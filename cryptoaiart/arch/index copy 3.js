@@ -1,13 +1,13 @@
-async function runMasterPaintingsClassification() {
+async function runExample() {
   // Create an ONNX inference session with WebGL backend.
   const session = new onnx.InferenceSession({ backendHint: 'webgl' });
 
-  // Load an ONNX model. This model is Resnet that takes a 1*3*299*299 image and classifies it.
+  // Load an ONNX model. This model is Resnet50 that takes a 1*3*299*299 image and classifies it.
   await session.loadModel("./resnetpaintings.onnx");
 
   // Load image.
   const imageLoader = new ImageLoader(imageSize, imageSize);
-  const imageData = await imageLoader.getImageData(document.getElementById("imageSource").src);
+  const imageData = await imageLoader.getImageData('./art_nouveau-modern_quintessential_ai.jpg');
 
   // Preprocess the image data to match input dimension requirement, which is 1*3*299*299.
   const width = imageSize;
@@ -20,13 +20,19 @@ async function runMasterPaintingsClassification() {
   const outputData = outputMap.values().next().value.data;
   const softMaxconst = softMax(outputData);
   const topK = PaintingClassesTopK(softMaxconst, 5);
+  // const argMax = argMax(outputData);
   
   console.log("outputData = ", outputData)
   console.log("softMax = ", softMaxconst)
-  console.log("top5 = ", topK)
+  console.log("topK = ", topK)
+  // console.log("argMax = ", argMax)
+  
+  // console.log(
+    // "outputData = ", outputData,
+    // "softmax = ", probs)
 
   // Render the output result in html.
-  // printMatches(softMaxconst);
+  printMatches(softMaxconst);
 }
 
 /**
@@ -106,7 +112,7 @@ function printMatches(data) {
     outputClasses = PaintingClassesTopK(data, 5);
     names = ["Abstract Expressionism", "Art Nouveau Modern", "Cubism", "Expressionism", "Impressionism", "Naive Art Primitivism", "Northern Renaissance", "Realism", "Romanticism", "Symbolism"];
   }
-  const predictions = document.getElementById("predictions");
+  const predictions = document.getElementById('predictions');
   predictions.innerHTML = '';
   const results = [];
   for (let i of [0, 1, 2, 3, 4]) {

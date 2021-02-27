@@ -8,12 +8,26 @@
   <script>
     const imageSize = 299;
   </script>
+  
+  <script>
+  var loadFile = function(event) {
+    var image = document.getElementById("imageSource");
+    image.src = URL.createObjectURL(event.target.files[0]);
+  };
+  </script>
+  
 </head>
 <body>
   <h1>Master Paintings Classification</h1>
-  <img id="imageSource" src="./art_nouveau-modern_quintessential_ai.jpg"/>
+
   <div>
-    <input type="button" value="Run" onclick="runExample()">
+  <p><input type="file" accept="image/gif, image/jpeg, image/png" name="image" id="file" onchange="loadFile(event)" style="display: none;"></p>
+  <p><label for="file" style="cursor: pointer;">Upload Master Painting</label></p>
+  <p><img id="imageSource" width="299" height="299"/></p>
+  </div>
+
+  <div>
+    <input type="button" value="Classify" onclick="runMasterPaintingsClassification()">
   </div>
   <div id="predictions">
 
