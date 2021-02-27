@@ -19,15 +19,14 @@ async function runMasterPaintingsClassification() {
   const outputMap = await session.run([inputTensor]);
   const outputData = outputMap.values().next().value.data;
   const softMaxconst = softMax(outputData);
-  const topK = paintingClassesTopK(softMaxconst, 5);
+  const topK = PaintingClassesTopK(softMaxconst, 5);
   
-  console.log("outputData = ", outputData);
-  console.log("softMax = ", softMaxconst);
-  console.log("top = ", topK[0]);
-  console.log("top5 = ", topK);
+  console.log("outputData = ", outputData)
+  console.log("softMax = ", softMaxconst)
+  console.log("top5 = ", topK)
 
   // Render the output result in html.
-  printMatches(softMaxconst);
+  // printMatches(softMaxconst);
 }
 
 /**
@@ -64,7 +63,7 @@ function preprocess(data, width, height) {
 /**
  * Utility function to post-process Resnet output. Find top k classes with highest probability.
  */
-function paintingClassesTopK(outputData, k) {
+function PaintingClassesTopK(outputData, k) {
   if (!k) { k = 5; }
   const probs = Array.from(outputData);
   const probsIndices = probs.map(
@@ -84,27 +83,12 @@ function paintingClassesTopK(outputData, k) {
     }
   ).reverse();
   const topK = sorted.slice(0, k).map(function (probIndex) {
-    const artMovement = [
-    "Abstract Expressionism",
-    "Art Nouveau Modern",
-    "Cubism",
-    "Expressionism",
-    "Impressionism",
-    "Naive Art Primitivism",
-    "Northern Renaissance",
-    "Realism",
-    "Romanticism",
-    "Symbolism"
-    ];
-    const iClass = artMovement[probIndex[1]];
     return {
-      id: iClass,
       index: parseInt(probIndex[1], 10),
       probability: probIndex[0]
     };
   });
   return topK;
-  return topK[0];
 }
 
 /**
@@ -119,14 +103,14 @@ function printMatches(data) {
     }
     outputClasses = empty;
   } else {
-    outputClasses = paintingClassesTopK(data, 5);
+    outputClasses = PaintingClassesTopK(data, 5);
     names = ["Abstract Expressionism", "Art Nouveau Modern", "Cubism", "Expressionism", "Impressionism", "Naive Art Primitivism", "Northern Renaissance", "Realism", "Romanticism", "Symbolism"];
   }
   const predictions = document.getElementById("predictions");
   predictions.innerHTML = '';
   const results = [];
   for (let i of [0, 1, 2, 3, 4]) {
-    results.push(`${outputClasses[i].id}: ${Math.round(100 * outputClasses[i].probability)}%`);
+    results.push(`${names[i]}: ${Math.round(100 * outputClasses[i].probability)}%`);
   }
   predictions.innerHTML = results.join('<br/>');
 }
