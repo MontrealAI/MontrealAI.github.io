@@ -110,13 +110,12 @@ function printMatches(data) {
     outputClasses = empty;
   } else {
     outputClasses = PaintingClassesTopK(data, 5);
-    names = ["Abstract Expressionism", "Art Nouveau Modern", "Cubism", "Expressionism", "Impressionism", "Naive Art Primitivism", "Northern Renaissance", "Realism", "Romanticism", "Symbolism"];
   }
   const predictions = document.getElementById('predictions');
   predictions.innerHTML = '';
   const results = [];
   for (let i of [0, 1, 2, 3, 4]) {
-    results.push(`${names[i]}: ${Math.round(100 * outputClasses[i].probability)}%`);
+    results.push(`${outputClasses[i].name}: ${Math.round(100 * outputClasses[i].probability)}%`);
   }
   predictions.innerHTML = results.join('<br/>');
 }
