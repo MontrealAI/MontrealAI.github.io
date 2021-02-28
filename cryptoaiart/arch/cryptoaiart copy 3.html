@@ -1,0 +1,36 @@
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/onnxjs/dist/onnx.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+  <script src="ndarray-browser-min.js"></script>
+  <script src="image-loader.js"></script>
+  <script src="index.js"></script>
+  <script>
+    const imageSize = 299;
+  </script>
+  
+  <script>
+  var loadFile = function(event) {
+    var image = document.getElementById("imageSource");
+    image.src = URL.createObjectURL(event.target.files[0]);
+  };
+  </script>
+  
+</head>
+<body>
+  <h1>Master Paintings Classification</h1>
+
+  <div>
+  <p><input type="file" accept="image/gif, image/jpeg, image/png" name="image" id="file" onchange="loadFile(event)" style="display: none;"></p>
+  <p><label for="file" style="cursor: pointer;">Upload Master Painting</label></p>
+  <p><img id="imageSource" width="299" height="299"/></p>
+  </div>
+
+  <div>
+    <input type="button" value="Classify" onclick="runMasterPaintingsClassification()">
+  </div>
+  <div id="predictions">
+
+  </div>
+</body>
+</html>
