@@ -34,10 +34,10 @@
 
         const hash = web3.utils.soliditySha3({ type: 'string', value: contactHash }, { type: 'uint256', value: tokenId });
         
-        const owner = await contract.methods.ownerOf().call();
+        const tokenOwner = await contract.methods.ownerOf(tokenId).call();
         const recoveredAddress = web3.eth.accounts.recover(hash, signature);
 
-        if (owner.toLowerCase() === recoveredAddress.toLowerCase()) {
+        if (tokenOwner.toLowerCase() === recoveredAddress.toLowerCase()) {
           document.getElementById("verificationResult").innerText = "The signature is valid and matches the Owner.";
         } else {
           document.getElementById("verificationResult").innerText = "The signature is invalid or does not match the Owner.";
