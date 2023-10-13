@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Secure Messaging</title>
+  <script src="./ethers.min.js"></script>
+</head>
+<body>
+  <h1>Secure Messaging</h1>
+
+  <h2>Recipient Ethereum Address</h2>
+  <input type="text" id="recipientAddress" placeholder="Enter recipient's Ethereum address">
+  
+  <h2>Send Message</h2>
+  <textarea id="messageToSend" placeholder="Enter your message here"></textarea>
+  <button onclick="sendMessage()">Send</button>
+
+  <h2>Encrypted Message</h2>
+  <textarea id="encryptedMessage" readonly></textarea>
+
+  <h2>Received Encrypted Message</h2>
+  <textarea id="receivedEncryptedMessage" placeholder="Paste the received encrypted message here"></textarea>
+  <button onclick="decryptMessage()">Decrypt</button>
+  
+  <h2>Decrypted Message</h2>
+  <textarea id="decryptedMessage" readonly></textarea>
+
+  <script>
+    async function sendMessage() {
+      const message = document.getElementById("messageToSend").value;
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const signer = provider.getSigner();
+      const senderAddress = await signer.getAddress();
+      const signature = await signer.signMessage(message);
+      const recipientAddress = document.getElementById("recipientAddress").value;
+
+      const encodedMsg = new TextEncoder().encode(signature + message);
+      const cryptoKey = await crypto.subtle.importKey("raw", new TextEncoder().encode(recipientAddress), "PBKDF2", false, ["deriveKey"]);
+      const aesKey = await crypto.subtle.deriveKey({name: "PBKDF2", salt: new TextEncoder().encode(senderAddress), iterations: 100000, hash: "SHA-256"}, cryptoKey, {name: "AES-GCM", length: 256}, false, ["encrypt"]);
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const encryptedMsg = await crypto.subtle.encrypt({name: "AES-GCM", iv: iv}, aesKey, encodedMsg);
+
+      const encryptedMsgBuffer = new Uint8Array(encryptedMsg);
+      const ivAndEncryptedMsg = new Uint8Array(iv.length + encryptedMsgBuffer.length);
+      ivAndEncryptedMsg.set(iv);
+      ivAndEncryptedMsg.set(encryptedMsgBuffer, iv.length);
+      const base64EncryptedMsg = btoa(String.fromCharCode.apply(null, ivAndEncryptedMsg));
+      document.getElementById("encryptedMessage").value = senderAddress + "|" + base64EncryptedMsg;
+    }
+
+    async function decryptMessage() {
+      const fullEncryptedMsg = document.getElementById("receivedEncryptedMessage").value.split("|");
+      const senderAddress = fullEncryptedMsg[0];
+      const encryptedMsgBase64 = fullEncryptedMsg[1];
+      const encryptedMsgBytes = Uint8Array.from(atob(encryptedMsgBase64), c => c.charCodeAt(0));
+      const iv = encryptedMsgBytes.slice(0, 12);
+      const encryptedMsg = encryptedMsgBytes.slice(12);
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const signer = provider.getSigner();
+      const recipientAddress = await signer.getAddress();
+
+      const cryptoKey = await crypto.subtle.importKey("raw", new TextEncoder().encode(recipientAddress), "PBKDF2", false, ["deriveKey"]);
+      const aesKey = await crypto.subtle.deriveKey({name: "PBKDF2", salt: new TextEncoder().encode(senderAddress), iterations: 100000, hash: "SHA-256"}, cryptoKey, {name: "AES-GCM", length: 256}, false, ["decrypt"]);
+
+      let decryptedMsg;
+      try {
+        decryptedMsg = await crypto.subtle.decrypt({name: "AES-GCM", iv: iv}, aesKey, encryptedMsg);
+      } catch (e) {
+        alert("Decryption failed. Check the encrypted message and recipient address.");
+        return;
+      }
+
+      const decryptedMsgBytes = new Uint8Array(decryptedMsg);
+      const signature = new TextDecoder().decode(decryptedMsgBytes.slice(0, 132));
+      const message = new TextDecoder().decode(decryptedMsgBytes.slice(132));
+      const recoveredAddress = ethers.utils.verifyMessage(message, signature);
+
+      if (recoveredAddress.toLowerCase() === senderAddress.toLowerCase()) {
+        document.getElementById("decryptedMessage").value = message;
+      } else {
+        alert("Signature verification failed.");
+      }
+    }
+  </script>
+</body>
+</html>
+
