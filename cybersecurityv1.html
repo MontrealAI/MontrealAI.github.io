@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Secure Messaging</title>
+  <script src="./ethers.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      box-shadow: 0px 0px 20px #ccc;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #333;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Secure Messaging</h1>
+    <h2>Recipient Ethereum Address</h2>
+    <input type="text" id="recipientAddress" placeholder="Enter recipient's Ethereum address">
+    <h2>Send Message</h2>
+    <textarea id="messageToSend" placeholder="Enter your message here"></textarea>
+    <button onclick="sendMessage()">Send</button>
+    <h2>Encrypted Message</h2>
+    <textarea id="encryptedMessage" readonly></textarea>
+    <h2>Received Encrypted Message</h2>
+    <textarea id="receivedEncryptedMessage" placeholder="Paste the received encrypted message here"></textarea>
+    <button onclick="decryptMessage()">Decrypt</button>
+    <h2>Decrypted Message</h2>
+    <textarea id="decryptedMessage" readonly></textarea>
+  </div>
+  <script>
+    async function sendMessage() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const signer = provider.getSigner();
+      const senderAddress = await signer.getAddress();
+      const message = document.getElementById("messageToSend").value;
+      const signature = await signer.signMessage(message);
+      const recipientAddress = document.getElementById("recipientAddress").value;
+      const payload = new TextEncoder().encode(signature + '|' + senderAddress + '|' + message);
+      const hashArray = new TextEncoder().encode(recipientAddress);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', hashArray);
+      const hashKey = new Uint8Array(hashBuffer);
+      const cryptoKey = await crypto.subtle.importKey("raw", hashKey, {name: "AES-GCM", length: 256}, false, ["encrypt"]);
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const encryptedMsg = await crypto.subtle.encrypt({name: "AES-GCM", iv: iv}, cryptoKey, payload);
+      const ivAndEncryptedMsg = new Uint8Array(iv.length + encryptedMsg.byteLength);
+      ivAndEncryptedMsg.set(new Uint8Array(iv), 0);
+      ivAndEncryptedMsg.set(new Uint8Array(encryptedMsg), iv.length);
+      const base64EncryptedMsg = btoa(String.fromCharCode(...ivAndEncryptedMsg));
+      document.getElementById("encryptedMessage").value = base64EncryptedMsg;
+    }
+
+    async function decryptMessage() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const signer = provider.getSigner();
+      const recipientAddress = await signer.getAddress();
+      const encryptedMsgBase64 = document.getElementById("receivedEncryptedMessage").value;
+      const encryptedMsgBytes = Uint8Array.from(atob(encryptedMsgBase64), c => c.charCodeAt(0));
+      const iv = encryptedMsgBytes.slice(0, 12);
+      const encryptedMsg = encryptedMsgBytes.slice(12);
+      const hashArray = new TextEncoder().encode(recipientAddress);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', hashArray);
+      const hashKey = new Uint8Array(hashBuffer);
+      const cryptoKey = await crypto.subtle.importKey("raw", hashKey, {name: "AES-GCM", length: 256}, false, ["decrypt"]);
+      let decryptedMsg;
+      try {
+        decryptedMsg = await crypto.subtle.decrypt({name: "AES-GCM", iv: iv}, cryptoKey, encryptedMsg);
+      } catch (e) {
+        alert("Decryption failed. Check the encrypted message and recipient address.");
+        return;
+      }
+      const decryptedMsgBytes = new TextDecoder().decode(new Uint8Array(decryptedMsg)).split('|');
+      const signature = decryptedMsgBytes[0];
+      const senderAddress = decryptedMsgBytes[1];
+      const message = decryptedMsgBytes[2];
+      const recoveredAddress = ethers.utils.verifyMessage(message, signature);
+      if (recoveredAddress.toLowerCase() === senderAddress.toLowerCase()) {
+        document.getElementById("decryptedMessage").value = message;
+      } else {
+        alert("Signature verification failed.");
+      }
+    }
+  </script>
+</body>
+
