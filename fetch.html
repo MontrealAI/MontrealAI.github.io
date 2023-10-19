@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NFT Viewer</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.5.0/dist/web3.min.js"></script>
+</head>
+<body>
+  <button onclick="loadNFTs()">Load NFTs</button>
+  <div id="nft-list"></div>
+
+  <script>
+    async function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function loadNFTs() {
+      console.log("Starting loadNFTs function");
+      if (window.ethereum) {
+        console.log("Initializing web3");
+        window.web3 = new Web3(window.ethereum);
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+      } else {
+        alert('MetaMask not detected');
+        return;
+      }
+
+      const accounts = await web3.eth.getAccounts();
+      const userAddress = accounts[0];
+      console.log(`User address from MetaMask: ${userAddress}`);
+
+      const latestBlock = await web3.eth.getBlockNumber();
+      console.log(`Latest block number: ${latestBlock}`);
+
+      const contractAddresses = new Set();
+      const blockChunkSize = 50000;
+
+      for (let i = latestBlock; i >= 0; i -= blockChunkSize) {
+        const startBlock = Math.max(i - blockChunkSize + 1, 0);
+        console.log(`Querying blocks from ${i} to ${startBlock}`);
+        
+        for (let j = i; j >= startBlock; j--) {
+          const block = await web3.eth.getBlock(j, true);
+          if (block && block.transactions) {
+            block.transactions.forEach(tx => {
+              if (tx.from.toLowerCase() === userAddress.toLowerCase()) {
+                contractAddresses.add(tx.to);
+              }
+            });
+          }
+        }
+        await sleep(300);
+      }
+
+      console.log(`Unique contract addresses: ${Array.from(contractAddresses)}`);
+
+      const erc721Abi = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"approved","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"approve","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"balance","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getApproved","outputs":[{"internalType":"address","name":"operator","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"owner","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"bool","name":"_approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+
+      for (const contractAddress of contractAddresses) {
+        try {
+          const contract = new web3.eth.Contract(erc721Abi, contractAddress);
+          const balance = await contract.methods.balanceOf(userAddress).call();
+          console.log(`Tokens owned by user on this contract: ${balance}`);
+
+          for (let i = 0; i < balance; i++) {
+            const tokenId = await contract.methods.tokenOfOwnerByIndex(userAddress, i).call();
+            const tokenUri = await contract.methods.tokenURI(tokenId).call();
+            const metadata = await fetch(tokenUri).then(res => res.json());
+            document.getElementById("nft-list").innerHTML += `<div>${metadata.name}: ${metadata.description}</div>`;
+          }
+        } catch (error) {
+          console.error(`Error with contract ${contractAddress}: ${error}`);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
+
