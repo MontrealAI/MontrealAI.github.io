@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Retrieve NFTs and Metadata</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #4a5568;
+    }
+    input, button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    button {
+      cursor: pointer;
+      background-color: #48bb78;
+      color: white;
+    }
+    #output {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+  <script>
+    let web3;
+    window.addEventListener('load', async () => {
+      if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
+      } else if (window.web3) {
+        web3 = new Web3(window.web3.currentProvider);
+      }
+    });
+
+    const alternateURIMethods = ['uri', 'tokenMetadata'];
+
+    async function fetchMetadata(contractAddress, tokenId, method = 'tokenURI') {
+      try {
+        const contract = new web3.eth.Contract([{
+          "constant": true,
+          "inputs": [{"name": "tokenId", "type": "uint256"}],
+          "name": method,
+          "outputs": [{"name": "", "type": "string"}],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+        }], contractAddress);
+        const uri = await contract.methods[method](tokenId).call();
+        return await fetch(uri).then(res => res.json());
+      } catch (error) {
+        return null;
+      }
+    }
+
+    async function fetchNFTs() {
+      const walletAddress = document.getElementById("walletAddress").value;
+      const apiKey = document.getElementById("apiKey").value;
+      const url = `https://api.etherscan.io/api?module=account&action=tokennfttx&address=${walletAddress}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.status === "1") {
+        const transactions = data.result;
+        const heldNFTs = {};
+        transactions.forEach(tx => {
+          if (tx.to === walletAddress.toLowerCase()) {
+            heldNFTs[tx.contractAddress] = heldNFTs[tx.contractAddress] || [];
+            heldNFTs[tx.contractAddress].push(tx.tokenID);
+          }
+        });
+
+        let outputHtml = "";
+        for (const [contract, tokenIDs] of Object.entries(heldNFTs)) {
+          outputHtml += `<strong>Contract: ${contract}</strong><br>`;
+          for (const tokenId of tokenIDs) {
+            let metadata = null;
+            for (const method of ['tokenURI'].concat(alternateURIMethods)) {
+              metadata = await fetchMetadata(contract, tokenId, method);
+              if (metadata) break;
+            }
+            if (metadata) {
+              outputHtml += `Token ID: ${tokenId}, Metadata: ${JSON.stringify(metadata)}<br>`;
+            } else {
+              outputHtml += `Token ID: ${tokenId}, Metadata: Not Available<br>`;
+            }
+          }
+        }
+        document.getElementById("output").innerHTML = outputHtml;
+      } else {
+        document.getElementById("output").innerHTML = "Failed to fetch NFTs.";
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Retrieve NFTs and Metadata</h1>
+  <label for="walletAddress">Wallet Address:</label>
+  <input type="text" id="walletAddress" placeholder="Enter wallet address">
+  <label for="apiKey">Etherscan API Key:</label>
+  <input type="text" id="apiKey" placeholder="Enter Etherscan API key">
+  <button onclick="fetchNFTs()">Fetch NFTs</button>
+  <div id="output">
+    <!-- Results will be displayed here -->
+  </div>
+</body>
+</html>
+
