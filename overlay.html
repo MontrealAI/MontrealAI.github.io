@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGI Club Image Processor</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f8;
+    color: #333;
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  h1 {
+    color: #4A47A3;
+    text-align: center;
+  }
+  p {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  #uploadImage {
+    display: block;
+    margin: 20px auto;
+  }
+  .button {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    background: #4A47A3;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+  }
+  #outputImage {
+    display: block;
+    width: 300px;
+    margin: 20px auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  #outputSection {
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>Welcome to AGI Club Image Processing</h1>
+<p>Select an image to be graced with the AGI Club's prestigious overlay.</p>
+
+<input type="file" id="uploadImage" accept="image/*" />
+
+<div id="outputSection">
+  <img id="outputImage" alt="Your AGI Club Profile Picture" />
+  <a id="downloadLink" class="button">Download AGI Club Profile Picture</a>
+</div>
+
+<script>
+// Sources for overlays, assumed to be in the same directory.
+const overlay1Src = 'agiringnft0v0.png';
+const overlay2Src = 'agiringnft1v0.png';
+
+// Load an image from a given source.
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous'; // Necessary for loading local images.
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+// Lighten blend mode operation.
+function lightenPixel(basePixel, topPixel) {
+  return Math.max(basePixel, topPixel);
+}
+
+// Apply the Lighten blend mode using canvas.
+function applyLightenBlend(baseCtx, topImage) {
+  const topCtx = document.createElement('canvas').getContext('2d');
+  topCtx.canvas.width = baseCtx.canvas.width;
+  topCtx.canvas.height = baseCtx.canvas.height;
+  topCtx.drawImage(topImage, 0, 0);
+  
+  const baseData = baseCtx.getImageData(0, 0, baseCtx.canvas.width, baseCtx.canvas.height);
+  const topData = topCtx.getImageData(0, 0, topCtx.canvas.width, topCtx.canvas.height);
+
+  // Apply Lighten blend mode.
+  for (let i = 0; i < baseData.data.length; i += 4) {
+    baseData.data[i] = lightenPixel(baseData.data[i], topData.data[i]);     // R
+    baseData.data[i + 1] = lightenPixel(baseData.data[i + 1], topData.data[i + 1]); // G
+    baseData.data[i + 2] = lightenPixel(baseData.data[i + 2], topData.data[i + 2]); // B
+  }
+  
+  baseCtx.putImageData(baseData, 0, 0);
+}
+
+// Cut a perfect circle from the canvas and make the rest transparent.
+function cutCircle(ctx) {
+  const size = ctx.canvas.width;
+  ctx.globalCompositeOperation = 'destination-in';
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+// Event listener for the file upload.
+document.getElementById('uploadImage').addEventListener('change', async function(event) {
+  const outputImage = document.getElementById('outputImage');
+  const downloadLink = document.getElementById('downloadLink');
+
+  // Hide output elements before processing.
+  outputImage.style.display = 'none';
+  downloadLink.style.display = 'none';
+  
+  try {
+    const file = event.target.files[0];
+    if (!file.type.startsWith('image/')) {
+      throw new Error('File is not an image.');
+    }
+
+    // Load the user's image and the two overlay images.
+    const baseImage = await loadImage(URL.createObjectURL(file));
+    const overlay2 = await loadImage(overlay2Src);
+    const overlay1 = await loadImage(overlay1Src);
+
+    // Set up the canvas and draw the base image.
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 1038;
+    canvas.height = 1038;
+    ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+
+    // Apply the Lighten blend mode with the first overlay.
+    applyLightenBlend(ctx, overlay2);
+
+    // Draw the second overlay.
+    ctx.drawImage(overlay1, 0, 0, canvas.width, canvas.height);
+
+    // Cut out the circle and make the rest transparent.
+    cutCircle(ctx);
+
+    // Convert the canvas to a Blob and create a URL for download.
+    canvas.toBlob(function(blob) {
+      const url = URL.createObjectURL(blob);
+      outputImage.src = url;
+      outputImage.style.display = 'block';
+
+      downloadLink.href = url;
+      downloadLink.download = 'AGI_Club_Profile_Pic.png';
+      downloadLink.style.display = 'block';
+      downloadLink.textContent = 'Download AGI Club Profile Picture';
+    }, 'image/png');
+    
+  } catch (error) {
+    alert(error.message);
+  }
+});
+</script>
+
+</body>
+</html>
+
