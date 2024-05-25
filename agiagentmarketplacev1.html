@@ -13,7 +13,7 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
@@ -61,6 +61,10 @@
             width: calc(100% / 2 - 40px);
             max-width: 300px;
             overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
         }
         .card img {
             width: 100%;
@@ -99,6 +103,7 @@
             text-decoration: none;
             font-size: 0.9rem;
             cursor: pointer;
+            transition: background-color 0.2s;
         }
         .btn:hover {
             background-color: #005f99;
@@ -171,6 +176,7 @@
             font-size: 1rem;
             width: 100%;
             margin-top: 10px;
+            transition: background-color 0.2s;
         }
         .modal-btn:hover {
             background-color: #005f99;
@@ -245,7 +251,7 @@
             <img id="modalImage" src="" alt="AGI Agent v0" style="width: 100%; border-radius: 10px;">
             <p id="modalENS"></p>
             <p id="modalPrice"></p>
-            <button class="modal-btn" onclick="confirmPurchase()">Confirm Purchase</button>
+            <button class="modal-btn" id="confirmPurchaseBtn" onclick="confirmPurchase()">Confirm Purchase</button>
         </div>
     </div>
 
@@ -256,9 +262,10 @@
             <h2>List AGI Agent v0</h2>
             <img id="listModalImage" src="" alt="AGI Agent v0" style="width: 100%; border-radius: 10px;">
             <p id="listModalENS"></p>
-            <input type="number" id="listPrice" placeholder="Price in AGI" style="width: 100%; margin-bottom: 10px; padding: 10px;">
-            <input type="number" id="listDuration" placeholder="Duration in seconds" style="width: 100%; margin-bottom: 10px; padding: 10px;">
-            <button class="modal-btn" onclick="confirmListing()">Confirm Listing</button>
+            <input type="number" id="listPrice" placeholder="Price in AGI" style="width: 100%; margin-bottom: 10px; padding: 10px; box-sizing: border-box;">
+            <input type="number" id="listDuration" placeholder="Duration in seconds" style="width: 100%; margin-bottom: 10px; padding: 10px; box-sizing: border-box;">
+            <button class="modal-btn" id="confirmListingBtn" onclick="confirmListing()">Confirm Listing</button>
+            <button class="modal-btn" id="confirmDelistBtn" onclick="confirmDelisting()" style="display: none;">Delist</button>
         </div>
     </div>
 
@@ -313,7 +320,8 @@
                                 <div class="card-content">
                                     <h3>${tokenData.name}</h3>
                                     <p>Owner: ${owner}</p>
-                                    ${isListed ? `<p class="price">Price: ${price} AGI</p><p class="time-limit">Expires: ${expirationTime}</p><a href="#" class="btn" onclick="openModal('${tokenData.image.replace('ipfs://', 'https://ipfs.io/ipfs/')}', '${owner}', '${price} AGI', ${tokenId})">Buy Now</a>` : `<p class="price">Not for sale</p><a href="#" class="btn ${owner === accounts[0] ? '' : 'disabled'}" onclick="openListModal('${tokenData.image.replace('ipfs://', 'https://ipfs.io/ipfs/')}', '${owner}', ${tokenId})">List for Sale</a>`}
+                                    <p>Token ID: ${tokenId}</p>
+                                    ${isListed ? `<p class="price">Price: ${price} AGI</p><p class="time-limit">Expires: ${expirationTime}</p>${owner === accounts[0] ? `<a href="#" class="btn" onclick="openListModal('${tokenData.image.replace('ipfs://', 'https://ipfs.io/ipfs/')}', '${owner}', ${tokenId}, true)">Delist</a>` : `<a href="#" class="btn" onclick="openModal('${tokenData.image.replace('ipfs://', 'https://ipfs.io/ipfs/')}', '${owner}', '${price} AGI', ${tokenId})">Buy Now</a>`}` : `<p class="price">Not for sale</p><a href="#" class="btn ${owner === accounts[0] ? '' : 'disabled'}" onclick="openListModal('${tokenData.image.replace('ipfs://', 'https://ipfs.io/ipfs/')}', '${owner}', ${tokenId}, false)">List for Sale</a>`}
                                 </div>
                             </div>
                         `;
@@ -364,11 +372,13 @@
                 });
         }
 
-        function openListModal(image, owner, tokenId) {
+        function openListModal(image, owner, tokenId, isListed) {
             document.getElementById('listModalImage').src = image;
             document.getElementById('listModalENS').textContent = 'Owner: ' + owner;
             document.getElementById('listModal').style.display = "block";
             currentTokenId = tokenId;
+            document.getElementById('confirmListingBtn').style.display = isListed ? "none" : "block";
+            document.getElementById('confirmDelistBtn').style.display = isListed ? "block" : "none";
         }
 
         function closeListModal() {
@@ -392,6 +402,22 @@
                 })
                 .on('error', (error) => {
                     showNotification('Listing failed: ' + error.message, 'error');
+                });
+        }
+
+        async function confirmDelisting() {
+            if (!(await agiAgentApproved(currentTokenId))) {
+                await approveAGIAgent(currentTokenId);
+            }
+
+            marketplace.methods.delistItem(currentTokenId).send({ from: accounts[0] })
+                .on('transactionHash', (hash) => {
+                    showNotification('Delisting transaction sent! Tx Hash: ' + hash, 'success');
+                    closeListModal();
+                    location.reload();
+                })
+                .on('error', (error) => {
+                    showNotification('Delisting transaction failed: ' + error.message, 'error');
                 });
         }
 
@@ -432,7 +458,7 @@
             notification.classList.add('show');
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 5000);
+            }, 8000);
         }
 
         window.onclick = function(event) {
