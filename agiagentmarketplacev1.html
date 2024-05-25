@@ -20,43 +20,45 @@
         }
         .marketplace-container {
             background-color: #0D1B2A;
-            padding: 40px;
+            padding: 20px;
             border-radius: 16px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            width: 90%;
-            max-width: 1600px;
+            width: 95%;
+            max-width: 1200px;
             text-align: center;
+            margin: 20px;
         }
         header {
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
         header h1 {
             color: #E0E1DD;
-            font-size: 3rem;
+            font-size: 2.5rem;
         }
         .showcase {
-            margin-bottom: 40px;
+            margin-bottom: 20px;
         }
         .showcase h2 {
-            font-size: 2rem;
+            font-size: 1.5rem;
             color: #E0E1DD;
             margin-bottom: 10px;
         }
         .showcase p {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #ffffff;
         }
         .cards {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 20px;
         }
         .card {
             background-color: #1B263B;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-            margin: 20px;
-            flex: 1 1 calc(25% - 40px);
+            margin: 10px;
+            width: calc(100% / 2 - 40px);
             max-width: 300px;
             overflow: hidden;
         }
@@ -65,36 +67,37 @@
             height: auto;
         }
         .card-content {
-            padding: 20px;
+            padding: 10px;
         }
         .card-content h3 {
             color: #E0E1DD;
             margin-top: 0;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
         .card-content p {
             color: #ffffff;
-            font-size: 1rem;
-            margin: 10px 0;
+            font-size: 0.9rem;
+            margin: 5px 0;
+            word-wrap: break-word;
         }
         .card-content .price {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #00E5FF;
         }
         .card-content .time-limit {
-            font-size: 1rem;
+            font-size: 0.8rem;
             color: #ff8c00;
         }
         .btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 8px 16px;
             margin-top: 10px;
             background-color: #0077B6;
             color: white;
             border: none;
             border-radius: 5px;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
         }
         .btn:hover {
@@ -108,8 +111,11 @@
             background: #333;
             color: white;
             text-align: center;
-            padding: 20px 0;
+            padding: 10px 0;
             width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
         }
         .modal {
             display: none;
@@ -120,7 +126,7 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0,0,0,0.8);
             padding-top: 60px;
         }
         .modal-content {
@@ -184,6 +190,31 @@
         .notification.show {
             display: block;
         }
+        .instructions {
+            font-size: 0.9rem;
+            color: #ffffff;
+            margin: 20px 0;
+            text-align: left;
+        }
+        @media (max-width: 768px) {
+            .card {
+                width: calc(100% - 40px);
+                margin: 10px auto;
+            }
+            .marketplace-container {
+                width: 100%;
+                padding: 10px;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            .showcase h2 {
+                font-size: 1.2rem;
+            }
+            .showcase p {
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -198,6 +229,12 @@
         <section class="cards" id="cards">
             <!-- Cards will be dynamically populated -->
         </section>
+        <div class="instructions" id="instructions">
+            <p>To interact with this marketplace, you need to have MetaMask installed and connected.</p>
+            <p>All transactions are conducted using the $AGI token.</p>
+            <p>If you are the owner of an NFT, you can list it for sale by specifying a price in $AGI and a duration.</p>
+            <p>For buying, make sure you have enough $AGI tokens in your wallet and approve the marketplace to spend your $AGI tokens if prompted.</p>
+        </div>
     </div>
 
     <!-- The Modal -->
