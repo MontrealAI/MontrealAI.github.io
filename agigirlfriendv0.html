@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Girlfriend.AGI.Eth Identity</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <style>
+        body { font-family: 'Times New Roman', serif; background-color: #fff; color: #333; }
+        .container { width: 80%; max-width: 600px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+        .hero-image { text-align: center; margin-top: 20px; }
+        .hero-image img { max-width: 100%; height: auto; border-radius: 50%; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ddd; }
+        button { background-color: #4CAF50; color: white; border: none; cursor: pointer; font-size: 18px; }
+        button:hover { background-color: #45a049; }
+        .instructions { text-align: left; margin-bottom: 20px; }
+        .tx-link { margin-top: 20px; }
+        .executive-summary { background-color: #f8f8f8; padding: 20px; border-left: 5px solid #4CAF50; margin-top: 30px; }
+        .executive-summary h3 { margin-top: 0; }
+        @media (max-width: 768px) {
+            .container { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Girlfriend.AGI.Eth Identity</h1>
+        <div class="hero-image">
+            <img src="agigirlfriendeth.png" alt="Girlfriend.AGI.Eth">
+        </div>
+        <div class="instructions">
+            <p>Welcome to the <strong>Girlfriend.AGI.Eth Identity NFT</strong> Registration portal (please take note that Girlfriend.AGI.Eth is presently under development).</p>
+            <p><strong>Steps to Register:</strong></p>
+            <ol>
+                <li><strong>Identity:</strong> Choose a unique name for your Girlfriend.AGI.Eth Identity NFT. This will be your identity in the Girlfriend.AGI.Eth ecosystem. An identity like 'aria' will translate to <strong>Aria.Girlfriend.AGI.Eth</strong> in the AGI Girlfriend universe. Use lowercase letters, numbers, and hyphens only.</li>
+                <li><strong>Ethereum Address:</strong> Provide the address of your Ethereum wallet. This is where your Girlfriend.AGI.Eth Identity NFT will be sent.</li>
+                <li>Click <strong>Register</strong> and complete the transaction in MetaMask.</li>
+            </ol>
+            <p><strong>Note:</strong> You will need 250 AGI tokens for registration (<a href="https://montrealai.xyz/" target="_blank">purchase AGI tokens</a>), which will need to be pre-approved for registration. The process will guide you through this step if necessary.</p>
+            <p><strong>Pre-Alpha Version</strong></p>
+        </div>
+        <input type="text" id="label" placeholder="Label (e.g., 'aria')">
+        <input type="text" id="newOwner" placeholder="Your Ethereum Address">
+        <button onclick="registerLabel()">Register</button>
+        <div class="tx-link" id="txLink"></div>
+    </div>
+    <div class="executive-summary">
+        <h3>[PRELIMINARY CONCEPTS EXCLUSIVELY]</h3>
+        <p>Girlfriend.AGI.Eth Identity NFT</p>
+        <p><strong>Pre-Alpha Version - Under Development.</strong></p>
+        <p>[LEGAL NOTICE] <strong>MATERIALS PROVIDED IN THIS SYSTEM ARE PROVIDED WITHOUT WARRANTY OF ANY KIND AND DOES NOT CONSTITUTE ENDORSEMENT.</strong></p>
+        <!-- Executive summary content as provided -->
+    </div>
+    
+    <script>
+        const agiTokenAddress = '0xf0780F43b86c13B3d0681B1Cf6DaeB1499e7f14D';
+        const agiTokenAbi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"InvalidShortString","type":"error"},{"inputs":[{"internalType":"string","name":"str","type":"string"}],"name":"StringTooLong","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":false,"internalType":"bool","name":"isBlacklisted","type":"bool"}],"name":"BlacklistUpdated","type":"event"},{"anonymous":false,"inputs":[],"name":"EIP712DomainChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"id","type":"uint256"}],"name":"Snapshot","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"buyTaxRate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"sellTaxRate","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"transferTaxRate","type":"uint256"}],"name":"TaxRatesUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"taxReceiver","type":"address"}],"name":"TaxReceiverUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"inputs":[],"name":"DOMAIN_SEPARATOR","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"addToBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"uint256","name":"snapshotId","type":"uint256"}],"name":"balanceOfAt","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"burn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"burnFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"buyTaxRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"customBurn","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"eip712Domain","outputs":[{"internalType":"bytes1","name":"fields","type":"bytes1"},{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"version","type":"string"},{"internalType":"uint256","name":"chainId","type":"uint256"},{"internalType":"address","name":"verifyingContract","type":"address"},{"internalType":"bytes32","name":"salt","type":"bytes32"},{"internalType":"uint256[]","name":"extensions","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"isBlacklisted","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"isExchange","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"nonces","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"},{"internalType":"uint256","name":"deadline","type":"uint256"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"permit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"removeFromBlacklist","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"sellTaxRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"exchange","type":"address"},{"internalType":"bool","name":"status","type":"bool"}],"name":"setExchangeAddress","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_buyTaxRate","type":"uint256"},{"internalType":"uint256","name":"_sellTaxRate","type":"uint256"},{"internalType":"uint256","name":"_transferTaxRate","type":"uint256"}],"name":"setTaxRates","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_taxReceiver","type":"address"}],"name":"setTaxReceiver","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"snapshot","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"taxReceiver","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"snapshotId","type":"uint256"}],"name":"totalSupplyAt","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"transferTaxRate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"}];
+        const contractAddress = '0x8BA2F2A37919548b8F3E62dcFBf11970431F1613';
+        const contractAbi = [{"inputs":[{"internalType":"address","name":"wrapper","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"bytes32","name":"node","type":"bytes32"}],"name":"DurationTooLong","type":"error"},{"inputs":[{"internalType":"bytes32","name":"node","type":"bytes32"}],"name":"ParentExpired","type":"error"},{"inputs":[{"internalType":"bytes32","name":"parentNode","type":"bytes32"}],"name":"ParentNameNotSetup","type":"error"},{"inputs":[{"internalType":"bytes32","name":"node","type":"bytes32"}],"name":"ParentNotWrapped","type":"error"},{"inputs":[{"internalType":"bytes32","name":"node","type":"bytes32"}],"name":"Unauthorised","type":"error"},{"inputs":[],"name":"Unavailable","type":"error"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes32","name":"node","type":"bytes32"},{"indexed":false,"internalType":"uint256","name":"expiry","type":"uint256"}],"name":"NameRegistered","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes32","name":"node","type":"bytes32"},{"indexed":false,"internalType":"uint256","name":"expiry","type":"uint256"}],"name":"NameRenewed","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes32","name":"node","type":"bytes32"},{"indexed":false,"internalType":"address","name":"pricer","type":"address"},{"indexed":false,"internalType":"address","name":"beneficiary","type":"address"},{"indexed":false,"internalType":"bool","name":"active","type":"bool"}],"name":"NameSetup","type":"event"},{"inputs":[{"internalType":"bytes32","name":"node","type":"bytes32"}],"name":"available","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"names","outputs":[{"internalType":"contract ISubdomainPricer","name":"pricer","type":"address"},{"internalType":"address","name":"beneficiary","type":"address"},{"internalType":"bool","name":"active","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"},{"internalType":"uint256[]","name":"","type":"uint256[]"},{"internalType":"uint256[]","name":"","type":"uint256[]"},{"internalType":"bytes","name":"","type":"bytes"}],"name":"onERC1155BatchReceived","outputs":[{"internalType":"bytes4","name":"","type":"bytes4"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"uint256","name":"","type":"uint256"},{"internalType":"bytes","name":"","type":"bytes"}],"name":"onERC1155Received","outputs":[{"internalType":"bytes4","name":"","type":"bytes4"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"parentNode","type":"bytes32"},{"internalType":"string","name":"label","type":"string"},{"internalType":"address","name":"newOwner","type":"address"},{"internalType":"address","name":"resolver","type":"address"},{"internalType":"uint16","name":"fuses","type":"uint16"},{"internalType":"bytes[]","name":"records","type":"bytes[]"}],"name":"register","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"node","type":"bytes32"},{"internalType":"contract ISubdomainPricer","name":"pricer","type":"address"},{"internalType":"address","name":"beneficiary","type":"address"},{"internalType":"bool","name":"active","type":"bool"}],"name":"setupDomain","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"wrapper","outputs":[{"internalType":"contract INameWrapper","name":"","type":"address"}],"stateMutability":"view","type":"function"}];
+        const parentNode = '0x09e37a2a0df7c602633440fc407fcd61d394840f4cbaacaec7097beeaa6ef610';
+        const resolver = '0x231b0Ee14048e9dCcD1d247744d114a4EB5E8E63';
+        const ensWrapperAddress = '0xD4416b13d2b3a9aBae7AcD5D6C2BbDBE25686401'; // Replace with the actual ENS Name Wrapper address
+
+        function validateLabel(label) {
+            return /^[a-z0-9-]+$/.test(label);
+        }
+
+        async function registerLabel() {
+            if (!window.ethereum) {
+                alert('MetaMask is required for registration.');
+                return;
+            }
+
+            const label = document.getElementById('label').value.trim().toLowerCase();
+            const newOwner = document.getElementById('newOwner').value.trim();
+            if (!label || !newOwner || !validateLabel(label)) {
+                alert('Please enter a valid label (lowercase letters, numbers, hyphens) and your Ethereum address.');
+                return;
+            }
+
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const userAddress = await signer.getAddress();
+
+                const agiTokenContract = new ethers.Contract(agiTokenAddress, agiTokenAbi, signer);
+                const allowance = await agiTokenContract.allowance(userAddress, contractAddress);
+                if (allowance.lt(ethers.utils.parseUnits("250", 18))) {
+                    const approvalTx = await agiTokenContract.approve(contractAddress, ethers.utils.parseUnits("250", 18));
+                    await approvalTx.wait();
+                    alert('AGI token approval successful. Please proceed with registration.');
+                }
+
+                const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+                const txn = await contract.register(parentNode, label, newOwner, resolver, 0, []);
+                const receipt = await txn.wait();
+
+                const namehash = ethers.utils.namehash(label + '.girlfriend.agi.eth');
+                const tokenDecimal = ethers.utils.formatUnits(namehash, 0);
+
+                const txLink = document.getElementById('txLink');
+                txLink.innerHTML = `Registration successful! <a href="https://etherscan.io/tx/${receipt.transactionHash}" target="_blank">Etherscan</a> | <a href="https://opensea.io/assets/ethereum/${ensWrapperAddress}/${tokenDecimal}" target="_blank">OpenSea</a> | <a href="https://app.ens.domains/${label}.girlfriend.agi.eth" target="_blank">ENS Domains</a>`;
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred during registration.');
+            }
+        }
+    </script>
+</body>
+</html>
