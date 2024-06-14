@@ -429,11 +429,9 @@
                 for (let i = 0; i < totalNFTs; i++) {
                     if (await agiJobManager.methods.ownerOf(i).call() === userAccount) {
                         const tokenURI = await agiJobManager.methods.tokenURI(i).call();
-                        const metadata = await fetch(getIPFSUrl(tokenURI)).then(response => response.json());
-                        const imageUrl = getIPFSUrl(metadata.image.replace('ipfs://', 'https://nftstorage.link/ipfs/'));
                         const listItem = `
                             <li class="nft-list-item">
-                                <img src="${imageUrl}" alt="NFT Image" class="nft-image">
+                                <img src="agijobsv0.png" alt="NFT Image" class="nft-image">
                                 Token ID: ${i}, URI: <a href="${getIPFSUrl(tokenURI)}" target="_blank">${tokenURI}</a>
                                 <button class="btn" onclick="listNFT(${i})">List</button>
                                 <button class="btn" onclick="delistNFT(${i})">Delist</button>
@@ -454,13 +452,11 @@
                 for (let i = 0; i < totalNFTs; i++) {
                     const tokenURI = await agiJobManager.methods.tokenURI(i).call();
                     const listing = await agiJobManager.methods.listings(i).call();
-                    const metadata = await fetch(getIPFSUrl(tokenURI)).then(response => response.json());
-                    const imageUrl = getIPFSUrl(metadata.image.replace('ipfs://', 'https://nftstorage.link/ipfs/'));
                     const price = web3.utils.fromWei(listing.price, 'ether');
                     const button = listing.isActive ? `<button class="btn" onclick="purchaseNFT(${i})">Purchase for ${price} $AGI</button>` : '';
                     const listItem = `
                         <li class="nft-list-item">
-                            <img src="${imageUrl}" alt="NFT Image" class="nft-image">
+                            <img src="agijobsv0.png" alt="NFT Image" class="nft-image">
                             Token ID: ${i}, URI: <a href="${getIPFSUrl(tokenURI)}" target="_blank">${tokenURI}</a>
                             ${button}
                         </li>`;
