@@ -24,6 +24,12 @@
             margin-bottom: 40px;
             font-size: 2.5rem;
         }
+        h2.subtitle {
+            text-align: center;
+            color: #FFEB3B;
+            margin-bottom: 40px;
+            font-size: 1.5rem;
+        }
         .card {
             background-color: #1A237E;
             border-radius: 16px;
@@ -165,6 +171,9 @@
             h1 {
                 font-size: 2rem;
             }
+            h2.subtitle {
+                font-size: 1rem;
+            }
             .card {
                 padding: 15px;
             }
@@ -183,6 +192,7 @@
 <body>
     <div class="container">
         <h1>AGI Job NFT Marketplace</h1>
+        <h2 class="subtitle">[ Jobs.AGI.eth 🗝️👾 ] : Post jobs, pay in $AGI.<br><br>Validators (AGI Club Members) ensure top-notch job quality and transparency.</h2>
         <div class="card">
             <h2>Summary</h2>
             <p>Total Jobs: <span id="total-jobs">0</span></p>
@@ -196,11 +206,20 @@
             <p>My Reputation: <span id="my-reputation">0</span></p>
         </div>
         <div class="card">
-            <h2>Manage Jobs</h2>
+            <h2>Create a Job</h2>
+            <p>Follow the steps below to create a job:</p>
+            <ol>
+                <li>Ensure you are connected to your wallet. If not, click the "Connect Wallet" button below.</li>
+                <li>Fill in the job details in the form provided when you click the "Create Job" button:</li>
+                <ul>
+                    <li><strong>IPFS Hash:</strong> Enter the IPFS hash of the job details document.</li>
+                    <li><strong>Payout:</strong> Specify the payout amount in $AGI.</li>
+                    <li><strong>Duration:</strong> Enter the job duration in seconds.</li>
+                    <li><strong>Details:</strong> Provide a brief description of the job.</li>
+                </ul>
+                <li>Click the "Create Job" button to submit your job. Make sure you have approved the necessary $AGI token amount for the job payout.</li>
+            </ol>
             <button class="btn" onclick="createJob()">Create Job</button>
-            <button class="btn" onclick="applyForJob()">Apply for Job</button>
-            <button class="btn" onclick="requestJobCompletion()">Request Job Completion</button>
-            <button class="btn" id="validateJobBtn" style="display: none;" onclick="validateJob()">Validate Job</button>
         </div>
         <div class="subdomain-verification">
             <label for="subdomainAgent">Enter Your AGI Agent Subdomain Identity:</label>
@@ -220,6 +239,44 @@
             <button onclick="verifyClubOwnership()">Verify Club Ownership</button>
             <p id="outputClub"></p>
             <button class="btn" onclick="window.open('https://montrealai.xyz/club.html', '_blank')">Buy AGI Club Subdomain Identity</button>
+        </div>
+        <div class="card">
+            <h2>How to Apply for a Job and Request Job Completion</h2>
+            <p>Follow these steps to apply for a job and request its completion:</p>
+            <ol>
+                <li>Ensure you have a verified AGI Agent subdomain.</li>
+                <li>Navigate to the job you want to apply for and click on "Apply for Job".</li>
+                <li>Enter your AGI Agent subdomain and provide the required proof.</li>
+                <li>Once the job is completed, click on "Request Job Completion".</li>
+                <li>Provide the IPFS hash of the completed work.</li>
+            </ol>
+            <button class="btn" onclick="applyForJob()">Apply for Job</button>
+            <button class="btn" onclick="requestJobCompletion()">Request Job Completion</button>
+            <button class="btn" id="validateJobBtn" style="display: none;" onclick="validateJob()">Validate Job</button>
+            <button class="btn" id="disapproveJobBtn" style="display: none;" onclick="disapproveJob()">Disapprove Job</button>
+        </div>
+        <div class="card">
+            <h2>How to Validate a Job</h2>
+            <ol>
+                <li>Ensure you own a subdomain identity under <code>club.agi.eth</code>.</li>
+                <li>Enter your club subdomain identity in the "AGI Club Subdomain Identity" field and click "Verify Club Ownership".</li>
+                <li>If the ownership verification is successful, the "Validate Job" button will appear.</li>
+                <li>Click on the "Validate Job" button and follow the prompts to enter the Job ID and your club subdomain identity.</li>
+                <li>The job validation process will require you to confirm the transaction in your wallet.</li>
+            </ol>
+            <button class="btn" id="validateJobBtn" onclick="validateJob()">Validate Job</button>
+        </div>
+        <div class="card">
+            <h2>Instructions for Disapproving a Job</h2>
+            <p>As an authorized validator, you can disapprove a job if you find it inappropriate or not meeting the required standards. Follow these steps:</p>
+            <ol>
+                <li>Ensure you have a valid AGI Club subdomain identity.</li>
+                <li>Enter your club subdomain identity in the "AGI Club Subdomain Identity" field and click "Verify Club Ownership".</li>
+                <li>Know the Job ID of the job you wish to disapprove and make sure you are not blacklisted as a validator.</li>
+                <li>Prepare your subdomain and the necessary proof (Merkle proof or other required credentials).</li>
+                <li>Click on the "Disapprove Job" button below and enter the required details when prompted.</li>
+            </ol>
+            <button class="btn" id="disapproveJobBtn" onclick="disapproveJob()">Disapprove Job</button>
         </div>
         <div class="verified-subdomains card">
             <h2>Verified Subdomains</h2>
@@ -458,6 +515,7 @@
                     addVerifiedSubdomain(fullSubdomain);
                     if (domainSuffix === 'club.agi.eth') {
                         document.getElementById('validateJobBtn').style.display = 'block';
+                        document.getElementById('disapproveJobBtn').style.display = 'block';
                     }
                 } else {
                     outputElement.textContent = `You do not own the subdomain: ${fullSubdomain}`;
@@ -557,6 +615,21 @@
             }
         }
 
+        async function disapproveJob() {
+            try {
+                const jobId = prompt("Enter Job ID to Disapprove:");
+                if (!jobId) return;
+
+                const subdomain = prompt("Enter Club Subdomain:");
+                const proof = []; // Gather proof from user or other source if needed
+
+                await agiJobManager.methods.disapproveJob(jobId, subdomain, proof).send({ from: userAccount });
+                await updateDashboard();
+            } catch (error) {
+                console.error('Error disapproving job:', error);
+            }
+        }
+      
         async function listNFT(tokenId) {
             const price = prompt("Enter price in $AGI:");
             if (!price) return;
