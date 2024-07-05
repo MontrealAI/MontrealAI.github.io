@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGIJobManager Contract Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #4A148C, #880E4F);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #FFEB3B;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+        h2.subtitle {
+            text-align: center;
+            color: #FFEB3B;
+            margin-bottom: 40px;
+            font-size: 1.5rem;
+        }
+        .card {
+            background-color: #1A237E;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #FFEB3B;
+        }
+        .card p, .card ul, .card ol {
+            margin: 10px 0;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AGIJobManager Contract Documentation</h1>
+        <h2 class="subtitle">Comprehensive Guide for Interaction</h2>
+
+        <div class="card">
+            <h2>Overview</h2>
+            <p>The AGIJobManager smart contract is designed to manage job creation, application, validation, and dispute resolution within the AGI (Artificial General Intelligence) Network. It facilitates interactions between employers, agents, and validators, ensuring a decentralized, transparent, and efficient job management process.</p>
+        </div>
+
+        <div class="card">
+            <h2>Key Components</h2>
+            <ul>
+                <li><strong>Variables</strong>
+                    <ul>
+                        <li><strong>agiToken (IERC20):</strong> Interface for the $AGI token contract used for payments and rewards.</li>
+                        <li><strong>baseIpfsUrl (string):</strong> Base URL for IPFS-hosted metadata.</li>
+                        <li><strong>requiredValidatorApprovals (uint256):</strong> Minimum number of validator approvals required to complete a job.</li>
+                        <li><strong>requiredValidatorDisapprovals (uint256):</strong> Minimum number of validator disapprovals required to dispute a job.</li>
+                        <li><strong>premiumReputationThreshold (uint256):</strong> Reputation points required to access premium features.</li>
+                        <li><strong>validationRewardPercentage (uint256):</strong> Percentage of job payout allocated as rewards to validators.</li>
+                        <li><strong>maxJobPayout (uint256):</strong> Maximum payout for a job.</li>
+                        <li><strong>jobDurationLimit (uint256):</strong> Maximum duration for a job.</li>
+                    </ul>
+                </li>
+                <li><strong>Data Structures</strong>
+                    <ul>
+                        <li><strong>Job:</strong> Contains job details such as employer, assigned agent, payout, duration, and validators' approvals/disapprovals.</li>
+                        <li><strong>AGIType:</strong> Defines the types of NFTs associated with payout percentages.</li>
+                        <li><strong>Listing:</strong> Represents an NFT listing for sale.</li>
+                    </ul>
+                </li>
+                <li><strong>Events</strong>
+                    <ul>
+                        <li><strong>JobCreated:</strong> Emitted when a new job is created.</li>
+                        <li><strong>JobApplied:</strong> Emitted when an agent applies for a job.</li>
+                        <li><strong>JobCompletionRequested:</strong> Emitted when an agent requests job completion.</li>
+                        <li><strong>JobValidated:</strong> Emitted when a validator approves a job.</li>
+                        <li><strong>JobDisapproved:</strong> Emitted when a validator disapproves a job.</li>
+                        <li><strong>JobCompleted:</strong> Emitted when a job is completed.</li>
+                        <li><strong>ReputationUpdated:</strong> Emitted when a user's reputation is updated.</li>
+                        <li><strong>JobCancelled:</strong> Emitted when a job is canceled.</li>
+                        <li><strong>DisputeResolved:</strong> Emitted when a job dispute is resolved.</li>
+                        <li><strong>JobDisputed:</strong> Emitted when a job is disputed.</li>
+                        <li><strong>RootNodeUpdated:</strong> Emitted when the root node is updated.</li>
+                        <li><strong>MerkleRootUpdated:</strong> Emitted when the Merkle root is updated.</li>
+                        <li><strong>OwnershipVerified:</strong> Emitted when ownership of a subdomain is verified.</li>
+                        <li><strong>RecoveryInitiated:</strong> Emitted when recovery is initiated.</li>
+                        <li><strong>AGITypeUpdated:</strong> Emitted when an AGIType is updated.</li>
+                        <li><strong>NFTIssued:</strong> Emitted when an NFT is issued.</li>
+                        <li><strong>NFTListed:</strong> Emitted when an NFT is listed for sale.</li>
+                        <li><strong>NFTPurchased:</strong> Emitted when an NFT is purchased.</li>
+                        <li><strong>NFTDelisted:</strong> Emitted when an NFT is delisted.</li>
+                        <li><strong>RewardPoolContribution:</strong> Emitted when a contribution is made to the reward pool.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Functions</h2>
+            <ul>
+                <li><strong>Job Management</strong>
+                    <ul>
+                        <li><strong>createJob:</strong> Creates a new job with specified IPFS hash, payout, duration, and details.</li>
+                        <li><strong>applyForJob:</strong> Allows an agent to apply for a job if they own the required subdomain or are an additional agent.</li>
+                        <li><strong>requestJobCompletion:</strong> Allows an assigned agent to request job completion by providing an IPFS hash of the completed work.</li>
+                        <li><strong>validateJob:</strong> Allows validators to approve a job if they own the required subdomain or are additional validators.</li>
+                        <li><strong>disapproveJob:</strong> Allows validators to disapprove a job if they own the required subdomain or are additional validators.</li>
+                        <li><strong>disputeJob:</strong> Allows the assigned agent or employer to dispute a job if not already disputed or completed.</li>
+                        <li><strong>resolveDispute:</strong> Allows a moderator to resolve a job dispute by favoring either the agent or the employer.</li>
+                        <li><strong>cancelJob:</strong> Allows the employer to cancel a job if it is not yet completed or assigned.</li>
+                    </ul>
+                </li>
+                <li><strong>Blacklisting and Moderation</strong>
+                    <ul>
+                        <li><strong>blacklistAgent:</strong> Allows the contract owner to blacklist or unblacklist an agent.</li>
+                        <li><strong>blacklistValidator:</strong> Allows the contract owner to blacklist or unblacklist a validator.</li>
+                        <li><strong>addModerator:</strong> Allows the contract owner to add a moderator.</li>
+                        <li><strong>removeModerator:</strong> Allows the contract owner to remove a moderator.</li>
+                    </ul>
+                </li>
+                <li><strong>Configuration and Updates</strong>
+                    <ul>
+                        <li><strong>updateAGITokenAddress:</strong> Updates the address of the $AGI token contract.</li>
+                        <li><strong>setBaseIpfsUrl:</strong> Sets the base IPFS URL for metadata.</li>
+                        <li><strong>setRequiredValidatorApprovals:</strong> Sets the number of approvals required from validators.</li>
+                        <li><strong>setRequiredValidatorDisapprovals:</strong> Sets the number of disapprovals required from validators.</li>
+                        <li><strong>setPremiumReputationThreshold:</strong> Sets the reputation threshold for premium features.</li>
+                        <li><strong>setMaxJobPayout:</strong> Sets the maximum payout for a job.</li>
+                        <li><strong>setJobDurationLimit:</strong> Sets the maximum duration for a job.</li>
+                        <li><strong>updateTermsAndConditionsIpfsHash:</strong> Updates the IPFS hash for the terms and conditions.</li>
+                        <li><strong>updateContactEmail:</strong> Updates the contact email address.</li>
+                        <li><strong>updateAdditionalText1:</strong> Updates additional text field 1.</li>
+                        <li><strong>updateAdditionalText2:</strong> Updates additional text field 2.</li>
+                        <li><strong>updateAdditionalText3:</strong> Updates additional text field 3.</li>
+                    </ul>
+                </li>
+                <li><strong>Reputation Management</strong>
+                    <ul>
+                        <li><strong>calculateReputationPoints:</strong> Calculates reputation points based on job payout and duration.</li>
+                        <li><strong>calculateValidatorReputationPoints:</strong> Calculates reputation points for validators based on the agent's reputation gain.</li>
+                        <li><strong>enforceReputationGrowth:</strong> Applies reputation growth to a user with diminishing returns.</li>
+                    </ul>
+                </li>
+                <li><strong>Ownership Verification</strong>
+                    <ul>
+                        <li><strong>_verifyOwnership:</strong> Verifies the ownership of a subdomain using ENS and Merkle proof.</li>
+                    </ul>
+                </li>
+                <li><strong>NFT Management</strong>
+                    <ul>
+                        <li><strong>listNFT:</strong> Lists an NFT for sale with a specified price.</li>
+                        <li><strong>purchaseNFT:</strong> Allows a user to purchase a listed NFT.</li>
+                        <li><strong>delistNFT:</strong> Allows the owner to delist an NFT.</li>
+                        <li><strong>addAGIType:</strong> Adds or updates an AGIType.</li>
+                        <li><strong>getHighestPayoutPercentage:</strong> Returns the highest payout percentage among the NFTs owned by an agent.</li>
+                    </ul>
+                </li>
+                <li><strong>Miscellaneous</strong>
+                    <ul>
+                        <li><strong>pause:</strong> Pauses the contract.</li>
+                        <li><strong>unpause:</strong> Unpauses the contract.</li>
+                        <li><strong>withdrawAGI:</strong> Allows the contract owner to withdraw $AGI tokens from the contract.</li>
+                        <li><strong>canAccessPremiumFeature:</strong> Checks if a user can access premium features based on their reputation.</li>
+                        <li><strong>contributeToRewardPool:</strong> Allows users to contribute to the reward pool.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
