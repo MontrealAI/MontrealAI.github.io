@@ -468,3 +468,16 @@ pip install Flask
 export FLASK_APP=agigirlfriend_app/app.py
 flask run
 
+# Step 10: Licensing Requirements for Llama 3.1
+# Create the NOTICE file
+cat << 'EOF' > agigirlfriend_app/static/NOTICE
+Llama 3.1 is licensed under the Llama 3.1 Community License, Copyright © Meta Platforms, Inc. All Rights Reserved.
+EOF
+
+# Create the built_with_llama.txt file
+cat << 'EOF' > agigirlfriend_app/static/built_with_llama.txt
+Built with Llama
+EOF
+
+echo "Setup script completed successfully."
+
