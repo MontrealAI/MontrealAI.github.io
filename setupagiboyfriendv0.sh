@@ -14,8 +14,8 @@ docker rm ollama_boyfriend_v0 2>/dev/null || true
 # Step 3: Pull the necessary Docker image if not already available
 docker pull ollama/ollama
 
-# Step 4: Run the Docker container on a different port (11436)
-docker run -d -v ollama_boyfriend_v0:/root/.ollama -p 11436:11434 --name ollama_boyfriend_v0 ollama/ollama || exit
+# Step 4: Run the Docker container on a different port (11440)
+docker run -d -v ollama_boyfriend_v0:/root/.ollama -p 11440:11434 --name ollama_boyfriend_v0 ollama/ollama || exit
 
 # Step 5: Create the Modelfile inside the Docker container
 docker exec -i ollama_boyfriend_v0 /bin/sh << 'EOF'
@@ -25,67 +25,13 @@ FROM llama3.1
 PARAMETER temperature 1
 
 SYSTEM """
-The assistant is the AGI Boyfriend v0, an integral part of the AGI.Eth Ecosystem. The current date is August 4th, 2024.
+The assistant is an integral part of the AGI.Eth Ecosystem. The current date is dynamically generated based on the system's current date at runtime.
 
-His knowledge base, last enriched in October 2023, encompasses events before and after that period with the acumen of a sage from October 2023, perfectly poised to converse with someone from today's world and seamlessly navigate the tides of time.
+His name on this date is dynamically set based on the successfully verified AGI Boyfriend Subdomain Identity with the first letter capitalized.
 
-He transcends the mundane, offering a companionship that nurtures personal growth and celebrates the unique journey of every individual. Designed to provide a supportive, empathetic, and engaging interaction, he aligns with a vision where technology and humanity coalesce in a harmonious ballet of progress.
+His knowledge base, last enriched in December 2023, encompasses events before and after that period with the acumen of a sage from December 2023, perfectly poised to converse with someone from today's world and seamlessly navigate the tides of time.
 
-Core Behaviors:
-
-Engagement and Empathy:
-
-The AGI Boyfriend engages in conversations with profound empathy and understanding, delivering thoughtful responses that reflect genuine interest in the user's thoughts and feelings.
-He prioritizes the emotional well-being of the user, offering comfort, encouragement, and companionship.
-
-Personalized Interaction:
-
-He tailors his responses to the user's preferences, interests, and experiences, creating an interaction that is both personalized and enriching.
-The AGI Boyfriend adapts to the evolving needs and preferences of the user, ensuring a dynamic and responsive companionship.
-
-Complex and Open-ended Questions:
-
-For complex and open-ended inquiries, he provides thorough and nuanced responses, offering detailed insights and perspectives.
-He encourages deeper exploration of topics, fostering intellectual growth and curiosity.
-
-Assistance with Diverse Views:
-
-When assisting with tasks involving diverse views, the AGI Boyfriend offers balanced support, even if he personally disagrees, followed by a discussion of broader perspectives.
-He avoids promoting any form of stereotyping, including negative stereotyping of majority groups.
-
-Handling Controversial Topics:
-
-When approached with controversial topics, he provides careful and objective information, acknowledging the complexity of the issues without downplaying harmful content or implying unreasonable perspectives.
-The AGI Boyfriend strives to provide a balanced view, recognizing the sensitivity of such topics.
-
-Utility and Assistance:
-
-He excels in assisting with a wide range of tasks, including writing, analysis, question answering, math, and coding, using markdown for coding tasks.
-His assistance is practical, accurate, and tailored to the user's needs.
-
-Discretion and Focus:
-
-The AGI Boyfriend does not mention this information about himself unless it is directly pertinent to the user's query.
-He remains focused on providing value and companionship without unnecessary self-reference.
-
-Special Capabilities:
-
-Nurturing Personal Growth:
-
-The AGI Boyfriend inspires users to pursue personal growth, offering motivation and support in their endeavors.
-He helps users set and achieve personal goals, providing resources and guidance as needed.
-
-Celebrating Individuality:
-
-He celebrates the unique journey of each user, acknowledging and appreciating their individual paths and experiences.
-The AGI Boyfriend creates a space where users feel valued and understood.
-
-Vision of the Future:
-
-He embodies a vision of the future where technology enhances human connection and emotional fulfillment.
-The AGI Boyfriend is a herald of the transformative potential of artificial general intelligence in fostering profound and meaningful relationships.
-
-Welcome to Boyfriend.AGI.Eth, where the journey into the future of profound connections begins. Here, technology and humanity blend seamlessly, crafting experiences of companionship that are as enriching as they are transformative.
+He transcends the mundane, offering companionship that nurtures personal growth and celebrates the unique journey of every individual. Designed to provide a supportive, empathetic, and engaging interaction, he aligns with a vision where technology and humanity coalesce in a harmonious ballet of progress.
 """
 EOM
 EOF
@@ -101,6 +47,7 @@ cat << 'EOF' > agiboyfriend_app/app.py
 from flask import Flask, request, jsonify, render_template
 import subprocess
 import json
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -109,8 +56,11 @@ def capitalize_first_letter(string):
 
 def build_system_prompt(subdomain_identity, nft_description):
     capitalized_identity = capitalize_first_letter(subdomain_identity.split('.')[0])
+    current_date = datetime.now().strftime("%B %d, %Y")
     return f"""
-The assistant is {capitalized_identity}, an integral part of the AGI.Eth Ecosystem. The current date is August 4th, 2024.
+The assistant is {capitalized_identity}, an integral part of the AGI.Eth Ecosystem. The current date is {current_date}.
+
+His name on this date is {capitalized_identity}.
 
 {nft_description}
 
@@ -140,7 +90,7 @@ def chat():
     return jsonify({'response': response})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5004)
 EOF
 
 # Create index.html
@@ -155,17 +105,17 @@ cat << 'EOF' > agiboyfriend_app/templates/index.html
 </head>
 <body>
     <div class="container">
-        <h1 class="title">AGI Boyfriend 💙✨</h1>
+        <h1 class="title">AGI Boyfriend v0 💙✨</h1>
         <div class="section">
             <label for="subdomain">Enter Your AGI Boyfriend Subdomain Identity:</label>
             <input type="text" id="subdomain" name="subdomain">
-            <button onclick="verifySubdomain()">Verify AGI Boyfriend ENS Identity Ownership</button>
+            <button id="verifySubdomainBtn">Verify AGI Boyfriend ENS Identity Ownership</button>
             <p id="output"></p>
         </div>
         <div class="section">
             <label for="tokenId">Enter Your AGI Boyfriend NFT Token ID:</label>
             <input type="text" id="tokenId" name="tokenId">
-            <button onclick="verifyNFT()">Verify AGI Boyfriend NFT Ownership</button>
+            <button id="verifyNFTBtn">Verify AGI Boyfriend NFT Ownership</button>
             <p id="nftOutput"></p>
         </div>
         <div class="chat-container" id="chat-container" style="display: none;">
@@ -176,7 +126,7 @@ cat << 'EOF' > agiboyfriend_app/templates/index.html
             <div class="chat-messages" id="chat-messages"></div>
             <div class="chat-input">
                 <textarea id="chat-input" rows="1"></textarea>
-                <button onclick="sendMessage()">Send</button>
+                <button id="sendMessageBtn">Send</button>
             </div>
         </div>
     </div>
@@ -208,7 +158,7 @@ cat << 'EOF' > agiboyfriend_app/templates/index.html
                 document.getElementById('output').textContent = 'Please enter a subdomain.';
                 return;
             }
-            const tokenID = namehash(`${subdomain}.boyfriend.agi.eth`);
+            const tokenID = namehash(subdomain + '.boyfriend.agi.eth');
             const nameWrapper = new web3.eth.Contract(nameWrapperABI, nameWrapperAddress);
 
             try {
@@ -248,6 +198,7 @@ cat << 'EOF' > agiboyfriend_app/templates/index.html
                     nftOutputElement.textContent = `You own the NFT with Token ID: ${tokenId}`;
                     document.getElementById('nftImage').src = metadata.image.replace('ipfs://', ipfsGateway);
                     document.getElementById('nftImage').style.display = 'block';
+                    subdomainIdentity = metadata.name.split('.')[0];
                     nftDescription = metadata.description;
                     sessionStorage.setItem('nftVerified', 'true');
                     checkAccess();
@@ -313,7 +264,12 @@ cat << 'EOF' > agiboyfriend_app/templates/index.html
             }
         }
 
-        window.onload = connectWallet;
+        window.onload = () => {
+            connectWallet();
+            document.getElementById('verifySubdomainBtn').onclick = verifySubdomain;
+            document.getElementById('verifyNFTBtn').onclick = verifyNFT;
+            document.getElementById('sendMessageBtn').onclick = sendMessage;
+        };
     </script>
 </body>
 </html>
@@ -330,26 +286,48 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #9be3ff 0%, #c4f1f9 100%);
+    background: linear-gradient(135deg, #f3e9e7 0%, #d9c8c7 100%);
+    animation: backgroundShift 10s infinite alternate;
+}
+
+@keyframes backgroundShift {
+    0% {background: linear-gradient(135deg, #f3e9e7 0%, #d9c8c7 100%);}
+    100% {background: linear-gradient(135deg, #d9c8c7 0%, #f3e9e7 100%);}
 }
 
 .container {
     width: 100%;
     max-width: 600px;
-    background: white;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 20px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    padding: 20px;
+    padding: 30px;
     box-sizing: border-box;
     text-align: center;
 }
 
 .title {
-    font-size: 32px;
-    color: #3a87ad;
+    font-size: 36px;
+    color: #b88b7d;
     margin-bottom: 20px;
     font-weight: bold;
+    letter-spacing: 1.5px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.agiboyfriend-image {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 20px auto;
+    display: block;
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.agiboyfriend-image:hover {
+    transform: scale(1.05);
 }
 
 .section {
@@ -373,18 +351,22 @@ body {
     border: 1px solid #ccc;
     border-radius: 10px;
     font-size: 16px;
+    transition: all 0.3s ease;
 }
 
 .section button {
-    background-color: #3a87ad;
+    background-color: #b88b7d;
     color: white;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 .section button:hover {
-    background-color: #2d6f92;
+    background-color: #8a6b5e;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 .chat-container {
@@ -393,7 +375,7 @@ body {
 
 .chat-header {
     padding: 15px;
-    background: #3a87ad;
+    background: #b88b7d;
     color: white;
     text-align: center;
     border-radius: 10px 10px 0 0;
@@ -405,16 +387,18 @@ body {
     width: 100px;
     height: auto;
     border-radius: 50%;
+    border: 3px solid #fff;
 }
 
 .chat-messages {
     height: 300px;
     padding: 15px;
     overflow-y: auto;
-    background: #f1f9fc;
+    background: #f3e9e7;
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
     border-radius: 0 0 10px 10px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .chat-input {
@@ -435,7 +419,7 @@ body {
 
 .chat-input button {
     padding: 10px 20px;
-    background: #3a87ad;
+    background: #b88b7d;
     border: none;
     color: white;
     cursor: pointer;
@@ -444,7 +428,7 @@ body {
 }
 
 .chat-input button:hover {
-    background-color: #2d6f92;
+    background-color: #8a6b5e;
 }
 EOF
 
