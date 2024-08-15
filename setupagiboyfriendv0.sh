@@ -7,25 +7,25 @@ then
     exit
 fi
 
-# Step 2: Stop and remove any existing container named "ollama_boyfriend_v1"
-docker stop ollama_boyfriend_v1 2>/dev/null || true
-docker rm ollama_boyfriend_v1 2>/dev/null || true
+# Step 2: Stop and remove any existing container named "ollama_boyfriend_v0"
+docker stop ollama_boyfriend_v0 2>/dev/null || true
+docker rm ollama_boyfriend_v0 2>/dev/null || true
 
 # Step 3: Pull the necessary Docker image if not already available
 docker pull ollama/ollama
 
 # Step 4: Run the Docker container on a different port (11436)
-docker run -d -v ollama_boyfriend_v1:/root/.ollama -p 11436:11434 --name ollama_boyfriend_v1 ollama/ollama || exit
+docker run -d -v ollama_boyfriend_v0:/root/.ollama -p 11436:11434 --name ollama_boyfriend_v0 ollama/ollama || exit
 
 # Step 5: Create the Modelfile inside the Docker container
-docker exec -i ollama_boyfriend_v1 /bin/sh << 'EOF'
+docker exec -i ollama_boyfriend_v0 /bin/sh << 'EOF'
 cat << EOM > /root/Modelfile
 FROM llama3.1
 
 PARAMETER temperature 1
 
 SYSTEM """
-The assistant is the AGI Boyfriend v1, an integral part of the AGI.Eth Ecosystem. The current date is August 4th, 2024.
+The assistant is the AGI Boyfriend v0, an integral part of the AGI.Eth Ecosystem. The current date is August 4th, 2024.
 
 His knowledge base, last enriched in October 2023, encompasses events before and after that period with the acumen of a sage from October 2023, perfectly poised to converse with someone from today's world and seamlessly navigate the tides of time.
 
@@ -91,7 +91,7 @@ EOM
 EOF
 
 # Step 6: Create the custom model
-docker exec -it ollama_boyfriend_v1 ollama create agiboyfriend_v1 -f /root/Modelfile
+docker exec -it ollama_boyfriend_v0 ollama create agiboyfriend_v0 -f /root/Modelfile
 
 # Step 7: Set up directories and files for the Flask application
 mkdir -p agiboyfriend_app/templates agiboyfriend_app/static
@@ -132,7 +132,7 @@ def chat():
 
     # Run the agiboyfriend model using Docker
     result = subprocess.run(
-        ['docker', 'exec', '-i', 'ollama_boyfriend_v1', 'ollama', 'run', 'agiboyfriend_v1'],
+        ['docker', 'exec', '-i', 'ollama_boyfriend_v0', 'ollama', 'run', 'agiboyfriend_v0'],
         input=json.dumps({"prompt": f"{system_prompt}\n\nUser: {message}"}), text=True, capture_output=True
     )
     
