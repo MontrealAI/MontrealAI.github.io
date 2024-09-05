@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generate Commitment</title>
-    <script src="https://cdn.jsdelivr.net/gh/ethers-io/ethers.js@v5/dist/ethers.umd.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,19 +44,19 @@
     <div class="container">
         <h1>Generate Commitment</h1>
         <label for="name">Domain Name:</label>
-        <input type="text" id="name" placeholder="Enter domain name (e.g., asitest)">
+        <input type="text" id="name" placeholder="Enter domain name (e.g., asitest)" required>
         
         <label for="owner">Owner Address:</label>
-        <input type="text" id="owner" placeholder="Enter owner address (e.g., 0xe0D188875e8f3E714049a95c02e51b17f3d51aE3)">
+        <input type="text" id="owner" placeholder="Enter owner address (e.g., 0xe0D188875e8f3E714049a95c02e51b17f3d51aE3)" required>
         
         <label for="duration">Duration (in seconds):</label>
-        <input type="number" id="duration" placeholder="Enter duration (e.g., 31536000 for 1 year)">
+        <input type="number" id="duration" placeholder="Enter duration (e.g., 31536000 for 1 year)" required>
         
         <label for="secret">Secret (bytes32):</label>
-        <input type="text" id="secret" placeholder="Enter secret (e.g., 0x9923eb9400000003c4afb471775c4496ba1f0809e9b3bca5230d765e5480a4b8)">
+        <input type="text" id="secret" placeholder="Enter secret (e.g., 0x9923eb9400000003c4afb471775c4496ba1f0809e9b3bca5230d765e5480a4b8)" required>
         
         <label for="resolver">Resolver Address:</label>
-        <input type="text" id="resolver" placeholder="Enter resolver address (e.g., 0x8FADE66B79cC9f707aB26799354482EB93a5B7dD)">
+        <input type="text" id="resolver" placeholder="Enter resolver address (e.g., 0x8FADE66B79cC9f707aB26799354482EB93a5B7dD)" required>
         
         <button onclick="generateCommitment()">Generate Commitment</button>
         
@@ -67,7 +67,7 @@
     </div>
 
     <script>
-        async function generateCommitment() {
+        function generateCommitment() {
             const name = document.getElementById('name').value;
             const owner = document.getElementById('owner').value;
             const duration = document.getElementById('duration').value;
@@ -80,7 +80,6 @@
             }
 
             try {
-                const ethers = window.ethers;
                 const labelHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(name));
                 const commitment = ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(
                     ['bytes32', 'address', 'uint256', 'bytes32', 'address', 'bytes[]', 'bool', 'uint16'],
