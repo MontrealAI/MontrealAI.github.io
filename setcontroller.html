@@ -102,12 +102,9 @@
                     throw new Error("You are not the contract owner.");
                 }
 
-                // Estimate gas
-                const gasEstimate = await controllableContract.estimateGas.setController(controllerAddress, enabled);
-
-                // Call the setController function
+                // Manually set the gas limit to avoid estimation issues
                 const tx = await controllableContract.setController(controllerAddress, enabled, {
-                    gasLimit: gasEstimate
+                    gasLimit: ethers.BigNumber.from("100000") // Manual gas limit
                 });
 
                 // Display the transaction hash and wait for confirmation
