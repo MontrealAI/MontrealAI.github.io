@@ -91,7 +91,9 @@
                 const controllableContract = new ethers.Contract(contractAddress, abi, signer);
 
                 // Call the setController function
-                const tx = await controllableContract.setController(controllerAddress, enabled);
+                const tx = await controllableContract.setController(controllerAddress, enabled, {
+                    gasLimit: ethers.BigNumber.from("100000") // Set gas limit manually to prevent estimation errors
+                });
 
                 // Display the transaction hash and wait for confirmation
                 document.getElementById('resultMessage').textContent = "Transaction sent. Waiting for confirmation... Transaction Hash: " + tx.hash;
@@ -100,7 +102,11 @@
                 const receipt = await tx.wait();
                 document.getElementById('resultMessage').textContent = "Transaction confirmed in block " + receipt.blockNumber + ". Controller successfully updated!";
             } catch (error) {
-                alert("Error: " + error.message);
+                if (error.code === 'UNPREDICTABLE_GAS_LIMIT') {
+                    alert("Error: Could not estimate gas. Please check that the contract address and controller address are correct.");
+                } else {
+                    alert("Error: " + error.message);
+                }
                 console.error("Error:", error);
             }
         }
