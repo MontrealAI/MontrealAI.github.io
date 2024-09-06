@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Controller</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result, .error, .controllers {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Set Controller</h1>
+
+        <label for="contractAddress">Contract Address:</label>
+        <input type="text" id="contractAddress" placeholder="Enter the Controllable contract address" required>
+
+        <label for="controllerAddress">Controller Address:</label>
+        <input type="text" id="controllerAddress" placeholder="Enter the controller address" required>
+
+        <label for="enabled">Enable Controller:</label>
+        <select id="enabled">
+            <option value="true">True</option>
+            <option value="false">False</option>
+        </select>
+
+        <button onclick="setController()">Set Controller</button>
+
+        <div id="result" class="result" style="display: none;">
+            <h3>Transaction Result:</h3>
+            <p id="resultMessage"></p>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div id="controllers" class="controllers" style="display: none;">
+            <h3>Current Controllers:</h3>
+            <ul id="controllerList"></ul>
+        </div>
+
+        <button onclick="getControllers()">Get Current Controllers</button>
+    </div>
+
+    <script>
+        async function setController() {
+            const contractAddress = document.getElementById('contractAddress').value;
+            const controllerAddress = document.getElementById('controllerAddress').value;
+            const enabled = document.getElementById('enabled').value === 'true';
+
+            if (!contractAddress || !controllerAddress) {
+                alert("Please fill in all the fields.");
+                return;
+            }
+
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const currentAccount = await signer.getAddress();
+
+                const abi = [
+                    "function setController(address controller, bool enabled) public onlyOwner",
+                    "function owner() public view returns (address)",
+                    "function controllers(address) public view returns (bool)"
+                ];
+
+                const controllableContract = new ethers.Contract(contractAddress, abi, signer);
+
+                const ownerAddress = await controllableContract.owner();
+                if (ownerAddress.toLowerCase() !== currentAccount.toLowerCase()) {
+                    throw new Error("You are not the contract owner.");
+                }
+
+                let gasEstimate;
+                try {
+                    gasEstimate = await controllableContract.estimateGas.setController(controllerAddress, enabled);
+                } catch (error) {
+                    gasEstimate = ethers.BigNumber.from("100000");
+                }
+
+                const tx = await controllableContract.setController(controllerAddress, enabled, {
+                    gasLimit: gasEstimate
+                });
+
+                document.getElementById('resultMessage').textContent = "Transaction sent. Waiting for confirmation... Transaction Hash: " + tx.hash;
+                document.getElementById('result').style.display = 'block';
+
+                const receipt = await tx.wait();
+                document.getElementById('resultMessage').textContent = "Transaction confirmed in block " + receipt.blockNumber + ". Controller successfully updated!";
+            } catch (error) {
+                document.getElementById('error').textContent = "Error: " + error.message;
+                document.getElementById('error').style.display = 'block';
+                console.error("Error:", error);
+            }
+        }
+
+        async function getControllers() {
+            const contractAddress = document.getElementById('contractAddress').value;
+
+            if (!contractAddress) {
+                alert("Please enter the contract address.");
+                return;
+            }
+
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+
+                const abi = [
+                    "function controllers(address) public view returns (bool)"
+                ];
+
+                const controllableContract = new ethers.Contract(contractAddress, abi, signer);
+
+                const addressesToCheck = [
+                    "0xe0D188875e8f3E714049a95c02e51b17f3d51aE3",
+                    // Add more addresses if needed
+                ];
+
+                const controllerList = document.getElementById('controllerList');
+                controllerList.innerHTML = '';
+
+                for (let i = 0; i < addressesToCheck.length; i++) {
+                    const isController = await controllableContract.controllers(addressesToCheck[i]);
+                    const listItem = document.createElement('li');
+                    listItem.textContent = addressesToCheck[i] + ": " + (isController ? "Enabled" : "Disabled");
+                    controllerList.appendChild(listItem);
+                }
+
+                document.getElementById('controllers').style.display = 'block';
+            } catch (error) {
+                document.getElementById('error').textContent = "Error: " + error.message;
+                document.getElementById('error').style.display = 'block';
+                console.error("Error:", error);
+            }
+        }
+    </script>
+</body>
+</html>
+
