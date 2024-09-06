@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register .AGI Domain</title>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+</head>
+<body>
+    <h1>Register Your .AGI Domain</h1>
+
+    <!-- Step 1: Make Commitment -->
+    <form id="commitmentForm">
+        <h2>Step 1: Make Commitment</h2>
+        <label for="domainNameCommit">Domain Name (.agi):</label><br>
+        <input type="text" id="domainNameCommit" name="domainNameCommit" required><br><br>
+
+        <label for="ownerAddressCommit">Owner Address:</label><br>
+        <input type="text" id="ownerAddressCommit" name="ownerAddressCommit" required><br><br>
+
+        <label for="durationCommit">Duration (in seconds):</label><br>
+        <input type="number" id="durationCommit" name="durationCommit" required><br><br>
+
+        <button type="submit">Make Commitment</button>
+    </form>
+
+    <div id="commitmentStatus"></div>
+    <div id="commitmentTiming"></div>
+
+    <!-- Step 2: Register Domain -->
+    <form id="registerForm">
+        <h2>Step 2: Register Domain</h2>
+        <label for="domainNameReg">Domain Name (.agi):</label><br>
+        <input type="text" id="domainNameReg" name="domainNameReg" required><br><br>
+
+        <label for="ownerAddressReg">Owner Address:</label><br>
+        <input type="text" id="ownerAddressReg" name="ownerAddressReg" required><br><br>
+
+        <label for="durationReg">Duration (in seconds):</label><br>
+        <input type="number" id="durationReg" name="durationReg" required><br><br>
+
+        <label for="resolverReg">Resolver Address (optional):</label><br>
+        <input type="text" id="resolverReg" name="resolverReg"><br><br>
+
+        <label for="reverseRecordReg">Set Reverse Record:</label><br>
+        <input type="checkbox" id="reverseRecordReg" name="reverseRecordReg"><br><br>
+
+        <button type="submit">Register Domain</button>
+    </form>
+
+    <div id="registrationStatus"></div>
+
+    <script>
+        const ETHRegistrarControllerAddress = "0xf9361c237B8881761F55db902e9044E827Bd5F8c"; // Your contract address
+        let web3;
+        let ETHRegistrarControllerContract;
+        let commitmentSecret;
+        let commitmentTime;
+
+        const minCommitmentAge = 60; // Minimum age before registration (in seconds)
+        const maxCommitmentAge = 86400; // Maximum allowed age (in seconds)
+
+        window.addEventListener('load', async () => {
+            if (window.ethereum) {
+                web3 = new Web3(window.ethereum);
+                await window.ethereum.enable();
+                ETHRegistrarControllerContract = new web3.eth.Contract(ETHRegistrarControllerABI, ETHRegistrarControllerAddress);
+            } else {
+                alert('Please install MetaMask or another Ethereum wallet.');
+            }
+        });
+
+        function generateSecret() {
+            return web3.utils.sha3(web3.utils.randomHex(32));
+        }
+
+        // Step 1: Make Commitment
+        document.getElementById('commitmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const domainName = document.getElementById('domainNameCommit').value;
+            const ownerAddress = document.getElementById('ownerAddressCommit').value;
+            const duration = document.getElementById('durationCommit').value;
+
+            commitmentSecret = generateSecret(); // Generate secret automatically
+            const commitment = await ETHRegistrarControllerContract.methods.makeCommitment(
+                domainName,
+                ownerAddress,
+                duration,
+                commitmentSecret,
+                "0x0000000000000000000000000000000000000000", // Empty resolver for now
+                [],
+                false,
+                0
+            ).call();
+
+            // Send commitment transaction
+            await ETHRegistrarControllerContract.methods.commit(commitment).send({ from: ownerAddress })
+                .on('transactionHash', (hash) => {
+                    document.getElementById('commitmentStatus').innerText = `Commitment made! Tx Hash: ${hash}`;
+                })
+                .on('receipt', (receipt) => {
+                    document.getElementById('commitmentStatus').innerText = 'Commitment completed. Wait until the commitment period ends.';
+                    commitmentTime = Math.floor(Date.now() / 1000); // Get current timestamp in seconds
+
+                    // Show valid registration period
+                    const minTime = commitmentTime + minCommitmentAge;
+                    const maxTime = commitmentTime + maxCommitmentAge;
+                    document.getElementById('commitmentTiming').innerHTML = `
+                        <p><strong>Commitment Time:</strong> ${new Date(commitmentTime * 1000).toLocaleTimeString()}</p>
+                        <p><strong>Valid Registration Window:</strong> From ${new Date(minTime * 1000).toLocaleTimeString()} to ${new Date(maxTime * 1000).toLocaleTimeString()}</p>
+                    `;
+                })
+                .on('error', (error) => {
+                    document.getElementById('commitmentStatus').innerText = `Error: ${error.message}`;
+                });
+        });
+
+        // Step 2: Register Domain
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const currentTime = Math.floor(Date.now() / 1000);
+            const minTime = commitmentTime + minCommitmentAge;
+            const maxTime = commitmentTime + maxCommitmentAge;
+
+            if (currentTime < minTime) {
+                document.getElementById('registrationStatus').innerText = 'Too early to register. Please wait for the commitment period to pass.';
+                return;
+            }
+            if (currentTime > maxTime) {
+                document.getElementById('registrationStatus').innerText = 'Commitment expired. Please make a new commitment.';
+                return;
+            }
+
+            const domainName = document.getElementById('domainNameReg').value;
+            const ownerAddress = document.getElementById('ownerAddressReg').value;
+            const duration = document.getElementById('durationReg').value;
+            const resolver = document.getElementById('resolverReg').value || "0x0000000000000000000000000000000000000000";
+            const reverseRecord = document.getElementById('reverseRecordReg').checked;
+
+            const price = await ETHRegistrarControllerContract.methods.rentPrice(domainName, duration).call();
+            const transactionParams = {
+                from: ownerAddress,
+                value: price.base + price.premium,
+                gas: 3000000
+            };
+
+            await ETHRegistrarControllerContract.methods.register(
+                domainName,
+                ownerAddress,
+                duration,
+                commitmentSecret, // Secret from the previous commitment
+                resolver,
+                [],
+                reverseRecord,
+                0
+            ).send(transactionParams)
+                .on('transactionHash', (hash) => {
+                    document.getElementById('registrationStatus').innerText = `Registration in progress! Tx Hash: ${hash}`;
+                })
+                .on('receipt', (receipt) => {
+                    document.getElementById('registrationStatus').innerText = 'Domain registered successfully!';
+                })
+                .on('error', (error) => {
+                    document.getElementById('registrationStatus').innerText = `Error: ${error.message}`;
+                });
+        });
+
+        const ETHRegistrarControllerABI = [{"inputs":[{"internalType":"contract BaseRegistrarImplementation","name":"_base","type":"address"},{"internalType":"contract IPriceOracle","name":"_prices","type":"address"},{"internalType":"uint256","name":"_minCommitmentAge","type":"uint256"},{"internalType":"uint256","name":"_maxCommitmentAge","type":"uint256"},{"internalType":"contract ReverseRegistrar","name":"_reverseRegistrar","type":"address"},{"internalType":"contract INameWrapper","name":"_nameWrapper","type":"address"},{"internalType":"contract ENS","name":"_ens","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"bytes32","name":"commitment","type":"bytes32"}],"name":"CommitmentTooNew","type":"error"},{"inputs":[{"internalType":"bytes32","name":"commitment","type":"bytes32"}],"name":"CommitmentTooOld","type":"error"},{"inputs":[{"internalType":"uint256","name":"duration","type":"uint256"}],"name":"DurationTooShort","type":"error"},{"inputs":[],"name":"InsufficientValue","type":"error"},{"inputs":[{"internalType":"string","name":"name","type":"string"}],"name":"NameNotAvailable","type":"error"},{"inputs":[],"name":"ResolverRequiredWhenDataSupplied","type":"error"},{"inputs":[{"internalType":"bytes32","name":"commitment","type":"bytes32"}],"name":"UnexpiredCommitmentExists","type":"error"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"name","type":"string"},{"indexed":true,"internalType":"bytes32","name":"label","type":"bytes32"},{"indexed":false,"internalType":"address","name":"owner","type":"address"},{"indexed":false,"internalType":"uint256","name":"baseCost","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"premium","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"expires","type":"uint256"}],"name":"NameRegistered","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"name","type":"string"},{"indexed":true,"internalType":"bytes32","name":"labelhash","type":"bytes32"},{"indexed":false,"internalType":"uint256","name":"cost","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"expires","type":"uint256"}],"name":"NameRenewed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[],"name":"MIN_REGISTRATION_DURATION","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"name","type":"string"}],"name":"available","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"commitment","type":"bytes32"}],"name":"commit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"name":"commitments","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"bytes32","name":"secret","type":"bytes32"},{"internalType":"address","name":"resolver","type":"address"},{"internalType":"bytes[]","name":"data","type":"bytes[]"},{"internalType":"bool","name":"reverseRecord","type":"bool"},{"internalType":"uint16","name":"ownerControlledFuses","type":"uint16"}],"name":"makeCommitment","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"pure","type":"function"},{"inputs":[],"name":"maxCommitmentAge","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"minCommitmentAge","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"nameWrapper","outputs":[{"internalType":"contract INameWrapper","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"prices","outputs":[{"internalType":"contract IPriceOracle","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_token","type":"address"},{"internalType":"address","name":"_to","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"recoverFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"bytes32","name":"secret","type":"bytes32"},{"internalType":"address","name":"resolver","type":"address"},{"internalType":"bytes[]","name":"data","type":"bytes[]"},{"internalType":"bool","name":"reverseRecord","type":"bool"},{"internalType":"uint16","name":"ownerControlledFuses","type":"uint16"}],"name":"register","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"uint256","name":"duration","type":"uint256"}],"name":"renew","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"uint256","name":"duration","type":"uint256"}],"name":"rentPrice","outputs":[{"components":[{"internalType":"uint256","name":"base","type":"uint256"},{"internalType":"uint256","name":"premium","type":"uint256"}],"internalType":"struct IPriceOracle.Price","name":"price","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"reverseRegistrar","outputs":[{"internalType":"contract ReverseRegistrar","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceID","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"name","type":"string"}],"name":"valid","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"pure","type":"function"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"}];
+    </script>
+</body>
+</html>
+
