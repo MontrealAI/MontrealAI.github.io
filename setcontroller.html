@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Controller</title>
+    <title>Set Controller</title>
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
     <style>
         body {
@@ -17,12 +17,13 @@
         label {
             font-weight: bold;
         }
-        input, button {
+        input, select {
             width: 100%;
             padding: 10px;
-            margin: 10px 0;
+            margin: 10px 0 20px;
         }
         button {
+            padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -31,26 +32,36 @@
         button:hover {
             background-color: #45a049;
         }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Add Controller</h1>
+        <h1>Set Controller</h1>
+
         <label for="contractAddress">Contract Address:</label>
-        <input type="text" id="contractAddress" placeholder="Enter ETHRegistrarController contract address" required>
+        <input type="text" id="contractAddress" placeholder="Enter the Controllable contract address" required>
 
         <label for="controllerAddress">Controller Address:</label>
-        <input type="text" id="controllerAddress" placeholder="Enter address to be added as controller" required>
+        <input type="text" id="controllerAddress" placeholder="Enter the controller address" required>
 
         <label for="enabled">Enable Controller:</label>
-        <select id="enabled" required>
-            <option value="true">Enable</option>
-            <option value="false">Disable</option>
+        <select id="enabled">
+            <option value="true">True</option>
+            <option value="false">False</option>
         </select>
 
         <button onclick="setController()">Set Controller</button>
 
-        <div id="status"></div>
+        <div id="result" class="result" style="display: none;">
+            <h3>Transaction Result:</h3>
+            <p id="resultMessage"></p>
+        </div>
     </div>
 
     <script>
@@ -60,35 +71,37 @@
             const enabled = document.getElementById('enabled').value === 'true';
 
             if (!contractAddress || !controllerAddress) {
-                alert('Please fill in all the fields.');
+                alert("Please fill in all the fields.");
                 return;
             }
 
             try {
-                // Initialize ethers.js
-                const provider = new ethers.providers.Web3Provider(window.ethereum);
-                await provider.send("eth_requestAccounts", []); // Connect to Metamask
+                // Prompt the user to connect their wallet
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
 
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
 
-                // ABI for the setController function
+                // ABI for the Controllable contract, focusing on the setController function
                 const abi = [
-                    "function setController(address controller, bool enabled) public"
+                    "function setController(address controller, bool enabled) public onlyOwner"
                 ];
 
-                // Initialize contract
-                const contract = new ethers.Contract(contractAddress, abi, signer);
+                // Interact with the contract
+                const controllableContract = new ethers.Contract(contractAddress, abi, signer);
 
-                // Call setController
-                const tx = await contract.setController(controllerAddress, enabled);
-                
-                document.getElementById('status').innerHTML = 'Transaction sent: ' + tx.hash;
+                // Call the setController function
+                const tx = await controllableContract.setController(controllerAddress, enabled);
 
-                // Wait for transaction to be mined
-                await tx.wait();
-                document.getElementById('status').innerHTML = 'Controller updated successfully!';
+                // Display the transaction hash and wait for confirmation
+                document.getElementById('resultMessage').textContent = "Transaction sent. Waiting for confirmation... Transaction Hash: " + tx.hash;
+                document.getElementById('result').style.display = 'block';
+
+                const receipt = await tx.wait();
+                document.getElementById('resultMessage').textContent = "Transaction confirmed in block " + receipt.blockNumber + ". Controller successfully updated!";
             } catch (error) {
-                document.getElementById('status').innerHTML = 'Error: ' + error.message;
+                alert("Error: " + error.message);
+                console.error("Error:", error);
             }
         }
     </script>
