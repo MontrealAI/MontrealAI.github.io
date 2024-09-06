@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Controller</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Controller</h1>
+        <label for="contractAddress">Contract Address:</label>
+        <input type="text" id="contractAddress" placeholder="Enter ETHRegistrarController contract address" required>
+
+        <label for="controllerAddress">Controller Address:</label>
+        <input type="text" id="controllerAddress" placeholder="Enter address to be added as controller" required>
+
+        <label for="enabled">Enable Controller:</label>
+        <select id="enabled" required>
+            <option value="true">Enable</option>
+            <option value="false">Disable</option>
+        </select>
+
+        <button onclick="setController()">Set Controller</button>
+
+        <div id="status"></div>
+    </div>
+
+    <script>
+        async function setController() {
+            const contractAddress = document.getElementById('contractAddress').value;
+            const controllerAddress = document.getElementById('controllerAddress').value;
+            const enabled = document.getElementById('enabled').value === 'true';
+
+            if (!contractAddress || !controllerAddress) {
+                alert('Please fill in all the fields.');
+                return;
+            }
+
+            try {
+                // Initialize ethers.js
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send("eth_requestAccounts", []); // Connect to Metamask
+
+                const signer = provider.getSigner();
+
+                // ABI for the setController function
+                const abi = [
+                    "function setController(address controller, bool enabled) public"
+                ];
+
+                // Initialize contract
+                const contract = new ethers.Contract(contractAddress, abi, signer);
+
+                // Call setController
+                const tx = await contract.setController(controllerAddress, enabled);
+                
+                document.getElementById('status').innerHTML = 'Transaction sent: ' + tx.hash;
+
+                // Wait for transaction to be mined
+                await tx.wait();
+                document.getElementById('status').innerHTML = 'Controller updated successfully!';
+            } catch (error) {
+                document.getElementById('status').innerHTML = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
+
