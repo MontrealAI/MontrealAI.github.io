@@ -6,6 +6,7 @@
     <title>Register .AGI Domain</title>
     <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
     <script src="bundle.js"></script>  <!-- Reference the bundled file -->
+    <link rel="icon" href="data:,">  <!-- Prevent the browser from requesting a missing favicon -->
 </head>
 <body>
     <h1>Register a .AGI Domain</h1>
@@ -30,6 +31,9 @@
                 document.getElementById('userAddress').innerText = `Connected: ${userAddress}`;
 
                 // Initialize ENS with Sepolia contracts using ENSBundle from the bundle.js
+                if (!ENSBundle || !ENSBundle.ENS) {
+                    throw new Error('ENS not found in ENSBundle');
+                }
                 ens = new ENSBundle.ENS({
                     provider: signer,
                     ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',  // ENS Registry on Sepolia
@@ -40,7 +44,7 @@
                 console.log('ENS initialized successfully.');
             } catch (error) {
                 console.error('Error initializing ENS or connecting to MetaMask:', error);
-                alert('Could not connect to MetaMask. Please try again.');
+                alert('Could not connect to MetaMask or ENS initialization failed. Please try again.');
             }
         }
 
