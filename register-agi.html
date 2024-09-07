@@ -26,7 +26,8 @@
             const signer = provider.getSigner();
             userAddress = await signer.getAddress();
 
-            ens = new ENS({
+            // Use ENS from the bundled global object
+            ens = new ENSBundle.ENS({
                 provider: signer,
                 ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',  // ENS Registry on Sepolia
                 ethRegistrarControllerAddress: '0xf9361c237B8881761F55db902e9044E827Bd5F8c',  // Custom .AGI Registrar Controller
