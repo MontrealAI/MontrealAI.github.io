@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>.AGI Domain Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, button {
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+    <!-- Include ethers.js from a CDN -->
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+</head>
+<body>
+
+<h1>.AGI Domain Registration</h1>
+
+<h2>Step 1: Make Commitment</h2>
+
+<form id="commitmentForm">
+    <label for="domain">Domain Label (without .agi):</label>
+    <input type="text" id="domain" placeholder="e.g., asitest999" required>
+
+    <label for="owner">Owner Address (0x...):</label>
+    <input type="text" id="owner" placeholder="0x..." required>
+
+    <label for="duration">Duration (in seconds, e.g., 31536000 for 1 year):</label>
+    <input type="number" id="duration" value="31536000" required>
+
+    <label for="secret">Commitment Secret (bytes32):</label>
+    <input type="text" id="secret" placeholder="0x..." required>
+
+    <label for="resolver">Resolver Address (optional):</label>
+    <input type="text" id="resolver" placeholder="0x0000000000000000000000000000000000000000">
+
+    <label for="reverseRecord">Set Reverse Record:</label>
+    <select id="reverseRecord">
+        <option value="false">No</option>
+        <option value="true">Yes</option>
+    </select>
+
+    <label for="fuses">Owner Controlled Fuses (uint16):</label>
+    <input type="number" id="fuses" value="0">
+
+    <button type="button" onclick="makeCommitment()">Make Commitment</button>
+</form>
+
+<div id="commitmentOutput" class="output" hidden></div>
+
+<h2>Step 2: Register Domain</h2>
+<button type="button" onclick="registerDomain()">Register Domain</button>
+
+<div id="registerOutput" class="output" hidden></div>
+
+<script>
+    const ethers = window.ethers;
+
+    async function makeCommitment() {
+        try {
+            const domain = document.getElementById('domain').value;
+            const owner = document.getElementById('owner').value;
+            const duration = document.getElementById('duration').value;
+            const secret = document.getElementById('secret').value;
+            const resolver = document.getElementById('resolver').value || "0x0000000000000000000000000000000000000000";
+            const reverseRecord = document.getElementById('reverseRecord').value;
+            const fuses = document.getElementById('fuses').value;
+
+            // Hash the domain label using ethers.js keccak256
+            const labelHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(domain));
+
+            // Calculate the commitment hash
+            const commitmentHash = ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(
+                ["bytes32", "address", "uint256", "bytes32", "address", "bool", "uint16"],
+                [labelHash, owner, duration, secret, resolver, reverseRecord === 'true', fuses]
+            ));
+
+            const output = `
+                <h3>Commitment Details</h3>
+                <p><strong>Label Hash (keccak256 of domain label):</strong> ${labelHash}</p>
+                <p><strong>Owner Address:</strong> ${owner}</p>
+                <p><strong>Duration:</strong> ${duration} seconds</p>
+                <p><strong>Secret:</strong> ${secret}</p>
+                <p><strong>Resolver Address:</strong> ${resolver}</p>
+                <p><strong>Reverse Record:</strong> ${reverseRecord}</p>
+                <p><strong>Owner Controlled Fuses:</strong> ${fuses}</p>
+                <p><strong>Commitment Hash:</strong> ${commitmentHash}</p>
+            `;
+
+            document.getElementById('commitmentOutput').innerHTML = output;
+            document.getElementById('commitmentOutput').hidden = false;
+        } catch (error) {
+            console.error(error);
+            document.getElementById('commitmentOutput').innerHTML = `<p class="error">Error generating commitment: ${error.message}</p>`;
+            document.getElementById('commitmentOutput').hidden = false;
+        }
+    }
+
+    async function registerDomain() {
+        try {
+            const output = `<h3>Registration in progress...</h3>`;
+            document.getElementById('registerOutput').innerHTML = output;
+            document.getElementById('registerOutput').hidden = false;
+
+            // Simulate the registration process (In real implementation, make a Web3 transaction)
+            await new Promise(resolve => setTimeout(resolve, 3000));
+
+            document.getElementById('registerOutput').innerHTML = "<h3>Registration Successful!</h3>";
+        } catch (error) {
+            console.error(error);
+            document.getElementById('registerOutput').innerHTML = `<p class="error">Error during registration: ${error.message}</p>`;
+            document.getElementById('registerOutput').hidden = false;
+        }
+    }
+</script>
+
+</body>
+</html>
+
