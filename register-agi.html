@@ -21,29 +21,42 @@
 
         // Initialize ENS.js with your custom contract addresses on Sepolia
         async function initENS() {
-            provider = new ethers.providers.Web3Provider(window.ethereum);
-            await provider.send('eth_requestAccounts', []);  // Request MetaMask connection
-            const signer = provider.getSigner();
-            userAddress = await signer.getAddress();
+            try {
+                // MetaMask connection
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send('eth_requestAccounts', []);  // Request MetaMask connection
+                const signer = provider.getSigner();
+                userAddress = await signer.getAddress();
+                document.getElementById('userAddress').innerText = `Connected: ${userAddress}`;
 
-            // Use ENS from the bundled global object
-            ens = new ENSBundle.ENS({
-                provider: signer,
-                ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',  // ENS Registry on Sepolia
-                ethRegistrarControllerAddress: '0xf9361c237B8881761F55db902e9044E827Bd5F8c',  // Custom .AGI Registrar Controller
-                baseRegistrarAddress: '0x712A445F860563b7Ab51D2a354dbA997bd7Da1b6',  // Custom .AGI Base Registrar
-            });
+                // Initialize ENS with Sepolia contracts using ENSBundle from the bundle.js
+                ens = new ENSBundle.ENS({
+                    provider: signer,
+                    ensAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',  // ENS Registry on Sepolia
+                    ethRegistrarControllerAddress: '0xf9361c237B8881761F55db902e9044E827Bd5F8c',  // Custom .AGI Registrar Controller
+                    baseRegistrarAddress: '0x712A445F860563b7Ab51D2a354dbA997bd7Da1b6',  // Custom .AGI Base Registrar
+                });
+
+                console.log('ENS initialized successfully.');
+            } catch (error) {
+                console.error('Error initializing ENS or connecting to MetaMask:', error);
+                alert('Could not connect to MetaMask. Please try again.');
+            }
         }
 
         // Check if the domain is available
         async function checkDomainAvailability(domain) {
-            const address = await ens.getAddress(domain);
-            if (!address) {
-                alert(`${domain} is available for registration.`);
-                return true;
-            } else {
-                alert(`${domain} is already taken.`);
-                return false;
+            try {
+                const address = await ens.getAddress(domain);
+                if (!address) {
+                    alert(`${domain} is available for registration.`);
+                    return true;
+                } else {
+                    alert(`${domain} is already taken.`);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error checking domain availability:', error);
             }
         }
 
@@ -53,28 +66,31 @@
             const isAvailable = await checkDomainAvailability(domain);
             if (!isAvailable) return;
 
-            // Step 1: Commit to register the domain
-            const secret = ethers.utils.formatBytes32String("secret");
-            const commitment = await ens.createCommitment(domain, userAddress, secret);
-            const commitTx = await ens.commit(commitment);
-            await commitTx.wait();
-            alert('Commitment sent and confirmed. Wait a few moments before registering.');
+            try {
+                // Step 1: Commit to register the domain
+                const secret = ethers.utils.formatBytes32String("secret");
+                const commitment = await ens.createCommitment(domain, userAddress, secret);
+                const commitTx = await ens.commit(commitment);
+                await commitTx.wait();
+                alert('Commitment sent and confirmed. Wait a few moments before registering.');
 
-            // Step 2: Register the domain
-            const duration = 365 * 24 * 60 * 60;  // One year
-            const price = await ens.getPrice(domain, duration);
-            const registerTx = await ens.register(domain, userAddress, secret, duration, {
-                value: price.base  // ETH required for registration
-            });
-            await registerTx.wait();
-            alert(`Successfully registered ${domain}`);
+                // Step 2: Register the domain
+                const duration = 365 * 24 * 60 * 60;  // One year
+                const price = await ens.getPrice(domain, duration);
+                const registerTx = await ens.register(domain, userAddress, secret, duration, {
+                    value: price.base  // ETH required for registration
+                });
+                await registerTx.wait();
+                alert(`Successfully registered ${domain}`);
+            } catch (error) {
+                console.error('Error during registration process:', error);
+            }
         }
 
         window.onload = () => {
             // Initialize ENS.js on page load
             document.getElementById('connectWallet').onclick = async () => {
                 await initENS();
-                document.getElementById('userAddress').innerText = `Connected: ${userAddress}`;
             };
 
             // Register domain when button is clicked
