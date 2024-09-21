@@ -102,8 +102,10 @@
 </div>
 
 <script>
-    const contractAddress = '0xED1bF7bc1151727c53a5573a29DAB8bbB531f725'; // Replace with your AGINameWrapper contract address
-    const abi = [
+    // Ensure the script runs after the page has loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const contractAddress = '0xED1bF7bc1151727c53a5573a29DAB8bbB531f725'; // Replace with your AGINameWrapper contract address
+        const abi = [
 	{
 		"inputs": [
 			{
@@ -1817,161 +1819,172 @@
 		"type": "function"
 	}
 ];
-    let provider;
-    let signer;
-    let contract;
+        let provider;
+        let signer;
+        let contract;
 
-    // Function to connect to the user's wallet
-    async function connectWallet() {
-        if (window.ethereum) {
-            try {
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                contract = new ethers.Contract(contractAddress, abi, signer);
-                const address = await signer.getAddress();
-                document.getElementById('wallet-address').innerText = `Connected: ${address}`;
-                document.getElementById('wallet-address').classList.add('connected-address');
-                populateFunctions();
-            } catch (error) {
-                console.error('User denied account access', error);
-            }
-        } else {
-            alert('Please install MetaMask!');
-        }
-    }
-
-    // Function to populate the interface with contract functions
-    function populateFunctions() {
-        const readFunctionsDiv = document.getElementById('read-functions');
-        const writeFunctionsDiv = document.getElementById('write-functions');
-
-        abi.forEach((item) => {
-            if (item.type === 'function') {
-                const funcDiv = document.createElement('div');
-                funcDiv.className = 'function';
-                const funcName = document.createElement('h3');
-                funcName.innerText = item.name;
-                funcDiv.appendChild(funcName);
-
-                const inputsDiv = document.createElement('div');
-                inputsDiv.className = 'inputs';
-
-                item.inputs.forEach((input, index) => {
-                    const inputGroup = document.createElement('div');
-                    inputGroup.className = 'input-group';
-                    const label = document.createElement('label');
-                    label.innerText = `${input.name} (${input.type}):`;
-                    label.htmlFor = `${item.name}-input-${index}`;
-                    let inputField;
-                    if (input.type === 'bytes' || input.type === 'string') {
-                        inputField = document.createElement('textarea');
-                    } else {
-                        inputField = document.createElement('input');
-                    }
-                    inputField.id = `${item.name}-input-${index}`;
-                    inputField.dataset.type = input.type;
-                    inputField.placeholder = `Enter ${input.name}`;
-                    inputGroup.appendChild(label);
-                    inputGroup.appendChild(inputField);
-                    inputsDiv.appendChild(inputGroup);
-                });
-
-                funcDiv.appendChild(inputsDiv);
-
-                const button = document.createElement('button');
-                button.innerText = item.stateMutability === 'view' || item.stateMutability === 'pure' ? 'Call' : 'Send Transaction';
-                button.onclick = () => executeFunction(item);
-                funcDiv.appendChild(button);
-
-                const outputDiv = document.createElement('div');
-                outputDiv.className = 'output';
-                outputDiv.id = `${item.name}-output`;
-                funcDiv.appendChild(outputDiv);
-
-                if (item.stateMutability === 'view' || item.stateMutability === 'pure') {
-                    readFunctionsDiv.appendChild(funcDiv);
-                } else {
-                    writeFunctionsDiv.appendChild(funcDiv);
+        // Function to connect to the user's wallet
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = provider.getSigner();
+                    contract = new ethers.Contract(contractAddress, abi, signer);
+                    const address = await signer.getAddress();
+                    document.getElementById('wallet-address').innerText = `Connected: ${address}`;
+                    document.getElementById('wallet-address').classList.add('connected-address');
+                    populateFunctions();
+                } catch (error) {
+                    console.error('User denied account access', error);
                 }
-            }
-        });
-    }
-
-    // Function to execute contract functions
-    async function executeFunction(func) {
-        const outputDiv = document.getElementById(`${func.name}-output`);
-        outputDiv.innerText = '';
-
-        const params = [];
-        for (let i = 0; i < func.inputs.length; i++) {
-            const inputField = document.getElementById(`${func.name}-input-${i}`);
-            const value = parseInput(inputField.value, inputField.dataset.type);
-            if (value === null) {
-                outputDiv.innerHTML = `<span class="notice">Invalid input for ${func.inputs[i].name} (${func.inputs[i].type})</span>`;
-                return;
-            }
-            params.push(value);
-        }
-
-        try {
-            if (func.stateMutability === 'view' || func.stateMutability === 'pure') {
-                const result = await contract[func.name](...params);
-                outputDiv.innerText = formatOutput(result);
             } else {
-                const tx = await contract[func.name](...params);
-                outputDiv.innerHTML = `Transaction sent: ${tx.hash}<br>Waiting for confirmation...`;
-                await tx.wait();
-                outputDiv.innerHTML += `<br>Transaction confirmed.`;
+                alert('Please install MetaMask!');
             }
-        } catch (error) {
-            console.error(error);
-            outputDiv.innerHTML = `<span class="notice">Error: ${error.message}</span>`;
         }
-    }
 
-    // Function to parse user input based on the expected type
-    function parseInput(value, type) {
-        if (!value && type !== 'bool') return null;
+        // Function to populate the interface with contract functions
+        function populateFunctions() {
+            const readFunctionsDiv = document.getElementById('read-functions');
+            const writeFunctionsDiv = document.getElementById('write-functions');
 
-        if (type.startsWith('uint') || type.startsWith('int')) {
-            if (type.endsWith('[]')) {
-                return value.split(',').map(v => ethers.BigNumber.from(v.trim()));
+            abi.forEach((item) => {
+                if (item.type === 'function') {
+                    const funcDiv = document.createElement('div');
+                    funcDiv.className = 'function';
+                    const funcName = document.createElement('h3');
+                    funcName.innerText = item.name;
+                    funcDiv.appendChild(funcName);
+
+                    const inputsDiv = document.createElement('div');
+                    inputsDiv.className = 'inputs';
+
+                    item.inputs.forEach((input, index) => {
+                        const inputGroup = document.createElement('div');
+                        inputGroup.className = 'input-group';
+                        const label = document.createElement('label');
+                        label.innerText = `${input.name} (${input.type}):`;
+                        label.htmlFor = `${item.name}-input-${index}`;
+                        let inputField;
+                        if (input.type === 'bytes' || input.type === 'string') {
+                            inputField = document.createElement('textarea');
+                        } else {
+                            inputField = document.createElement('input');
+                        }
+                        inputField.id = `${item.name}-input-${index}`;
+                        inputField.dataset.type = input.type;
+                        inputField.placeholder = `Enter ${input.name}`;
+                        inputGroup.appendChild(label);
+                        inputGroup.appendChild(inputField);
+                        inputsDiv.appendChild(inputGroup);
+                    });
+
+                    funcDiv.appendChild(inputsDiv);
+
+                    const button = document.createElement('button');
+                    button.innerText = item.stateMutability === 'view' || item.stateMutability === 'pure' ? 'Call' : 'Send Transaction';
+                    button.onclick = () => executeFunction(item);
+                    funcDiv.appendChild(button);
+
+                    const outputDiv = document.createElement('div');
+                    outputDiv.className = 'output';
+                    outputDiv.id = `${item.name}-output`;
+                    funcDiv.appendChild(outputDiv);
+
+                    if (item.stateMutability === 'view' || item.stateMutability === 'pure') {
+                        readFunctionsDiv.appendChild(funcDiv);
+                    } else {
+                        writeFunctionsDiv.appendChild(funcDiv);
+                    }
+                }
+            });
+        }
+
+        // Function to execute contract functions
+        async function executeFunction(func) {
+            const outputDiv = document.getElementById(`${func.name}-output`);
+            outputDiv.innerText = '';
+
+            const params = [];
+            for (let i = 0; i < func.inputs.length; i++) {
+                const inputField = document.getElementById(`${func.name}-input-${i}`);
+                const value = parseInput(inputField.value, inputField.dataset.type);
+                if (value === null) {
+                    outputDiv.innerHTML = `<span class="notice">Invalid input for ${func.inputs[i].name} (${func.inputs[i].type})</span>`;
+                    return;
+                }
+                params.push(value);
+            }
+
+            try {
+                if (func.stateMutability === 'view' || func.stateMutability === 'pure') {
+                    const result = await contract[func.name](...params);
+                    outputDiv.innerText = formatOutput(result);
+                } else {
+                    const tx = await contract[func.name](...params);
+                    outputDiv.innerHTML = `Transaction sent: ${tx.hash}<br>Waiting for confirmation...`;
+                    await tx.wait();
+                    outputDiv.innerHTML += `<br>Transaction confirmed.`;
+                }
+            } catch (error) {
+                console.error(error);
+                outputDiv.innerHTML = `<span class="notice">Error: ${error.message}</span>`;
+            }
+        }
+
+        // Function to parse user input based on the expected type
+        function parseInput(value, type) {
+            if (!value && type !== 'bool') return null;
+
+            if (type.startsWith('uint') || type.startsWith('int')) {
+                if (type.endsWith('[]')) {
+                    return value.split(',').map(v => ethers.BigNumber.from(v.trim()));
+                } else {
+                    return ethers.BigNumber.from(value);
+                }
+            } else if (type === 'address') {
+                if (!ethers.utils.isAddress(value)) return null;
+                return value;
+            } else if (type === 'bytes32') {
+                if (!ethers.utils.isHexString(value)) {
+                    // Try to hash the input if it's not a hex string
+                    return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(value));
+                }
+                return value;
+            } else if (type === 'bytes') {
+                if (ethers.utils.isHexString(value)) {
+                    return value;
+                } else {
+                    return ethers.utils.toUtf8Bytes(value);
+                }
+            } else if (type === 'string') {
+                return value;
+            } else if (type === 'bool') {
+                if (value.toLowerCase() === 'true' || value === '1') return true;
+                if (value.toLowerCase() === 'false' || value === '0') return false;
+                return null;
+            } else if (type.endsWith('[]')) {
+                // For arrays of other types
+                return value.split(',').map(v => parseInput(v.trim(), type.slice(0, -2)));
             } else {
-                return ethers.BigNumber.from(value);
+                return value;
             }
-        } else if (type === 'address') {
-            if (!ethers.utils.isAddress(value)) return null;
-            return value;
-        } else if (type === 'bytes32') {
-            if (!ethers.utils.isHexString(value, 32)) return null;
-            return value;
-        } else if (type === 'bytes') {
-            return ethers.utils.isHexString(value) ? value : ethers.utils.toUtf8Bytes(value);
-        } else if (type === 'string') {
-            return value;
-        } else if (type === 'bool') {
-            if (value.toLowerCase() === 'true' || value === '1') return true;
-            if (value.toLowerCase() === 'false' || value === '0') return false;
-            return null;
-        } else if (type.endsWith('[]')) {
-            // For arrays of other types
-            return value.split(',').map(v => parseInput(v.trim(), type.slice(0, -2)));
-        } else {
-            return value;
         }
-    }
 
-    // Function to format output for display
-    function formatOutput(output) {
-        if (Array.isArray(output)) {
-            return JSON.stringify(output, null, 2);
-        } else if (output && typeof output === 'object') {
-            return JSON.stringify(output, null, 2);
-        } else {
-            return output.toString();
+        // Function to format output for display
+        function formatOutput(output) {
+            if (Array.isArray(output)) {
+                return JSON.stringify(output, null, 2);
+            } else if (output && typeof output === 'object') {
+                return JSON.stringify(output, null, 2);
+            } else {
+                return output.toString();
+            }
         }
-    }
+
+        // Expose connectWallet function to the global scope
+        window.connectWallet = connectWallet;
+    });
 </script>
 
 </body>
