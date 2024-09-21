@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AGINameWrapper Interface</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+    <style>
+        /* CSS Styles for the interface */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .function {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .function h3 {
+            margin-top: 0;
+        }
+        .function label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .function input, .function select, .function textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        .function button {
+            padding: 10px 15px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .function button:hover {
+            background-color: #1abc9c;
+        }
+        .output {
+            margin-top: 10px;
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+        }
+        .connect-button {
+            background-color: #27ae60;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .connect-button:hover {
+            background-color: #2ecc71;
+        }
+        .connected-address {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .function .inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .function .input-group {
+            flex: 1 1 200px;
+            min-width: 200px;
+        }
+        .notice {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>AGINameWrapper Interface</h1>
+
+<button class="connect-button" onclick="connectWallet()">Connect Wallet</button>
+<span id="wallet-address"></span>
+
+<div class="section" id="read-contract">
+    <h2>Read Contract</h2>
+    <div id="read-functions"></div>
+</div>
+
+<div class="section" id="write-contract">
+    <h2>Write Contract</h2>
+    <div id="write-functions"></div>
+</div>
+
+<script>
+    const contractAddress = '0xED1bF7bc1151727c53a5573a29DAB8bbB531f725'; // Replace with your AGINameWrapper contract address
+    const abi = [
+	{
+		"inputs": [
+			{
+				"internalType": "contract ENS",
+				"name": "_ens",
+				"type": "address"
+			},
+			{
+				"internalType": "contract IBaseRegistrar",
+				"name": "_registrar",
+				"type": "address"
+			},
+			{
+				"internalType": "contract IMetadataService",
+				"name": "_metadataService",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [],
+		"name": "CannotUpgrade",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "ENSAddressZero",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "IncompatibleParent",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "IncorrectTargetOwner",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "IncorrectTokenType",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "labelHash",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "expectedLabelhash",
+				"type": "bytes32"
+			}
+		],
+		"name": "LabelMismatch",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "label",
+				"type": "string"
+			}
+		],
+		"name": "LabelTooLong",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "LabelTooShort",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "MetadataAddressZero",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "NameAlreadyWrapped",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "NameNotWrapped",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "NameStillExpired",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "NameWrappedAlready",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "NotAdmin",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "NotController",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			}
+		],
+		"name": "OperationProhibited",
+		"type": "error"
+	},
+	{
+		"inputs": [],
+		"name": "RegistrarAddressZero",
+		"type": "error"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			}
+		],
+		"name": "Unauthorised",
+		"type": "error"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "approved",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "Approval",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "approved",
+				"type": "bool"
+			}
+		],
+		"name": "ApprovalForAll",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint64",
+				"name": "expiry",
+				"type": "uint64"
+			}
+		],
+		"name": "ExpiryExtended",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint32",
+				"name": "fuses",
+				"type": "uint32"
+			}
+		],
+		"name": "FusesSet",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "metadataService",
+				"type": "address"
+			}
+		],
+		"name": "MetadataServiceSet",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "NameUnwrapped",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "bytes",
+				"name": "name",
+				"type": "bytes"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint32",
+				"name": "fuses",
+				"type": "uint32"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint64",
+				"name": "expiry",
+				"type": "uint64"
+			}
+		],
+		"name": "NameWrapped",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "resolver",
+				"type": "address"
+			}
+		],
+		"name": "ResolverSet",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "previousAdminRole",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "newAdminRole",
+				"type": "bytes32"
+			}
+		],
+		"name": "RoleAdminChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			}
+		],
+		"name": "RoleGranted",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			}
+		],
+		"name": "RoleRevoked",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint64",
+				"name": "ttl",
+				"type": "uint64"
+			}
+		],
+		"name": "TTLSet",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256[]",
+				"name": "ids",
+				"type": "uint256[]"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256[]",
+				"name": "values",
+				"type": "uint256[]"
+			}
+		],
+		"name": "TransferBatch",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "TransferSingle",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "value",
+				"type": "string"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "URI",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "upgradeContract",
+				"type": "address"
+			}
+		],
+		"name": "UpgradeContractSet",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "ADMIN_ROLE",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "CONTROLLER_ROLE",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "DEFAULT_ADMIN_ROLE",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "_tokens",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint32",
+				"name": "fuseMask",
+				"type": "uint32"
+			}
+		],
+		"name": "allFusesBurned",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "balanceOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address[]",
+				"name": "accounts",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "ids",
+				"type": "uint256[]"
+			}
+		],
+		"name": "balanceOfBatch",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			}
+		],
+		"name": "canExtendSubnames",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "addr",
+				"type": "address"
+			}
+		],
+		"name": "canModifyName",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "ens",
+		"outputs": [
+			{
+				"internalType": "contract ENS",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "parentNode",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "labelhash",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint64",
+				"name": "expiry",
+				"type": "uint64"
+			}
+		],
+		"name": "extendExpiry",
+		"outputs": [
+			{
+				"internalType": "uint64",
+				"name": "",
+				"type": "uint64"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "getApproved",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "getData",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint32",
+				"name": "fuses",
+				"type": "uint32"
+			},
+			{
+				"internalType": "uint64",
+				"name": "expiry",
+				"type": "uint64"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			}
+		],
+		"name": "getRoleAdmin",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "grantRole",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "hasRole",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			}
+		],
+		"name": "isApprovedForAll",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "parentNode",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "labelhash",
+				"type": "bytes32"
+			}
+		],
+		"name": "isWrapped",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			}
+		],
+		"name": "isWrapped",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "metadataService",
+		"outputs": [
+			{
+				"internalType": "contract IMetadataService",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "name",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "names",
+		"outputs": [
+			{
+				"internalType": "bytes",
+				"name": "",
+				"type": "bytes"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			}
+		],
+		"name": "onERC721Received",
+		"outputs": [
+			{
+				"internalType": "bytes4",
+				"name": "",
+				"type": "bytes4"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "ownerOf",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_token",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "recoverFunds",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "label",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "wrappedOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "duration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "resolver",
+				"type": "address"
+			},
+			{
+				"internalType": "uint16",
+				"name": "ownerControlledFuses",
+				"type": "uint16"
+			}
+		],
+		"name": "registerAndWrapAGI2LD",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "registrarExpiry",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "registrar",
+		"outputs": [
+			{
+				"internalType": "contract IBaseRegistrar",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "duration",
+				"type": "uint256"
+			}
+		],
+		"name": "renew",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "renounceRole",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "role",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "account",
+				"type": "address"
+			}
+		],
+		"name": "revokeRole",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "ids",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "amounts",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			}
+		],
+		"name": "safeBatchTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bytes",
+				"name": "data",
+				"type": "bytes"
+			}
+		],
+		"name": "safeTransferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "approved",
+				"type": "bool"
+			}
+		],
+		"name": "setApprovalForAll",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "parentNode",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "labelhash",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint32",
+				"name": "fuses",
+				"type": "uint32"
+			},
+			{
+				"internalType": "uint64",
+				"name": "expiry",
+				"type": "uint64"
+			}
+		],
+		"name": "setChildFuses",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint16",
+				"name": "ownerControlledFuses",
+				"type": "uint16"
+			}
+		],
+		"name": "setFuses",
+		"outputs": [
+			{
+				"internalType": "uint32",
+				"name": "",
+				"type": "uint32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract IMetadataService",
+				"name": "_metadataService",
+				"type": "address"
+			}
+		],
+		"name": "setMetadataService",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "resolver",
+				"type": "address"
+			},
+			{
+				"internalType": "uint64",
+				"name": "ttl",
+				"type": "uint64"
+			}
+		],
+		"name": "setRecord",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "resolver",
+				"type": "address"
+			}
+		],
+		"name": "setResolver",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "parentNode",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "string",
+				"name": "label",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint32",
+				"name": "fuses",
+				"type": "uint32"
+			},
+			{
+				"internalType": "uint64",
+				"name": "expiry",
+				"type": "uint64"
+			}
+		],
+		"name": "setSubnodeOwner",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "parentNode",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "string",
+				"name": "label",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "resolver",
+				"type": "address"
+			},
+			{
+				"internalType": "uint64",
+				"name": "ttl",
+				"type": "uint64"
+			},
+			{
+				"internalType": "uint32",
+				"name": "fuses",
+				"type": "uint32"
+			},
+			{
+				"internalType": "uint64",
+				"name": "expiry",
+				"type": "uint64"
+			}
+		],
+		"name": "setSubnodeRecord",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "node",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint64",
+				"name": "ttl",
+				"type": "uint64"
+			}
+		],
+		"name": "setTTL",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract INameWrapperUpgrade",
+				"name": "_upgradeAddress",
+				"type": "address"
+			}
+		],
+		"name": "setUpgradeContract",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes4",
+				"name": "interfaceId",
+				"type": "bytes4"
+			}
+		],
+		"name": "supportsInterface",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "parentNode",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "labelhash",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "controller",
+				"type": "address"
+			}
+		],
+		"name": "unwrap",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "labelhash",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "registrant",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "controller",
+				"type": "address"
+			}
+		],
+		"name": "unwrapAGI2LD",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "wrappedName",
+				"type": "bytes"
+			},
+			{
+				"internalType": "bytes",
+				"name": "extraData",
+				"type": "bytes"
+			}
+		],
+		"name": "upgrade",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "upgradeContract",
+		"outputs": [
+			{
+				"internalType": "contract INameWrapperUpgrade",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "uri",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes",
+				"name": "wrappedName",
+				"type": "bytes"
+			},
+			{
+				"internalType": "address",
+				"name": "wrappedOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "resolver",
+				"type": "address"
+			}
+		],
+		"name": "wrap",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "label",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "wrappedOwner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint16",
+				"name": "ownerControlledFuses",
+				"type": "uint16"
+			},
+			{
+				"internalType": "address",
+				"name": "resolver",
+				"type": "address"
+			}
+		],
+		"name": "wrapAGI2LD",
+		"outputs": [
+			{
+				"internalType": "uint64",
+				"name": "expiry",
+				"type": "uint64"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+];
+    let provider;
+    let signer;
+    let contract;
+
+    // Function to connect to the user's wallet
+    async function connectWallet() {
+        if (window.ethereum) {
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                signer = provider.getSigner();
+                contract = new ethers.Contract(contractAddress, abi, signer);
+                const address = await signer.getAddress();
+                document.getElementById('wallet-address').innerText = `Connected: ${address}`;
+                document.getElementById('wallet-address').classList.add('connected-address');
+                populateFunctions();
+            } catch (error) {
+                console.error('User denied account access', error);
+            }
+        } else {
+            alert('Please install MetaMask!');
+        }
+    }
+
+    // Function to populate the interface with contract functions
+    function populateFunctions() {
+        const readFunctionsDiv = document.getElementById('read-functions');
+        const writeFunctionsDiv = document.getElementById('write-functions');
+
+        abi.forEach((item) => {
+            if (item.type === 'function') {
+                const funcDiv = document.createElement('div');
+                funcDiv.className = 'function';
+                const funcName = document.createElement('h3');
+                funcName.innerText = item.name;
+                funcDiv.appendChild(funcName);
+
+                const inputsDiv = document.createElement('div');
+                inputsDiv.className = 'inputs';
+
+                item.inputs.forEach((input, index) => {
+                    const inputGroup = document.createElement('div');
+                    inputGroup.className = 'input-group';
+                    const label = document.createElement('label');
+                    label.innerText = `${input.name} (${input.type}):`;
+                    label.htmlFor = `${item.name}-input-${index}`;
+                    let inputField;
+                    if (input.type === 'bytes' || input.type === 'string') {
+                        inputField = document.createElement('textarea');
+                    } else {
+                        inputField = document.createElement('input');
+                    }
+                    inputField.id = `${item.name}-input-${index}`;
+                    inputField.dataset.type = input.type;
+                    inputField.placeholder = `Enter ${input.name}`;
+                    inputGroup.appendChild(label);
+                    inputGroup.appendChild(inputField);
+                    inputsDiv.appendChild(inputGroup);
+                });
+
+                funcDiv.appendChild(inputsDiv);
+
+                const button = document.createElement('button');
+                button.innerText = item.stateMutability === 'view' || item.stateMutability === 'pure' ? 'Call' : 'Send Transaction';
+                button.onclick = () => executeFunction(item);
+                funcDiv.appendChild(button);
+
+                const outputDiv = document.createElement('div');
+                outputDiv.className = 'output';
+                outputDiv.id = `${item.name}-output`;
+                funcDiv.appendChild(outputDiv);
+
+                if (item.stateMutability === 'view' || item.stateMutability === 'pure') {
+                    readFunctionsDiv.appendChild(funcDiv);
+                } else {
+                    writeFunctionsDiv.appendChild(funcDiv);
+                }
+            }
+        });
+    }
+
+    // Function to execute contract functions
+    async function executeFunction(func) {
+        const outputDiv = document.getElementById(`${func.name}-output`);
+        outputDiv.innerText = '';
+
+        const params = [];
+        for (let i = 0; i < func.inputs.length; i++) {
+            const inputField = document.getElementById(`${func.name}-input-${i}`);
+            const value = parseInput(inputField.value, inputField.dataset.type);
+            if (value === null) {
+                outputDiv.innerHTML = `<span class="notice">Invalid input for ${func.inputs[i].name} (${func.inputs[i].type})</span>`;
+                return;
+            }
+            params.push(value);
+        }
+
+        try {
+            if (func.stateMutability === 'view' || func.stateMutability === 'pure') {
+                const result = await contract[func.name](...params);
+                outputDiv.innerText = formatOutput(result);
+            } else {
+                const tx = await contract[func.name](...params);
+                outputDiv.innerHTML = `Transaction sent: ${tx.hash}<br>Waiting for confirmation...`;
+                await tx.wait();
+                outputDiv.innerHTML += `<br>Transaction confirmed.`;
+            }
+        } catch (error) {
+            console.error(error);
+            outputDiv.innerHTML = `<span class="notice">Error: ${error.message}</span>`;
+        }
+    }
+
+    // Function to parse user input based on the expected type
+    function parseInput(value, type) {
+        if (!value && type !== 'bool') return null;
+
+        if (type.startsWith('uint') || type.startsWith('int')) {
+            if (type.endsWith('[]')) {
+                return value.split(',').map(v => ethers.BigNumber.from(v.trim()));
+            } else {
+                return ethers.BigNumber.from(value);
+            }
+        } else if (type === 'address') {
+            if (!ethers.utils.isAddress(value)) return null;
+            return value;
+        } else if (type === 'bytes32') {
+            if (!ethers.utils.isHexString(value, 32)) return null;
+            return value;
+        } else if (type === 'bytes') {
+            return ethers.utils.isHexString(value) ? value : ethers.utils.toUtf8Bytes(value);
+        } else if (type === 'string') {
+            return value;
+        } else if (type === 'bool') {
+            if (value.toLowerCase() === 'true' || value === '1') return true;
+            if (value.toLowerCase() === 'false' || value === '0') return false;
+            return null;
+        } else if (type.endsWith('[]')) {
+            // For arrays of other types
+            return value.split(',').map(v => parseInput(v.trim(), type.slice(0, -2)));
+        } else {
+            return value;
+        }
+    }
+
+    // Function to format output for display
+    function formatOutput(output) {
+        if (Array.isArray(output)) {
+            return JSON.stringify(output, null, 2);
+        } else if (output && typeof output === 'object') {
+            return JSON.stringify(output, null, 2);
+        } else {
+            return output.toString();
+        }
+    }
+</script>
+
+</body>
+</html>
+
