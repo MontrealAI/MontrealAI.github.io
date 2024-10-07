@@ -138,6 +138,9 @@
         <p>THIS IS PART OF AN ASPIRATIONAL RESEARCH PROGRAM WITH AN AMBITIOUS RESEARCH AGENDA. AGI ORCHESTRATOR ACCESS PASSES, AGI CLUB ACCESS PASSES, AGI GIRLFRIEND V0 ENS NAMES, AGI AGENTS V0 KEYS, AGI NODES V0 KEYS, etc., ARE COMMODITIES. THEY ARE LIKELY RETAILED BY DISTINCT OPERATING INTERNATIONAL ENTITIES ESTABLISHED AS APPROPRIATE IN SPACE AND TIME. WHILE, AS INDUCEMENTS FOR OPERATION, AGI NODES MAY OFFER THE PROSPECT OF EARNING $AGI, WHICH IS MOST LIKELY MANAGED BY A SERIES OF DISTINCT FOUNDATIONS OR ORGANIZATIONS ESTABLISHED WHEN AND WHERE APPROPRIATE, ANY EXPECTATION OF PROFIT OR RETURN IS UNJUSTIFIED. POSSESSION OF $AGI OR OF AN AGI AGENT V0 KEY OR OF AN AGI NODE V0 KEY, ETC., DOES NOT SIGNIFY OR ESTABLISH ANY ENTITLEMENT OR INTEREST, SHARE OR EQUITY, BOND OR ANALOGOUS ENTITLEMENT, OR ANY RIGHT TO OBTAIN ANY FUTURE INCOME. MATERIALS PROVIDED IN THIS SYSTEM ARE WITHOUT WARRANTY OF ANY KIND AND DO NOT CONSTITUTE ENDORSEMENT AND CAN BE MODIFIED AT ANY TIME. BY USING THE PRESENT SYSTEM, YOU AGREE TO THE $AGI TERMS AND CONDITIONS. ANY USE OF THIS SYSTEM, OR ANY OF THE INFORMATION CONTAINED HEREIN, FOR OTHER THAN THE PURPOSE FOR WHICH IT WAS DEVELOPED, IS EXPRESSLY PROHIBITED, EXCEPT AS AGI.ETH MAY OTHERWISE AGREE TO IN WRITING OFFICIALLY.</p>
     </div>
 
+    <!-- Load Web3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.4.0/web3.min.js"></script>
+
     <!-- JavaScript -->
     <script>
         const contractAddress = '0xE7337BDDe55A453D36DabDf3c298988036DE1ba1';
@@ -148,13 +151,12 @@
 
         async function loadWeb3() {
             if (window.ethereum) {
-                window.web3 = new Web3(window.ethereum);
+                web3 = new Web3(window.ethereum);
                 try {
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
                 } catch (error) {
                     return displayMessage('Ethereum access denied.', true);
                 }
-                web3 = new Web3(window.ethereum);
                 contract = new web3.eth.Contract(abi, contractAddress);
 
                 // Handling the 'disconnect' event
@@ -162,7 +164,7 @@
                     displayMessage('MetaMask disconnected. Please reconnect.', true);
                 });
             } else {
-                displayMessage('Ethereum browser not detected. Please use Metamask.', true);
+                displayMessage('Ethereum browser not detected. Please use MetaMask.', true);
             }
         }
 
@@ -189,18 +191,7 @@
             const messageDiv = document.getElementById('message');
             messageDiv.className = isError ? 'message error-message' : 'message success-message';
             messageDiv.innerHTML = message;
-        }
-
-        function toggleLegalText() {
-            const content = document.querySelector('.legal-text-content');
-            const expandCollapseButton = document.querySelector('.expand-collapse');
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-                expandCollapseButton.textContent = '[Read More]';
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-                expandCollapseButton.textContent = '[Read Less]';
-            }
+            messageDiv.style.display = 'block';
         }
 
         loadWeb3();
