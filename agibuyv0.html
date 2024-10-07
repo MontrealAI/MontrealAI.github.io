@@ -16,8 +16,9 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            flex-wrap: wrap;
         }
-        .container {
+        .container, .legal-container {
             background: #FFFFFF;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
@@ -25,8 +26,17 @@
             max-width: 600px;
             width: 100%;
             text-align: center;
-            position: relative;
             margin: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .container {
+            min-height: 600px; /* Ensure consistent height */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center align all content */
         }
         .container h2 {
             font-family: 'Helvetica Neue', sans-serif;
@@ -59,19 +69,19 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            width: calc(100% - 40px);
+            margin: 0 auto; /* Center align the button */
+            display: block;
         }
         .buy-btn:hover {
             background-color: #1A2B40;
         }
         .legal-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-top: 20px;
             font-size: 14px;
             text-align: left;
+            overflow-y: auto; /* Enable scrolling */
+            height: 600px; /* Match the height of the Purchase AGI Tokens box */
         }
         .legal-container p {
             margin: 0;
@@ -98,11 +108,16 @@
             color: #4F8A10;
         }
         @media (max-width: 768px) {
-            .container {
+            .container, .legal-container {
                 padding: 20px;
+                height: auto; /* Let height adjust on small screens */
             }
             .buy-btn {
                 font-size: 18px;
+            }
+            .legal-container {
+                height: auto; /* Let height adjust on small screens */
+                max-height: 400px; /* Set a max height for scrolling */
             }
         }
     </style>
@@ -159,8 +174,7 @@
                 }
                 contract = new web3.eth.Contract(abi, contractAddress);
 
-                // Handling the 'disconnect' event
-                window.ethereum.on('disconnect', (error) => {
+                window.ethereum.on('disconnect', () => {
                     displayMessage('MetaMask disconnected. Please reconnect.', true);
                 });
             } else {
