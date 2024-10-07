@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase AGI Tokens</title>
+    <link href="https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&family=Helvetica+Neue&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #F8F9FA;
+            color: #2C3E50;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-wrap: wrap;
+        }
+        .container, .legal-container {
+            background: #FFFFFF;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            margin: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .container {
+            min-height: 600px; /* Ensure consistent height */
+        }
+        .container h2 {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-weight: 700;
+            color: #2C3E50;
+            margin-bottom: 20px;
+        }
+        .rate-info {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        .input-field {
+            width: calc(100% - 40px);
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            border: 2px solid #E5C100;
+            text-align: center;
+            font-size: 18px;
+            color: #2C3E50;
+            outline: none;
+        }
+        .buy-btn {
+            background-color: #2C3E50;
+            color: white;
+            border: none;
+            padding: 15px 60px;
+            font-size: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: calc(100% - 40px);
+        }
+        .buy-btn:hover {
+            background-color: #1A2B40;
+        }
+        .legal-container {
+            padding: 30px;
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: left;
+            overflow-y: auto; /* Enable scrolling */
+            height: 600px; /* Match the height of the Purchase AGI Tokens box */
+        }
+        .legal-container p {
+            margin: 0;
+            line-height: 1.6;
+        }
+        .legal-header {
+            font-weight: bold;
+            color: #2C3E50;
+            margin-bottom: 15px;
+        }
+        .message {
+            font-size: 16px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none; /* Initially hidden */
+        }
+        .error-message {
+            background-color: #FFD2D2;
+            color: #D8000C;
+        }
+        .success-message {
+            background-color: #DFF2BF;
+            color: #4F8A10;
+        }
+        @media (max-width: 768px) {
+            .container, .legal-container {
+                padding: 20px;
+                height: auto; /* Let height adjust on small screens */
+            }
+            .buy-btn {
+                font-size: 18px;
+            }
+            .legal-container {
+                height: auto; /* Let height adjust on small screens */
+                max-height: 400px; /* Set a max height for scrolling */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Purchase AGI Tokens</h2>
+        <div class="rate-info">Fixed Rate: 0.1 ETH = 250 AGI</div>
+        <div id="message" class="message"></div>
+        <input type="number" id="ethAmount" class="input-field" placeholder="Enter ETH amount">
+        <button class="buy-btn" onclick="buyAGI()">Buy AGI</button>
+        <p style="margin-top: 15px;">$AGI is a Utility Token for exclusive use in the AGI.Eth Ecosystem. Not for investment purposes.</p>
+    </div>
+
+    <div class="legal-container">
+        <div class="legal-header">$AGI by AGI.eth</div>
+        <p><strong>[ INITIAL TERMS & CONDITIONS ]</strong></p>
+        <p><strong>Published by:</strong> AGI.eth<br>
+        <strong>Approval Authority:</strong> AGI.eth<br>
+        <strong>Office of Primary Responsibility:</strong> AGI.eth</p>
+
+        <p>1. <strong>Token Usage:</strong> $AGI tokens are strictly utility tokens intended for the purchase of products / services in the AGI.Eth Ecosystem, such as the AGI ORCHESTRATOR ACCESS PASSES, AGI CLUB ACCESS PASSES, AGI GIRLFRIEND V0 ENS NAMES, AGI AGENTS V0 KEYS, AGI NODES V0 KEYS, etc. They are not intended for investment or speculative purposes.</p>
+        <p>2. <strong>Non-Refundable:</strong> Purchases of $AGI tokens are final and non-refundable.</p>
+        <p>3. <strong>No Exchange Service:</strong> The issuer of $AGI tokens does not provide exchange services between $AGI and other currencies (fiat or crypto). $AGI tokens are not intended to be used as a digital currency or a medium of exchange.</p>
+        <p>4. <strong>Limited Transferability:</strong> $AGI tokens are intended to be used solely within the issuer's ecosystem and are not transferable outside of the platform for trading or other purposes.</p>
+        <p>5. <strong>No Guarantee of Value:</strong> The issuer does not guarantee any specific value of the $AGI token in relation to fiat currencies or other cryptocurrencies.</p>
+        <p>6. <strong>Regulatory Compliance:</strong> It is the responsibility of the user to ensure that the purchase and use of $AGI tokens comply with all applicable laws and regulations, including but not limited to anti-money laundering (AML) and counter-terrorism financing (CTF) laws.</p>
+        <p>7. <strong>User Responsibility:</strong> It is the responsibility of the user to ensure that the purchase and use of $AGI tokens comply with laws and regulations in their jurisdiction.</p>
+        <p>8. <strong>Changes to Terms:</strong> The issuer reserves the right to make changes to the terms and conditions at any time, subject to regulatory compliance.</p>
+
+        <p><strong>OVERRIDING AUTHORITY: AGI.ETH</strong></p>
+
+        <p>THIS IS PART OF AN ASPIRATIONAL RESEARCH PROGRAM WITH AN AMBITIOUS RESEARCH AGENDA. AGI ORCHESTRATOR ACCESS PASSES, AGI CLUB ACCESS PASSES, AGI GIRLFRIEND V0 ENS NAMES, AGI AGENTS V0 KEYS, AGI NODES V0 KEYS, etc., ARE COMMODITIES. THEY ARE LIKELY RETAILED BY DISTINCT OPERATING INTERNATIONAL ENTITIES ESTABLISHED AS APPROPRIATE IN SPACE AND TIME. WHILE, AS INDUCEMENTS FOR OPERATION, AGI NODES MAY OFFER THE PROSPECT OF EARNING $AGI, WHICH IS MOST LIKELY MANAGED BY A SERIES OF DISTINCT FOUNDATIONS OR ORGANIZATIONS ESTABLISHED WHEN AND WHERE APPROPRIATE, ANY EXPECTATION OF PROFIT OR RETURN IS UNJUSTIFIED. POSSESSION OF $AGI OR OF AN AGI AGENT V0 KEY OR OF AN AGI NODE V0 KEY, ETC., DOES NOT SIGNIFY OR ESTABLISH ANY ENTITLEMENT OR INTEREST, SHARE OR EQUITY, BOND OR ANALOGOUS ENTITLEMENT, OR ANY RIGHT TO OBTAIN ANY FUTURE INCOME. MATERIALS PROVIDED IN THIS SYSTEM ARE WITHOUT WARRANTY OF ANY KIND AND DO NOT CONSTITUTE ENDORSEMENT AND CAN BE MODIFIED AT ANY TIME. BY USING THE PRESENT SYSTEM, YOU AGREE TO THE $AGI TERMS AND CONDITIONS. ANY USE OF THIS SYSTEM, OR ANY OF THE INFORMATION CONTAINED HEREIN, FOR OTHER THAN THE PURPOSE FOR WHICH IT WAS DEVELOPED, IS EXPRESSLY PROHIBITED, EXCEPT AS AGI.ETH MAY OTHERWISE AGREE TO IN WRITING OFFICIALLY.</p>
+    </div>
+
+    <!-- Load Web3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.4.0/web3.min.js"></script>
+
+    <!-- JavaScript -->
+    <script>
+        const contractAddress = '0xE7337BDDe55A453D36DabDf3c298988036DE1ba1';
+        const abi = [{"inputs":[{"internalType":"address","name":"_agiTokenAddress","type":"address"},{"internalType":"uint256","name":"_initialRate","type":"uint256"},{"internalType":"uint256","name":"_initialDailyLimit","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"claimant","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"AirdropClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"newLimit","type":"uint256"}],"name":"DailyLimitUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bytes32","name":"newMerkleRoot","type":"bytes32"}],"name":"MerkleRootUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"buyer","type":"address"},{"indexed":false,"internalType":"uint256","name":"ethSpent","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"agiReceived","type":"uint256"}],"name":"Purchased","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"newRate","type":"uint256"}],"name":"RateUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"bool","name":"isActive","type":"bool"}],"name":"WhitelistStatusChanged","type":"event"},{"inputs":[],"name":"RATE_PRECISION","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"agiToken","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"airdropAmount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"buyAGI","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bytes32[]","name":"_merkleProof","type":"bytes32[]"}],"name":"claimAirdrop","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"claimedAirdrop","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"confirmWithdrawAGI","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"confirmWithdrawETH","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"dailyLimit","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"isWhitelistActive","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lastBoughtAmount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lastPurchase","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"merkleRoot","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"rate","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"setAirdropAmount","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"_merkleRoot","type":"bytes32"}],"name":"setMerkleRoot","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bool","name":"_isActive","type":"bool"}],"name":"setWhitelistStatus","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_newLimit","type":"uint256"}],"name":"updateDailyLimit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_newRate","type":"uint256"}],"name":"updateRate","outputs":[],"stateMutability":"nonpayable","type":"function"}]; // ABI goes here
+
+        let contract;
+        let web3;
+
+        async function loadWeb3() {
+            if (window.ethereum) {
+                web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                } catch (error) {
+                    return displayMessage('Ethereum access denied.', true);
+                }
+                contract = new web3.eth.Contract(abi, contractAddress);
+
+                window.ethereum.on('disconnect', () => {
+                    displayMessage('MetaMask disconnected. Please reconnect.', true);
+                });
+            } else {
+                displayMessage('Ethereum browser not detected. Please use MetaMask.', true);
+            }
+        }
+
+        async function buyAGI() {
+            const ethAmount = document.getElementById('ethAmount').value;
+            if (!ethAmount) {
+                return displayMessage('Please enter an amount of ETH.', true);
+            }
+
+            try {
+                const accounts = await web3.eth.getAccounts();
+                const transaction = await contract.methods.buyAGI().send({
+                    from: accounts[0],
+                    value: web3.utils.toWei(ethAmount, 'ether')
+                });
+                const txLink = `<a href="https://etherscan.io/tx/${transaction.transactionHash}" target="_blank" class="transaction-link">Transaction Details</a>`;
+                displayMessage('Transaction successful! ' + txLink, false);
+            } catch (error) {
+                displayMessage('Transaction failed: ' + error.message, true);
+            }
+        }
+
+        function displayMessage(message, isError) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = isError ? 'message error-message' : 'message success-message';
+            messageDiv.innerHTML = message;
+            messageDiv.style.display = 'block';
+        }
+
+        loadWeb3();
+    </script>
+</body>
+</html>
+
