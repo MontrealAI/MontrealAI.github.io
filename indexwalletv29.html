@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token-Gated Page</title>
+    <script src="https://unpkg.com/@solana/web3.js@1.76.0/lib/index.iife.js"></script>
+</head>
+<body>
+    <h1>Welcome to the Token-Gated Website</h1>
+    <button id="connect-wallet">Connect Wallet</button>
+    <div id="content" style="display: none;">
+        <h2>🚀 Access Granted!</h2>
+        <p>Congratulations! You hold at least 1,000,000 tokens.</p>
+    </div>
+    <div id="access-denied" style="display: none;">
+        <h2>⛔ Access Denied</h2>
+        <p>You need at least 1,000,000 tokens to access this content.</p>
+    </div>
+
+    <script>
+        const TOKEN_MINT = "tWKHzXd5PRmxTF5cMfJkm2Ua3TcjwNNoSRUqx6Apump";
+        const REQUIRED_BALANCE = 1_000_000;
+        const RPC_URL = "https://rpc.hellomoon.io/";  // Using a more reliable RPC
+        const { Connection, PublicKey } = solanaWeb3;
+
+        document.getElementById("connect-wallet").addEventListener("click", async () => {
+            if (!window.solana || !window.solana.isPhantom) {
+                alert("Phantom Wallet not found! Install it first.");
+                return;
+            }
+
+            try {
+                const connection = new Connection(RPC_URL);
+                const wallet = window.solana;
+                const response = await wallet.connect();
+                const publicKey = response.publicKey.toString();
+
+                const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
+                    new PublicKey(publicKey),
+                    { programId: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA") }
+                );
+
+                let balance = 0;
+                tokenAccounts.value.forEach(account => {
+                    if (account.account.data.parsed.info.mint === TOKEN_MINT) {
+                        balance += account.account.data.parsed.info.tokenAmount.uiAmount;
+                    }
+                });
+
+                if (balance >= REQUIRED_BALANCE) {
+                    document.getElementById("content").style.display = "block";
+                } else {
+                    document.getElementById("access-denied").style.display = "block";
+                }
+            } catch (error) {
+                console.error("Error connecting wallet:", error);
+                alert("Failed to connect wallet.");
+            }
+        });
+    </script>
+</body>
+</html>
+
