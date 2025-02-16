@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGI ALPHA AGENT – Official Website</title>
+<style>
+/* GLOBAL RESETS & FONTS */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; font-family: "Open Sans", sans-serif; overflow-x: hidden; }
+/* BACKGROUND & THEME (PALE IVORY / GOLD) */
+body { background: linear-gradient(135deg, rgba(255,250,235,1), rgba(255,245,220,1)); color: #333; min-height: 100vh; line-height: 1.4; scroll-behavior: smooth; position: relative; }
+/* FUSED P5 BACKGROUND + ADVANCED ASI SUPRA-HIEROGLYPHS OVERLAY */
+#p5-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: url("https://ipfs.io/ipfs/QmQ6MogCaNn5xMWkFa2jtvYSoiTJXtapp3unTenD65SDak") center center no-repeat; background-size: cover; opacity: 0.3; mix-blend-mode: multiply; }
+#asi-hieroglyphs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; background: repeating-linear-gradient(160deg, transparent 0 10px, rgba(255,205,160,0.05) 10px 20px, transparent 20px 30px, rgba(255,225,200,0.03) 30px 40px); mix-blend-mode: screen; }
+/* HEADER */
+header { width: 100%; padding: 3rem 1rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; }
+header .agent-image { max-width: 500px; width: 85%; border-radius: 0.5rem; box-shadow: 0 0 35px rgba(0,0,0,0.25); margin-bottom: 1.5rem; }
+header h1 { font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 2.2rem; color: #8e6d2a; text-transform: uppercase; margin-bottom: 1rem; letter-spacing: 0.08em; }
+header p.tagline { font-size: 1.15rem; color: #a28154; margin-bottom: 1.5rem; }
+header a.cta-button { display: inline-block; text-decoration: none; padding: 0.9rem 1.5rem; font-size: 1.15rem; font-weight: 600; border-radius: 30px; color: #fff; background: linear-gradient(135deg, #ffd28f, #fbb45c); transition: all 0.4s ease; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+header a.cta-button:hover, header button.cta-button:hover { box-shadow: 0 0 35px rgba(255,255,255,0.5); transform: scale(1.06); }
+/* Wallet button styled like CTA */
+header button.cta-button { cursor: pointer; border: none; background: linear-gradient(135deg, #ffd28f, #fbb45c); color: #fff; margin-top: 1rem; }
+  
+/* MAIN CONTAINER */
+main { width: 90%; max-width: 1100px; margin: 2rem auto; background-color: rgba(255,255,255, 0.8); backdrop-filter: blur(5px); border-radius: 0.5rem; padding: 2rem; box-shadow: 0 0 25px rgba(255,255,255,0.5); }
+main h2 { font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 1.7rem; color: #8e6d2a; margin: 1rem 0; }
+main .code-block { display: inline-block; background: #fff3e0; padding: 0.3rem 0.6rem; border-radius: 4px; font-family: monospace; color: #8e6d2a; }
+main p { margin-bottom: 1.2rem; font-size: 1rem; color: #333; line-height: 1.6; }
+main p strong { font-weight: 700; color: #8e6d2a; }
+/* SECTIONS */
+section { margin-bottom: 2rem; opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+section.in-view { opacity: 1; transform: translateY(0); }
+/* HORIZONTAL RULES */
+hr { margin: 2rem 0; border: none; height: 1px; background-color: rgba(142,109,42,0.25); }
+/* RESTRICTED ACCESS STYLES */
+#restricted-section { margin-top: 2rem; display: none; }
+#access-message { margin-top: 2rem; display: none; text-align: center; padding: 1rem; border: 1px solid #8e6d2a; border-radius: 0.5rem; background-color: rgba(255,245,220,0.9); color: #8e6d2a; }
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  header .agent-image { max-width: 300px; }
+  header h1 { font-size: 1.6rem; margin-bottom: 0.7rem; }
+  header p.tagline { font-size: 1rem; }
+  header a.cta-button { font-size: 1rem; }
+  main { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Merged P5 Background + Overlay -->
+<div id="p5-background"></div>
+<div id="asi-hieroglyphs"></div>
+
+<header>
+  <img class="agent-image"
+       src="https://ipfs.io/ipfs/QmQ6MogCaNn5xMWkFa2jtvYSoiTJXtapp3unTenD65SDak"
+       alt="AGI ALPHA AGENT">
+  <h1>AGI ALPHA AGENT</h1>
+  <p class="tagline">The Official AGI ALPHA AGENT Website</p>
+  <a class="cta-button"
+     href="https://dexscreener.com/solana/8zq3vBuoy66dur6dhrA4aqnrtGg9yZyRAp51BTBpEXj"
+     target="_blank"
+     rel="noopener">
+    Buy $AGIALPHA Tokens
+  </a>
+  <!-- Wallet Connect Button & Info -->
+  <button id="wallet-button" class="cta-button">Connect Wallet</button>
+  <span id="wallet-info" style="display:none; margin-top:0.5rem; font-size:1rem; color:#8e6d2a;"></span>
+  <p style="margin-top:1rem; font-size:0.95rem; color:#8e6d2a;">
+    Contract Address (CA): 
+    <strong>tWKHzXd5PRmxTF5cMfJkm2Ua3TcjwNNoSRUqx6Apump</strong>
+  </p>
+</header>
+
+<main>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <h2>About AGI ALPHA AGENT</h2>
+    <p>
+      <strong>AGI-Alpha-Agent-v0</strong><br>
+      <strong>CA:</strong>
+      <span class="code-block">tWKHzXd5PRmxTF5cMfJkm2Ua3TcjwNNoSRUqx6Apump</span><br>
+      <strong>AGI ALPHA AGENT (ALPHA.AGENT.AGI.Eth) Powered by $AGIALPHA</strong><br>
+      <strong>Seize the Alpha. Transform the world.</strong>
+    </p>
+    <p>
+      <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener">Vincent Boucher</a>, 
+      a pioneer in AI and President of 
+      <a href="https://www.montreal.ai/" target="_blank" rel="noopener">MONTREAL.AI</a> since 2003,
+      reshaped the landscape by dominating the 
+      <a href="https://web.archive.org/web/20170929214241/https://gym.openai.com/read-only.html"
+         target="_blank" rel="noopener">OpenAI Gym</a>
+      with <strong>AI Agents</strong> in 2016 and unveiling the game-changing 
+      <a href="https://www.quebecartificialintelligence.com/priorart"
+         target="_blank" rel="noopener">“Multi-Agent AI DAO”</a> blueprint in 2017 
+      (“The Holy Grail of Foundational IP at the Intersection of AI Agents and Blockchain” #PriorArt:
+      🎥 <a href="https://youtu.be/Y4_6aZbVlo4" target="_blank" rel="noopener">Watch</a>;
+      📖 <a href="https://www.huffpost.com/archive/qc/entry/blockchain-et-lintelligence-artificielle-une-combinaison-puis_qc_5ccc6223e4b03b38d6933d24"
+           target="_blank" rel="noopener">Read</a>).
+      Our <strong>AGI ALPHA AGENT</strong>, fueled by the strictly-utility 
+      <strong>$AGIALPHA</strong> token, now harnesses that visionary foundation—
+      <em>arguably world’s most valuable, impactful and important IP</em>—to unleash 
+      the ultimate alpha signal engine.
+    </p>
+  </section>
+
+  <hr>
+
+  <!-- FOUNDATION -->
+  <section id="foundation">
+    <p><strong>AGI ALPHA</strong><br>
+       AGI ALPHA AGENT — DECISIVE SIGNALS. UNSTOPPABLE ALPHA.</p>
+    <p>
+      <strong>CA:</strong> 
+      <span class="code-block">tWKHzXd5PRmxTF5cMfJkm2Ua3TcjwNNoSRUqx6Apump</span><br>
+    </p>
+    <p><strong>Exclusive Access with $AGIALPHA Token</strong></p>
+  </section>
+
+  <hr>
+
+  <!-- DISCLAIMERS -->
+  <section id="disclaimers">
+    <h2>Initial Terms & Conditions</h2>
+    <p>
+      <strong>1.</strong> Token Usage: $AGIALPHA tokens are strictly utility tokens—no equity, no profit-sharing—intended 
+      for the purchase of products/services by the AGI ALPHA AGENT (ALPHA.AGENT.AGI.Eth). 
+      They are not intended for investment or speculative purposes.
+    </p>
+    <p>
+      <strong>2.</strong> Non-Refundable: Purchases of $AGIALPHA tokens are final and non-refundable.
+    </p>
+    <p>
+      <strong>3.</strong> No Guarantee of Value: The issuer does not guarantee any specific value 
+      of the $AGIALPHA token in relation to fiat currencies or other cryptocurrencies.
+    </p>
+    <p>
+      <strong>4.</strong> Regulatory Compliance: It is the user’s responsibility to ensure that 
+      the purchase and use of $AGIALPHA tokens comply with all applicable laws and regulations.
+    </p>
+    <p>
+      <strong>5.</strong> User Responsibility: Users are responsible for complying with the laws 
+      in their own jurisdiction regarding the purchase and use of $AGIALPHA tokens.
+    </p>
+    <p>
+      <strong>Overriding Authority:</strong> AGI.Eth<br>
+      $AGIALPHA is experimental and part of an ambitious research agenda. Any expectation of profit is unjustified.
+    </p>
+    <p>
+      Materials provided (including $AGIALPHA) are without warranty. By using $AGIALPHA, 
+      you agree to the $AGIALPHA Terms and Conditions.
+    </p>
+    <p>
+      <strong>Changes to Terms:</strong> The issuer may revise these terms at any time, subject to regulatory compliance. 
+      Current Terms & Conditions: 
+      <a href="https://www.montreal.ai/" target="_blank" rel="noopener">https://www.montreal.ai/</a>.
+    </p>
+  </section>
+
+  <hr>
+
+  <!-- FURTHER INFO -->
+  <section id="further-info">
+    <p>
+      <strong>AGI ALPHA AGENT Discord Link:</strong>
+      <a href="https://discord.gg/montrealai" target="_blank" rel="noopener">https://discord.gg/montrealai</a>
+    </p>
+    <p>
+      <strong>Official info about $AGIALPHA</strong> resides in the on-chain records of the AGI ALPHA Agent:
+      <a href="https://app.ens.domains/alpha.agent.agi.eth" target="_blank" rel="noopener">
+        https://app.ens.domains/alpha.agent.agi.eth
+      </a>.
+    </p>
+    <p>Pre-Alpha Version — Under Development.</p>
+  </section>
+  
+  <!-- RESTRICTED ACCESS SECTION (Access Granted Message) -->
+  <section id="restricted-section" style="display:none;">
+    <h2>Access Granted: AGI ALPHA AGENT</h2>
+    <p>Welcome, eligible holder! You have at least 1,000,000 AGIALPHA tokens and now have exclusive access.</p>
+    <!-- Additional restricted content can be added here -->
+  </section>
+  
+  <!-- (Optional) You may keep the access-message block if needed -->
+  <div id="access-message" style="display:none;">
+    <p>Access Denied: You must hold at least 1,000,000 AGIALPHA tokens to access the AGI ALPHA AGENT.</p>
+    <p>Please <a href="https://dexscreener.com/solana/8zq3vBuoy66dur6dhrA4aqnrtGg9yZyRAp51BTBpEXj" target="_blank">buy AGIALPHA tokens</a> to gain access.</p>
+  </div>
+  
+</main>
+
+<!-- p5.js: 33 stars in rotating container + slow zoom in/out -->
+<script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+<script>
+let starCount = 33;
+let stars = [];
+let containerRadius = 300;
+let angle = 0;
+function setup() {
+  let cnv = createCanvas(windowWidth, windowHeight, WEBGL);
+  cnv.parent("p5-background");
+  colorMode(HSB, 360, 100, 100);
+  noStroke();
+  for (let i = 0; i < starCount; i++) {
+    stars.push(new Star());
+  }
+}
+function draw() {
+  background(0, 0.08);
+  rotateY(angle * 0.001);
+  rotateX(angle * 0.0007);
+  angle += 0.2;
+  let zoom = sin(frameCount * 0.002) * 150;
+  translate(0, 0, zoom);
+  push();
+  noFill();
+  stroke(50, 0, 100, 20);
+  sphere(containerRadius);
+  pop();
+  for (let s of stars) {
+    s.update();
+    s.render();
+  }
+}
+class Star {
+  constructor() {
+    let r = random(containerRadius);
+    let theta = random(TWO_PI);
+    let phi = random(PI);
+    this.x = r * sin(phi) * cos(theta);
+    this.y = r * sin(phi) * sin(theta);
+    this.z = r * cos(phi);
+    this.vx = random(-1, 1);
+    this.vy = random(-1, 1);
+    this.vz = random(-1, 1);
+    this.hue = random(360);
+    this.size = random(4, 7);
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.z += this.vz;
+    let magPos = sqrt(this.x*this.x + this.y*this.y + this.z*this.z);
+    if (magPos > containerRadius - this.size) {
+      let nx = this.x / magPos;
+      let ny = this.y / magPos;
+      let nz = this.z / magPos;
+      let dot = this.vx*nx + this.vy*ny + this.vz*nz;
+      this.vx -= 2*dot*nx;
+      this.vy -= 2*dot*ny;
+      this.vz -= 2*dot*nz;
+    }
+  }
+  render() {
+    push();
+    translate(this.x, this.y, this.z);
+    fill(this.hue, 80, 100);
+    sphere(this.size);
+    pop();
+    this.hue = (this.hue+0.4) % 360;
+  }
+}
+function windowResized() { resizeCanvas(windowWidth, windowHeight); }
+</script>
+
+<!-- SCROLL REVEAL -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const sections = document.querySelectorAll("section");
+  const observerOpts = { root: null, rootMargin: "0px", threshold: 0.1 };
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add("in-view");
+        obs.unobserve(entry.target);
+      }
+    });
+  }, observerOpts);
+  sections.forEach(sec => observer.observe(sec));
+});
+</script>
+
+<!-- SOLANA WALLET & ACCESS CHECK -->
+<script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+<script>
+const AGIALPHA_MINT = "tWKHzXd5PRmxTF5cMfJkm2Ua3TcjwNNoSRUqx6Apump";
+const REQUIRED_BALANCE = 1000000;
+// Using a CORS-friendly RPC endpoint (replace if desired)
+let connection = new solanaWeb3.Connection("https://solana-api.projectserum.com", 'confirmed');
+let walletPublicKey = null;
+async function connectWallet(){
+  if(window.solana && window.solana.isPhantom){
+    try{
+      const resp = await window.solana.connect();
+      walletPublicKey = resp.publicKey;
+      document.getElementById("wallet-button").innerText = walletPublicKey.toString().slice(0,8)+"..."+walletPublicKey.toString().slice(-8);
+      document.getElementById("wallet-info").style.display = "block";
+      checkBalance();
+      setInterval(checkBalance,60000);
+    } catch(err){
+      console.error("Wallet connection failed:", err);
+    }
+  } else {
+    alert("Phantom wallet not found. Please install Phantom Wallet.");
+  }
+}
+async function checkBalance(){
+  if(!walletPublicKey)return;
+  try{
+    let tokenAccounts = await connection.getTokenAccountsByOwner(walletPublicKey, { mint: new solanaWeb3.PublicKey(AGIALPHA_MINT) });
+    let balance = 0;
+    if(tokenAccounts.value.length > 0){
+      let accountInfo = await connection.getTokenAccountBalance(tokenAccounts.value[0].pubkey);
+      balance = accountInfo.value.uiAmount || 0;
+    }
+    // If eligible, display access-granted message; otherwise, show the current balance.
+    if(balance >= REQUIRED_BALANCE){
+      document.getElementById("wallet-info").innerText = "Access Granted: You hold " + balance.toLocaleString() + " AGIALPHA tokens.";
+      document.getElementById("restricted-section").style.display = "block";
+    } else {
+      document.getElementById("wallet-info").innerText = "Balance: " + balance.toLocaleString() + " AGIALPHA tokens.";
+      document.getElementById("restricted-section").style.display = "none";
+    }
+  } catch(err){
+    console.error("Error checking token balance:", err);
+  }
+}
+if(window.solana){
+  window.solana.on("disconnect",()=>{
+    walletPublicKey = null;
+    document.getElementById("wallet-button").innerText = "Connect Wallet";
+    document.getElementById("wallet-info").style.display = "none";
+    document.getElementById("restricted-section").style.display = "none";
+  });
+}
+document.getElementById("wallet-button").addEventListener("click", connectWallet);
+</script>
+</body>
+</html>
+

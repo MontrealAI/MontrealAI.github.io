@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AGIALPHA Token Access</title>
+</head>
+<body>
+  <h1>AGIALPHA Token Access</h1>
+  <p id="message">Connect your Solana wallet to check your AGIALPHA token balance.</p>
+  <button id="connect-button">Connect Wallet</button>
+  <div id="balance-info"></div>
+
+  <!-- Include Solana Web3.js library (via CDN) :contentReference[oaicite:0]{index=0} -->
+  <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+  <script>
+    // Solana Web3 is now accessible via the global solanaWeb3 object&#8203;:contentReference[oaicite:1]{index=1}
+    // Define the token mint address for AGIALPHA token
+    const AGI_ALPHA_MINT = new solanaWeb3.PublicKey('tWKHzXd5PRmxTF5cMfJkm2Ua3TcjwNNoSRUqx6Apump');
+    const ACCESS_THRESHOLD = 1000000;  // 1,000,000 tokens threshold
+
+    // List of RPC endpoints to cycle through to avoid connection issues
+    const RPC_ENDPOINTS = [
+      { name: "Mainnet Beta (Default)", url: solanaWeb3.clusterApiUrl('mainnet-beta') },
+      { name: "Backup RPC (Project Serum)", url: 'https://solana-api.projectserum.com' }
+      // Additional RPC URLs can be added here if needed
+    ];
+
+    let currentEndpointIndex = 0;
+    let connection = new solanaWeb3.Connection(RPC_ENDPOINTS[currentEndpointIndex].url, 'confirmed');
+
+    // DOM element references
+    const connectButton = document.getElementById('connect-button');
+    const messageEl = document.getElementById('message');
+    const balanceInfoEl = document.getElementById('balance-info');
+
+    // Function to fetch AGIALPHA token balance and update UI
+    async function fetchAndDisplayBalance(ownerPublicKey) {
+      // Show loading status
+      balanceInfoEl.textContent = "Fetching token balance...";
+      balanceInfoEl.style.color = "";
+      balanceInfoEl.style.fontWeight = "";
+
+      // Try each RPC provider until success or all have been tried
+      for (let i = currentEndpointIndex; i < RPC_ENDPOINTS.length; i++) {
+        const rpc = RPC_ENDPOINTS[i];
+        try {
+          console.log(`Using RPC endpoint: ${rpc.url} (${rpc.name})`);
+          // Update connection to current RPC endpoint
+          connection = new solanaWeb3.Connection(rpc.url, 'confirmed');
+          // Fetch token accounts by owner for the AGIALPHA mint&#8203;:contentReference[oaicite:2]{index=2}
+          const response = await connection.getParsedTokenAccountsByOwner(ownerPublicKey, { mint: AGI_ALPHA_MINT });
+          console.log('Token accounts response:', response);
+
+          // Calculate total token balance (sum across all token accounts for safety)
+          let totalBalance = 0;
+          response.value.forEach(accountInfo => {
+            const tokenAmount = accountInfo.account.data.parsed.info.tokenAmount;
+            // Use uiAmount (float) or uiAmountString if available for large values
+            let amount = tokenAmount.uiAmount;
+            if (amount === null) {
+              amount = parseFloat(tokenAmount.uiAmountString);
+            }
+            totalBalance += amount;
+          });
+          console.log(`AGIALPHA token balance: ${totalBalance}`);
+
+          // Determine output based on threshold
+          if (totalBalance >= ACCESS_THRESHOLD) {
+            balanceInfoEl.textContent = "Access Granted";
+            balanceInfoEl.style.color = "green";
+            balanceInfoEl.style.fontWeight = "bold";
+          } else {
+            // Format balance nicely and display
+            balanceInfoEl.textContent = `Current AGIALPHA Balance: ${totalBalance.toLocaleString()} tokens`;
+            balanceInfoEl.style.color = "";
+            balanceInfoEl.style.fontWeight = "";
+          }
+          return;  // Success - exit the function
+        } catch (error) {
+          console.error(`Error fetching token balance from ${rpc.name}:`, error);
+          // Specific handling for parsing errors vs connection errors
+          if (error.name === 'StructError' || (error.message && error.message.includes('Struct'))) {
+            console.warn('Data parsing error (StructError) encountered. Trying next RPC endpoint...');
+          } else {
+            console.warn(`RPC request to ${rpc.name} failed. Switching to next RPC provider...`);
+          }
+          // Move to the next RPC provider for the next iteration
+          currentEndpointIndex = i + 1;
+          if (currentEndpointIndex >= RPC_ENDPOINTS.length) {
+            // No more providers available, break out of loop
+            break;
+          }
+        }
+      }
+
+      // If we reach here, all RPC attempts failed
+      balanceInfoEl.textContent = "Error: Unable to fetch token balance. Please try again later.";
+      balanceInfoEl.style.color = "red";
+      balanceInfoEl.style.fontWeight = "bold";
+    }
+
+    // Wallet connection event
+    connectButton.addEventListener('click', async () => {
+      if (window.solana && window.solana.isPhantom) {  // Check for a Solana provider (Phantom)&#8203;:contentReference[oaicite:3]{index=3}
+        try {
+          const resp = await window.solana.connect();  // Connect to Phantom wallet&#8203;:contentReference[oaicite:4]{index=4}
+          const walletPublicKey = resp.publicKey;
+          console.log('Wallet connected:', walletPublicKey.toString());
+          messageEl.textContent = `Connected wallet: ${walletPublicKey.toString()}`;
+          // Fetch and display the AGIALPHA token balance for this wallet
+          await fetchAndDisplayBalance(walletPublicKey);
+        } catch (err) {
+          console.error('Wallet connection failed:', err);
+          messageEl.textContent = "Wallet connection failed or was rejected.";
+        }
+      } else {
+        console.warn('Solana wallet not found. Please install Phantom or another Solana wallet.');
+        messageEl.textContent = "Solana wallet not found. Please install a wallet extension like Phantom.";
+      }
+    });
+  </script>
+</body>
+</html>
+
