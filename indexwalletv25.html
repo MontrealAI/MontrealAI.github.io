@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Find Real Mint</title></head>
+<body>
+<pre id="output"></pre>
+<script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.78.2/lib/index.iife.min.js"></script>
+<script>
+(async () => {
+  try {
+    let connection = new solanaWeb3.Connection("https://rpc.ankr.com/solana");
+    let tokenAccountPubkey = new solanaWeb3.PublicKey("BqSHYuJVQWFrLjFhmEwroMM921KpbcGRSSmRQYbVhaop");
+    let accountInfo = await connection.getParsedAccountInfo(tokenAccountPubkey);
+
+    if (accountInfo.value && accountInfo.value.data && accountInfo.value.data.parsed) {
+      let mintAddress = accountInfo.value.data.parsed.info.mint;
+      document.getElementById("output").innerText = "Real Mint Address: " + mintAddress;
+    } else {
+      document.getElementById("output").innerText = "Could not parse token account info.";
+    }
+  } catch (e) {
+    document.getElementById("output").innerText = e.message;
+  }
+})();
+</script>
+</body>
+</html>
