@@ -367,7 +367,7 @@
                 const balance = await agiToken.methods.balanceOf(userAccount).call();
                 const reputation = await agiJobManager.methods.reputation(userAccount).call();
                 const myJobs = await getJobsByOwner(userAccount);
-                document.getElementById('agi-balance').textContent = Number(balance) / 1_000_000;
+                document.getElementById('agi-balance').textContent = web3.utils.fromWei(balance, 'mwei');
                 document.getElementById('my-reputation').textContent = reputation;
                 document.getElementById('my-jobs').textContent = myJobs.length;
 
@@ -403,7 +403,7 @@
                         <td>${job.id}</td>
                         <td>${job.employer}</td>
                         <td>${job.ipfsHash}</td>
-                        <td>${web3.utils.fromWei(job.payout, 'ether')}</td>
+                        <td>${web3.utils.fromWei(job.payout, 'mwei')}</td>
                         <td>${job.duration}</td>
                         <td>${job.assignedAgent || 'Unassigned'}</td>
                         <td>${job.completed ? 'Completed' : 'Ongoing'}</td>
@@ -430,7 +430,7 @@
         async function checkApproval(amount) {
             const allowance = await agiToken.methods.allowance(userAccount, agiJobManagerAddress).call();
             if (allowance < amount) {
-                if (!confirm(`You need to approve ${web3.utils.fromWei(amount, 'ether')} $AGIALPHA to create this job. Do you want to approve?`)) {
+                if (!confirm(`You need to approve ${web3.utils.fromWei(amount, 'mwei')} $AGIALPHA to create this job. Do you want to approve?`)) {
                     return false;
                 }
                 await agiToken.methods.approve(agiJobManagerAddress, amount).send({ from: userAccount });
@@ -446,7 +446,7 @@
                 const details = prompt("Enter Job Details:");
                 if (!ipfsHash || !payout || !duration || !details) return;
 
-                const payoutWei = web3.utils.toWei(payout, 'ether');
+                const payoutWei = web3.utils.toWei(payout, 'mwei');
                 const approvalGranted = await checkApproval(payoutWei);
                 if (!approvalGranted) return;
 
@@ -575,7 +575,7 @@
                 for (let i = 0; i < totalNFTs; i++) {
                     const tokenURI = await agiJobManager.methods.tokenURI(i).call();
                     const listing = await agiJobManager.methods.listings(i).call();
-                    const price = web3.utils.fromWei(listing.price, 'ether');
+                    const price = web3.utils.fromWei(listing.price, 'mwei');
                     const button = listing.isActive ? `<button class="btn" onclick="purchaseNFT(${i})">Purchase for ${price} $AGIALPHA</button>` : '';
                     const listItem = `<li class="nft-list-item">
                             <img src="agijobs360v0.png" alt="NFT Image" class="nft-image">
@@ -635,7 +635,7 @@
             if (!price) return;
 
             try {
-                const priceWei = web3.utils.toWei(price, 'ether');
+                const priceWei = web3.utils.toWei(price, 'mwei');
                 await agiJobManager.methods.listNFT(tokenId, priceWei).send({ from: userAccount });
                 await updateDashboard();
             } catch (error) {
