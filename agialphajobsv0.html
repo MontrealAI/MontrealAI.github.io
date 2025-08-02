@@ -367,7 +367,7 @@
                 const balance = await agiToken.methods.balanceOf(userAccount).call();
                 const reputation = await agiJobManager.methods.reputation(userAccount).call();
                 const myJobs = await getJobsByOwner(userAccount);
-                document.getElementById('agi-balance').textContent = web3.utils.fromWei(balance, 'ether');
+                document.getElementById('agi-balance').textContent = Number(balance) / 1_000_000;
                 document.getElementById('my-reputation').textContent = reputation;
                 document.getElementById('my-jobs').textContent = myJobs.length;
 
