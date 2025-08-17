@@ -34,7 +34,7 @@
                 <li><strong>Ethereum Address:</strong> Provide the address of your Ethereum wallet. This is where your AGI ALPHA CLUB Lifetime Membership NFT will be sent.</li>
                 <li>Click <strong>Register</strong> and complete the transaction in MetaMask.</li>
             </ol>
-            <p><strong>Note:</strong> You will need 5000 AGIALPHA tokens for registration, which will need to be pre-approved for registration. The process will guide you through this step if necessary.</p>
+            <p><strong>Note:</strong> You will need 10000 AGIALPHA tokens for registration, which will need to be pre-approved for registration. The process will guide you through this step if necessary.</p>
             <p><strong>Pre-Alpha Version</strong></p>
         </div>
         <input type="text" id="label" placeholder="Label (e.g., 'alice')">
@@ -87,8 +87,8 @@
 
                 const agiTokenContract = new ethers.Contract(agiTokenAddress, agiTokenAbi, signer);
                 const allowance = await agiTokenContract.allowance(userAddress, contractAddress);
-                if (allowance.lt(ethers.utils.parseUnits("5000", 6))) {
-                    const approvalTx = await agiTokenContract.approve(contractAddress, ethers.utils.parseUnits("5000", 6));
+                if (allowance.lt(ethers.utils.parseUnits("10000", 6))) {
+                    const approvalTx = await agiTokenContract.approve(contractAddress, ethers.utils.parseUnits("10000", 6));
                     await approvalTx.wait();
                     alert('AGI token approval successful. Please proceed with registration.');
                 }
