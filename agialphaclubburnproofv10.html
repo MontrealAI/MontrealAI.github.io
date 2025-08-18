@@ -1,0 +1,501 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Buyer self‑burn → build proof → recordSelfBurn → claim</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <style>
+    :root { --fg:#111; --muted:#6b7280; --ok:#0b7a0b; --warn:#b25600; --err:#b00020; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 20px; color:var(--fg); }
+    h1 { font-size: 18px; margin: 0 0 12px }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    .bar { display:flex; gap:12px; align-items:center; border:1px solid #e5e7eb; padding:10px 12px; border-radius:8px; }
+    .btn { background:#111; color:#fff; border:0; padding:10px 12px; border-radius:8px; font-weight:600; cursor:pointer }
+    .btn:disabled { opacity:.6; cursor:not-allowed }
+    .tag { font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid #e5e7eb; }
+    .tag.err{ color:var(--err); border-color:#f2b3bc; }
+    .tag.ok { color:var(--ok); border-color:#bfe0bf; }
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    .card { border:1px solid #e5e7eb; padding:14px; border-radius:10px; margin:14px 0; }
+    label { display:block; font-size:12px; font-weight:600; color:#374151; margin:8px 0 4px }
+    input, select, textarea { width:100%; padding:10px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px }
+    textarea { height:140px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; word-break:break-all; }
+    .muted { color:var(--muted); font-size:12px }
+    .row { display:flex; gap:10px; }
+    .row .btn { flex:1 }
+    .status { font-size:13px; }
+    .ok { color:var(--ok); font-weight:600 }
+    .warn { color:var(--warn); font-weight:600 }
+    .err { color:var(--err); font-weight:600 }
+  </style>
+
+  <!-- UMD libraries (no require/ESM); with fallbacks -->
+  <script>
+    const loadScript = (src) => new Promise((resolve,reject)=>{
+      const s=document.createElement('script'); s.src=src; s.async=true;
+      s.onload=resolve; s.onerror=reject; document.head.appendChild(s);
+    });
+
+    // Load in order. Use UMD builds only.
+    async function loadLibs() {
+      try {
+        // ethers v5 (UMD)
+        await loadScript("https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js");
+        // Buffer polyfill (UMD) – avoids 'require'
+        await loadScript("https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js");
+        // rlp (UMD)
+        try { await loadScript("https://cdn.jsdelivr.net/npm/rlp@3.0.0/dist/rlp.umd.js"); }
+        catch { await loadScript("https://unpkg.com/rlp@3.0.0/dist/rlp.umd.js"); }
+        // ethereumjs util/trie (UMD)
+        try { await loadScript("https://cdn.jsdelivr.net/npm/@ethereumjs/util@9.0.1/dist/index.umd.js"); }
+        catch { await loadScript("https://unpkg.com/@ethereumjs/util@9.0.1/dist/index.umd.js"); }
+        try { await loadScript("https://cdn.jsdelivr.net/npm/@ethereumjs/trie@5.6.3/dist/index.umd.js"); }
+        catch { await loadScript("https://unpkg.com/@ethereumjs/trie@5.6.3/dist/index.umd.js"); }
+
+        // Globals required by some ethereumjs bits
+        // (they check for Buffer/global)
+        window.Buffer = window.Buffer || window.buffer?.Buffer;
+        window.global = window;
+
+        const ok = !!(window.ethers && window.Buffer && window.rlp && window.ethereumjs_trie && window.ethereumjs_util);
+        document.getElementById('libs').textContent = ok ? 'libs: ok' : 'libs: failed to load';
+        document.getElementById('libs').className = 'tag ' + (ok?'ok':'err');
+        if(!ok) throw new Error('Library load failed');
+      } catch(e) {
+        document.getElementById('libs').textContent = 'libs: failed to load';
+        document.getElementById('libs').className = 'tag err';
+        console.error(e);
+      }
+    }
+  </script>
+</head>
+<body>
+<div class="wrap">
+  <h1>Buyer self‑burn → build proof → <span class="mono">recordSelfBurn</span> → claim</h1>
+
+  <div class="bar">
+    <button class="btn" id="btnConnect">Connect MetaMask</button>
+    <span id="libs" class="tag">libs: loading…</span>
+    <span>Account: <span id="acct" class="mono"></span></span>
+    <span>Network: <span id="net" class="mono"></span></span>
+  </div>
+
+  <div class="card">
+    <h3>1) Configure</h3>
+
+    <label>Parent domain (e.g., <i>example.eth</i>)</label>
+    <input id="parentDomain" placeholder="alpha.club.agi.eth" value="alpha.club.agi.eth"/>
+
+    <div class="muted">parentNode (namehash): <span id="parentNode" class="mono">--</span></div>
+
+    <label>Label you want to register (e.g., <i>alice</i>)</label>
+    <input id="label" placeholder="alice" value="3"/>
+
+    <div class="grid">
+      <div>
+        <label>Registrar (ForeverSubdomainRegistrar)</label>
+        <input id="registrar" value="0x75EA7a1E35F8438557Ee1B6682bdFAfBefcD7637"/>
+      </div>
+      <div>
+        <label>Verifier (BurnReceiptVerifier)</label>
+        <input id="verifier" value="0xBcf1065521A7379D6f4AbEF2dEdAf86a77E5eac8"/>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <label>AGI token address</label>
+        <input id="agi" value="0xf0780f43b86c13b3d0681b1cf6daeb1499e7f14d"/>
+        <div class="muted">Address may be pasted lower‑case; we’ll normalize to a safe form.</div>
+      </div>
+      <div>
+        <label>Burn to</label>
+        <select id="burnMode">
+          <option value="burn">Real burn (call token.burn)</option>
+          <option value="dead">Fallback: transfer(0x0000…dEaD)</option>
+        </select>
+        <div class="muted">If the token lacks <code>burn(uint256)</code>, fallback uses <code>transfer(0x...dEaD, amount)</code>.</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <label>Amount to burn</label>
+        <input id="amount" type="number" step="any" value="250"/>
+        <div class="muted">AGI / decimals auto‑detected (fallback 18; we’ll multiply by 10^decimals)</div>
+      </div>
+      <div>
+        <label>Confirmations required</label>
+        <input id="confs" type="number" min="1" value="6"/>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <label>RPC URL (optional; blank → MetaMask)</label>
+        <input id="rpc" placeholder="(must support eth_getBlockByNumber & receipts)"/>
+      </div>
+      <div>
+        <label>Burn age / status</label>
+        <div id="status" class="status muted">—</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <button id="btnBurn" class="btn">Burn 250 AGI</button>
+      <button id="btnOpenTx" class="btn" style="background:#374151">Open burn tx on Etherscan</button>
+    </div>
+
+    <label>Burn TX hash (auto‑filled after “Burn now”, or paste manually)</label>
+    <input id="txHash" placeholder="0x…"/>
+  </div>
+
+  <div class="card">
+    <h3>2) Build proof</h3>
+    <button id="btnBuild" class="btn">Build header & receipt proof</button>
+    <div id="buildMsg" class="muted" style="margin-top:8px"></div>
+
+    <div class="grid">
+      <div>
+        <label>blockNumber (uint256)</label>
+        <input id="blockNumber" class="mono" readonly>
+      </div>
+      <div>
+        <label>txIndex (uint256)</label>
+        <input id="txIndex" class="mono" readonly>
+      </div>
+    </div>
+
+    <label>headerRlp (bytes)</label>
+    <textarea id="headerRlp" class="mono" readonly></textarea>
+
+    <label>receiptRlp (bytes)</label>
+    <textarea id="receiptRlp" class="mono" readonly></textarea>
+
+    <label>rlpParentNodes (bytes)</label>
+    <textarea id="proofNodes" class="mono" readonly></textarea>
+
+    <div class="muted" style="margin-top:6px">
+      Copy these three bytes values, and use with <b>buyer</b> (your wallet), <b>parentNode</b>, <b>label</b>, <b>blockNumber</b>, <b>txIndex</b> in <b>recordSelfBurn</b> on the Verifier.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>3) Call contracts on Etherscan</h3>
+    <ol>
+      <li>Open <b>BurnReceiptVerifier</b> at <span class="mono">0xBcf1065521A7379D6f4AbEF2dEdAf86a77E5eac8</span> → <b>Contract</b> → <b>Write as Proxy</b> (connect wallet).</li>
+      <li>Call <b>recordSelfBurn</b> with:
+        <ul>
+          <li><b>buyer</b> = your wallet address (shown top‑left)</li>
+          <li><b>parentNode</b> = value shown under “parentNode (namehash)”</li>
+          <li><b>label</b> = exact label you’ll register</li>
+          <li><b>blockNumber</b>, <b>txIndex</b> = from step 2</li>
+          <li><b>headerRlp</b>, <b>receiptRlp</b>, <b>rlpParentNodes</b> = from step 2</li>
+        </ul>
+      </li>
+      <li>Then open <b>ForeverSubdomainRegistrar</b> at <span class="mono">0x75EA7a1E35F8438557Ee1B6682bdFAfBefcD7637</span> → <b>Write as Proxy</b> → call <b>claimAfterSelfBurn(name, newOwner, duration)</b>.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+(async () => {
+  await loadLibs();
+
+  const $ = (id) => document.getElementById(id);
+
+  let provider, signer, acct, chain;
+  let watch = { tx:null, block:0, required:6, handle:null };
+
+  // ---------------------------------------------------------------------------
+  // Provider / wallet
+  // ---------------------------------------------------------------------------
+  async function connect() {
+    // Prefer custom RPC if given (read+write if MetaMask is present)
+    const rpc = $('rpc').value.trim();
+    if (rpc) {
+      provider = new ethers.providers.JsonRpcProvider(rpc);
+      // signer only if MetaMask is available & on same chain
+      if (window.ethereum) {
+        const web3 = new ethers.providers.Web3Provider(window.ethereum);
+        await web3.send('eth_requestAccounts', []);
+        signer = web3.getSigner();
+      }
+    } else {
+      if (!window.ethereum) return alert('Please install MetaMask.');
+      const web3 = new ethers.providers.Web3Provider(window.ethereum);
+      await web3.send('eth_requestAccounts', []);
+      provider = web3; signer = web3.getSigner();
+    }
+
+    acct = signer ? await signer.getAddress() : null;
+    const net = await provider.getNetwork();
+    chain = net.chainId;
+
+    $('acct').textContent = acct || '(read‑only)';
+    $('net').textContent = `${net.name} (chainId=${net.chainId})`;
+
+    // live namehash preview
+    updateParentNode();
+    $('parentDomain').addEventListener('input', updateParentNode);
+
+    // re‑watch burn on new blocks
+    if (watch.handle) provider.off('block', watch.handle);
+    watch.handle = async (bn)=> { if (watch.tx) await updateConfirmations(); };
+    provider.on('block', watch.handle);
+  }
+
+  $('btnConnect').onclick = connect;
+
+  // ENS/EIP‑137 namehash (use ethers implementation, sanitize dots)
+  function safeNamehash(name) {
+    const s = (name||'').trim().replace(/\.+$/,''); // remove trailing dot
+    return ethers.utils.namehash(s || '');
+  }
+  function updateParentNode() {
+    try {
+      const hn = safeNamehash($('parentDomain').value);
+      $('parentNode').textContent = hn;
+    } catch {
+      $('parentNode').textContent = '--';
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Burn 250 AGI (decimals auto) – burn() preferred, fallback to transfer(0x…dEaD)
+  // ---------------------------------------------------------------------------
+  async function burnNow() {
+    try {
+      if (!signer) await connect();
+      const rawAddr = $('agi').value.trim();
+      const agiAddr = rawAddr.toLowerCase(); // avoid checksum complaints when instantiating
+      const burnMode = $('burnMode').value;  // 'burn' | 'dead'
+      const amountUi = $('amount').value || '250';
+
+      // Minimal ABI for decimals, burn, transfer
+      const abi = [
+        "function decimals() view returns (uint8)",
+        "function burn(uint256) returns (bool)",
+        "function transfer(address,uint256) returns (bool)"
+      ];
+      const agi = new ethers.Contract(agiAddr, abi, signer);
+
+      let decimals = 18;
+      try { decimals = await agi.decimals(); } catch {}
+      const amt = ethers.utils.parseUnits(amountUi.toString(), decimals);
+
+      let tx;
+      if (burnMode === 'burn') {
+        try {
+          // Try estimating first; if it fails, fallback to transfer to 0x..dEaD
+          await agi.estimateGas.burn(amt);
+          tx = await agi.burn(amt);
+        } catch (e) {
+          console.warn('burn() not available; fallback to transfer(0x…dEaD)', e);
+          const DEAD = '0x000000000000000000000000000000000000dEaD';
+          tx = await agi.transfer(DEAD, amt);
+        }
+      } else {
+        const DEAD = '0x000000000000000000000000000000000000dEaD';
+        tx = await agi.transfer(DEAD, amt);
+      }
+
+      $('txHash').value = tx.hash;
+      $('btnOpenTx').onclick = () => window.open(`https://etherscan.io/tx/${tx.hash}`, '_blank');
+      $('status').textContent = 'Sent. Waiting for confirmations…';
+
+      watch.tx = tx.hash;
+      watch.required = parseInt($('confs').value || '6',10);
+      await updateConfirmations(); // kick immediately
+    } catch (e) {
+      console.error(e);
+      alert((e && e.message) || String(e));
+    }
+  }
+  $('btnBurn').onclick = burnNow;
+  $('btnOpenTx').onclick = () => {
+    const h = $('txHash').value.trim();
+    if (h) window.open(`https://etherscan.io/tx/${h}`, '_blank');
+  };
+
+  // Update confirmations live; auto-build proof when threshold reached
+  async function updateConfirmations() {
+    try {
+      const h = $('txHash').value.trim() || watch.tx;
+      if (!h) return;
+
+      const r = await provider.getTransactionReceipt(h);
+      if (!r || !r.blockNumber) {
+        $('status').textContent = 'Waiting for receipt…';
+        return;
+      }
+      watch.block = r.blockNumber;
+      $('blockNumber').value = String(r.blockNumber);
+      $('txIndex').value = String(r.transactionIndex);
+
+      const now = await provider.getBlockNumber();
+      const confs = Math.max(0, now - r.blockNumber + 1); // +1 counts the mined block
+      const need = parseInt($('confs').value || '6', 10);
+
+      if (confs >= need) {
+        $('status').innerHTML = `<span class="ok">OK</span>: ${confs} confirmations`;
+        // build proof automatically the first time we cross the threshold
+        if (!$('headerRlp').value) {
+          await buildProofFromTx(h);
+        }
+      } else {
+        $('status').textContent = `Waiting: ${confs}/${need} confirmations`;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Receipt proof
+  // ---------------------------------------------------------------------------
+  const { RLP } = window.rlp || {};
+  const { Trie, createProof } = window.ethereumjs_trie || {};
+  const { bytesToHex, hexToBytes } = window.ethereumjs_util || {};
+
+  const toBuf = (hex) => {
+    const s = (hex || '0x').slice(2);
+    return Buffer.from(s.length % 2 ? '0'+s : s, 'hex');
+  };
+  const qToBuf = (hex) => { // quantity → minimal big-endian
+    if (!hex || hex === '0x' || hex === '0x0') return Buffer.from([]);
+    let s = hex.slice(2); if (s.length % 2) s = '0'+s;
+    return Buffer.from(s,'hex');
+  };
+
+  function rlpEncodeReceiptPayload(r) {
+    // [status/root, cumulativeGasUsed, logsBloom, logs]
+    const statusOrRoot = r.status ? qToBuf(r.status) : toBuf(r.root);
+    const cgu = qToBuf(r.cumulativeGasUsed);
+    const bloom = toBuf(r.logsBloom);
+    const logs = r.logs.map(log => [ toBuf(log.address), log.topics.map(toBuf), toBuf(log.data) ]);
+    return RLP.encode([ statusOrRoot, cgu, bloom, logs ]);
+  }
+  function rlpEncodeTypedReceipt(r) {
+    const payload = rlpEncodeReceiptPayload(r);
+    const t = r.type && r.type !== '0x' ? parseInt(r.type,16) : null;
+    return t===null ? payload : Buffer.concat([ Buffer.from([t]), payload ]);
+  }
+  function rlpEncodeHeader(block) {
+    const f = [];
+    f.push(toBuf(block.parentHash));
+    f.push(toBuf(block.sha3Uncles));
+    f.push(toBuf(block.miner));
+    f.push(toBuf(block.stateRoot));
+    f.push(toBuf(block.transactionsRoot));
+    f.push(toBuf(block.receiptsRoot));
+    f.push(toBuf(block.logsBloom));
+    f.push(qToBuf(block.difficulty));
+    f.push(qToBuf(block.number));
+    f.push(qToBuf(block.gasLimit));
+    f.push(qToBuf(block.gasUsed));
+    f.push(qToBuf(block.timestamp));
+    f.push(toBuf(block.extraData));
+    f.push(toBuf(block.mixHash));
+    f.push(toBuf(block.nonce));
+    if (block.baseFeePerGas) f.push(qToBuf(block.baseFeePerGas));
+    if (block.withdrawalsRoot) f.push(toBuf(block.withdrawalsRoot));
+    if (block.blobGasUsed) f.push(qToBuf(block.blobGasUsed));
+    if (block.excessBlobGas) f.push(qToBuf(block.excessBlobGas));
+    if (block.parentBeaconBlockRoot) f.push(toBuf(block.parentBeaconBlockRoot));
+    return RLP.encode(f);
+  }
+  function rlpEncodeUint(n) {
+    const hex = ethers.utils.hexlify(n); // minimal
+    return RLP.encode(Buffer.from(ethers.utils.arrayify(hex)));
+  }
+
+  async function getBlockAndAllReceipts(blockNumber) {
+    const blockHex = ethers.utils.hexValue(blockNumber);
+    const block = await provider.send('eth_getBlockByNumber', [blockHex, true]);
+    let receipts = null;
+    try {
+      receipts = await provider.send('eth_getBlockReceipts', [blockHex]);
+    } catch {}
+    if (!receipts) {
+      receipts = [];
+      for (const tx of block.transactions) {
+        receipts.push(await provider.getTransactionReceipt(tx.hash));
+      }
+    }
+    return { block, receipts };
+  }
+
+  async function buildProofFromTx(txHash) {
+    try {
+      $('buildMsg').textContent = 'Building proof (fetching block + receipts)…';
+      const r = await provider.getTransactionReceipt(txHash);
+      const need = parseInt($('confs').value || '6',10);
+      const now = await provider.getBlockNumber();
+      const confs = Math.max(0, now - r.blockNumber + 1);
+      if (confs < need) {
+        $('buildMsg').textContent = 'Error: Not enough confirmations yet';
+        return;
+      }
+      if (confs > 256) {
+        $('buildMsg').textContent = 'Error: Burn too old (must be ≤ 256 blocks)';
+        return;
+      }
+
+      // Load block + all receipts, rebuild receipts trie
+      const { block, receipts } = await getBlockAndAllReceipts(r.blockNumber);
+
+      const headerRlp = rlpEncodeHeader(block);
+      const headerHash = ethers.utils.keccak256(headerRlp);
+      if (headerHash.toLowerCase() !== block.hash.toLowerCase()) {
+        throw new Error('Header RLP hash mismatch (RPC inconsistency). Try another RPC in the box above.');
+      }
+
+      const trie = new Trie();
+      for (const rc of receipts) {
+        const key = rlpEncodeUint(parseInt(rc.transactionIndex));
+        const val = rlpEncodeTypedReceipt(rc);
+        await trie.put(key, val);
+      }
+      const rootHex = '0x'+Buffer.from(trie.root()).toString('hex');
+      if (rootHex.toLowerCase() !== block.receiptsRoot.toLowerCase()) {
+        throw new Error('Reconstructed receiptsRoot does not match block.receiptsRoot (RPC mismatch).');
+      }
+
+      const key = rlpEncodeUint(parseInt(r.transactionIndex));
+      const proofArr = await createProof(trie, key);
+      const proofRlp = RLP.encode(proofArr);
+      const receiptRlp = rlpEncodeTypedReceipt(r);
+
+      // Fill outputs
+      $('headerRlp').value  = '0x'+Buffer.from(headerRlp).toString('hex');
+      $('receiptRlp').value = '0x'+Buffer.from(receiptRlp).toString('hex');
+      $('proofNodes').value = '0x'+Buffer.from(proofRlp).toString('hex');
+      $('buildMsg').textContent = 'Proof ready. Paste into recordSelfBurn on Etherscan.';
+    } catch (e) {
+      console.error(e);
+      $('buildMsg').textContent = 'Error: ' + ((e && e.message) || e);
+    }
+  }
+
+  $('btnBuild').onclick = () => {
+    const h = $('txHash').value.trim();
+    if (!h) return alert('Enter or create a burn transaction first.');
+    buildProofFromTx(h);
+  };
+
+  // When the user pastes a tx hash, start watching automatically
+  $('txHash').addEventListener('input', async () => {
+    watch.tx = $('txHash').value.trim() || null;
+    if (watch.tx) await updateConfirmations();
+  });
+
+  // Initialize
+  connect().catch(console.error);
+})();
+</script>
+</body>
+</html>
+
