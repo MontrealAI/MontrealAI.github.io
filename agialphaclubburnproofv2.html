@@ -1,0 +1,378 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Self‑Burn → Proof → recordSelfBurn helper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <style>
+    :root { --b:#111; --sub:#555; --ok:#0a7a0a; --warn:#b35600; --err:#b00020; --bd:#e5e5e5; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; max-width: 980px }
+    h1 { font-size: 22px; margin: 0 0 8px }
+    h2 { font-size: 16px; margin-top: 24px }
+    label { display:block; margin: 8px 0 6px; font-weight:600 }
+    input, select, textarea, button { width: 100%; padding: 10px 12px; font-size: 14px; border:1px solid var(--bd); border-radius:8px; }
+    textarea { height: 130px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; word-break: break-all }
+    .ok { color: var(--ok); font-weight: 600 }
+    .warn { color: var(--warn); font-weight: 600 }
+    .err { color: var(--err); font-weight: 600 }
+    small { color:var(--sub) }
+    .card { border: 1px solid var(--bd); padding: 14px; border-radius: 12px; margin: 12px 0; }
+    .inline { display:flex; gap:8px; align-items:center }
+    .btn { cursor:pointer; }
+    .copy { width:auto; padding:6px 10px; white-space:nowrap; }
+    .muted { color: var(--sub); font-size: 12px; }
+    a { color:#0b6bcb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+
+  <!-- Browser-safe UMD bundles -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+  <!-- Buffer polyfill (exposes window.buffer & window.Buffer) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
+  <script>window.Buffer = window.buffer.Buffer;</script>
+
+  <!-- EthereumJS UMD bundles -->
+  <script src="https://cdn.jsdelivr.net/npm/@ethereumjs/rlp@4.0.1/dist/index.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@ethereumjs/util@9.0.1/dist/index.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@ethereumjs/trie@5.6.3/dist/index.umd.js"></script>
+</head>
+<body>
+  <h1>Buyer self‑burn → build proof → recordSelfBurn → claim</h1>
+
+  <div class="card">
+    <div class="inline" style="justify-content:space-between; gap:12px;">
+      <button id="btnConnect" class="btn">🔌 Connect MetaMask</button>
+      <div class="muted">or provide a custom RPC below</div>
+    </div>
+    <div>Account: <span id="acct" class="mono"></span></div>
+    <div>Network: <span id="net" class="mono"></span></div>
+  </div>
+
+  <div class="card">
+    <h2>1) Configure</h2>
+
+    <label>Parent domain (e.g., <i>example.eth</i>)</label>
+    <input id="parentDomain" placeholder="example.eth" />
+
+    <div class="inline">
+      <div class="mono" style="flex:1;">parentNode (namehash): <span id="parentNode"></span></div>
+      <button class="copy btn" data-copy="#parentNode">Copy</button>
+    </div>
+
+    <label>Label you will register (e.g., <i>alice</i>)</label>
+    <input id="label" placeholder="alice" />
+
+    <label>Burn transaction hash (the tx where you burned AGI)</label>
+    <input id="txHash" placeholder="0x..." />
+
+    <div class="row">
+      <div>
+        <label>Registrar (ForeverSubdomainRegistrar)</label>
+        <input id="registrar" value="0x75EA7a1E35F8438557Ee1B6682bdFAfBefcD7637" />
+        <div class="muted"><a target="_blank" href="https://etherscan.io/address/0x75ea7a1e35f8438557ee1b6682bdfafbefcd7637#writeContract">Open Write Contract</a></div>
+      </div>
+      <div>
+        <label>Verifier (BurnReceiptVerifier)</label>
+        <input id="verifier" value="0xBcf1065521A7379D6f4AbEF2dEdAf86a77E5eac8" />
+        <div class="muted"><a target="_blank" href="https://etherscan.io/address/0xbcf1065521a7379d6f4abef2dedaf86a77e5eac8#writeContract">Open Write Contract</a></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>RPC URL (optional)</label>
+        <input id="rpc" placeholder="(leave blank to use MetaMask) e.g. https://mainnet.infura.io/v3/… or https://eth-mainnet.g.alchemy.com/v2/…" />
+        <small>If your RPC supports <code>eth_getBlockReceipts</code> this will be faster; otherwise it falls back to per‑tx receipts.</small>
+      </div>
+      <div>
+        <label>Confirmations required</label>
+        <input id="confs" value="6" />
+      </div>
+    </div>
+
+    <div>Burn status: <span id="status" class="mono"></span></div>
+  </div>
+
+  <div class="card">
+    <h2>2) Build Proof</h2>
+    <button id="btnBuild" class="btn">🛠 Build header & receipt proof</button>
+    <div id="buildMsg" class="mono" style="margin-top:8px;"></div>
+
+    <div class="row" style="margin-top:10px;">
+      <div>
+        <label>blockNumber (uint256)</label>
+        <input id="blockNumber" class="mono" readonly />
+      </div>
+      <div>
+        <label>txIndex (uint256)</label>
+        <input id="txIndex" class="mono" readonly />
+      </div>
+    </div>
+
+    <div class="inline" style="margin-top:10px;">
+      <label style="flex:1;">headerRlp (bytes)</label>
+      <button class="copy btn" data-copy="#headerRlp">Copy</button>
+    </div>
+    <textarea id="headerRlp" readonly></textarea>
+
+    <div class="inline">
+      <label style="flex:1;">receiptRlp (bytes)</label>
+      <button class="copy btn" data-copy="#receiptRlp">Copy</button>
+    </div>
+    <textarea id="receiptRlp" readonly></textarea>
+
+    <div class="inline">
+      <label style="flex:1;">rlpParentNodes (bytes)</label>
+      <button class="copy btn" data-copy="#proofNodes">Copy</button>
+    </div>
+    <textarea id="proofNodes" readonly></textarea>
+
+    <small>Paste these three bytes values + buyer + parentNode + label + blockNumber + txIndex into <b>recordSelfBurn</b> on the Verifier.</small>
+  </div>
+
+  <div class="card">
+    <h2>3) Finish on Etherscan</h2>
+    <ol>
+      <li>Open <b>BurnReceiptVerifier</b> (link above) → <b>Write Contract</b> → connect your wallet.</li>
+      <li>Call <b>recordSelfBurn</b> with:
+        <ul>
+          <li><b>buyer</b> = your wallet address (the burner)</li>
+          <li><b>parentNode</b> = the namehash shown above</li>
+          <li><b>label</b> = the label you’ll register (e.g. <code>alice</code>)</li>
+          <li><b>blockNumber</b>, <b>txIndex</b> from this page</li>
+          <li><b>headerRlp</b>, <b>receiptRlp</b>, <b>rlpParentNodes</b> from this page</li>
+        </ul>
+      </li>
+      <li>After that tx confirms, open the <b>ForeverSubdomainRegistrar</b> (link above) → <b>Write Contract</b> → call
+        <b>claimAfterSelfBurn(name, newOwner, duration)</b> with:
+        <ul>
+          <li><b>name</b> = <code>&lt;label&gt;</code> (e.g. <code>alice</code>)</li>
+          <li><b>newOwner</b> = the recipient wallet</li>
+          <li><b>duration</b> = e.g. <code>31536000</code> (1 year in seconds)</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+<script>
+(async () => {
+  // ----- Imports from UMD globals -----
+  const { RLP } = window.ethereumjs_rlp;
+  const { Trie, createProof } = window.ethereumjs_trie;
+
+  // ----- DOM helpers -----
+  const $ = (id) => document.getElementById(id);
+  const on = (el, ev, fn) => el.addEventListener(ev, fn);
+
+  // Copy buttons
+  document.querySelectorAll('.copy').forEach(btn => {
+    on(btn, 'click', async () => {
+      const sel = btn.getAttribute('data-copy');
+      const el = document.querySelector(sel);
+      if (!el) return;
+      await navigator.clipboard.writeText(el.value || el.textContent || '');
+      const t = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      setTimeout(() => btn.textContent = t, 900);
+    });
+  });
+
+  // ----- Provider / account -----
+  let provider, signer, account;
+
+  async function connect() {
+    try {
+      const rpc = $('rpc').value.trim();
+      if (rpc) {
+        provider = new ethers.providers.JsonRpcProvider(rpc);
+        $('acct').textContent = '(read‑only via RPC)';
+      } else {
+        if (!window.ethereum) return alert('MetaMask not found. Install MetaMask or paste an RPC URL.');
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        signer = provider.getSigner();
+        account = await signer.getAddress();
+        $('acct').textContent = account;
+      }
+      const net = await provider.getNetwork();
+      $('net').textContent = `${net.name || 'network'} (chainId ${net.chainId})`;
+    } catch (e) {
+      console.error(e);
+      alert('Failed to connect: ' + (e?.message || e));
+    }
+  }
+  $('btnConnect').onclick = connect;
+
+  // Auto-update parentNode when parentDomain changes
+  function updateParentNode() {
+    const name = $('parentDomain').value.trim();
+    if (!name) { $('parentNode').textContent = ''; return; }
+    try {
+      $('parentNode').textContent = ethers.utils.namehash(name);
+    } catch (e) {
+      $('parentNode').textContent = '(invalid ENS name)';
+    }
+  }
+  on($('parentDomain'), 'input', updateParentNode);
+
+  // ----- Encoding helpers -----
+  const toBuf = (hex) => Buffer.from(ethers.utils.arrayify(hex || '0x'));
+  function qToBufAny(v) {
+    if (v === null || v === undefined) return Buffer.alloc(0);
+    // ethers.hexlify(0) -> "0x00" but for RLP, 0 is empty Buffer
+    const h = ethers.utils.hexlify(v);
+    if (h === '0x' || h === '0x00') return Buffer.alloc(0);
+    return Buffer.from(ethers.utils.arrayify(h));
+  }
+  function rlpEncodeUint(n) { return RLP.encode(qToBufAny(n)); }
+
+  // Receipt payload per yellow paper: [status|root, cumulativeGasUsed, logsBloom, logs]
+  function rlpEncodeReceiptPayload(r) {
+    // Ethers v5: r.status is number (0/1) for post-Byzantium receipts
+    const statusOrRoot = (r.status === 0 || r.status === 1 || typeof r.status === 'number')
+      ? qToBufAny(r.status)
+      : toBuf(r.root);
+
+    const cgu = qToBufAny(r.cumulativeGasUsed);
+    const bloom = toBuf(r.logsBloom);
+    const logs = r.logs.map(log => [
+      toBuf(log.address),
+      log.topics.map(toBuf),
+      toBuf(log.data)
+    ]);
+    return RLP.encode([ statusOrRoot, cgu, bloom, logs ]);
+  }
+
+  function rlpEncodeTypedReceipt(r) {
+    const payload = rlpEncodeReceiptPayload(r);
+    // EIP-2718 typed receipts: a single leading type byte (0x01/0x02/0x03...) + payload
+    const t = (r.type === 0 || r.type === '0x0' || r.type === null || r.type === undefined)
+      ? null
+      : (typeof r.type === 'number' ? r.type : parseInt(String(r.type), 16));
+    return t ? Buffer.concat([ Buffer.from([t]), payload ]) : payload;
+  }
+
+  // Execution header (post-merge & upgrades). Only include fields that exist on the block.
+  function rlpEncodeHeader(b) {
+    const f = [];
+    f.push(toBuf(b.parentHash));
+    f.push(toBuf(b.sha3Uncles));
+    f.push(toBuf(b.miner));
+    f.push(toBuf(b.stateRoot));
+    f.push(toBuf(b.transactionsRoot));
+    f.push(toBuf(b.receiptsRoot));
+    f.push(toBuf(b.logsBloom));
+    f.push(qToBufAny(b.difficulty));  // 0 in PoS
+    f.push(qToBufAny(b.number));
+    f.push(qToBufAny(b.gasLimit));
+    f.push(qToBufAny(b.gasUsed));
+    f.push(qToBufAny(b.timestamp));
+    f.push(toBuf(b.extraData));
+    f.push(toBuf(b.mixHash));         // prevRandao in PoS
+    f.push(toBuf(b.nonce));           // 0x0000000000000000 in PoS
+    if (b.baseFeePerGas) f.push(qToBufAny(b.baseFeePerGas));
+    if (b.withdrawalsRoot) f.push(toBuf(b.withdrawalsRoot));
+    if (b.blobGasUsed) f.push(qToBufAny(b.blobGasUsed));
+    if (b.excessBlobGas) f.push(qToBufAny(b.excessBlobGas));
+    if (b.parentBeaconBlockRoot) f.push(toBuf(b.parentBeaconBlockRoot));
+    return RLP.encode(f);
+  }
+
+  async function getBlockAndAllReceipts(blockNumberHex) {
+    const block = await provider.send('eth_getBlockByNumber', [blockNumberHex, true]);
+    if (!block) throw new Error('Block not found via RPC');
+    let receipts = null;
+    try {
+      receipts = await provider.send('eth_getBlockReceipts', [blockNumberHex]);
+    } catch (_) {}
+    if (!receipts) {
+      receipts = [];
+      // Fetch per-tx receipts (slower)
+      for (const tx of block.transactions) {
+        const r = await provider.getTransactionReceipt(tx.hash);
+        receipts.push(r);
+      }
+    }
+    return { block, receipts };
+  }
+
+  async function buildProof() {
+    try {
+      if (!provider) await connect();
+
+      const txHash = $('txHash').value.trim();
+      const parent = $('parentDomain').value.trim();
+      const confsRequired = parseInt($('confs').value || '6', 10);
+      if (!txHash) return alert('Enter burn transaction hash');
+      if (!parent) return alert('Enter parent domain (e.g., example.eth)');
+
+      // parentNode
+      const pnode = ethers.utils.namehash(parent);
+      $('parentNode').textContent = pnode;
+
+      // Look up burn receipt and basic freshness checks
+      const r = await provider.getTransactionReceipt(txHash);
+      if (!r || !r.blockNumber) throw new Error('Receipt not found / still pending');
+      const now = await provider.getBlockNumber();
+      const confs = now - r.blockNumber;
+      $('status').innerHTML = confs >= confsRequired
+        ? `<span class="ok">OK: ${confs} confirmations</span>`
+        : `<span class="warn">Waiting: ${confs}/${confsRequired} confirmations</span>`;
+      if (confs < confsRequired) throw new Error('Not enough confirmations yet');
+      if (confs > 256) throw new Error('Too old for on-chain blockhash (must be ≤ 256 blocks)');
+
+      $('blockNumber').value = String(r.blockNumber);
+      $('txIndex').value = String(r.transactionIndex);
+
+      // Build header RLP + receipts trie
+      $('buildMsg').textContent = 'Downloading block & receipts, building trie...';
+      const { block, receipts } = await getBlockAndAllReceipts(ethers.utils.hexValue(r.blockNumber));
+
+      // Encode header and sanity-check its hash
+      const headerRlp = rlpEncodeHeader(block);
+      const headerHash = ethers.utils.keccak256(headerRlp);
+      if (headerHash.toLowerCase() !== String(block.hash).toLowerCase()) {
+        throw new Error('Header RLP does not hash to block.hash (RPC mismatch). Try another RPC.');
+      }
+
+      // Build receipts trie; key is RLP(txIndex) and value is the (typed) receipt RLP
+      const trie = new Trie();
+      for (const rc of receipts) {
+        const key = rlpEncodeUint(parseInt(rc.transactionIndex));
+        const val = rlpEncodeTypedReceipt(rc);
+        await trie.put(key, val);
+      }
+      const rootHex = '0x' + Buffer.from(trie.root()).toString('hex');
+      if (rootHex.toLowerCase() !== String(block.receiptsRoot).toLowerCase()) {
+        throw new Error('Rebuilt receiptsRoot does not match block.receiptsRoot. Switch RPC and try again.');
+      }
+
+      // Build proof for our txIndex
+      const key = rlpEncodeUint(parseInt(r.transactionIndex));
+      const proofArr = await createProof(trie, key);
+      const proofRlp = RLP.encode(proofArr);
+
+      // Encoded typed receipt
+      const receiptRlp = rlpEncodeTypedReceipt(r);
+
+      // Fill outputs
+      $('headerRlp').value  = '0x' + Buffer.from(headerRlp).toString('hex');
+      $('receiptRlp').value = '0x' + Buffer.from(receiptRlp).toString('hex');
+      $('proofNodes').value = '0x' + Buffer.from(proofRlp).toString('hex');
+
+      $('buildMsg').innerHTML = '<span class="ok">Proof ready. Paste into <b>recordSelfBurn</b> on the Verifier.</span>';
+    } catch (e) {
+      console.error(e);
+      $('buildMsg').innerHTML = '<span class="err">Error: ' + (e && e.message || e) + '</span>';
+    }
+  }
+
+  $('btnBuild').onclick = buildProof;
+})();
+</script>
+</body>
+</html>
+
