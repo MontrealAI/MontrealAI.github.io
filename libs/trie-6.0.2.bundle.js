@@ -1,1 +1,0 @@
-version 6.0.2 of '@ethereumjs/trie' not found
