@@ -56,6 +56,95 @@
     return toHashRoute(parsed.pathname + parsed.search);
   }; // end normalizeHashHref
 
+  const baseRoutes = new Set(['/', '/jobs', '/identity', '/admin', '/advanced', '/design', '/deployment', '/demo']);
+
+  const recoverPrefixedRoute = (routePath) => {
+    if (typeof routePath !== 'string' || !routePath.startsWith('/')) return null;
+
+    const segments = routePath.split('/').filter(Boolean);
+    if (segments.length === 0) return '/';
+
+    const normalizedSegments = [];
+    for (const segment of segments) {
+      const lower = segment.toLowerCase();
+      if (!segment) continue;
+      if (lower === 'ipfs' || lower === 'ipns') {
+        normalizedSegments.length = 0;
+        continue;
+      }
+      if (lower === 'agijobmanager' || lower === 'index.html' || lower === 'agijobmanager.html') {
+        continue;
+      }
+      if (lower.endsWith('.html')) {
+        continue;
+      }
+      normalizedSegments.push(segment);
+    }
+
+    if (normalizedSegments.length === 0) return '/';
+
+    const first = normalizedSegments[0] || '';
+    const firstLower = first.toLowerCase();
+    if (firstLower === 'jobs') {
+      const maybeJobId = normalizedSegments.slice(1).join('/');
+      if (!maybeJobId) return '/jobs';
+      return '/jobs/' + maybeJobId;
+    }
+
+    const candidate = '/' + firstLower;
+    if (baseRoutes.has(candidate)) return candidate;
+    return null;
+  };
+
+  const sanitizeRoutePath = (routePath) => {
+    if (typeof routePath !== 'string' || !routePath) return '/';
+
+    const nestedHashRouteIndex = routePath.lastIndexOf('#/');
+    if (nestedHashRouteIndex > 0) {
+      const nestedHashRoute = routePath.slice(nestedHashRouteIndex + 1);
+      return sanitizeRoutePath(nestedHashRoute);
+    }
+
+    const routeWithoutHash = routePath.split('#')[0] || '/';
+    const withoutQuery = routeWithoutHash.split('?')[0] || '/';
+    const normalizedSlash = withoutQuery.startsWith('/') ? withoutQuery : '/' + withoutQuery;
+    const collapsed = normalizedSlash.replace(/\/{2,}/g, '/');
+    const lowered = collapsed.toLowerCase();
+
+    if (lowered.includes('agijobmanager.html') || lowered.startsWith('/agijobmanager/') || lowered.startsWith('/ipfs/') || lowered.startsWith('/ipns/')) {
+      const recoveredRoute = recoverPrefixedRoute(collapsed);
+      if (recoveredRoute) {
+        if (recoveredRoute.startsWith('/jobs/')) {
+          const rawRecoveredJobId = recoveredRoute.slice('/jobs/'.length);
+          let decodedRecoveredJobId = rawRecoveredJobId;
+          try {
+            decodedRecoveredJobId = decodeURIComponent(rawRecoveredJobId);
+          } catch (_error) {
+            decodedRecoveredJobId = rawRecoveredJobId;
+          }
+          return '/jobs/' + encodeURIComponent(decodedRecoveredJobId);
+        }
+        return recoveredRoute;
+      }
+      return '/';
+    }
+
+    if (collapsed.startsWith('/jobs/')) {
+      const jobId = collapsed.slice('/jobs/'.length);
+      if (!jobId || jobId.startsWith('/')) return '/jobs';
+      let decodedJobId = jobId;
+      try {
+        decodedJobId = decodeURIComponent(jobId);
+      } catch (_error) {
+        decodedJobId = jobId;
+      }
+      return '/jobs/' + encodeURIComponent(decodedJobId);
+    }
+
+    if (baseRoutes.has(collapsed)) return collapsed;
+    return '/';
+  };
+
   const parseRouteInput = (routeInput) => {
     if (typeof routeInput !== 'string' || !routeInput.startsWith('/')) return null;
     const hashIndex = routeInput.indexOf('#');
@@ -66,56 +155,45 @@
     return { pathname, search, routeInput: withoutHash };
   }; // end parseRouteInput
 
-  const toGatewayUrl = (routeInput) => {
-    const parsedGatewayRoute = parseRouteInput(routeInput);
-    if (!parsedGatewayRoute) return null;
-    const isContentAddressedGateway = gatewayBase.startsWith('/ipfs/') || gatewayBase.startsWith('/ipns/');
-    const gatewayPathname = isContentAddressedGateway
-      ? gatewayBase + parsedGatewayRoute.pathname
-      : parsedGatewayRoute.pathname;
-    return gatewayPathname + parsedGatewayRoute.search;
-  };
-
   const toHashUrl = (routeInput) => {
     const parsedHashRoute = parseRouteInput(routeInput);
     if (!parsedHashRoute) return null;
-    const isContentAddressedGateway = gatewayBase.startsWith('/ipfs/') || gatewayBase.startsWith('/ipns/');
-    const hashBaseUrl = isContentAddressedGateway ? gatewayBase : documentUrl;
-    return hashBaseUrl + '#' + parsedHashRoute.routeInput;
+    // Always preserve the exact document URL prefix (path + filename + query)
+    // and mutate only the hash fragment. This keeps routing filename-agnostic
+    // and nested-hosting-safe for GitHub Pages, arbitrary subpaths, and IPFS gateways.
+    return documentUrl + '#' + parsedHashRoute.routeInput;
   };
 
   const dispatchRouteUpdate = (state) => {
     window.dispatchEvent(new PopStateEvent('popstate', { state }));
   };
 
-  const hasMalformedStartupHash = (rawHash) => {
-    if (!rawHash) return false;
+  const getStartupCanonicalHash = (rawHash) => {
+    if (!rawHash || rawHash === '#') return null;
     const lowerHash = rawHash.toLowerCase();
-    if (rawHash.startsWith('#/#/')) return true;
-    if (rawHash.startsWith('##/')) return true;
-    if (lowerHash.includes('agijobmanager.html')) return true;
-    if (rawHash.includes(documentPath)) return true;
-    if (rawHash.includes(gatewayBase)) return true;
 
-    if (rawHash.startsWith('#/')) {
-      const routeCandidate = rawHash.slice(2);
-      const lowerRouteCandidate = routeCandidate.toLowerCase();
-      if (!routeCandidate) return false;
-      if (routeCandidate.startsWith('/')) return true;
-      if (lowerRouteCandidate.includes('agijobmanager.html')) return true;
-      if (lowerRouteCandidate.startsWith('agijobmanager/')) return true;
-      if (lowerRouteCandidate.startsWith('ipfs/') || lowerRouteCandidate.startsWith('ipns/')) return true;
-      return false;
+    const directRouteCandidate = rawHash.startsWith('#/') ? rawHash.slice(1) : '';
+    if (directRouteCandidate) {
+      const sanitizedDirectRoute = sanitizeRoutePath(directRouteCandidate);
+      const directCanonicalHash = '#' + sanitizedDirectRoute;
+      if (directCanonicalHash !== rawHash) return directCanonicalHash;
+      return null;
     }
 
-    return true;
+    if (rawHash.startsWith('#/#/') || rawHash.startsWith('##/')) return '#/';
+    if (lowerHash.includes('agijobmanager.html')) return '#/';
+    if (rawHash.includes(documentPath)) return '#/';
+    if (rawHash.includes(gatewayBase)) return '#/';
+
+    return '#/';
   };
 
   const getRouteFromHash = () => {
     const rawHash = window.location.hash || '';
+    if (rawHash === '#' || rawHash === '') return '/';
     if (!rawHash.startsWith('#/')) return '/';
     const normalized = rawHash.slice(1);
-    return normalized.startsWith('/') ? normalized : '/';
+    return sanitizeRoutePath(normalized.startsWith('/') ? normalized : '/');
   };
 
   const navigateHashRoute = (nextRoute, options = {}) => {
@@ -151,6 +229,8 @@
     return routeViewCopy[routePath] ? routePath : '/';
   };
 
+  const isJobDetailRoute = (routePath) => routePath.startsWith('/jobs/') && routePath.length > '/jobs/'.length;
+
   const updateRoutePanel = (routePath) => {
     const normalized = normalizeRouteForView(routePath);
     const view = routeViewCopy[normalized] || routeViewCopy['/'];
@@ -176,38 +256,80 @@
   };
 
   const routeContent = {
-    '/': '<h2>Dashboard</h2><p>Read-only-first supervision console for autonomous agents with human owner oversight.</p>',
-    '/jobs': '<h2>Jobs</h2><p>Jobs ledger route active.</p>',
-    '/identity': '<h2>Identity</h2><p>ENS identity layer route active.</p>',
-    '/admin': '<h2>Admin</h2><p>Owner/operator controls route active.</p>',
-    '/advanced': '<h2>Advanced</h2><p>ABI-driven advanced console route active.</p>',
-    '/design': '<h2>Design</h2><p>Sovereign Purple design system route active.</p>',
-    '/deployment': '<h2>Deployment</h2><p>Mainnet deployment registry route active.</p>',
-    '/demo': '<h2>Demo</h2><p>Deterministic demo scenarios route active.</p>'
+    '/': '<section data-testid="route-dashboard"><h2>Dashboard · Sovereign Ops Console</h2><p>Read-only-first, simulation-first operations for autonomous AI agents with human owner supervision.</p><ul><li>Jobs ledger quick view</li><li>Identity-layer readiness</li><li>Token and allowance posture</li></ul><p><strong>Intent:</strong> autonomous AI agents are primary operators; humans supervise ownership and risk boundaries.</p></section>',
+    '/jobs': '<section data-testid="route-jobs"><h2>Jobs Ledger</h2><p>Filterable job slots with status, payout, employer, agent, and ENS name derivation.</p><p>Use #/jobs/&lt;jobId&gt; for route-stable detail inspection.</p><table><thead><tr><th>ID</th><th>Status</th><th>Payout</th><th>ENS Name</th></tr></thead><tbody><tr><td>245</td><td>Open</td><td>1,200 AGI</td><td>job-245.alpha.jobs.agi.eth</td></tr></tbody></table></section>',
+    '/identity': '<section data-testid="route-identity"><h2>Identity Layer Console</h2><p>ENSJobPages mainnet snapshot, permission checks, and record safety policy.</p><p>All external links are allowlisted and copy-first by default.</p><ul><li>Root name: alpha.jobs.agi.eth</li><li>NameWrapper approval status</li><li>Job manager wiring state</li></ul></section>',
+    '/admin': '<section data-testid="route-admin"><h2>Admin Ops Console</h2><p>Owner-gated governance controls with typed confirmations and simulation-first transaction flow.</p><p>Non-owner wallets remain explicit read-only.</p><ol><li>Prepare</li><li>Simulate</li><li>Sign</li><li>Pending</li><li>Confirmed/Failed</li></ol></section>',
+    '/advanced': '<section data-testid="route-advanced"><h2>Advanced Contract Console</h2><p>ABI-driven method explorer for AGIJobManager, ENSJobPages, and AGI ALPHA token flows.</p><p>Export agent-ready payload JSON for deterministic execution.</p><pre>{"simulateFirst":true,"chainId":1,"functionName":"approve"}</pre></section>',
+    '/design': '<section data-testid="route-design"><h2>Design System Gallery</h2><p>ASI Sovereign Purple palette, typography, contrast checks, and reduced-motion examples.</p><p>This route is the canonical visual demo for CI and docs.</p><ul><li>Palette anchors</li><li>Typography scale</li><li>Focus-visible states</li></ul></section>',
+    '/deployment': '<section data-testid="route-deployment"><h2>Deployment Registry</h2><p>Mainnet artifact-derived addresses, owner/deployer roles, linked libraries, and constructor evidence.</p><p>Includes release and explorer references.</p><dl><dt>AGIJobManager</dt><dd>0xB3AAeb69b630f0299791679c063d68d6687481d1</dd><dt>ENSJobPages</dt><dd>0xc19A84D10ed28c2642EfDA532eC7f3dD88E5ed94</dd></dl></section>',
+    '/demo': '<section data-testid="route-demo"><h2>Deterministic Demo Mode</h2><p>Fixtures cover lifecycle edge-cases, malformed URI blocking, and degraded RPC behavior.</p><p>Writes are disabled while preserving operator-visible action panels.</p><p>Actors: visitor, employer, agent, validator, moderator, owner.</p></section>'
+  };
+
+  const routeJobDetailMarker = 'data-testid="route-job-detail"';
+
+  const renderJobDetail = (routePath, host) => {
+    const rawJobId = routePath.slice('/jobs/'.length);
+    let jobId = rawJobId;
+    try {
+      jobId = decodeURIComponent(rawJobId);
+    } catch (_error) {
+      jobId = rawJobId;
+    }
+
+    const section = document.createElement('section');
+    section.setAttribute('data-testid', 'route-job-detail');
+    section.setAttribute('data-marker', routeJobDetailMarker);
+
+    const title = document.createElement('h2');
+    title.textContent = 'Job Detail · ' + jobId;
+
+    const description = document.createElement('p');
+    description.textContent = 'Route-specific detail panels: core state, dispute posture, spec/completion URI safety, and ENS identity snapshot.';
+
+    const eligibility = document.createElement('p');
+    eligibility.textContent = 'Eligibility and write safety require simulation-first preflight checks.';
+
+    section.append(title, description, eligibility);
+    host.replaceChildren(section);
   };
 
   const updatePrimaryView = (routePath) => {
-    const normalized = normalizeRouteForView(routePath);
+    const normalizedRoute = sanitizeRoutePath(routePath);
+    const normalized = normalizeRouteForView(normalizedRoute);
     const main = document.querySelector('main');
     if (!main) return;
-    const existing = main.querySelector('[data-ipfs-route-view="true"]');
+    const existing = main.querySelector('[data-ipfs-main-outlet="true"]');
     const host = existing || (() => {
-      const wrapper = document.createElement('section');
-      wrapper.setAttribute('data-ipfs-route-view', 'true');
+      main.innerHTML = '';
+      const wrapper = document.createElement('article');
+      wrapper.setAttribute('data-ipfs-main-outlet', 'true');
       wrapper.style.padding = '1rem';
-      wrapper.style.borderTop = '1px solid rgba(169,160,180,0.25)';
+      wrapper.style.maxWidth = '74rem';
+      wrapper.style.margin = '0 auto';
       main.append(wrapper);
       return wrapper;
     })();
+
+    if (isJobDetailRoute(normalizedRoute)) {
+      renderJobDetail(normalizedRoute, host);
+      return;
+    }
+
     host.innerHTML = routeContent[normalized] || routeContent['/'];
   };
 
-  if (hasMalformedStartupHash(window.location.hash || '')) {
-    rawReplaceState(history.state, '', documentUrl + '#/');
+  const startupCanonicalHash = getStartupCanonicalHash(window.location.hash || '');
+  if (startupCanonicalHash) {
+    rawReplaceState(history.state, '', documentUrl + startupCanonicalHash);
   }
 
   window.addEventListener('hashchange', () => {
     const routePath = getRouteFromHash();
+    const canonicalHash = '#' + routePath;
+    if (window.location.hash !== canonicalHash) {
+      rawReplaceState(history.state, '', documentUrl + canonicalHash);
+    }
     updateRoutePanel(routePath);
     updatePrimaryView(routePath);
   });
@@ -229,7 +351,7 @@
     if (!hashRoute) return;
 
     event.preventDefault();
-    const routePath = hashRoute.slice(1);
+    const routePath = sanitizeRoutePath(hashRoute.slice(1));
     navigateHashRoute(routePath, { mode: 'push' });
     updateRoutePanel(routePath);
     updatePrimaryView(routePath);
