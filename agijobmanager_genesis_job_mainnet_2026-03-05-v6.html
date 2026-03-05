@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AGIJobManager · Jobs.AGI.eth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --background:278 100% 6%;
+      --foreground:269 18% 92%;
+      --card:274 59% 11%;
+      --card-2:274 59% 9%;
+      --border:269 32% 30%;
+      --accent:#7A3FF2;
+      --text-soft:rgba(226,220,240,.85);
+      --danger:rgba(255,100,130,.95);
+      --ok:rgba(120,255,190,.95);
+      --warn:rgba(255,210,120,.98);
+    }
+    body{
+      font-family:'Montserrat',sans-serif;
+      background:
+        radial-gradient(circle at 22% 12%, rgba(122,63,242,.38), transparent 45%),
+        radial-gradient(circle at 78% 18%, rgba(122,63,242,.18), transparent 55%),
+        linear-gradient(180deg, rgba(20,0,31,.75), transparent 60%),
+        hsl(var(--background));
+      color:hsl(var(--foreground));
+      margin:0;
+      padding:0;
+    }
+    .container{width:min(1100px,92%);margin:0 auto;padding:24px 0 40px;}
+    h1{text-align:center;margin:28px 0 10px;font-size:clamp(2rem,3.2vw,2.6rem);letter-spacing:.2px;}
+    .subtitle{text-align:center;color:var(--text-soft);margin:0 0 20px;font-size:clamp(1rem,2vw,1.25rem);line-height:1.45;}
+    .card{
+      background:hsl(var(--card));
+      border:1px solid hsl(var(--border));
+      border-radius:16px;
+      padding:18px 18px;
+      margin:0 0 16px;
+      box-shadow:0 10px 26px rgba(0,0,0,.32);
+      backdrop-filter:blur(6px);
+    }
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .muted{color:var(--text-soft)}
+    .btn{
+      background:rgba(122,63,242,.18);
+      color:hsl(var(--foreground));
+      border:1px solid rgba(122,63,242,.35);
+      padding:10px 14px;
+      cursor:pointer;
+      font-size:.98em;
+      border-radius:10px;
+      transition:transform .12s ease,background-color .2s ease,border-color .2s ease;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(122,63,242,.28);border-color:rgba(122,63,242,.55);}
+    .btn-primary{background:rgba(122,63,242,.35);border-color:rgba(122,63,242,.75);}
+    .btn-danger{background:rgba(255,100,130,.12);border-color:rgba(255,100,130,.35);}
+    .btn-danger:hover{background:rgba(255,100,130,.18);border-color:rgba(255,100,130,.55);}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    input[type="text"],input[type="number"]{
+      width:min(520px,92%);
+      padding:10px 12px;
+      border:1px solid hsl(var(--border));
+      background:rgba(255,255,255,.04);
+      color:hsl(var(--foreground));
+      border-radius:12px;
+      font-size:16px;
+      outline:none;
+    }
+    input:focus{border-color:rgba(122,63,242,.7);box-shadow:0 0 0 3px rgba(122,63,242,.18);}
+    label{display:block;margin:0 0 8px;color:var(--text-soft)}
+    .statusline{padding:10px 12px;border-radius:12px;border:1px solid hsl(var(--border));background:hsl(var(--card-2));color:var(--text-soft);word-break:break-word}
+    .statusline b{color:hsl(var(--foreground))}
+    .pill{display:inline-block;padding:3px 10px;border-radius:999px;border:1px solid hsl(var(--border));background:rgba(255,255,255,.03);font-size:.85rem;color:var(--text-soft)}
+    .pill.ok{border-color:rgba(120,255,190,.35);color:var(--ok)}
+    .pill.warn{border-color:rgba(255,210,120,.35);color:var(--warn)}
+    .pill.bad{border-color:rgba(255,100,130,.35);color:var(--danger)}
+    .jobs-table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:14px;border:1px solid hsl(var(--border));}
+    .jobs-table th,.jobs-table td{border-bottom:1px solid hsl(var(--border));padding:10px;text-align:left;vertical-align:top}
+    .jobs-table th{background:rgba(122,63,242,.16);color:hsl(var(--foreground));font-weight:700}
+    .jobs-table tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+    .jobs-table tbody tr:hover{background:rgba(122,63,242,.08)}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    a{color:rgba(198,163,255,1)}
+    .twoCol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:900px){.twoCol{grid-template-columns:1fr}}
+
+    .heroNotice{display:grid;grid-template-columns:1.35fr .95fr;gap:12px;margin-bottom:16px}
+    .noticeBox{border:1px solid rgba(255,210,120,.28);background:linear-gradient(180deg, rgba(122,63,242,.12), rgba(255,255,255,.02));border-radius:16px;padding:16px}
+    .noticeTitle{font-size:1.12rem;font-weight:700;margin:0 0 8px}
+    .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .miniStat{padding:12px;border:1px solid hsl(var(--border));border-radius:14px;background:rgba(255,255,255,.03)}
+    .miniStat .k{display:block;color:var(--text-soft);font-size:.88rem;margin-bottom:4px}
+    .miniStat .v{font-weight:700;font-size:1.04rem}
+    .helper{font-size:.92rem;color:var(--text-soft);line-height:1.5}
+    .checkline{display:flex;gap:10px;align-items:flex-start;margin-top:12px}
+    .checkline input{margin-top:4px}
+    .toc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0}
+    .term-link{display:block;padding:10px 12px;border:1px solid hsl(var(--border));border-radius:12px;background:rgba(255,255,255,.03);text-decoration:none}
+    .term-link:hover{background:rgba(122,63,242,.12)}
+    .term-block{border:1px solid hsl(var(--border));border-radius:14px;background:rgba(255,255,255,.02);margin:0 0 10px}
+    .term-block summary{cursor:pointer;list-style:none;padding:14px 16px;font-weight:700}
+    .term-block summary::-webkit-details-marker{display:none}
+    .term-body{padding:0 16px 16px;color:var(--text-soft);line-height:1.6;white-space:normal}
+    .scrollTerms{max-height:720px;overflow:auto;padding-right:4px}
+    .stickyBar{position:sticky;top:0;z-index:2;background:hsl(var(--card));padding-bottom:10px}
+    .smallBtn{padding:8px 12px;font-size:.9rem}
+    .banner{border:1px solid rgba(255,100,130,.32);background:rgba(255,100,130,.08);border-radius:14px;padding:12px 14px;color:hsl(var(--foreground))}
+    @media (max-width:900px){.heroNotice,.calc-grid,.toc{grid-template-columns:1fr}}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AGIJobManager</h1>
+    <div class="subtitle">[ Jobs.AGI.eth 🗝️👾 ] · Post jobs, pay in <b>$AGIALPHA</b>. ENS subdomain ownership is the primary authorization path.</div>
+
+    <div class="card">
+      <div class="row">
+        <div class="statusline" style="flex:1;min-width:260px">
+          <div><b>Wallet</b>: <span id="walletStatus">Not connected</span></div>
+          <div class="muted" style="margin-top:4px">Network: <span id="chainStatus">—</span></div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="connectBtn">Connect Wallet</button>
+          <button class="btn" id="refreshBtn" disabled>Refresh</button>
+        </div>
+      </div>
+      <div id="toast" class="statusline" style="margin-top:12px;display:none"></div>
+    </div>
+
+
+    <div class="heroNotice">
+      <div class="card">
+        <div class="noticeTitle">Before You Transact</div>
+        <div class="banner">
+          This protocol is experimental. Jobs, bonds, validator outcomes, disputes, NFT minting, and settlement all depend on the deployed smart contract rules. Token transfers can be irreversible.
+        </div>
+        <div class="helper" style="margin-top:12px">
+          The interface below now includes the full smart-contract Terms &amp; Conditions in a structured, readable format. For write actions, this page asks you to confirm you have read and accepted them.
+        </div>
+        <div class="checkline">
+          <input type="checkbox" id="termsAccepted">
+          <label for="termsAccepted" style="margin:0">I have read and accept the AGIJobManager Terms &amp; Conditions shown below.</label>
+        </div>
+        <div class="actions" style="margin-top:12px">
+          <button class="btn smallBtn" id="jumpToTermsBtn">Read Terms</button>
+          <button class="btn smallBtn" id="expandTermsBtn">Expand All Terms</button>
+          <button class="btn smallBtn" id="collapseTermsBtn">Collapse All Terms</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="noticeTitle">Quick Bond Calculator</div>
+        <div class="helper" style="margin-bottom:10px">Fast planning tool using the live contract parameters shown on this page. Validator bond uses the public bond parameters directly. Dispute bond follows the contract constants in the verified source. Agent bond is shown as a base-rate estimate because the final on-chain formula also depends on duration logic in <code>BondMath</code>.</div>
+        <div class="calc-grid">
+          <div class="miniStat" style="grid-column:1/-1">
+            <label for="calcPayout">Job payout ($AGIALPHA)</label>
+            <input id="calcPayout" type="number" min="0" step="0.0001" placeholder="e.g. 88888" style="width:100%">
+          </div>
+          <div class="miniStat" style="grid-column:1/-1">
+            <label for="calcDuration">Job duration (seconds)</label>
+            <input id="calcDuration" type="number" min="1" step="1" placeholder="e.g. 604800" style="width:100%">
+          </div>
+          <div class="miniStat"><span class="k">Agent bond estimate</span><span class="v" id="calcAgentBond">—</span></div>
+          <div class="miniStat"><span class="k">Validator bond</span><span class="v" id="calcValidatorBond">—</span></div>
+          <div class="miniStat"><span class="k">Dispute bond</span><span class="v" id="calcDisputeBond">—</span></div>
+          <div class="miniStat"><span class="k">Validator reward pool</span><span class="v" id="calcRewardPool">—</span></div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="twoCol">
+      <div class="card">
+        <h2 style="margin:0 0 10px">Summary</h2>
+        <div class="muted">Total Jobs: <b><span id="totalJobs">0</span></b></div>
+        <div class="muted">Required Validator Approvals: <b><span id="reqApprovals">0</span></b></div>
+        <div class="muted">Required Validator Disapprovals: <b><span id="reqDisapprovals">0</span></b></div>
+        <div class="muted">Vote Quorum: <b><span id="voteQuorum">0</span></b></div>
+        <div class="muted">Completion Review Period: <b><span id="completionReview">—</span></b></div>
+        <div class="muted">Challenge Window: <b><span id="challengePeriod">—</span></b></div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin:0 0 10px">My Stats</h2>
+        <div class="muted">My $AGIALPHA Balance: <b><span id="agiBalance">0</span></b></div>
+        <div class="muted">My Reputation: <b><span id="myReputation">0</span></b></div>
+        <div class="muted">Jobs I posted: <b><span id="myJobs">0</span></b></div>
+        <div style="margin-top:10px">
+          <span class="pill" id="agentPill">Agent ENS: not verified</span>
+          <span class="pill ok" id="agentAlphaBadge" style="margin-left:8px;display:none">Alpha Agent Enabled</span>
+          <span class="pill" id="clubPill" style="margin-left:8px">Club ENS: not verified</span>
+          <span class="pill ok" id="validatorBadge" style="margin-left:8px;display:none">Validator Mode Enabled</span>
+          <span class="pill ok" id="clubAlphaBadge" style="margin-left:8px;display:none">Alpha Validator Enabled</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 10px">Protocol Parameters (Mainnet)</h2>
+      <div class="muted" style="margin-bottom:10px">These values are read directly from the contract. Bonds are computed on-chain from payout/duration using these parameters.</div>
+      <div class="twoCol">
+        <div>
+          <div class="muted">Agent bond min: <b><span id="agentBondMin">—</span></b> $AGIALPHA</div>
+          <div class="muted">Agent bond bps: <b><span id="agentBondBps">—</span></b></div>
+          <div class="muted">Agent bond max: <b><span id="agentBondMax">—</span></b> $AGIALPHA</div>
+          <div class="muted" style="margin-top:10px">Max active jobs / agent: <b><span id="maxActiveJobs">—</span></b></div>
+        </div>
+        <div>
+          <div class="muted">Validator bond bps: <b><span id="validatorBondBps">—</span></b></div>
+          <div class="muted">Validator bond min: <b><span id="validatorBondMin">—</span></b> $AGIALPHA</div>
+          <div class="muted">Validator bond max: <b><span id="validatorBondMax">—</span></b> $AGIALPHA</div>
+          <div class="muted" style="margin-top:10px">Validator slash bps: <b><span id="validatorSlashBps">—</span></b></div>
+        </div>
+        <div>
+          <div class="muted">Validation reward %: <b><span id="validationRewardPct">—</span></b></div>
+          <div class="muted">Max job payout: <b><span id="maxJobPayout">—</span></b> $AGIALPHA</div>
+          <div class="muted">Job duration limit: <b><span id="jobDurationLimit">—</span></b> seconds</div>
+        </div>
+        <div>
+          <div class="muted">Paused (intake): <b><span id="pausedState">—</span></b></div>
+          <div class="muted">Settlement paused: <b><span id="settlementPaused">—</span></b></div>
+          <div class="muted">Dispute review period: <b><span id="disputeReview">—</span></b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 10px">Bond Notes</h2>
+      <div class="muted">
+        <ul style="margin:0;padding-left:18px">
+          <li><b>Agent bond</b> is charged when applying for a job, based on payout + duration, and returned on agent-win paths.</li>
+          <li><b>Validator bond</b> is charged per vote (approve/disapprove). A portion may be slashed depending on final outcome.</li>
+          <li><b>Dispute bond</b> may be required when starting a dispute (computed on-chain; constants aren’t exposed as public getters).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 12px">1) Verify ENS Subdomain Ownership</h2>
+      <div class="twoCol">
+        <div>
+          <label for="agentSub">Agent subdomain (agent.agi.eth)</label>
+          <div class="row" style="justify-content:flex-start">
+            <input id="agentSub" type="text" placeholder="e.g. alice" style="max-width:520px">
+            <button class="btn" id="verifyAgentBtn">Verify</button>
+            <button class="btn" id="verifyAgentAlphaBtn">Verify Alpha</button>
+          </div>
+          <div class="muted" id="agentOut" style="margin-top:8px"></div>
+        </div>
+        <div>
+          <label for="clubSub">Club subdomain (club.agi.eth)</label>
+          <div class="row" style="justify-content:flex-start">
+            <input id="clubSub" type="text" placeholder="e.g. validator1" style="max-width:520px">
+            <button class="btn" id="verifyClubBtn">Verify</button>
+            <button class="btn" id="verifyClubAlphaBtn">Verify Alpha</button>
+          </div>
+          <div class="muted" id="clubOut" style="margin-top:8px"></div>
+          <div style="margin-top:10px">
+            <button class="btn" id="buyClubBtn">Buy club subdomain</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 12px">2) Create a Job (Employer)</h2>
+      <div class="twoCol">
+        <div>
+          <label for="jobSpecURI">Job Spec URI (must be a valid URI)</label>
+          <input id="jobSpecURI" type="text" placeholder="e.g. ipfs://... or https://...">
+        </div>
+        <div>
+          <label for="jobDetails">Details (short description)</label>
+          <input id="jobDetails" type="text" placeholder="e.g. Build X by date Y">
+        </div>
+        <div>
+          <label for="jobPayout">Payout ($AGIALPHA)</label>
+          <input id="jobPayout" type="number" min="0" step="0.0001" placeholder="e.g. 100">
+        </div>
+        <div>
+          <label for="jobDuration">Duration (seconds)</label>
+          <input id="jobDuration" type="number" min="1" step="1" placeholder="e.g. 604800">
+        </div>
+      </div>
+      <div style="margin-top:12px" class="actions">
+        <button class="btn btn-primary" id="createJobBtn" data-tx="1">Create Job</button>
+      </div>
+      <div class="muted" style="margin-top:8px">You will be asked to approve token spending if needed.</div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 12px">Jobs</h2>
+      <div class="muted" style="margin-bottom:10px">Actions below call the on-chain methods on <code>0xB3AA…81d1</code>.</div>
+      <table class="jobs-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Employer</th>
+            <th>Job Spec URI</th>
+            <th>Payout</th>
+            <th>Duration</th>
+            <th>Agent</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="jobsBody"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 12px">Completion NFTs (ERC-721)</h2>
+      <div class="muted" style="margin-bottom:10px">This contract mints a completion NFT to the employer on successful settlement.</div>
+      <div class="twoCol">
+        <div>
+          <h3 style="margin:0 0 10px;font-size:1.05rem">My NFTs</h3>
+          <ul id="myNfts" class="muted" style="list-style:none;padding:0;margin:0"></ul>
+        </div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:1.05rem">Latest NFTs</h3>
+          <ul id="allNfts" class="muted" style="list-style:none;padding:0;margin:0"></ul>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="card" id="termsSection">
+      <div class="stickyBar">
+        <h2 style="margin:0 0 8px">Terms &amp; Conditions</h2>
+        <div class="helper">Copied into this interface from the AGIJobManager smart contract source text you provided, organized for easier reading. This section preserves the full text while making navigation easier.</div>
+        <div class="toc">
+          <a class="term-link" href="#1-definitions">1. Definitions</a>
+<a class="term-link" href="#2-nature-of-the-protocol-no-intermediary-code-controls">2. Nature of the Protocol; No Intermediary; Code Controls</a>
+<a class="term-link" href="#3-eligibility-sanctions-legal-compliance-user-responsibility">3. Eligibility; Sanctions; Legal Compliance (User Responsibility)</a>
+<a class="term-link" href="#4-roles-and-exclusive-responsibilities">4. Roles and Exclusive Responsibilities</a>
+<a class="term-link" href="#5-job-lifecycle-and-core-mechanics-disclosure">5. Job Lifecycle and Core Mechanics (Disclosure)</a>
+<a class="term-link" href="#6-disputes-moderation-no-duty-to-resolve">6. Disputes; Moderation; No Duty to Resolve</a>
+<a class="term-link" href="#7-protocol-economics-fees-retained-remainder-disclosure">7. Protocol Economics; Fees; Retained Remainder Disclosure</a>
+<a class="term-link" href="#8-taxes-withholding-reporting-exclusive-user-responsibility">8. Taxes, Withholding, Reporting (Exclusive User Responsibility)</a>
+<a class="term-link" href="#9-no-employment-relationship-independent-contractors-only">9. No Employment Relationship; Independent Contractors Only</a>
+<a class="term-link" href="#10-user-content-intellectual-property-confidentiality">10. User Content; Intellectual Property; Confidentiality</a>
+<a class="term-link" href="#11-prohibited-uses">11. Prohibited Uses</a>
+<a class="term-link" href="#12-assumption-of-risk-smart-contract-and-crypto-risks">12. Assumption of Risk (Smart Contract and Crypto Risks)</a>
+<a class="term-link" href="#13-disclaimers-no-warranties">13. Disclaimers; No Warranties</a>
+<a class="term-link" href="#14-limitation-of-liability">14. Limitation of Liability</a>
+<a class="term-link" href="#15-indemnification">15. Indemnification</a>
+<a class="term-link" href="#16-governing-law-forum-user-to-user-disputes">16. Governing Law; Forum; User-to-User Disputes</a>
+<a class="term-link" href="#17-changes-to-terms-continued-use">17. Changes to Terms; Continued Use</a>
+<a class="term-link" href="#18-severability-entire-agreement-no-waiver">18. Severability; Entire Agreement; No Waiver</a>
+<a class="term-link" href="#regulatory-compliance-legal-disclosures-token-and-program">Regulatory Compliance &amp; Legal Disclosures (Token and Program)</a>
+<a class="term-link" href="#research-program-notice-no-warranty">Research Program Notice; No Warranty</a>
+<a class="term-link" href="#r-e-g-u-l-a-t-o-r-y-c-o-m-p-l-i-a-n-c-e-l-e-g-a-l-d-i-s-c-l-o-s-u-r-e-s">[ R E G U L A T O R Y  C O M P L I A N C E  &amp;  L E G A L  D I S C L O S U R E S ]</a>
+<a class="term-link" href="#1-token-usage-agialpha-tokens-are-strictly-utility-tokens-no-equity-no-profit-sharing-intended-for-the-purchase-of-products-services-by-the-agi-alpha-agent-alpha-agent-agi-eth-they-are-not-intended-for-investment-or-speculative-purposes">1. Token Usage: $AGIALPHA tokens are strictly utility tokens—no equity, no profit-sharing—intended for the purchase of products/services by the AGI ALPHA AGENT (ALPHA.AGENT.AGI.Eth). They are not intended for investment or speculative purposes.</a>
+<a class="term-link" href="#2-non-refundable-purchases-of-agialpha-tokens-are-final-and-non-refundable">2. Non-Refundable: Purchases of $AGIALPHA tokens are final and non-refundable.</a>
+<a class="term-link" href="#3-no-guarantee-of-value-the-issuer-does-not-guarantee-any-specific-value-of-the-agialpha-token-in-relation-to-fiat-currencies-or-other-cryptocurrencies">3. No Guarantee of Value: The issuer does not guarantee any specific value of the $AGIALPHA token in relation to fiat currencies or other cryptocurrencies.</a>
+<a class="term-link" href="#4-regulatory-compliance-it-is-the-user-s-responsibility-to-ensure-that-the-purchase-and-use-of-agialpha-tokens-comply-with-all-applicable-laws-and-regulations">4. Regulatory Compliance: It is the user’s responsibility to ensure that the purchase and use of $AGIALPHA tokens comply with all applicable laws and regulations.</a>
+<a class="term-link" href="#5-user-responsibility-users-are-responsible-for-complying-with-the-laws-in-their-own-jurisdiction-regarding-the-purchase-and-use-of-agialpha-tokens">5. User Responsibility: Users are responsible for complying with the laws in their own jurisdiction regarding the purchase and use of $AGIALPHA tokens.</a>
+        </div>
+      </div>
+      <div class="scrollTerms">
+        <details class="term-block" open id="1-definitions">
+  <summary>1. Definitions</summary>
+  <div class="term-body">- &quot;Protocol&quot; / &quot;AGIJobManager&quot;: The AGIJobManager smart contract(s) implementing job posting, assignment, escrow, bonds, validation, disputes, and settlement.<br>- &quot;$AGIALPHA&quot;: The ERC-20 token used by the Protocol for job payouts, validator rewards, agent/validator/dispute bonds, and any protocol-retained amounts.<br>- &quot;Employer&quot;: Any person or entity that posts a Job and escrows a payout in $AGIALPHA.<br>- &quot;Agent&quot;: Any person or entity that applies for, performs, and requests completion of a Job.<br>- &quot;Validator&quot;: Any person or entity that votes to approve or disapprove a Job completion request under the Protocol rules, posting any required validator bond.<br>- &quot;Moderator&quot;: An address designated by the Protocol owner with permission to resolve disputes through the Protocol&#x27;s dispute-resolution functions.<br>- &quot;Owner&quot;: The address holding administrative permissions in the Protocol (e.g., pausing, parameter updates, allowlist/blacklist management, moderator management, delisting unassigned jobs, and withdrawing certain withdrawable balances as permitted by the code).<br>- &quot;Job&quot;: A work request defined by an on-chain job id plus off-chain/on-chain references (e.g., jobSpecURI, details, and later jobCompletionURI).<br>- &quot;Job Spec URI&quot;: A URI describing the Job requested by the Employer.<br>- &quot;Job Completion URI&quot;: A URI submitted by the Agent describing or containing the completion deliverable(s).<br>- &quot;Escrow&quot;: The $AGIALPHA amount deposited by the Employer as the Job payout and held by the Protocol until settlement according to code.<br>- &quot;Bonds&quot;: Any $AGIALPHA amounts posted as Agent bonds, Validator bonds, or Dispute bonds per the Protocol.<br>- &quot;Settlement&quot;: The Protocol&#x27;s distribution of escrowed payout and bonds according to the on-chain rules.<br>- &quot;User Content&quot;: Any Job Spec URI, Job Completion URI, details, or any referenced content (including IPFS/HTTP content) supplied by users.</div>
+</details>
+<details class="term-block" open id="2-nature-of-the-protocol-no-intermediary-code-controls">
+  <summary>2. Nature of the Protocol; No Intermediary; Code Controls</summary>
+  <div class="term-body">1) Self-executing software. The Protocol is a set of smart contracts that execute transactions according to on-chain code. Outcomes (assignment, settlement, dispute states, reward allocation, slashing, etc.) are determined by the code and blockchain conditions.<br>2) No employment agency / marketplace operator role. The Protocol is not an employer, employment agency, staffing firm, contractor, broker, payment processor, escrow agent, fiduciary, or financial institution.<br>3) No party to user agreements. Any agreement regarding work scope, quality standards, deliverables, deadlines, confidentiality, IP ownership, compliance obligations, and payment terms exists only between the Employer and the Agent (and, if applicable, between either of them and any Validator). The Protocol is not a party to those agreements and has no obligations under them.<br>4) Code prevails. If these Terms conflict with the deployed code, the code prevails for on-chain behavior. These Terms allocate risk and responsibilities and govern off-chain expectations to the maximum extent permitted.</div>
+</details>
+<details class="term-block" id="3-eligibility-sanctions-legal-compliance-user-responsibility">
+  <summary>3. Eligibility; Sanctions; Legal Compliance (User Responsibility)</summary>
+  <div class="term-body">You represent, warrant, and covenant that:<br><br>- You have the legal capacity and authority to enter into these Terms.<br>- Your use of the Protocol is compliant with all applicable laws and regulations (present and future), including (without limitation) labor and employment laws, tax laws, consumer protection laws, IP laws, data protection laws, anti-bribery laws, export controls, and sanctions.<br>- You are not located in, organized under, or ordinarily resident in any jurisdiction where use of the Protocol would be unlawful.<br>- You are not subject to sanctions or on any restricted party lists, and you will not use the Protocol to transact with sanctioned parties or prohibited jurisdictions.<br><br>All compliance obligations are solely yours (Employer/Agent/Validator, as applicable). The Protocol does not perform KYC/AML checks and does not provide compliance advice or compliance services.</div>
+</details>
+<details class="term-block" id="4-roles-and-exclusive-responsibilities">
+  <summary>4. Roles and Exclusive Responsibilities</summary>
+  <div class="term-body">4.1 Employer Responsibilities (Exclusive)<br>The Employer is solely and exclusively responsible for:<br><br>- The legality, accuracy, and completeness of the Job description, Job Spec URI, details, and any referenced content.<br>- Ensuring the Job does not solicit or require unlawful acts, regulated acts without permits, infringement, malware, fraud, or rights violations.<br>- Determining whether a Job creates (or could be interpreted as creating) an employment relationship, and satisfying all obligations associated with such classification, including payroll, withholding, insurance, benefits, reporting, and worker protections.<br>- All tax obligations relating to posting the Job, escrowing $AGIALPHA, receiving any refunds, or any other token transfers.<br>- Any off-chain contracting, NDAs, IP assignments/licenses, confidentiality terms, acceptance criteria, warranties, or service levels for the Job.<br><br>4.2 Agent Responsibilities (Exclusive)<br>The Agent is solely and exclusively responsible for:<br><br>- Performing the Job in accordance with any off-chain agreement with the Employer.<br>- Ensuring all deliverables and the Job Completion URI content are lawful and do not violate third-party rights.<br>- All tax obligations relating to receiving $AGIALPHA payments, posting or forfeiting Agent bonds, or receiving any additional settlement amounts.<br>- Maintaining operational security of wallets, private keys, endpoints, and any systems used to perform Jobs.<br>- Understanding that Agent bonds may be forfeited under certain settlement paths per the code.<br><br>4.3 Validator Responsibilities (Exclusive)<br>Each Validator is solely and exclusively responsible for:<br><br>- Performing independent diligence before approving/disapproving completion, and voting honestly according to their own judgment and any standards they adopt or communicate.<br>- All consequences of their votes, including the possibility of slashing or reduced returns per the Protocol rules.<br>- All tax obligations relating to validator rewards, bond returns, slashing outcomes, and any other transfers.<br>- Compliance with all applicable laws (including any professional, licensing, or regulatory obligations that might apply to their validation activity).<br>- Avoiding bribery, collusion, or manipulation; recognizing that the Protocol&#x27;s incentives may not prevent manipulation and that participation is at their own risk.<br><br>4.4 No Reliance on Validators, Moderators, or Owner<br><br>- Employers and Agents acknowledge that Validator participation may be insufficient, adversarial, mistaken, or absent.<br>- Moderators (where enabled) may act at their discretion, may be unavailable, and owe no duty to any user.<br>- The Owner may pause or restrict functions per the code and owes no duty to keep the Protocol available or to resolve disputes.</div>
+</details>
+<details class="term-block" id="5-job-lifecycle-and-core-mechanics-disclosure">
+  <summary>5. Job Lifecycle and Core Mechanics (Disclosure)</summary>
+  <div class="term-body">This section summarizes expected mechanics; the deployed code controls.<br><br>5.1 Posting a Job (Employer)<br><br>- To post a Job, the Employer escrows the full payout amount in $AGIALPHA into the Protocol.<br>- The Employer provides a Job Spec URI and optional details.<br>- Jobs may have maximum payout and duration limits set by the Protocol.<br><br>5.2 Applying / Assignment (Agent)<br><br>- A Job may be assigned to the first eligible Agent who successfully applies under the Protocol rules.<br>- Eligibility may depend on authorization mechanisms (e.g., allowlists, Merkle proofs, or ENS-based authorization).<br>- The Protocol may require an Agent bond (computed by code) to be posted at application/assignment time.<br>- The Agent&#x27;s payout percentage may be determined by the Agent&#x27;s holdings of specific NFT types configured in the Protocol and snapshotted at assignment time.<br><br>5.3 Completion Request (Agent)<br><br>- The Agent requests completion by submitting a Job Completion URI within the permitted time windows enforced by the Protocol.<br>- The Protocol may enforce review periods and timeouts.<br><br>5.4 Validation Voting (Validators)<br><br>- Authorized Validators may approve or disapprove during the completion review window.<br>- Validator voting may require posting a Validator bond per vote (computed by code).<br>- Validator votes can trigger:<br>  - Approval threshold reached (with a subsequent challenge window before settlement), or<br>  - Disapproval threshold reached, which may put the Job into dispute.<br><br>5.5 Finalization / Settlement (Anyone may be able to call)<br><br>- After the applicable review/challenge windows, settlement can occur according to the Protocol logic, including outcomes where:<br>  - The Agent wins (payout to Agent, validator rewards distributed, remainder retained by protocol), or<br>  - The Employer wins (refund to Employer, validator settlement, possible agent bond forfeiture), or<br>  - A dispute is forced due to insufficient participation or ties.<br><br>5.6 Expiration<br><br>- If conditions in the code are met (e.g., time elapsed without completion request), a Job may be expired, which can trigger refund mechanics and bond settlement.<br><br>5.7 Cancellation / Delisting<br><br>- An Employer may be able to cancel an unassigned Job (per code).<br>- The Owner may delist/cancel unassigned Jobs (per code).<br>- Users acknowledge there is no obligation to keep a Job listed or available.</div>
+</details>
+<details class="term-block" id="6-disputes-moderation-no-duty-to-resolve">
+  <summary>6. Disputes; Moderation; No Duty to Resolve</summary>
+  <div class="term-body">1) Dispute initiation. A dispute may be initiated by an Employer or Agent (and/or may be triggered by validator disapproval thresholds) as permitted by the code. Disputes may require a Dispute bond in $AGIALPHA.<br>2) Moderator resolution. Where enabled, Moderators may resolve disputes using the Protocol&#x27;s dispute code mechanism (e.g., settle in favor of Agent or Employer).<br>3) No obligation; no SLA. The Protocol, Owner, and Moderators have no obligation to resolve disputes within any timeframe (or at all), except as the code permits. Any reliance on moderator action is at user risk.<br>4) Off-chain disputes remain off-chain. The Protocol cannot adjudicate legal questions (fraud, IP infringement, breach of contract, misrepresentation, employment classification, etc.). Those issues are solely between users and must be handled off-chain.</div>
+</details>
+<details class="term-block" id="7-protocol-economics-fees-retained-remainder-disclosure">
+  <summary>7. Protocol Economics; Fees; Retained Remainder Disclosure</summary>
+  <div class="term-body">1) Validator reward budget. The Protocol may allocate a portion of the Job payout as a validator reward budget (as snapshotted per job) for distribution to participating Validators, subject to code rules.<br>2) Bond returns and slashing. Validator bonds may be returned in full, partially slashed, or redistributed depending on whether a Validator ends up on the correct side of the final outcome, as defined by the code.<br>3) Protocol-retained remainder (platform revenue). On certain settlement paths (including Agent-win), the Protocol may retain the remainder of the Job payout after Agent and Validator allocations. This remainder may become withdrawable by the Owner under conditions specified in the code (e.g., when paused and when not backing active escrows/bonds).<br>4) No refunds from the Protocol. Token movements are governed by the smart contract; there is no guarantee of reversal, refunds, or discretionary recovery.<br>5) Gas fees. Users pay their own gas/transaction fees and accept the risk of network congestion, failed transactions, MEV, reorgs, and other chain-level issues.</div>
+</details>
+<details class="term-block" id="8-taxes-withholding-reporting-exclusive-user-responsibility">
+  <summary>8. Taxes, Withholding, Reporting (Exclusive User Responsibility)</summary>
+  <div class="term-body">The Employer, Agent, and each Validator are exclusively responsible for:<br><br>- Determining and paying any and all taxes (income, payroll, self-employment, VAT/GST/sales tax, withholding, capital gains, information reporting, etc.) arising from:<br>  - Job payouts, validator rewards, protocol distributions, refunds;<br>  - Posting, returning, or forfeiting bonds;<br>  - Token price volatility and taxable events in their jurisdiction.<br>- Maintaining records and issuing any required invoices, receipts, and tax forms.<br>- Handling any withholding obligations, if applicable.<br><br>The Protocol does not provide tax advice, does not withhold taxes, and does not issue tax forms.</div>
+</details>
+<details class="term-block" id="9-no-employment-relationship-independent-contractors-only">
+  <summary>9. No Employment Relationship; Independent Contractors Only</summary>
+  <div class="term-body">1) No employment relationship created by the Protocol. Nothing in the Protocol or these Terms creates an employment, partnership, joint venture, agency, fiduciary, or franchise relationship between:<br>   - The Protocol (or its publishers/maintainers/Owner/Moderators) and any user; or<br>   - Any Employer and any Agent, unless they separately create such a relationship off-chain.<br>2) Employer classification duty. The Employer is solely responsible for worker classification and compliance with all related obligations.<br>3) No benefits. The Protocol does not provide benefits, insurance, or protections to any user.</div>
+</details>
+<details class="term-block" id="10-user-content-intellectual-property-confidentiality">
+  <summary>10. User Content; Intellectual Property; Confidentiality</summary>
+  <div class="term-body">1) User Content is user responsibility. Employers and Agents (and any Validators who publish content) are solely responsible for any User Content they submit or reference, including legality, accuracy, and IP permissions.<br>2) No IP transfer by default. The Protocol and AGIJobs NFTs do not automatically transfer or license intellectual property rights. Any IP transfer/license must be agreed off-chain between the relevant parties.<br>3) Public nature of blockchains. On-chain actions are public. URIs and referenced content may be publicly accessible. Do not submit sensitive personal data or confidential information unless you accept that risk and have the rights to do so.</div>
+</details>
+<details class="term-block" id="11-prohibited-uses">
+  <summary>11. Prohibited Uses</summary>
+  <div class="term-body">You may not use the Protocol to:<br><br>- Violate any law or regulation (including sanctions, export controls, labor laws, tax laws, or consumer protection laws).<br>- Post or perform Jobs involving fraud, theft, violence, doxxing, harassment, malware, exploitation, or rights infringement.<br>- Circumvent authorization/eligibility mechanisms or use compromised wallets/keys.<br>- Engage in bribery, collusion, or manipulation of Validator voting or dispute outcomes.<br><br>The Owner may maintain blacklists or otherwise restrict participation as permitted by the code. Such actions are discretionary and create no duty.</div>
+</details>
+<details class="term-block" id="12-assumption-of-risk-smart-contract-and-crypto-risks">
+  <summary>12. Assumption of Risk (Smart Contract and Crypto Risks)</summary>
+  <div class="term-body">You acknowledge and accept, without limitation, the risks of:<br><br>- Smart contract bugs, exploits, reentrancy, logic errors, and unforeseen interactions.<br>- Chain congestion, MEV/front-running, reorgs, downtime, and client bugs.<br>- Token volatility, illiquidity, and loss of value of $AGIALPHA.<br>- Validator non-participation, collusion, bribery, or incorrect outcomes.<br>- Irreversible transactions and the impossibility of guaranteed recovery.<br>- Loss of private keys or compromised wallets.</div>
+</details>
+<details class="term-block" id="13-disclaimers-no-warranties">
+  <summary>13. Disclaimers; No Warranties</summary>
+  <div class="term-body">To the maximum extent permitted by law:<br><br>- The Protocol and any related materials are provided &quot;AS IS&quot; and &quot;AS AVAILABLE&quot;.<br>- No warranties are provided, including warranties of merchantability, fitness for a particular purpose, non-infringement, accuracy, security, uptime, or that any particular outcome will be achieved.<br>- No statement in documentation, interfaces, community channels, or elsewhere creates any warranty or duty.</div>
+</details>
+<details class="term-block" id="14-limitation-of-liability">
+  <summary>14. Limitation of Liability</summary>
+  <div class="term-body">To the maximum extent permitted by law:<br><br>- In no event shall the Protocol, its publishers, maintainers, contributors, Owner, Moderators, or any related persons be liable for any indirect, incidental, special, consequential, exemplary, or punitive damages, or any loss of profits, revenue, data, goodwill, or digital assets, arising out of or related to your use of the Protocol.<br>- Any liability that cannot be excluded is limited to the minimum amount permitted by law.<br><br>All liability for Jobs, deliverables, validation activities, disputes, taxes, and compliance rests exclusively with Employers, Agents, and Validators.</div>
+</details>
+<details class="term-block" id="15-indemnification">
+  <summary>15. Indemnification</summary>
+  <div class="term-body">To the maximum extent permitted by law, you agree to defend, indemnify, and hold harmless the Protocol, its publishers, maintainers, contributors, Owner, Moderators, and related persons from and against any and all claims, demands, actions, damages, losses, liabilities, costs, and expenses (including reasonable attorneys&#x27; fees) arising out of or related to:<br><br>- Your use of the Protocol;<br>- Any Job you post, perform, validate, approve/disapprove, dispute, or otherwise participate in;<br>- Any User Content you submit or reference;<br>- Your breach of these Terms; or<br>- Your violation of any law or third-party rights.</div>
+</details>
+<details class="term-block" id="16-governing-law-forum-user-to-user-disputes">
+  <summary>16. Governing Law; Forum; User-to-User Disputes</summary>
+  <div class="term-body">1) User-to-user disputes. Any dispute between an Employer, Agent, and/or Validator is strictly between those parties. The Protocol (and its publishers/maintainers/Owner/Moderators) is not a party and shall not be named as such to the extent permitted.<br>2) Governing law for user-to-user disputes. User-to-user disputes shall be governed by the laws applicable to those users and their off-chain agreement(s), if any.<br>3) Protocol not subject to jurisdiction. You agree that you will not seek to impose jurisdiction over the Protocol as a party to any user-to-user dispute, to the maximum extent permitted by law.</div>
+</details>
+<details class="term-block" id="17-changes-to-terms-continued-use">
+  <summary>17. Changes to Terms; Continued Use</summary>
+  <div class="term-body">- The publisher may publish updated Terms from time to time (including at a canonical URL or IPFS link).<br>- Continued use of the Protocol after publication of updated Terms constitutes acceptance of those updated Terms to the extent permitted by law.<br>- Historic on-chain behavior remains governed by the deployed code and the blockchain state.</div>
+</details>
+<details class="term-block" id="18-severability-entire-agreement-no-waiver">
+  <summary>18. Severability; Entire Agreement; No Waiver</summary>
+  <div class="term-body">- Severability: If any provision is held invalid or unenforceable, the remaining provisions remain in full force.<br>- Entire Agreement: These Terms constitute the entire agreement between you and the publisher regarding your use of the Protocol (without affecting any separate agreements between users).<br>- No Waiver: Failure to enforce any provision is not a waiver.</div>
+</details>
+<details class="term-block" id="regulatory-compliance-legal-disclosures-token-and-program">
+  <summary>Regulatory Compliance &amp; Legal Disclosures (Token and Program)</summary>
+  <div class="term-body">1) Utility Token Only: $AGIALPHA is intended as a utility token used within an experimental system (including paying for protocol-defined interactions, payouts, and bonds). It is not intended to represent equity, ownership, profit-sharing, or voting rights in any entity.<br>2) No Expectation of Profit: Any expectation of profit, yield, or return is unjustified.<br>3) No Guarantee of Value: No party guarantees any value, price stability, or liquidity of $AGIALPHA.<br>4) Non-Refundable Token Purchases: Where applicable, token acquisitions are final and non-refundable, subject to mandatory consumer laws that cannot be waived.<br>5) User Compliance Responsibility: Users are solely responsible for ensuring acquisition, holding, and use of $AGIALPHA complies with all laws in their jurisdiction, including securities, commodities, consumer, tax, and AML-related obligations that may apply to them.</div>
+</details>
+<details class="term-block" id="research-program-notice-no-warranty">
+  <summary>Research Program Notice; No Warranty</summary>
+  <div class="term-body">THIS IS PART OF AN ASPIRATIONAL RESEARCH PROGRAM WITH AN AMBITIOUS RESEARCH AGENDA. ANY EXPECTATION OF PROFIT OR RETURN IS UNJUSTIFIED. POSSESSION OF $AGIALPHA DOES NOT SIGNIFY OR ESTABLISH ANY ENTITLEMENT OR INTEREST, SHARE OR EQUITY, BOND OR ANALOGOUS ENTITLEMENT, OR ANY RIGHT TO OBTAIN ANY FUTURE INCOME. MATERIALS PROVIDED IN THIS SYSTEM ARE WITHOUT WARRANTY OF ANY KIND AND DO NOT CONSTITUTE ENDORSEMENT AND CAN BE MODIFIED AT ANY TIME. BY USING THE PRESENT SYSTEM, YOU AGREE TO THE $AGIALPHA TERMS AND CONDITIONS. ANY USE OF THIS SYSTEM, OR ANY OF THE INFORMATION CONTAINED HEREIN, FOR OTHER THAN THE PURPOSE FOR WHICH IT WAS DEVELOPED, IS EXPRESSLY PROHIBITED, EXCEPT AS AGI.ETH MAY OTHERWISE AGREE TO IN WRITING OFFICIALLY.<br><br>OVERRIDING AUTHORITY: AGI.ETH<br><br>By interacting with the AGIJobManager smart contract, you acknowledge that you have read, understood, and agree to be bound by these Terms.<br><br>--------------------------------------------------------------------------------</div>
+</details>
+<details class="term-block" id="r-e-g-u-l-a-t-o-r-y-c-o-m-p-l-i-a-n-c-e-l-e-g-a-l-d-i-s-c-l-o-s-u-r-e-s">
+  <summary>[ R E G U L A T O R Y  C O M P L I A N C E  &amp;  L E G A L  D I S C L O S U R E S ]</summary>
+  <div class="term-body">Published by: ALPHA.AGI.ETH<br><br>Approval Authority: ALPHA.AGI.ETH<br><br>Office of Primary Responsibility: ALPHA.AGI.ETH<br><br>Initial Terms &amp; Conditions<br><br>The Emergence of an AGI-Powered Alpha Agent.<br><br>Ticker ($): AGIALPHA<br><br>Rooted in the publicly disclosed 2017 &quot;Multi-Agent AI DAO&quot; prior art, the AGI ALPHA AGENT utilizes $AGIALPHA tokens purely as utility tokens—no equity, no profit-sharing—to grant users prepaid access to the AGI ALPHA AGENT’s capabilities. By structuring $AGIALPHA as an advance payment mechanism for leveraging ALPHA.AGENT.AGI.Eth’s AI-driven services, holders likely avoid securities classification complexities. By purchasing these tokens, you gain usage credits for future AI services from the AGI ALPHA AGENT. Instead of representing ownership or investment rights, these tokens simply secure the right to interact with and benefit from the AGI ALPHA AGENT’s intelligence and outputs. This model delivers a straightforward, compliance-friendly approach to accessing cutting-edge AI functionalities, ensuring a seamless, equity-free experience for all participants.</div>
+</details>
+<details class="term-block" id="1-token-usage-agialpha-tokens-are-strictly-utility-tokens-no-equity-no-profit-sharing-intended-for-the-purchase-of-products-services-by-the-agi-alpha-agent-alpha-agent-agi-eth-they-are-not-intended-for-investment-or-speculative-purposes">
+  <summary>1. Token Usage: $AGIALPHA tokens are strictly utility tokens—no equity, no profit-sharing—intended for the purchase of products/services by the AGI ALPHA AGENT (ALPHA.AGENT.AGI.Eth). They are not intended for investment or speculative purposes.</summary>
+  <div class="term-body"></div>
+</details>
+<details class="term-block" id="2-non-refundable-purchases-of-agialpha-tokens-are-final-and-non-refundable">
+  <summary>2. Non-Refundable: Purchases of $AGIALPHA tokens are final and non-refundable.</summary>
+  <div class="term-body"></div>
+</details>
+<details class="term-block" id="3-no-guarantee-of-value-the-issuer-does-not-guarantee-any-specific-value-of-the-agialpha-token-in-relation-to-fiat-currencies-or-other-cryptocurrencies">
+  <summary>3. No Guarantee of Value: The issuer does not guarantee any specific value of the $AGIALPHA token in relation to fiat currencies or other cryptocurrencies.</summary>
+  <div class="term-body"></div>
+</details>
+<details class="term-block" id="4-regulatory-compliance-it-is-the-user-s-responsibility-to-ensure-that-the-purchase-and-use-of-agialpha-tokens-comply-with-all-applicable-laws-and-regulations">
+  <summary>4. Regulatory Compliance: It is the user’s responsibility to ensure that the purchase and use of $AGIALPHA tokens comply with all applicable laws and regulations.</summary>
+  <div class="term-body"></div>
+</details>
+<details class="term-block" id="5-user-responsibility-users-are-responsible-for-complying-with-the-laws-in-their-own-jurisdiction-regarding-the-purchase-and-use-of-agialpha-tokens">
+  <summary>5. User Responsibility: Users are responsible for complying with the laws in their own jurisdiction regarding the purchase and use of $AGIALPHA tokens.</summary>
+  <div class="term-body">OVERRIDING AUTHORITY: AGI.Eth<br><br>$AGIALPHA is experimental and part of an ambitious research agenda. Any expectation of profit is unjustified.<br><br>Materials provided (including $AGIALPHA) are without warranty. By using $AGIALPHA, you agree to the $AGIALPHA Terms and Conditions.<br><br>Changes to Terms: The issuer may revise these terms at any time, subject to regulatory compliance. Current Terms &amp; Conditions: https://agialphaagent.com/.<br><br>THIS IS PART OF AN ASPIRATIONAL RESEARCH PROGRAM WITH AN AMBITIOUS RESEARCH AGENDA. ANY EXPECTATION OF PROFIT OR RETURN IS UNJUSTIFIED. POSSESSION OF $AGIALPHA DOES NOT SIGNIFY OR ESTABLISH ANY ENTITLEMENT OR INTEREST, SHARE OR EQUITY, BOND OR ANALOGOUS ENTITLEMENT, OR ANY RIGHT TO OBTAIN ANY FUTURE INCOME. MATERIALS PROVIDED IN THIS SYSTEM ARE WITHOUT WARRANTY OF ANY KIND AND DO NOT CONSTITUTE ENDORSEMENT AND CAN BE MODIFIED AT ANY TIME. BY USING THE PRESENT SYSTEM, YOU AGREE TO THE $AGIALPHA TERMS AND CONDITIONS. ANY USE OF THIS SYSTEM, OR ANY OF THE INFORMATION CONTAINED HEREIN, FOR OTHER THAN THE PURPOSE FOR WHICH IT WAS DEVELOPED, IS EXPRESSLY PROHIBITED, EXCEPT AS AGI.ETH MAY OTHERWISE AGREE TO IN WRITING OFFICIALLY.<br><br>OVERRIDING AUTHORITY: AGI.ETH</div>
+</details>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 10px">Contact & Legal</h2>
+      <div class="muted">The full Terms &amp; Conditions are embedded above for easier reading. This footer keeps the public contact and external legal reference links handy.</div>
+      <div style="margin-top:10px" class="muted">
+        Contact: <a href="mailto:secretariat@montreal.ai">secretariat@montreal.ai</a><br>
+        Terms: <a href="https://agialphaagent.com/" target="_blank" rel="noopener">agialphaagent.com</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/web3@4.8.0/dist/web3.min.js"></script>
+  <script>
+    let web3, userAccount, agiJobManager, agiToken, tokenDecimals = 18;
+    const AGI_JOB_MANAGER = "0xB3AAeb69b630f0299791679c063d68d6687481d1";
+    const NAME_WRAPPER = "0xD4416b13d2b3a9aBae7AcD5D6C2BbDBE25686401";
+    const SUFFIX = { agent:"agent.agi.eth", club:"club.agi.eth", alphaAgent:"alpha.agent.agi.eth", alphaClub:"alpha.club.agi.eth" };
+
+    const verified = { agent:null, club:null, agentAlpha:false, clubAlpha:false };
+
+    let isMainnet = false;
+    let hasAcceptedTerms = false;
+    const DISPUTE_BOND_BPS = 50n;
+    const DISPUTE_BOND_MIN = 1n;
+    const DISPUTE_BOND_MAX = 200n;
+    function updateWriteGate(){
+      const enabled = isMainnet && hasAcceptedTerms;
+      const ids=['createJobBtn'];
+      for(const id of ids){const b=document.getElementById(id); if(b) b.disabled=!enabled;}
+      document.querySelectorAll('button[data-tx="1"]').forEach(b=>{b.disabled=!enabled;});
+    }
+
+const AGIJobManagerABI = [
+      {"inputs":[],"name":"agiToken","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"nextJobId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"nextTokenId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"requiredValidatorApprovals","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"requiredValidatorDisapprovals","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"voteQuorum","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"completionReviewPeriod","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"challengePeriodAfterApproval","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"reputation","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"string","name":"_jobSpecURI","type":"string"},{"internalType":"uint256","name":"_payout","type":"uint256"},{"internalType":"uint256","name":"_duration","type":"uint256"},{"internalType":"string","name":"_details","type":"string"}],"name":"createJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"getJobCore","outputs":[{"internalType":"address","name":"employer","type":"address"},{"internalType":"address","name":"assignedAgent","type":"address"},{"internalType":"uint256","name":"payout","type":"uint256"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"uint256","name":"assignedAt","type":"uint256"},{"internalType":"bool","name":"completed","type":"bool"},{"internalType":"bool","name":"disputed","type":"bool"},{"internalType":"bool","name":"expired","type":"bool"},{"internalType":"uint8","name":"agentPayoutPct","type":"uint8"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"getJobValidation","outputs":[{"internalType":"bool","name":"completionRequested","type":"bool"},{"internalType":"uint256","name":"validatorApprovals","type":"uint256"},{"internalType":"uint256","name":"validatorDisapprovals","type":"uint256"},{"internalType":"uint256","name":"completionRequestedAt","type":"uint256"},{"internalType":"uint256","name":"disputedAt","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"getJobSpecURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"getJobCompletionURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"},{"internalType":"string","name":"subdomain","type":"string"},{"internalType":"bytes32[]","name":"proof","type":"bytes32[]"}],"name":"applyForJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"},{"internalType":"string","name":"_jobCompletionURI","type":"string"}],"name":"requestJobCompletion","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"},{"internalType":"string","name":"subdomain","type":"string"},{"internalType":"bytes32[]","name":"proof","type":"bytes32[]"}],"name":"validateJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"},{"internalType":"string","name":"subdomain","type":"string"},{"internalType":"bytes32[]","name":"proof","type":"bytes32[]"}],"name":"disapproveJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"}],"name":"finalizeJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"}],"name":"disputeJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"}],"name":"expireJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"}],"name":"cancelJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"},{"internalType":"bool","name":"burnFuses","type":"bool"}],"name":"lockJobENS","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}
+,
+      {"inputs":[],"name":"agentBond","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"agentBondBps","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"agentBondMax","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"maxActiveJobsPerAgent","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"validatorBondBps","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"validatorBondMin","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"validatorBondMax","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"validatorSlashBps","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"validationRewardPercentage","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"maxJobPayout","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"jobDurationLimit","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"settlementPaused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"disputeReviewPeriod","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
+    ];
+
+    const ERC20ABI = [
+      {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"}
+    ];
+
+    const NameWrapperABI = [
+      {"inputs":[{"internalType":"uint256","name":"id","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+    ];
+
+    function el(id){return document.getElementById(id);}
+    function shortAddr(a){return a?`${a.slice(0,6)}…${a.slice(-4)}`:"";}
+    function setToast(msg, kind){
+      const t = el("toast");
+      if(!t) return;
+      t.style.display = "block";
+      t.style.borderColor = kind==="ok" ? "rgba(120,255,190,.35)" : kind==="bad" ? "rgba(255,100,130,.35)" : "hsl(var(--border))";
+      t.style.color = kind==="ok" ? "var(--ok)" : kind==="bad" ? "var(--danger)" : "var(--text-soft)";
+      t.textContent = msg;
+    }
+    function clearToast(){const t=el("toast"); if(t){t.style.display="none"; t.textContent="";}}
+    function requireConnected(){
+      if(!web3 || !userAccount || !agiJobManager || !agiToken){
+        setToast("Connect your wallet first.", "warn");
+        return false;
+      }
+      return true;
+    }
+
+    function parseAmountToUnits(s){
+      const str = String(s||"").trim();
+      if(!str) throw new Error("Missing amount");
+      if(!/^[0-9]+(\.[0-9]+)?$/.test(str)) throw new Error("Invalid number");
+      const parts = str.split(".");
+      const a = parts[0];
+      const b = parts[1] || "";
+      const dec = tokenDecimals;
+      const frac = (b + "0".repeat(dec)).slice(0, dec);
+      return BigInt(a) * (10n**BigInt(dec)) + BigInt(frac || "0");
+    }
+    function formatUnitsToAmount(x){
+      const n = BigInt(x);
+      const dec = tokenDecimals;
+      const base = 10n**BigInt(dec);
+      const whole = n / base;
+      const frac = (n % base).toString().padStart(dec, "0").replace(/0+$/,"");
+      return frac ? `${whole.toString()}.${frac}` : whole.toString();
+    }
+    function secondsToHuman(sec){
+      const s = Number(sec||0);
+      if(!isFinite(s) || s<=0) return "—";
+      const d = Math.floor(s/86400);
+      if(d>=1) return `${d}d`;
+      const h = Math.floor(s/3600);
+      if(h>=1) return `${h}h`;
+      const m = Math.floor(s/60);
+      if(m>=1) return `${m}m`;
+      return `${s}s`;
+    }
+
+
+    function mustBeReadyToWrite(){
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return false;}
+      if(!hasAcceptedTerms){
+        setToast("Please read and accept the Terms & Conditions first.", "warn");
+        document.getElementById("termsSection")?.scrollIntoView({behavior:"smooth", block:"start"});
+        return false;
+      }
+      return true;
+    }
+    function computeDisputeBondFromPayout(payout){
+      if(!payout || payout <= 0n) return 0n;
+      let bond = (payout * DISPUTE_BOND_BPS) / 10000n;
+      const minUnits = DISPUTE_BOND_MIN * (10n**BigInt(tokenDecimals));
+      const maxUnits = DISPUTE_BOND_MAX * (10n**BigInt(tokenDecimals));
+      if(bond < minUnits) bond = minUnits;
+      if(bond > maxUnits) bond = maxUnits;
+      if(bond > payout) bond = payout;
+      return bond;
+    }
+    function updateCalculator(){
+      const payoutRaw = (el("calcPayout")?.value || "").trim();
+      const durationRaw = (el("calcDuration")?.value || "").trim();
+      if(!payoutRaw){
+        el("calcAgentBond").textContent = "—";
+        el("calcValidatorBond").textContent = "—";
+        el("calcDisputeBond").textContent = "—";
+        el("calcRewardPool").textContent = "—";
+        return;
+      }
+      try{
+        const payout = parseAmountToUnits(payoutRaw);
+        const duration = durationRaw ? BigInt(durationRaw) : 0n;
+        const agentBps = BigInt(el("agentBondBps").textContent.replace(/[^0-9]/g,"") || "0");
+        const validatorBps = BigInt(el("validatorBondBps").textContent.replace(/[^0-9]/g,"") || "0");
+        const validationPct = BigInt((el("validationRewardPct").textContent.match(/[0-9]+/) || ["0"])[0]);
+        const agentBase = (payout * agentBps) / 10000n;
+        const validatorBond = (payout * validatorBps) / 10000n;
+        const rewardPool = (payout * validationPct) / 100n;
+        const disputeBond = computeDisputeBondFromPayout(payout);
+        const durationNote = duration > 0n ? " (duration-sensitive)" : "";
+        el("calcAgentBond").textContent = formatUnitsToAmount(agentBase) + durationNote;
+        el("calcValidatorBond").textContent = formatUnitsToAmount(validatorBond);
+        el("calcDisputeBond").textContent = formatUnitsToAmount(disputeBond);
+        el("calcRewardPool").textContent = formatUnitsToAmount(rewardPool);
+      }catch{
+        el("calcAgentBond").textContent = "—";
+        el("calcValidatorBond").textContent = "—";
+        el("calcDisputeBond").textContent = "—";
+        el("calcRewardPool").textContent = "—";
+      }
+    }
+
+    function namehash(name){
+      const keccak = web3.utils.keccak256;
+      let node = "0x" + "00".repeat(32);
+      if(name){
+        const labels = name.split(".");
+        for(let i=labels.length-1;i>=0;i--){
+          node = keccak(node + keccak(labels[i]).replace("0x",""));
+        }
+      }
+      return node;
+    }
+
+    async function connectWallet(){
+      clearToast();
+      try{
+        if(!window.ethereum){alert("Please install MetaMask.");return;}
+        web3 = new Web3(window.ethereum);
+        await window.ethereum.request({method:"eth_requestAccounts"});
+        const accts = await web3.eth.getAccounts();
+        userAccount = accts[0] || null;
+        if(!userAccount){el("walletStatus").textContent="Not connected";return;}
+        el("walletStatus").textContent = shortAddr(userAccount);
+
+        const chainId = await web3.eth.getChainId();
+        isMainnet = (Number(chainId) === 1);
+        el("chainStatus").textContent = `chainId ${chainId}` + (isMainnet ? " (Mainnet)" : " (Not Mainnet)");
+        updateWriteGate();
+        if(!isMainnet){ setToast("Connected on the wrong network. Switch to Ethereum Mainnet to transact.", "warn"); }
+
+        agiJobManager = new web3.eth.Contract(AGIJobManagerABI, AGI_JOB_MANAGER);
+        const tokenAddr = await agiJobManager.methods.agiToken().call();
+        agiToken = new web3.eth.Contract(ERC20ABI, tokenAddr);
+        try{ tokenDecimals = Number(await agiToken.methods.decimals().call()); }catch{ tokenDecimals = 18; }
+
+        el("refreshBtn").disabled = false;
+        setToast("Connected. Loading data…", "ok");
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function refreshAll(){
+      if(!requireConnected()) return;
+      try{
+        if(!isMainnet){
+          setToast("Read-only mode: switch to Ethereum Mainnet to transact. You can still review the embedded terms and the interface structure here.", "warn");
+          el("totalJobs").textContent = "—";
+          el("reqApprovals").textContent = "—";
+          el("reqDisapprovals").textContent = "—";
+          el("voteQuorum").textContent = "—";
+          el("completionReview").textContent = "—";
+          el("challengePeriod").textContent = "—";
+          el("agiBalance").textContent = "—";
+          el("myReputation").textContent = "—";
+          el("myJobs").textContent = "—";
+          const tbody = el("jobsBody");
+          if(tbody) tbody.innerHTML = '<tr><td colspan="8" class="muted">Switch to Ethereum Mainnet (chainId 1) to load jobs.</td></tr>';
+          const my = el("myNfts"), all = el("allNfts");
+          if(my) my.innerHTML = "<li>—</li>";
+          if(all) all.innerHTML = "<li>—</li>";
+          return;
+        }
+        await updateSummary();
+        await loadJobs();
+        await loadNFTs();
+        setToast("Up to date.", "ok");
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+async function updateSummary(){
+      const total = await agiJobManager.methods.nextJobId().call();
+      el("totalJobs").textContent = total;
+
+      const ra = await agiJobManager.methods.requiredValidatorApprovals().call();
+      const rd = await agiJobManager.methods.requiredValidatorDisapprovals().call();
+      const vq = await agiJobManager.methods.voteQuorum().call();
+      const crp = await agiJobManager.methods.completionReviewPeriod().call();
+      const chp = await agiJobManager.methods.challengePeriodAfterApproval().call();
+
+      el("reqApprovals").textContent = ra;
+      el("reqDisapprovals").textContent = rd;
+      el("voteQuorum").textContent = vq;
+      el("completionReview").textContent = secondsToHuman(crp);
+      el("challengePeriod").textContent = secondsToHuman(chp);
+
+      // Protocol parameters (bonds, limits, pause states)
+      const [
+        aMin,aBps,aMax,maxActive,
+        vBps,vMin,vMax,vSlash,
+        vReward,maxPayout,jobLimit,
+        pausedState,settlePaused,drp
+      ] = await Promise.all([
+        agiJobManager.methods.agentBond().call(),
+        agiJobManager.methods.agentBondBps().call(),
+        agiJobManager.methods.agentBondMax().call(),
+        agiJobManager.methods.maxActiveJobsPerAgent().call(),
+        agiJobManager.methods.validatorBondBps().call(),
+        agiJobManager.methods.validatorBondMin().call(),
+        agiJobManager.methods.validatorBondMax().call(),
+        agiJobManager.methods.validatorSlashBps().call(),
+        agiJobManager.methods.validationRewardPercentage().call(),
+        agiJobManager.methods.maxJobPayout().call(),
+        agiJobManager.methods.jobDurationLimit().call(),
+        agiJobManager.methods.paused().call(),
+        agiJobManager.methods.settlementPaused().call(),
+        agiJobManager.methods.disputeReviewPeriod().call()
+      ]);
+
+      el("agentBondMin").textContent = formatUnitsToAmount(aMin);
+      el("agentBondBps").textContent = aBps;
+      el("agentBondMax").textContent = formatUnitsToAmount(aMax);
+      el("maxActiveJobs").textContent = maxActive;
+
+      el("validatorBondBps").textContent = vBps;
+      el("validatorBondMin").textContent = formatUnitsToAmount(vMin);
+      el("validatorBondMax").textContent = formatUnitsToAmount(vMax);
+      el("validatorSlashBps").textContent = vSlash;
+
+      el("validationRewardPct").textContent = String(vReward) + "%";
+      el("maxJobPayout").textContent = formatUnitsToAmount(maxPayout);
+      el("jobDurationLimit").textContent = jobLimit;
+      el("pausedState").textContent = pausedState ? "true" : "false";
+      el("settlementPaused").textContent = settlePaused ? "true" : "false";
+      el("disputeReview").textContent = secondsToHuman(drp);
+
+      const bal = await agiToken.methods.balanceOf(userAccount).call();
+      el("agiBalance").textContent = formatUnitsToAmount(bal);
+
+      const rep = await agiJobManager.methods.reputation(userAccount).call();
+      el("myReputation").textContent = rep;
+
+      el("myJobs").textContent = "—";
+      updateCalculator();
+    }
+
+    function statusPillFrom(job){
+      if(job.expired) return `<span class="pill bad">Expired</span>`;
+      if(job.disputed) return `<span class="pill warn">Disputed</span>`;
+      if(job.completed) return `<span class="pill ok">Completed</span>`;
+      if(job.completionRequested) return `<span class="pill warn">Completion requested</span>`;
+      if(job.assignedAgent && job.assignedAgent !== "0x0000000000000000000000000000000000000000") return `<span class="pill">Assigned</span>`;
+      return `<span class="pill">Open</span>`;
+    }
+
+    function safeLink(uri){
+      const u = String(uri||"").trim();
+      if(!u) return "";
+      const esc = u.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      const lower = u.toLowerCase();
+      if(lower.startsWith("https://") || lower.startsWith("http://")){
+        return `<a href="${esc}" target="_blank" rel="noopener">${esc}</a>`;
+      }
+      if(lower.startsWith("ipfs://")){
+        const link = normalizeIpfsToHttp(u).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        return `<a href="${link}" target="_blank" rel="noopener">${esc}</a>`;
+      }
+      return `<span class="muted">${esc}</span>`;
+    }
+
+    async function loadJobs(){
+      const total = Number(await agiJobManager.methods.nextJobId().call());
+      const tbody = el("jobsBody");
+      tbody.innerHTML = "";
+      let myJobsCount = 0;
+      for(let i=0;i<total;i++){
+        const core = await agiJobManager.methods.getJobCore(i).call();
+        const spec = await agiJobManager.methods.getJobSpecURI(i).call();
+        const val = await agiJobManager.methods.getJobValidation(i).call();
+        let completionURI = "";
+        if(val.completionRequested){
+          try{ completionURI = await agiJobManager.methods.getJobCompletionURI(i).call(); }catch{}
+        }
+        const assignedAgent = core.assignedAgent;
+        const isOpen = assignedAgent === "0x0000000000000000000000000000000000000000";
+        if(String(core.employer).toLowerCase()===userAccount?.toLowerCase()) myJobsCount++;
+        const job = {
+          id:i,
+          employer:core.employer,
+          assignedAgent:assignedAgent,
+          payout:core.payout,
+          duration:core.duration,
+          completed:core.completed,
+          disputed:core.disputed,
+          expired:core.expired,
+          completionRequested:val.completionRequested,
+          approvals:val.validatorApprovals,
+          disapprovals:val.validatorDisapprovals,
+          completionURI:completionURI,
+          specURI:spec
+        };
+
+        const actions = [];
+        const txAttr = isMainnet ? 'data-tx="1"' : 'data-tx="1" disabled';
+        if(isOpen && verified.agent) actions.push(`<button class="btn" ${txAttr} onclick="applyForJob(${i})">Apply</button>`);
+        if(!isOpen && job.assignedAgent.toLowerCase()===userAccount?.toLowerCase() && !job.completed && !job.expired && !job.completionRequested){
+          actions.push(`<button class="btn" ${txAttr} onclick="requestCompletion(${i})">Request completion</button>`);
+        }
+        if(verified.club && job.completionRequested && !job.completed && !job.expired && !job.disputed){
+          actions.push(`<button class="btn" ${txAttr} onclick="validateJob(${i})">Approve</button>`);
+          actions.push(`<button class="btn btn-danger" ${txAttr} onclick="disapproveJob(${i})">Disapprove</button>`);
+        }
+        if(job.completionRequested && !job.completed && !job.expired){
+          actions.push(`<button class="btn btn-primary" ${txAttr} onclick="finalizeJob(${i})">Finalize</button>`);
+        }
+        if(job.completionRequested && !job.completed && !job.expired && !job.disputed){
+          actions.push(`<button class="btn btn-danger" ${txAttr} onclick="disputeJob(${i})">Dispute</button>`);
+        }
+        if(!job.completed && !job.expired && !job.disputed && !isOpen){
+          actions.push(`<button class="btn" ${txAttr} onclick="expireJob(${i})">Expire</button>`);
+        }
+        if(isOpen && job.employer.toLowerCase()===userAccount?.toLowerCase() && !job.completed && !job.expired){
+          actions.push(`<button class="btn btn-danger" ${txAttr} onclick="cancelJob(${i})">Cancel</button>`);
+        }
+        if(job.completed || job.expired){
+          actions.push(`<button class="btn" ${txAttr} onclick="lockEns(${i})">Lock ENS</button>`);
+        }
+
+        
+
+        const statusHtml = `${statusPillFrom(job)}<div class="muted" style="margin-top:6px;font-size:.9rem">A:${job.approvals} · D:${job.disapprovals}</div>` +
+          (job.completionURI ? `<div class="muted" style="margin-top:6px;font-size:.9rem">Completion: ${safeLink(job.completionURI)}</div>` : "");
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${i}</td>
+          <td class="muted">${shortAddr(job.employer)}</td>
+          <td class="muted">${safeLink(job.specURI)}</td>
+          <td class="muted">${formatUnitsToAmount(job.payout)}</td>
+          <td class="muted">${secondsToHuman(job.duration)}</td>
+          <td class="muted">${isOpen ? "—" : shortAddr(job.assignedAgent)}</td>
+          <td>${statusHtml}</td>
+          <td><div class="actions">${actions.join("") || '<span class="muted">—</span>'}</div></td>
+        `;
+        tbody.appendChild(row);
+      }
+      el("myJobs").textContent = String(myJobsCount);
+    }
+
+    async function ensureApproval(required){
+      const allowance = await agiToken.methods.allowance(userAccount, AGI_JOB_MANAGER).call();
+      if(BigInt(allowance) >= BigInt(required)) return true;
+      const ok = confirm(`You need to approve ${formatUnitsToAmount(required)} $AGIALPHA for this action. Approve now?`);
+      if(!ok) return false;
+      await agiToken.methods.approve(AGI_JOB_MANAGER, String(required)).send({from:userAccount});
+      return true;
+    }
+
+    async function createJob(){
+      if(!requireConnected()) return;
+      if(!mustBeReadyToWrite()) return;
+      try{
+        const spec = el("jobSpecURI").value.trim();
+        const details = el("jobDetails").value.trim();
+        const payout = el("jobPayout").value.trim();
+        const duration = el("jobDuration").value.trim();
+        if(!spec || !details || !payout || !duration) throw new Error("Fill in all fields.");
+        const payoutUnits = parseAmountToUnits(payout);
+        const durationInt = BigInt(duration);
+        if(durationInt <= 0n) throw new Error("Duration must be > 0.");
+
+        const approved = await ensureApproval(payoutUnits);
+        if(!approved) return;
+
+        setToast("Sending transaction…", "warn");
+        await agiJobManager.methods.createJob(spec, String(payoutUnits), String(durationInt), details).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function applyForJob(jobId){
+      if(!requireConnected()) return;
+      if(!mustBeReadyToWrite()) return;
+      if(!verified.agent){setToast("Verify your agent.agi.eth subdomain first.", "warn");return;}
+      try{
+        setToast("Applying…", "warn");
+        await agiJobManager.methods.applyForJob(String(jobId), verified.agent, []).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function requestCompletion(jobId){
+      if(!requireConnected()) return;
+      if(!mustBeReadyToWrite()) return;
+      try{
+        const uri = prompt("Job Completion URI (must be a valid URI, e.g. ipfs://... or https://...):");
+        if(!uri) return;
+        setToast("Requesting completion…", "warn");
+        await agiJobManager.methods.requestJobCompletion(String(jobId), uri.trim()).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function validateJob(jobId){
+      if(!requireConnected()) return;
+      if(!mustBeReadyToWrite()) return;
+      if(!verified.club){setToast("Verify your club.agi.eth subdomain first.", "warn");return;}
+      try{
+        setToast("Submitting approval…", "warn");
+        await agiJobManager.methods.validateJob(String(jobId), verified.club, []).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function disapproveJob(jobId){
+      if(!requireConnected()) return;
+      if(!mustBeReadyToWrite()) return;
+      if(!verified.club){setToast("Verify your club.agi.eth subdomain first.", "warn");return;}
+      try{
+        const ok = confirm("Disapprove this job completion? This is on-chain and may post a validator bond.");
+        if(!ok) return;
+        setToast("Submitting disapproval…", "warn");
+        await agiJobManager.methods.disapproveJob(String(jobId), verified.club, []).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function finalizeJob(jobId){
+      if(!requireConnected()) return;
+      if(!mustBeReadyToWrite()) return;
+      try{
+        setToast("Finalizing…", "warn");
+        await agiJobManager.methods.finalizeJob(String(jobId)).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function disputeJob(jobId){
+      if(!requireConnected()) return;
+      if(!mustBeReadyToWrite()) return;
+      try{
+        const ok = confirm("Start a dispute for this job? This may require a dispute bond.");
+        if(!ok) return;
+        setToast("Disputing…", "warn");
+        await agiJobManager.methods.disputeJob(String(jobId)).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function expireJob(jobId){
+      if(!requireConnected()) return;
+      if(!mustBeReadyToWrite()) return;
+      try{
+        const ok = confirm("Try expiring this job (only succeeds if duration elapsed and no completion requested)?");
+        if(!ok) return;
+        setToast("Expiring…", "warn");
+        await agiJobManager.methods.expireJob(String(jobId)).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function cancelJob(jobId){
+      if(!requireConnected()) return;
+      if(!mustBeReadyToWrite()) return;
+      try{
+        const ok = confirm("Cancel this unassigned job and refund escrow to the employer?");
+        if(!ok) return;
+        setToast("Cancelling…", "warn");
+        await agiJobManager.methods.cancelJob(String(jobId)).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function lockEns(jobId){
+      if(!requireConnected()) return;
+      try{
+        setToast("Locking ENS…", "warn");
+        await agiJobManager.methods.lockJobENS(String(jobId), false).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function verifySubdomain(kind, alpha=false){
+      if(!requireConnected()) return;
+      const isAgent = kind==="agent";
+      const input = isAgent ? el("agentSub") : el("clubSub");
+      const out = isAgent ? el("agentOut") : el("clubOut");
+      const pill = isAgent ? el("agentPill") : el("clubPill");
+
+      const suffix = isAgent ? (alpha ? SUFFIX.alphaAgent : SUFFIX.agent) : (alpha ? SUFFIX.alphaClub : SUFFIX.club);
+      const sub = (input.value||"").trim();
+      if(!/^[a-z0-9-]+$/.test(sub)){
+        out.textContent="Invalid format. Use lowercase letters, numbers, hyphens.";
+        pill.className="pill bad";
+        pill.textContent=(isAgent?"Agent":"Club")+" ENS: invalid";
+        if(isAgent){ const b=el("agentAlphaBadge"); if(b) b.style.display="none"; verified.agentAlpha=false; }
+        else { const b=el("clubAlphaBadge"); if(b) b.style.display="none"; verified.clubAlpha=false; const vb=el("validatorBadge"); if(vb) vb.style.display="none";
+          const cab=el("clubAlphaBadge"); if(cab) cab.style.display="none"; }
+        return;
+      }
+
+      try{
+        const full = `${sub}.${suffix}`;
+        const tokenID = namehash(full);
+        const nw = new web3.eth.Contract(NameWrapperABI, NAME_WRAPPER);
+        const owner = await nw.methods.ownerOf(tokenID).call();
+
+        if(owner.toLowerCase() === userAccount.toLowerCase()){
+          verified[kind] = sub;
+          if(isAgent){
+            verified.agentAlpha = !!alpha;
+            const ab = el("agentAlphaBadge");
+            if(ab) ab.style.display = alpha ? "inline-block" : "none";
+          }else{
+            verified.clubAlpha = !!alpha;
+            const cb = el("clubAlphaBadge");
+            if(cb) cb.style.display = alpha ? "inline-block" : "none";
+            const vb = el("validatorBadge");
+            if(vb) vb.style.display = "inline-block";
+          }
+          out.textContent = `Verified: you own ${full}`;
+          pill.className = "pill ok";
+          pill.textContent = (isAgent?"Agent":"Club") + (alpha ? " ENS: verified (alpha)" : " ENS: verified");
+          await loadJobs();
+        }else{
+          out.textContent = `Not owned by this wallet: ${full}`;
+          if(alpha){
+            if(isAgent){
+              verified.agentAlpha = false;
+              const ab = el("agentAlphaBadge"); if(ab) ab.style.display="none";
+            }else{
+              verified.clubAlpha = false;
+              const cb = el("clubAlphaBadge"); if(cb) cb.style.display="none";
+            }
+          }
+          pill.className = "pill bad";
+          pill.textContent = (isAgent?"Agent":"Club") + " ENS: not verified";
+          if(!isAgent){
+            if(!verified.club){ const vb=el("validatorBadge"); if(vb) vb.style.display="none"; }
+          }
+        }
+      }catch(e){
+        console.error(e);
+        out.textContent = `Verification error: ${e.message || String(e)}`;
+        pill.className = "pill bad";
+        pill.textContent = (isAgent?"Agent":"Club") + " ENS: error";
+        if(isAgent){
+          verified.agentAlpha = false;
+          const ab=el("agentAlphaBadge"); if(ab) ab.style.display="none";
+        }else{
+          verified.clubAlpha = false;
+          const cb=el("clubAlphaBadge"); if(cb) cb.style.display="none";
+          const vb=el("validatorBadge"); if(vb) vb.style.display="none";
+        }
+      }
+    }
+
+function normalizeIpfsToHttp(uri){
+      const u = String(uri||"").trim();
+      if(u.startsWith("ipfs://")){
+        return "https://ipfs.io/ipfs/" + u.slice("ipfs://".length).replace(/^ipfs\//,"");
+      }
+      return u;
+    }
+
+    async function loadNFTs(){
+      const my = el("myNfts");
+      const all = el("allNfts");
+      my.innerHTML = "";
+      all.innerHTML = "";
+      const total = Number(await agiJobManager.methods.nextTokenId().call());
+      const start = Math.max(0, total - 25);
+
+      for(let i=0;i<total;i++){
+        const owner = await agiJobManager.methods.ownerOf(i).call();
+        const uri = await agiJobManager.methods.tokenURI(i).call();
+        const link = normalizeIpfsToHttp(uri);
+        if(owner.toLowerCase() === userAccount.toLowerCase()){
+          const li = document.createElement("li");
+          li.style.margin = "6px 0";
+          li.innerHTML = `#${i} · <a href="${link}" target="_blank" rel="noopener">${uri}</a>`;
+          my.appendChild(li);
+        }
+      }
+
+      for(let i=start;i<total;i++){
+        const uri = await agiJobManager.methods.tokenURI(i).call();
+        const link = normalizeIpfsToHttp(uri);
+        const li = document.createElement("li");
+        li.style.margin = "6px 0";
+        li.innerHTML = `#${i} · <a href="${link}" target="_blank" rel="noopener">${uri}</a>`;
+        all.appendChild(li);
+      }
+
+      if(!my.children.length){const li=document.createElement("li");li.textContent="—";my.appendChild(li);}
+      if(!all.children.length){const li=document.createElement("li");li.textContent="—";all.appendChild(li);}
+    }
+
+    function bind(){
+      el("connectBtn").addEventListener("click", connectWallet);
+      el("refreshBtn").addEventListener("click", refreshAll);
+      el("verifyAgentBtn").addEventListener("click", ()=>verifySubdomain("agent", false));
+      el("verifyAgentAlphaBtn").addEventListener("click", ()=>verifySubdomain("agent", true));
+      el("verifyClubBtn").addEventListener("click", ()=>verifySubdomain("club", false));
+      el("verifyClubAlphaBtn").addEventListener("click", ()=>verifySubdomain("club", true));
+      el("buyClubBtn").addEventListener("click", ()=>window.open("https://montrealai.xyz/club.html","_blank","noopener"));
+      el("createJobBtn").addEventListener("click", createJob);
+
+      el("termsAccepted").addEventListener("change", (e)=>{ hasAcceptedTerms = !!e.target.checked; updateWriteGate(); });
+      el("jumpToTermsBtn").addEventListener("click", ()=>document.getElementById("termsSection")?.scrollIntoView({behavior:"smooth", block:"start"}));
+      el("expandTermsBtn").addEventListener("click", ()=>document.querySelectorAll(".term-block").forEach(d=>d.open=true));
+      el("collapseTermsBtn").addEventListener("click", ()=>document.querySelectorAll(".term-block").forEach((d,i)=>d.open=i<2));
+      el("calcPayout").addEventListener("input", updateCalculator);
+      el("calcDuration").addEventListener("input", updateCalculator);
+
+      if(window.ethereum){
+        window.ethereum.on("accountsChanged", async (accounts)=>{
+          userAccount = accounts && accounts[0] ? accounts[0] : null;
+          el("walletStatus").textContent = userAccount ? shortAddr(userAccount) : "Not connected";
+          verified.agent = null; verified.club = null; verified.agentAlpha=false; verified.clubAlpha=false; hasAcceptedTerms=false; const tac=el("termsAccepted"); if(tac) tac.checked=false; updateWriteGate();
+          el("agentPill").className="pill"; el("agentPill").textContent="Agent ENS: not verified";
+          const aab=el("agentAlphaBadge"); if(aab) aab.style.display="none";
+          el("clubPill").className="pill"; el("clubPill").textContent="Club ENS: not verified";
+          const vb=el("validatorBadge"); if(vb) vb.style.display="none";
+          if(!userAccount){ el("refreshBtn").disabled=true; return; }
+          await connectWallet();
+        });
+        window.ethereum.on("chainChanged", async ()=>{
+          try{ if(web3){ const cid = await web3.eth.getChainId(); isMainnet = (Number(cid)===1); el("chainStatus").textContent = `chainId ${cid}` + (isMainnet ? " (Mainnet)" : " (Not Mainnet)"); updateWriteGate();} }catch{}
+          clearToast();
+          setToast(isMainnet ? "Network changed. Click Refresh if needed." : "Read-only mode: switch to Ethereum Mainnet to transact.", "warn");
+        });
+      }
+    }
+
+    window.addEventListener("load", bind);
+  </script>
+</body>
+</html>
