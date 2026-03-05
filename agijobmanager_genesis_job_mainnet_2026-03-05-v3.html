@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AGIJobManager · Jobs.AGI.eth</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --background:278 100% 6%;
+      --foreground:269 18% 92%;
+      --card:274 59% 11%;
+      --card-2:274 59% 9%;
+      --border:269 32% 30%;
+      --accent:#7A3FF2;
+      --text-soft:rgba(226,220,240,.85);
+      --danger:rgba(255,100,130,.95);
+      --ok:rgba(120,255,190,.95);
+      --warn:rgba(255,210,120,.98);
+    }
+    body{
+      font-family:'Montserrat',sans-serif;
+      background:
+        radial-gradient(circle at 22% 12%, rgba(122,63,242,.38), transparent 45%),
+        radial-gradient(circle at 78% 18%, rgba(122,63,242,.18), transparent 55%),
+        linear-gradient(180deg, rgba(20,0,31,.75), transparent 60%),
+        hsl(var(--background));
+      color:hsl(var(--foreground));
+      margin:0;
+      padding:0;
+    }
+    .container{width:min(1100px,92%);margin:0 auto;padding:24px 0 40px;}
+    h1{text-align:center;margin:28px 0 10px;font-size:clamp(2rem,3.2vw,2.6rem);letter-spacing:.2px;}
+    .subtitle{text-align:center;color:var(--text-soft);margin:0 0 20px;font-size:clamp(1rem,2vw,1.25rem);line-height:1.45;}
+    .card{
+      background:hsl(var(--card));
+      border:1px solid hsl(var(--border));
+      border-radius:16px;
+      padding:18px 18px;
+      margin:0 0 16px;
+      box-shadow:0 10px 26px rgba(0,0,0,.32);
+      backdrop-filter:blur(6px);
+    }
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .muted{color:var(--text-soft)}
+    .btn{
+      background:rgba(122,63,242,.18);
+      color:hsl(var(--foreground));
+      border:1px solid rgba(122,63,242,.35);
+      padding:10px 14px;
+      cursor:pointer;
+      font-size:.98em;
+      border-radius:10px;
+      transition:transform .12s ease,background-color .2s ease,border-color .2s ease;
+      user-select:none;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(122,63,242,.28);border-color:rgba(122,63,242,.55);}
+    .btn-primary{background:rgba(122,63,242,.35);border-color:rgba(122,63,242,.75);}
+    .btn-danger{background:rgba(255,100,130,.12);border-color:rgba(255,100,130,.35);}
+    .btn-danger:hover{background:rgba(255,100,130,.18);border-color:rgba(255,100,130,.55);}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    input[type="text"],input[type="number"]{
+      width:min(520px,92%);
+      padding:10px 12px;
+      border:1px solid hsl(var(--border));
+      background:rgba(255,255,255,.04);
+      color:hsl(var(--foreground));
+      border-radius:12px;
+      font-size:16px;
+      outline:none;
+    }
+    input:focus{border-color:rgba(122,63,242,.7);box-shadow:0 0 0 3px rgba(122,63,242,.18);}
+    label{display:block;margin:0 0 8px;color:var(--text-soft)}
+    .statusline{padding:10px 12px;border-radius:12px;border:1px solid hsl(var(--border));background:hsl(var(--card-2));color:var(--text-soft);word-break:break-word}
+    .statusline b{color:hsl(var(--foreground))}
+    .pill{display:inline-block;padding:3px 10px;border-radius:999px;border:1px solid hsl(var(--border));background:rgba(255,255,255,.03);font-size:.85rem;color:var(--text-soft)}
+    .pill.ok{border-color:rgba(120,255,190,.35);color:var(--ok)}
+    .pill.warn{border-color:rgba(255,210,120,.35);color:var(--warn)}
+    .pill.bad{border-color:rgba(255,100,130,.35);color:var(--danger)}
+    .jobs-table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:14px;border:1px solid hsl(var(--border));}
+    .jobs-table th,.jobs-table td{border-bottom:1px solid hsl(var(--border));padding:10px;text-align:left;vertical-align:top}
+    .jobs-table th{background:rgba(122,63,242,.16);color:hsl(var(--foreground));font-weight:700}
+    .jobs-table tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+    .jobs-table tbody tr:hover{background:rgba(122,63,242,.08)}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    a{color:rgba(198,163,255,1)}
+    .twoCol{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:900px){.twoCol{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AGIJobManager</h1>
+    <div class="subtitle">[ Jobs.AGI.eth 🗝️👾 ] · Post jobs, pay in <b>$AGIALPHA</b>. ENS subdomain ownership is the primary authorization path.</div>
+
+    <div class="card">
+      <div class="row">
+        <div class="statusline" style="flex:1;min-width:260px">
+          <div><b>Wallet</b>: <span id="walletStatus">Not connected</span></div>
+          <div class="muted" style="margin-top:4px">Network: <span id="chainStatus">—</span></div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" id="connectBtn">Connect Wallet</button>
+          <button class="btn" id="refreshBtn" disabled>Refresh</button>
+        </div>
+      </div>
+      <div id="toast" class="statusline" style="margin-top:12px;display:none"></div>
+    </div>
+
+    <div class="twoCol">
+      <div class="card">
+        <h2 style="margin:0 0 10px">Summary</h2>
+        <div class="muted">Total Jobs: <b><span id="totalJobs">0</span></b></div>
+        <div class="muted">Required Validator Approvals: <b><span id="reqApprovals">0</span></b></div>
+        <div class="muted">Required Validator Disapprovals: <b><span id="reqDisapprovals">0</span></b></div>
+        <div class="muted">Vote Quorum: <b><span id="voteQuorum">0</span></b></div>
+        <div class="muted">Completion Review Period: <b><span id="completionReview">—</span></b></div>
+        <div class="muted">Challenge Window: <b><span id="challengePeriod">—</span></b></div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin:0 0 10px">My Stats</h2>
+        <div class="muted">My $AGIALPHA Balance: <b><span id="agiBalance">0</span></b></div>
+        <div class="muted">My Reputation: <b><span id="myReputation">0</span></b></div>
+        <div class="muted">Jobs I posted: <b><span id="myJobs">0</span></b></div>
+        <div style="margin-top:10px">
+          <span class="pill" id="agentPill">Agent ENS: not verified</span>
+          <span class="pill" id="clubPill" style="margin-left:8px">Club ENS: not verified</span>
+          <span class="pill ok" id="validatorBadge" style="margin-left:8px;display:none">Validator Mode Enabled</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 12px">1) Verify ENS Subdomain Ownership</h2>
+      <div class="twoCol">
+        <div>
+          <label for="agentSub">Agent subdomain (agent.agi.eth)</label>
+          <div class="row" style="justify-content:flex-start">
+            <input id="agentSub" type="text" placeholder="e.g. alice" style="max-width:520px">
+            <button class="btn" id="verifyAgentBtn">Verify</button>
+          </div>
+          <div class="muted" id="agentOut" style="margin-top:8px"></div>
+        </div>
+        <div>
+          <label for="clubSub">Club subdomain (club.agi.eth)</label>
+          <div class="row" style="justify-content:flex-start">
+            <input id="clubSub" type="text" placeholder="e.g. validator1" style="max-width:520px">
+            <button class="btn" id="verifyClubBtn">Verify</button>
+          </div>
+          <div class="muted" id="clubOut" style="margin-top:8px"></div>
+          <div style="margin-top:10px">
+            <button class="btn" id="buyClubBtn">Buy club subdomain</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 12px">2) Create a Job (Employer)</h2>
+      <div class="twoCol">
+        <div>
+          <label for="jobSpecURI">Job Spec URI (must be a valid URI)</label>
+          <input id="jobSpecURI" type="text" placeholder="e.g. ipfs://... or https://...">
+        </div>
+        <div>
+          <label for="jobDetails">Details (short description)</label>
+          <input id="jobDetails" type="text" placeholder="e.g. Build X by date Y">
+        </div>
+        <div>
+          <label for="jobPayout">Payout ($AGIALPHA)</label>
+          <input id="jobPayout" type="number" min="0" step="0.0001" placeholder="e.g. 100">
+        </div>
+        <div>
+          <label for="jobDuration">Duration (seconds)</label>
+          <input id="jobDuration" type="number" min="1" step="1" placeholder="e.g. 604800">
+        </div>
+      </div>
+      <div style="margin-top:12px" class="actions">
+        <button class="btn btn-primary" id="createJobBtn" data-tx="1">Create Job</button>
+      </div>
+      <div class="muted" style="margin-top:8px">You will be asked to approve token spending if needed.</div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 12px">Jobs</h2>
+      <div class="muted" style="margin-bottom:10px">Actions below call the on-chain methods on <code>0xB3AA…81d1</code>.</div>
+      <table class="jobs-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Employer</th>
+            <th>Job Spec URI</th>
+            <th>Payout</th>
+            <th>Duration</th>
+            <th>Agent</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="jobsBody"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 12px">Completion NFTs (ERC-721)</h2>
+      <div class="muted" style="margin-bottom:10px">This contract mints a completion NFT to the employer on successful settlement.</div>
+      <div class="twoCol">
+        <div>
+          <h3 style="margin:0 0 10px;font-size:1.05rem">My NFTs</h3>
+          <ul id="myNfts" class="muted" style="list-style:none;padding:0;margin:0"></ul>
+        </div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:1.05rem">Latest NFTs</h3>
+          <ul id="allNfts" class="muted" style="list-style:none;padding:0;margin:0"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin:0 0 10px">Contact & Legal</h2>
+      <div class="muted">This UI does not fetch contact info from the contract (the deployed contract does not expose contact/terms getters). Keep links here static as you prefer.</div>
+      <div style="margin-top:10px" class="muted">
+        Contact: <a href="mailto:secretariat@montreal.ai">secretariat@montreal.ai</a><br>
+        Terms: <a href="https://agialphaagent.com/" target="_blank" rel="noopener">agialphaagent.com</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/web3@4.8.0/dist/web3.min.js"></script>
+  <script>
+    let web3, userAccount, agiJobManager, agiToken, tokenDecimals = 18;
+    const AGI_JOB_MANAGER = "0xB3AAeb69b630f0299791679c063d68d6687481d1";
+    const NAME_WRAPPER = "0xD4416b13d2b3a9aBae7AcD5D6C2BbDBE25686401";
+
+    const verified = { agent:null, club:null };
+
+    let isMainnet = false;
+    function setWriteEnabled(on){
+      const ids=['createJobBtn'];
+      for(const id of ids){const b=document.getElementById(id); if(b) b.disabled=!on;}
+      document.querySelectorAll('button[data-tx="1"]').forEach(b=>{b.disabled=!on;});
+    }
+
+const AGIJobManagerABI = [
+      {"inputs":[],"name":"agiToken","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"nextJobId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"nextTokenId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"requiredValidatorApprovals","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"requiredValidatorDisapprovals","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"voteQuorum","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"completionReviewPeriod","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"challengePeriodAfterApproval","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"reputation","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"string","name":"_jobSpecURI","type":"string"},{"internalType":"uint256","name":"_payout","type":"uint256"},{"internalType":"uint256","name":"_duration","type":"uint256"},{"internalType":"string","name":"_details","type":"string"}],"name":"createJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"getJobCore","outputs":[{"internalType":"address","name":"employer","type":"address"},{"internalType":"address","name":"assignedAgent","type":"address"},{"internalType":"uint256","name":"payout","type":"uint256"},{"internalType":"uint256","name":"duration","type":"uint256"},{"internalType":"uint256","name":"assignedAt","type":"uint256"},{"internalType":"bool","name":"completed","type":"bool"},{"internalType":"bool","name":"disputed","type":"bool"},{"internalType":"bool","name":"expired","type":"bool"},{"internalType":"uint8","name":"agentPayoutPct","type":"uint8"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"getJobValidation","outputs":[{"internalType":"bool","name":"completionRequested","type":"bool"},{"internalType":"uint256","name":"validatorApprovals","type":"uint256"},{"internalType":"uint256","name":"validatorDisapprovals","type":"uint256"},{"internalType":"uint256","name":"completionRequestedAt","type":"uint256"},{"internalType":"uint256","name":"disputedAt","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"getJobSpecURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"getJobCompletionURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"},{"internalType":"string","name":"subdomain","type":"string"},{"internalType":"bytes32[]","name":"proof","type":"bytes32[]"}],"name":"applyForJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"},{"internalType":"string","name":"_jobCompletionURI","type":"string"}],"name":"requestJobCompletion","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"},{"internalType":"string","name":"subdomain","type":"string"},{"internalType":"bytes32[]","name":"proof","type":"bytes32[]"}],"name":"validateJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"},{"internalType":"string","name":"subdomain","type":"string"},{"internalType":"bytes32[]","name":"proof","type":"bytes32[]"}],"name":"disapproveJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"}],"name":"finalizeJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"}],"name":"disputeJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"}],"name":"expireJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"_jobId","type":"uint256"}],"name":"cancelJob","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"},{"internalType":"bool","name":"burnFuses","type":"bool"}],"name":"lockJobENS","outputs":[],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}
+    ];
+
+    const ERC20ABI = [
+      {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+      {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"}
+    ];
+
+    const NameWrapperABI = [
+      {"inputs":[{"internalType":"uint256","name":"id","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}
+    ];
+
+    function el(id){return document.getElementById(id);}
+    function shortAddr(a){return a?`${a.slice(0,6)}…${a.slice(-4)}`:"";}
+    function setToast(msg, kind){
+      const t = el("toast");
+      if(!t) return;
+      t.style.display = "block";
+      t.style.borderColor = kind==="ok" ? "rgba(120,255,190,.35)" : kind==="bad" ? "rgba(255,100,130,.35)" : "hsl(var(--border))";
+      t.style.color = kind==="ok" ? "var(--ok)" : kind==="bad" ? "var(--danger)" : "var(--text-soft)";
+      t.textContent = msg;
+    }
+    function clearToast(){const t=el("toast"); if(t){t.style.display="none"; t.textContent="";}}
+    function requireConnected(){
+      if(!web3 || !userAccount || !agiJobManager || !agiToken){
+        setToast("Connect your wallet first.", "warn");
+        return false;
+      }
+      return true;
+    }
+
+    function parseAmountToUnits(s){
+      const str = String(s||"").trim();
+      if(!str) throw new Error("Missing amount");
+      if(!/^[0-9]+(\.[0-9]+)?$/.test(str)) throw new Error("Invalid number");
+      const parts = str.split(".");
+      const a = parts[0];
+      const b = parts[1] || "";
+      const dec = tokenDecimals;
+      const frac = (b + "0".repeat(dec)).slice(0, dec);
+      return BigInt(a) * (10n**BigInt(dec)) + BigInt(frac || "0");
+    }
+    function formatUnitsToAmount(x){
+      const n = BigInt(x);
+      const dec = tokenDecimals;
+      const base = 10n**BigInt(dec);
+      const whole = n / base;
+      const frac = (n % base).toString().padStart(dec, "0").replace(/0+$/,"");
+      return frac ? `${whole.toString()}.${frac}` : whole.toString();
+    }
+    function secondsToHuman(sec){
+      const s = Number(sec||0);
+      if(!isFinite(s) || s<=0) return "—";
+      const d = Math.floor(s/86400);
+      if(d>=1) return `${d}d`;
+      const h = Math.floor(s/3600);
+      if(h>=1) return `${h}h`;
+      const m = Math.floor(s/60);
+      if(m>=1) return `${m}m`;
+      return `${s}s`;
+    }
+
+    function namehash(name){
+      const keccak = web3.utils.keccak256;
+      let node = "0x" + "00".repeat(32);
+      if(name){
+        const labels = name.split(".");
+        for(let i=labels.length-1;i>=0;i--){
+          node = keccak(node + keccak(labels[i]).replace("0x",""));
+        }
+      }
+      return node;
+    }
+
+    async function connectWallet(){
+      clearToast();
+      try{
+        if(!window.ethereum){alert("Please install MetaMask.");return;}
+        web3 = new Web3(window.ethereum);
+        await window.ethereum.request({method:"eth_requestAccounts"});
+        const accts = await web3.eth.getAccounts();
+        userAccount = accts[0] || null;
+        if(!userAccount){el("walletStatus").textContent="Not connected";return;}
+        el("walletStatus").textContent = shortAddr(userAccount);
+
+        const chainId = await web3.eth.getChainId();
+        isMainnet = (Number(chainId) === 1);
+        el("chainStatus").textContent = `chainId ${chainId}` + (isMainnet ? " (Mainnet)" : " (Not Mainnet)");
+        setWriteEnabled(isMainnet);
+        if(!isMainnet){ setToast("Connected on the wrong network. Switch to Ethereum Mainnet to transact.", "warn"); }
+
+        agiJobManager = new web3.eth.Contract(AGIJobManagerABI, AGI_JOB_MANAGER);
+        const tokenAddr = await agiJobManager.methods.agiToken().call();
+        agiToken = new web3.eth.Contract(ERC20ABI, tokenAddr);
+        try{ tokenDecimals = Number(await agiToken.methods.decimals().call()); }catch{ tokenDecimals = 18; }
+
+        el("refreshBtn").disabled = false;
+        setToast("Connected. Loading data…", "ok");
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function refreshAll(){
+      if(!requireConnected()) return;
+      try{
+        if(!isMainnet){
+          setToast("Read-only mode: switch to Ethereum Mainnet to load on-chain data.", "warn");
+          el("totalJobs").textContent = "—";
+          el("reqApprovals").textContent = "—";
+          el("reqDisapprovals").textContent = "—";
+          el("voteQuorum").textContent = "—";
+          el("completionReview").textContent = "—";
+          el("challengePeriod").textContent = "—";
+          el("agiBalance").textContent = "—";
+          el("myReputation").textContent = "—";
+          el("myJobs").textContent = "—";
+          const tbody = el("jobsBody");
+          if(tbody) tbody.innerHTML = '<tr><td colspan="8" class="muted">Switch to Ethereum Mainnet (chainId 1) to load jobs.</td></tr>';
+          const my = el("myNfts"), all = el("allNfts");
+          if(my) my.innerHTML = "<li>—</li>";
+          if(all) all.innerHTML = "<li>—</li>";
+          return;
+        }
+        await updateSummary();
+        await loadJobs();
+        await loadNFTs();
+        setToast("Up to date.", "ok");
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+async function updateSummary(){
+      const total = await agiJobManager.methods.nextJobId().call();
+      el("totalJobs").textContent = total;
+
+      const ra = await agiJobManager.methods.requiredValidatorApprovals().call();
+      const rd = await agiJobManager.methods.requiredValidatorDisapprovals().call();
+      const vq = await agiJobManager.methods.voteQuorum().call();
+      const crp = await agiJobManager.methods.completionReviewPeriod().call();
+      const chp = await agiJobManager.methods.challengePeriodAfterApproval().call();
+
+      el("reqApprovals").textContent = ra;
+      el("reqDisapprovals").textContent = rd;
+      el("voteQuorum").textContent = vq;
+      el("completionReview").textContent = secondsToHuman(crp);
+      el("challengePeriod").textContent = secondsToHuman(chp);
+
+      const bal = await agiToken.methods.balanceOf(userAccount).call();
+      el("agiBalance").textContent = formatUnitsToAmount(bal);
+
+      const rep = await agiJobManager.methods.reputation(userAccount).call();
+      el("myReputation").textContent = rep;
+
+      el("myJobs").textContent = "—";
+    }
+
+    function statusPillFrom(job){
+      if(job.expired) return `<span class="pill bad">Expired</span>`;
+      if(job.disputed) return `<span class="pill warn">Disputed</span>`;
+      if(job.completed) return `<span class="pill ok">Completed</span>`;
+      if(job.completionRequested) return `<span class="pill warn">Completion requested</span>`;
+      if(job.assignedAgent && job.assignedAgent !== "0x0000000000000000000000000000000000000000") return `<span class="pill">Assigned</span>`;
+      return `<span class="pill">Open</span>`;
+    }
+
+    function safeLink(uri){
+      const u = String(uri||"").trim();
+      if(!u) return "";
+      const esc = u.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      const lower = u.toLowerCase();
+      if(lower.startsWith("https://") || lower.startsWith("http://")){
+        return `<a href="${esc}" target="_blank" rel="noopener">${esc}</a>`;
+      }
+      if(lower.startsWith("ipfs://")){
+        const link = normalizeIpfsToHttp(u).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        return `<a href="${link}" target="_blank" rel="noopener">${esc}</a>`;
+      }
+      return `<span class="muted">${esc}</span>`;
+    }
+
+    async function loadJobs(){
+      const total = Number(await agiJobManager.methods.nextJobId().call());
+      const tbody = el("jobsBody");
+      tbody.innerHTML = "";
+      let myJobsCount = 0;
+      for(let i=0;i<total;i++){
+        const core = await agiJobManager.methods.getJobCore(i).call();
+        const spec = await agiJobManager.methods.getJobSpecURI(i).call();
+        const val = await agiJobManager.methods.getJobValidation(i).call();
+        let completionURI = "";
+        if(val.completionRequested){
+          try{ completionURI = await agiJobManager.methods.getJobCompletionURI(i).call(); }catch{}
+        }
+        const assignedAgent = core.assignedAgent;
+        const isOpen = assignedAgent === "0x0000000000000000000000000000000000000000";
+        if(String(core.employer).toLowerCase()===userAccount?.toLowerCase()) myJobsCount++;
+        const job = {
+          id:i,
+          employer:core.employer,
+          assignedAgent:assignedAgent,
+          payout:core.payout,
+          duration:core.duration,
+          completed:core.completed,
+          disputed:core.disputed,
+          expired:core.expired,
+          completionRequested:val.completionRequested,
+          approvals:val.validatorApprovals,
+          disapprovals:val.validatorDisapprovals,
+          completionURI:completionURI,
+          specURI:spec
+        };
+
+        const actions = [];
+        const txAttr = isMainnet ? 'data-tx="1"' : 'data-tx="1" disabled';
+        if(isOpen && verified.agent) actions.push(`<button class="btn" ${txAttr} onclick="applyForJob(${i})">Apply</button>`);
+        if(!isOpen && job.assignedAgent.toLowerCase()===userAccount?.toLowerCase() && !job.completed && !job.expired && !job.completionRequested){
+          actions.push(`<button class="btn" ${txAttr} onclick="requestCompletion(${i})">Request completion</button>`);
+        }
+        if(verified.club && job.completionRequested && !job.completed && !job.expired && !job.disputed){
+          actions.push(`<button class="btn" ${txAttr} onclick="validateJob(${i})">Approve</button>`);
+          actions.push(`<button class="btn btn-danger" ${txAttr} onclick="disapproveJob(${i})">Disapprove</button>`);
+        }
+        if(job.completionRequested && !job.completed && !job.expired){
+          actions.push(`<button class="btn btn-primary" ${txAttr} onclick="finalizeJob(${i})">Finalize</button>`);
+        }
+        if(job.completionRequested && !job.completed && !job.expired && !job.disputed){
+          actions.push(`<button class="btn btn-danger" ${txAttr} onclick="disputeJob(${i})">Dispute</button>`);
+        }
+        if(!job.completed && !job.expired && !job.disputed && !isOpen){
+          actions.push(`<button class="btn" ${txAttr} onclick="expireJob(${i})">Expire</button>`);
+        }
+        if(isOpen && job.employer.toLowerCase()===userAccount?.toLowerCase() && !job.completed && !job.expired){
+          actions.push(`<button class="btn btn-danger" ${txAttr} onclick="cancelJob(${i})">Cancel</button>`);
+        }
+        if(job.completed || job.expired){
+          actions.push(`<button class="btn" ${txAttr} onclick="lockEns(${i})">Lock ENS</button>`);
+        }
+
+        
+
+        const statusHtml = `${statusPillFrom(job)}<div class="muted" style="margin-top:6px;font-size:.9rem">A:${job.approvals} · D:${job.disapprovals}</div>` +
+          (job.completionURI ? `<div class="muted" style="margin-top:6px;font-size:.9rem">Completion: ${safeLink(job.completionURI)}</div>` : "");
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${i}</td>
+          <td class="muted">${shortAddr(job.employer)}</td>
+          <td class="muted">${safeLink(job.specURI)}</td>
+          <td class="muted">${formatUnitsToAmount(job.payout)}</td>
+          <td class="muted">${secondsToHuman(job.duration)}</td>
+          <td class="muted">${isOpen ? "—" : shortAddr(job.assignedAgent)}</td>
+          <td>${statusHtml}</td>
+          <td><div class="actions">${actions.join("") || '<span class="muted">—</span>'}</div></td>
+        `;
+        tbody.appendChild(row);
+      }
+      el("myJobs").textContent = String(myJobsCount);
+    }
+
+    async function ensureApproval(required){
+      const allowance = await agiToken.methods.allowance(userAccount, AGI_JOB_MANAGER).call();
+      if(BigInt(allowance) >= BigInt(required)) return true;
+      const ok = confirm(`You need to approve ${formatUnitsToAmount(required)} $AGIALPHA for this action. Approve now?`);
+      if(!ok) return false;
+      await agiToken.methods.approve(AGI_JOB_MANAGER, String(required)).send({from:userAccount});
+      return true;
+    }
+
+    async function createJob(){
+      if(!requireConnected()) return;
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return;}
+      try{
+        const spec = el("jobSpecURI").value.trim();
+        const details = el("jobDetails").value.trim();
+        const payout = el("jobPayout").value.trim();
+        const duration = el("jobDuration").value.trim();
+        if(!spec || !details || !payout || !duration) throw new Error("Fill in all fields.");
+        const payoutUnits = parseAmountToUnits(payout);
+        const durationInt = BigInt(duration);
+        if(durationInt <= 0n) throw new Error("Duration must be > 0.");
+
+        const approved = await ensureApproval(payoutUnits);
+        if(!approved) return;
+
+        setToast("Sending transaction…", "warn");
+        await agiJobManager.methods.createJob(spec, String(payoutUnits), String(durationInt), details).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function applyForJob(jobId){
+      if(!requireConnected()) return;
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return;}
+      if(!verified.agent){setToast("Verify your agent.agi.eth subdomain first.", "warn");return;}
+      try{
+        setToast("Applying…", "warn");
+        await agiJobManager.methods.applyForJob(String(jobId), verified.agent, []).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function requestCompletion(jobId){
+      if(!requireConnected()) return;
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return;}
+      try{
+        const uri = prompt("Job Completion URI (must be a valid URI, e.g. ipfs://... or https://...):");
+        if(!uri) return;
+        setToast("Requesting completion…", "warn");
+        await agiJobManager.methods.requestJobCompletion(String(jobId), uri.trim()).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function validateJob(jobId){
+      if(!requireConnected()) return;
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return;}
+      if(!verified.club){setToast("Verify your club.agi.eth subdomain first.", "warn");return;}
+      try{
+        setToast("Submitting approval…", "warn");
+        await agiJobManager.methods.validateJob(String(jobId), verified.club, []).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function disapproveJob(jobId){
+      if(!requireConnected()) return;
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return;}
+      if(!verified.club){setToast("Verify your club.agi.eth subdomain first.", "warn");return;}
+      try{
+        const ok = confirm("Disapprove this job completion? This is on-chain and may post a validator bond.");
+        if(!ok) return;
+        setToast("Submitting disapproval…", "warn");
+        await agiJobManager.methods.disapproveJob(String(jobId), verified.club, []).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function finalizeJob(jobId){
+      if(!requireConnected()) return;
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return;}
+      try{
+        setToast("Finalizing…", "warn");
+        await agiJobManager.methods.finalizeJob(String(jobId)).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function disputeJob(jobId){
+      if(!requireConnected()) return;
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return;}
+      try{
+        const ok = confirm("Start a dispute for this job? This may require a dispute bond.");
+        if(!ok) return;
+        setToast("Disputing…", "warn");
+        await agiJobManager.methods.disputeJob(String(jobId)).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function expireJob(jobId){
+      if(!requireConnected()) return;
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return;}
+      try{
+        const ok = confirm("Try expiring this job (only succeeds if duration elapsed and no completion requested)?");
+        if(!ok) return;
+        setToast("Expiring…", "warn");
+        await agiJobManager.methods.expireJob(String(jobId)).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function cancelJob(jobId){
+      if(!requireConnected()) return;
+      if(!isMainnet){setToast("Switch to Ethereum Mainnet to transact.", "warn");return;}
+      try{
+        const ok = confirm("Cancel this unassigned job and refund escrow to the employer?");
+        if(!ok) return;
+        setToast("Cancelling…", "warn");
+        await agiJobManager.methods.cancelJob(String(jobId)).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function lockEns(jobId){
+      if(!requireConnected()) return;
+      try{
+        setToast("Locking ENS…", "warn");
+        await agiJobManager.methods.lockJobENS(String(jobId), false).send({from:userAccount});
+        await refreshAll();
+      }catch(e){
+        console.error(e);
+        setToast(e.message || String(e), "bad");
+      }
+    }
+
+    async function verifySubdomain(kind){
+      if(!requireConnected()) return;
+      const isAgent = kind==="agent";
+      const input = isAgent ? el("agentSub") : el("clubSub");
+      const out = isAgent ? el("agentOut") : el("clubOut");
+      const pill = isAgent ? el("agentPill") : el("clubPill");
+      const suffix = isAgent ? "agent.agi.eth" : "club.agi.eth";
+      const sub = (input.value||"").trim();
+      if(!/^[a-z0-9-]+$/.test(sub)){
+        out.textContent="Invalid format. Use lowercase letters, numbers, hyphens.";
+        pill.className="pill bad";
+        pill.textContent=(isAgent?"Agent":"Club")+" ENS: invalid";
+        return;
+      }
+      try{
+        const full = `${sub}.${suffix}`;
+        const tokenID = namehash(full);
+        const nw = new web3.eth.Contract(NameWrapperABI, NAME_WRAPPER);
+        const owner = await nw.methods.ownerOf(tokenID).call();
+        if(owner.toLowerCase() === userAccount.toLowerCase()){
+          verified[kind] = sub;
+          out.textContent = `Verified: you own ${full}`;
+          pill.className = "pill ok";
+          pill.textContent = (isAgent?"Agent":"Club") + " ENS: verified";
+          if(!isAgent){ const vb=el("validatorBadge"); if(vb) vb.style.display="inline-block"; }
+          await loadJobs();
+        }else{
+          verified[kind] = null;
+          out.textContent = `Not owned by this wallet: ${full}`;
+          pill.className = "pill bad";
+          pill.textContent = (isAgent?"Agent":"Club") + " ENS: not verified";
+          if(!isAgent){ const vb=el("validatorBadge"); if(vb) vb.style.display="none"; }
+        }
+      }catch(e){
+        console.error(e);
+        verified[kind] = null;
+        out.textContent = `Verification error: ${e.message || String(e)}`;
+        pill.className = "pill bad";
+        pill.textContent = (isAgent?"Agent":"Club") + " ENS: error";
+        if(!isAgent){ const vb=el("validatorBadge"); if(vb) vb.style.display="none"; }
+      }
+    }
+
+    function normalizeIpfsToHttp(uri){
+      const u = String(uri||"").trim();
+      if(u.startsWith("ipfs://")){
+        return "https://ipfs.io/ipfs/" + u.slice("ipfs://".length).replace(/^ipfs\//,"");
+      }
+      return u;
+    }
+
+    async function loadNFTs(){
+      const my = el("myNfts");
+      const all = el("allNfts");
+      my.innerHTML = "";
+      all.innerHTML = "";
+      const total = Number(await agiJobManager.methods.nextTokenId().call());
+      const start = Math.max(0, total - 25);
+
+      for(let i=0;i<total;i++){
+        const owner = await agiJobManager.methods.ownerOf(i).call();
+        const uri = await agiJobManager.methods.tokenURI(i).call();
+        const link = normalizeIpfsToHttp(uri);
+        if(owner.toLowerCase() === userAccount.toLowerCase()){
+          const li = document.createElement("li");
+          li.style.margin = "6px 0";
+          li.innerHTML = `#${i} · <a href="${link}" target="_blank" rel="noopener">${uri}</a>`;
+          my.appendChild(li);
+        }
+      }
+
+      for(let i=start;i<total;i++){
+        const uri = await agiJobManager.methods.tokenURI(i).call();
+        const link = normalizeIpfsToHttp(uri);
+        const li = document.createElement("li");
+        li.style.margin = "6px 0";
+        li.innerHTML = `#${i} · <a href="${link}" target="_blank" rel="noopener">${uri}</a>`;
+        all.appendChild(li);
+      }
+
+      if(!my.children.length){const li=document.createElement("li");li.textContent="—";my.appendChild(li);}
+      if(!all.children.length){const li=document.createElement("li");li.textContent="—";all.appendChild(li);}
+    }
+
+    function bind(){
+      el("connectBtn").addEventListener("click", connectWallet);
+      el("refreshBtn").addEventListener("click", refreshAll);
+      el("verifyAgentBtn").addEventListener("click", ()=>verifySubdomain("agent"));
+      el("verifyClubBtn").addEventListener("click", ()=>verifySubdomain("club"));
+      el("buyClubBtn").addEventListener("click", ()=>window.open("https://montrealai.xyz/club.html","_blank","noopener"));
+      el("createJobBtn").addEventListener("click", createJob);
+
+      if(window.ethereum){
+        window.ethereum.on("accountsChanged", async (accounts)=>{
+          userAccount = accounts && accounts[0] ? accounts[0] : null;
+          el("walletStatus").textContent = userAccount ? shortAddr(userAccount) : "Not connected";
+          verified.agent = null; verified.club = null;
+          el("agentPill").className="pill"; el("agentPill").textContent="Agent ENS: not verified";
+          el("clubPill").className="pill"; el("clubPill").textContent="Club ENS: not verified";
+          const vb=el("validatorBadge"); if(vb) vb.style.display="none";
+          if(!userAccount){ el("refreshBtn").disabled=true; return; }
+          await connectWallet();
+        });
+        window.ethereum.on("chainChanged", async ()=>{
+          try{ if(web3){ const cid = await web3.eth.getChainId(); isMainnet = (Number(cid)===1); el("chainStatus").textContent = `chainId ${cid}` + (isMainnet ? " (Mainnet)" : " (Not Mainnet)"); setWriteEnabled(isMainnet);} }catch{}
+          clearToast();
+          setToast(isMainnet ? "Network changed. Click Refresh if needed." : "Read-only mode: switch to Ethereum Mainnet to transact.", "warn");
+        });
+      }
+    }
+
+    window.addEventListener("load", bind);
+  </script>
+</body>
+</html>
