@@ -1353,7 +1353,6 @@
           <div class="line">Wrapped owner: <b id="alphaIdentityWrappedOwner">—</b></div>
           <div class="line">Resolver: <b id="alphaIdentityResolver">—</b></div>
           <div class="line">Wrapped expiry: <b id="alphaIdentityWrappedExpiry">—</b></div>
-          <div class="line">Labelhash: <b id="alphaIdentityLabelhash">—</b></div>
           <div class="line">Minted at: <b id="alphaIdentityMintedAt">—</b></div>
           <div class="line">TokenURI (decoded): <b id="alphaIdentityTokenMetaName">—</b></div>
           <div class="smallNote" id="alphaIdentityTokenMetaDescription">—</div>
@@ -2235,7 +2234,7 @@ Evaluation methodology"></textarea>
     const activeJobIndexCache = { ids:null, ts:0 };
     const nftRenderCache = { total:null, myHtml:'', allHtml:'', ts:0, myAccount:'' };
     const AGI_JOB_MANAGER = "0xB3AAeb69b630f0299791679c063d68d6687481d1";
-    const FALLBACK_NAME_WRAPPER = "0xD4416b13d2b3a9aBae7AcD5D6C2BbDBE25686401";
+    const NAME_WRAPPER = "0xD4416b13d2b3a9aBae7AcD5D6C2BbDBE25686401";
     const KNOWN_ENS_JOB_PAGES_FALLBACK = "0x06188e77c1c38d392b16d9d9fb24673363ce1da0";
     const FREE_TRIAL_REGISTRAR = "0x7aae649184182a01ac7d8d5d7873903015c08761";
     const FREE_TRIAL_REGISTRAR_IDENTITY = "0x7811993CbcCa3b8bb35a3d919F3BA59eeFbeAA9a";
@@ -2408,19 +2407,23 @@ const AGIJobManagerABI = [
       {"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"},{"indexed":true,"internalType":"address","name":"employer","type":"address"},{"indexed":false,"internalType":"string","name":"tokenURI","type":"string"}],"name":"NFTIssued","type":"event"},
       {"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint8","name":"hook","type":"uint8"},{"indexed":true,"internalType":"uint256","name":"jobId","type":"uint256"},{"indexed":true,"internalType":"address","name":"target","type":"address"},{"indexed":false,"internalType":"bool","name":"success","type":"bool"}],"name":"EnsHookAttempted","type":"event"}
     ];
-
-    
     const ENSJobPagesABI = [
+      {"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"ens","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"nameWrapper","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"publicResolver","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
       {"inputs":[],"name":"jobsRootName","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
       {"inputs":[],"name":"jobsRootNode","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},
       {"inputs":[],"name":"jobManager","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-      {"inputs":[],"name":"useEnsJobTokenURI","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
-      {"inputs":[],"name":"configLocked","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
-      {"inputs":[],"name":"publicResolver","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"jobLabelPrefix","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"nextJobId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"jobLabelSnapshot","outputs":[{"internalType":"bool","name":"isSet","type":"bool"},{"internalType":"string","name":"label","type":"string"}],"stateMutability":"view","type":"function"},
       {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"jobEnsLabel","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
       {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"jobEnsName","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
       {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"jobEnsURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"jobEnsNode","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"}
+      {"inputs":[{"internalType":"uint256","name":"jobId","type":"uint256"}],"name":"jobEnsNode","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"useEnsJobTokenURI","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},
+      {"inputs":[],"name":"configLocked","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"}
     ];
 
 
@@ -2724,7 +2727,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       if(el('mintAlphaStatus')) el('mintAlphaStatus').textContent = 'Runtime context reset. Reconnect to refresh registrar state.';
       if(el('mintAlphaAvailability')) el('mintAlphaAvailability').textContent = '—';
       if(el('freeTrialParentUsableState')) el('freeTrialParentUsableState').textContent = '—';
-      ['alphaIdentityStatusPill','alphaIdentityFullName','alphaIdentityTokenId','alphaIdentityExists','alphaIdentityClaimable','alphaIdentityRegistrable','alphaIdentityActionStatus','alphaIdentityTokenOwner','alphaIdentityWrappedOwner','alphaIdentityResolver','alphaIdentityWrappedExpiry','alphaIdentityLabelhash','alphaIdentityMintedAt','alphaIdentityTokenMetaName','alphaIdentityTokenMetaDescription'].forEach(id=>{ if(el(id)) el(id).textContent='—'; });
+      ['alphaIdentityStatusPill','alphaIdentityFullName','alphaIdentityTokenId','alphaIdentityExists','alphaIdentityClaimable','alphaIdentityRegistrable','alphaIdentityActionStatus','alphaIdentityTokenOwner','alphaIdentityWrappedOwner','alphaIdentityResolver','alphaIdentityWrappedExpiry','alphaIdentityMintedAt','alphaIdentityTokenMetaName','alphaIdentityTokenMetaDescription'].forEach(id=>{ if(el(id)) el(id).textContent='—'; });
       ['alphaIdentityRootName','alphaIdentityRootNode','alphaIdentityRootActive','alphaIdentityPaused','alphaIdentityWrapper','alphaIdentityRegistry','alphaIdentityOwnerLine','alphaIdentityParentOwner','alphaIdentityParentFlags','alphaIdentityRegistrarAuth','alphaIdentityParentExpiry','alphaIdentityRootUsable','alphaIdentityRequiredFuses','alphaIdentityNameSymbol'].forEach(id=>{ if(el(id)) el(id).textContent='—'; });
       if(el('alphaIdentityAdminControls')) el('alphaIdentityAdminControls').innerHTML = '<div class="smallNote">Reconnect to refresh identity admin posture.</div>';
       if(el('alphaIdentityActionStatus')) el('alphaIdentityActionStatus').textContent='Runtime context reset. Reconnect to refresh identity state.';
@@ -3095,6 +3098,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       let primary = {label:'Connect wallet', action:'connect'};
       let secondary = {label:'Command Palette', action:'command'};
       const bridgedBal = parseDisplayedNumber(el('bridgeAcceptedBalance')?.textContent || '0');
+      const p = APP_STATE.identity?.preview;
       if(connected && !isMainnet){
         title = 'Switch to Ethereum Mainnet';
         body = 'The UI is in read-only mode on the current network. Switch to chainId 1 to post jobs, apply, validate, finalize, and mint through the Ethereum vault.';
@@ -3113,12 +3117,24 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         pill = 'Bridge conversion available';
         primary = {label:'Open bridge console', action:'bridge'};
         secondary = {label:'Refresh balances', action:'refresh'};
-      }else if(connected && isMainnet && hasAcceptedTerms && !verified.agentAlpha && !((APP_STATE.identity?.preview?.claimable) || (APP_STATE.identity?.preview?.identityExists && [3,4].includes(APP_STATE.identity?.preview?.status)) || (APP_STATE.identity?.preview?.registrable))){
-        title = 'Mint your alpha-agent ENS access key';
-        body = 'You can mint a free-trial *.alpha.agent.agi.eth identity now (gas only), then auto-verify it for agent readiness.';
-        pill = 'Alpha-agent identity recommended';
-        primary = {label:'Mint free alpha-agent ENS', action:'mint-alpha'};
-        secondary = {label:'Verify ENS', action:'verify'};
+      }else if(connected && isMainnet && hasAcceptedTerms && p && p.claimable){
+        title = 'Claim your Alpha Agent Identity';
+        body = 'A wrapped alpha-agent ENS name is already present for this label and can be claimed into your soulbound identity credential now.';
+        pill = 'Identity claim available';
+        primary = {label:'Claim Alpha Agent Identity', action:'claim-alpha-identity'};
+        secondary = {label:'Open ENS-only alpha-agent path', action:'mint-alpha'};
+      }else if(connected && isMainnet && hasAcceptedTerms && p && p.identityExists && (p.status===3 || p.status===4)){
+        title = 'Repair Alpha Agent Identity state';
+        body = 'Your selected label indicates expired or desynced identity posture. Run sync to repair or clean up stale credential state.';
+        pill = 'Identity sync recommended';
+        primary = {label:'Sync Alpha Agent Identity', action:'sync-alpha-identity'};
+        secondary = {label:'Refresh identity preview', action:'refresh-identity-preview'};
+      }else if(connected && isMainnet && hasAcceptedTerms && p && p.registrable){
+        title = 'Mint Alpha Agent Identity';
+        body = 'Use the recommended register(label) path to mint wrapped ENS + soulbound identity (gas only, no recipient override).';
+        pill = 'Identity register available';
+        primary = {label:'Mint Alpha Agent Identity', action:'mint-alpha-identity'};
+        secondary = {label:'Open ENS-only alpha-agent path', action:'mint-alpha'};
       }else if(connected && isMainnet && hasAcceptedTerms && jobStats.completion > 0 && verified.club){
         title = 'Review jobs waiting for validator attention';
         body = `${jobStats.completion} job${jobStats.completion === 1 ? '' : 's'} currently show a live completion-review surface. Open the board, inspect the details modal, and vote only after independent evidence review.`;
@@ -3131,15 +3147,19 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         pill = 'Agent mode ready';
         primary = {label:'Browse open jobs', action:'jobs'};
         secondary = {label:'Command Palette', action:'command'};
+      }else if(connected && isMainnet && hasAcceptedTerms && !verified.agentAlpha){
+        title = 'Mint your alpha-agent ENS access key';
+        body = 'You can mint a free-trial *.alpha.agent.agi.eth identity now (gas only), then auto-verify it for agent readiness.';
+        pill = 'Alpha-agent identity recommended';
+        primary = {label:'Open alpha-agent section', action:'mint-alpha'};
+        secondary = {label:'Refresh identity preview', action:'refresh-identity-preview'};
       }else if(connected && isMainnet && hasAcceptedTerms){
         title = 'System ready';
         body = 'Wallet, network, and write-gating are in a good state. You can create a job, inspect live jobs, or use the command palette for faster navigation.';
         pill = 'Ready for production use';
-        const p = APP_STATE.identity?.preview;
         if(p && p.claimable){ primary = {label:'Claim Alpha Agent Identity', action:'claim-alpha-identity'}; secondary = {label:'Open ENS-only alpha-agent path', action:'mint-alpha'}; }
         else if(p && p.identityExists && (p.status===3 || p.status===4)){ primary = {label:'Sync Alpha Agent Identity', action:'sync-alpha-identity'}; secondary = {label:'Open alpha-agent section', action:'mint-alpha'}; }
-        else if(p && p.registrable){ primary = {label:'Mint Alpha Agent Identity', action:'mint-alpha-identity'}; secondary = {label:'Open ENS-only alpha-agent path', action:'mint-alpha'}; }
-        else if((!p || !p.identityExists) && userAccount && isMainnet && hasAcceptedTerms){ primary = {label:'Open alpha-agent section', action:'mint-alpha-identity'}; secondary = {label:'Open ENS-only alpha-agent path', action:'mint-alpha'}; }
+        else if(p && p.registrable){ primary = {label:'Mint Alpha Agent Identity', action:'mint-alpha-identity'}; secondary = {label:'Open ENS-only alpha-agent path', action:'mint-alpha'}; } else if(!p){ primary = {label:'Open alpha-agent section', action:'mint-alpha'}; secondary = {label:'Refresh identity preview', action:'refresh-identity-preview'}; }
         else { primary = {label:'Open Create Job', action:'create'}; secondary = {label:'Open Jobs', action:'jobs'}; }
       }
       if(el('missionNextActionTitle')) el('missionNextActionTitle').textContent = title;
@@ -3646,7 +3666,8 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
           if(el('ensHookReadiness')) el('ensHookReadiness').textContent = 'ENSJobPages unavailable. Degraded state: live preview is not fully available.';
           return;
         }
-        const nextJobId = Number(await agiJobManager.methods.nextJobId().call());
+        const nextJobIdRead = await ensContract.methods.nextJobId().call().catch(()=>agiJobManager.methods.nextJobId().call().catch(()=>0));
+        const nextJobId = Number(nextJobIdRead || 0);
         const [owner, ensRegistry, nameWrapper, publicResolver, rootName, rootNode, jobManager, tokenUriMode, configLocked, prefix, snapshot, label, ensName, ensURI, ensNode] = await Promise.all([
           ensContract.methods.owner().call().catch(()=>''),
           ensContract.methods.ens().call().catch(()=>''),
@@ -3956,17 +3977,21 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       if(!v) return null;
       const p = Array.isArray(v)
         ? {
-          validLabel:!!v[0], fullName:String(v[1]||''), labelOut:String(v[2]||''), labelhash:String(v[3]||''), node:String(v[4]||''), tokenId:String(v[5]||''),
-          rootActiveOut:!!v[6], pausedOut:!!v[7], parentWrapped:!!v[8], parentLocked:!!v[9], registrarAuthorised:!!v[10], rootUsable:!!v[11],
-          availableOut:!!v[12], identityExists:!!v[13], registrable:!!v[14], claimable:!!v[15], tokenOwner:String(v[16]||''), wrappedOwner:String(v[17]||''),
-          resolver:String(v[18]||''), currentWrappedExpiry:Number(v[19]||0), expectedNewExpiry:Number(v[20]||0), status:Number(v[21]||0)
-        }
+            validLabel: !!v[0], fullName: String(v[1]||''), labelOut: String(v[2]||''), labelhash: String(v[3]||''),
+            node: String(v[4]||''), tokenId: String(v[5]||''), rootActiveOut: !!v[6], pausedOut: !!v[7],
+            parentWrapped: !!v[8], parentLocked: !!v[9], registrarAuthorised: !!v[10], rootUsable: !!v[11],
+            availableOut: !!v[12], identityExists: !!v[13], registrable: !!v[14], claimable: !!v[15],
+            tokenOwner: String(v[16]||''), wrappedOwner: String(v[17]||''), resolver: String(v[18]||''),
+            currentWrappedExpiry: Number(v[19]||0), expectedNewExpiry: Number(v[20]||0), status: Number(v[21]||0)
+          }
         : {
-          validLabel:!!v.validLabel, fullName:String(v.fullName||''), labelOut:String(v.labelOut||''), labelhash:String(v.labelhash||''), node:String(v.node||''), tokenId:String(v.tokenId||''),
-          rootActiveOut:!!v.rootActiveOut, pausedOut:!!v.pausedOut, parentWrapped:!!v.parentWrapped, parentLocked:!!v.parentLocked, registrarAuthorised:!!v.registrarAuthorised, rootUsable:!!v.rootUsable,
-          availableOut:!!v.availableOut, identityExists:!!v.identityExists, registrable:!!v.registrable, claimable:!!v.claimable, tokenOwner:String(v.tokenOwner||''), wrappedOwner:String(v.wrappedOwner||''),
-          resolver:String(v.resolver||''), currentWrappedExpiry:Number(v.currentWrappedExpiry||0), expectedNewExpiry:Number(v.expectedNewExpiry||0), status:Number(v.status||0)
-        };
+            validLabel: !!v.validLabel, fullName: String(v.fullName||''), labelOut: String(v.labelOut||''), labelhash: String(v.labelhash||''),
+            node: String(v.node||''), tokenId: String(v.tokenId||''), rootActiveOut: !!v.rootActiveOut, pausedOut: !!v.pausedOut,
+            parentWrapped: !!v.parentWrapped, parentLocked: !!v.parentLocked, registrarAuthorised: !!v.registrarAuthorised, rootUsable: !!v.rootUsable,
+            availableOut: !!v.availableOut, identityExists: !!v.identityExists, registrable: !!v.registrable, claimable: !!v.claimable,
+            tokenOwner: String(v.tokenOwner||''), wrappedOwner: String(v.wrappedOwner||''), resolver: String(v.resolver||''),
+            currentWrappedExpiry: Number(v.currentWrappedExpiry||0), expectedNewExpiry: Number(v.expectedNewExpiry||0), status: Number(v.status||0)
+          };
       p.statusLabel = IDENTITY_PREVIEW_STATUS[p.status] || `unknown-${p.status}`;
       return p;
     }
@@ -4008,18 +4033,22 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       if(el('alphaIdentityOwnerLine')) el('alphaIdentityOwnerLine').textContent = `${owner || '—'} / ${pendingOwner || '—'}`;
       if(el('alphaIdentityRequiredFuses')) el('alphaIdentityRequiredFuses').textContent = String(fuses || '—');
       if(el('alphaIdentityNameSymbol')) el('alphaIdentityNameSymbol').textContent = `${name || '—'} / ${symbol || '—'}`;
-      const managerWrapperLive = await agiJobManager.methods.nameWrapper().call().catch(()=>"");
-      const managerEnsLive = await agiJobManager.methods.ens().call().catch(()=>"");
-      if(el('alphaIdentityActionStatus') && managerWrapperLive && wrapper && String(managerWrapperLive).toLowerCase() !== String(wrapper).toLowerCase()) el('alphaIdentityActionStatus').textContent = 'Warning: AGIJobManager nameWrapper differs from identity wrapper; treat posture as degraded.';
-      if(el('alphaIdentityActionStatus') && managerEnsLive && registry && String(managerEnsLive).toLowerCase() !== String(registry).toLowerCase()) el('alphaIdentityActionStatus').textContent = 'Warning: AGIJobManager ENS registry differs from identity registrar ENS registry; verify before writing.';
-      const h = health ? (Array.isArray(health) ? {rootName:String(health[0]||''),rootNode:String(health[1]||''),active:!!health[2],pausedOut:!!health[3],wrapperAddress:String(health[4]||''),ensRegistryAddress:String(health[5]||''),contractOwner:String(health[6]||''),wrappedParentOwner:String(health[7]||''),parentWrapped:!!health[8],parentLocked:!!health[9],registrarAuthorised:!!health[10],effectiveParentExpiry:Number(health[11]||0),rootUsable:!!health[12]} : health) : null;
+      const h = health ? (Array.isArray(health) ? {rootName:String(health[0]||''), rootNode:String(health[1]||''), active:!!health[2], pausedOut:!!health[3], wrapperAddress:String(health[4]||''), ensRegistryAddress:String(health[5]||''), contractOwner:String(health[6]||''), wrappedParentOwner:String(health[7]||''), parentWrapped:!!health[8], parentLocked:!!health[9], registrarAuthorised:!!health[10], effectiveParentExpiry:Number(health[11]||0), rootUsable:!!health[12]} : health) : null;
       if(el('alphaIdentityParentOwner')) el('alphaIdentityParentOwner').textContent = h?.wrappedParentOwner || '—';
       if(el('alphaIdentityParentFlags')) el('alphaIdentityParentFlags').textContent = h ? `${h.parentWrapped?'wrapped':'not wrapped'} / ${h.parentLocked?'locked':'unlocked'}` : '—';
       if(el('alphaIdentityRegistrarAuth')) el('alphaIdentityRegistrarAuth').textContent = h ? String(!!h.registrarAuthorised) : '—';
       if(el('alphaIdentityParentExpiry')) el('alphaIdentityParentExpiry').textContent = h ? formatTimestamp(h.effectiveParentExpiry) : '—';
       if(el('alphaIdentityRootUsable')) el('alphaIdentityRootUsable').textContent = h ? String(!!h.rootUsable) : '—';
-      const rootNodeMismatch = !!(rootNode && computed.toLowerCase() !== String(rootNode).toLowerCase());
-      if(rootNodeMismatch && el('alphaIdentityActionStatus')) el('alphaIdentityActionStatus').textContent = `Blocking warning: ROOT_NODE mismatch. computed ${computed}, contract ${rootNode}.`; 
+      const effectiveRootNode = String(rootNode || h?.rootNode || '').trim();
+      const rootNodeMismatch = !!effectiveRootNode && computed.toLowerCase() !== effectiveRootNode.toLowerCase();
+      if(rootNodeMismatch && el('alphaIdentityActionStatus')) el('alphaIdentityActionStatus').textContent = `Blocking warning: ROOT_NODE mismatch. computed ${computed}, contract ${effectiveRootNode}.`;
+      const mismatchWarnings = [];
+      const managerEns = await agiJobManager?.methods?.ens?.().call().catch(()=> '');
+      const managerWrapper = await agiJobManager?.methods?.nameWrapper?.().call().catch(()=> '');
+      const ensOnlyWrapper = await freeTrialRegistrar?.methods?.wrapper?.().call().catch(()=> '');
+      if(wrapper && ensOnlyWrapper && String(wrapper).toLowerCase() !== String(ensOnlyWrapper).toLowerCase()) mismatchWarnings.push('Identity wrapper differs from ENS-only registrar wrapper.');
+      if(managerEns && registry && String(managerEns).toLowerCase() !== String(registry).toLowerCase()) mismatchWarnings.push('Identity ensRegistry differs from AGIJobManager.ens().');
+      if(managerWrapper && wrapper && String(managerWrapper).toLowerCase() !== String(wrapper).toLowerCase()) mismatchWarnings.push('Identity wrapper differs from AGIJobManager.nameWrapper().');
       const previewRaw = local.ok ? await freeTrialRegistrarIdentity.methods.preview(local.label).call().catch(()=>null) : null;
       const preview = parseIdentityPreviewResult(previewRaw);
       APP_STATE.identity.preview = preview;
@@ -4027,12 +4056,9 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       if(el('alphaIdentityFullName')) el('alphaIdentityFullName').textContent = preview?.fullName || (local.ok ? `${local.label}.${ALPHA_AGENT_PARENT}` : '—');
       if(el('alphaIdentityTokenId')) el('alphaIdentityTokenId').textContent = preview?.tokenId || '—';
       if(el('alphaIdentityExists')) el('alphaIdentityExists').textContent = preview ? String(!!preview.identityExists) : '—';
-      if(el('alphaIdentityWrappedOwner')) el('alphaIdentityWrappedOwner').textContent = preview?.wrappedOwner || '—';
-      if(el('alphaIdentityResolver')) el('alphaIdentityResolver').textContent = preview?.resolver || '—';
-      if(el('alphaIdentityWrappedExpiry')) el('alphaIdentityWrappedExpiry').textContent = preview ? formatTimestamp(preview.currentWrappedExpiry) : '—';
       if(el('alphaIdentityClaimable')) el('alphaIdentityClaimable').textContent = preview ? String(!!preview.claimable) : '—';
       if(el('alphaIdentityRegistrable')) el('alphaIdentityRegistrable').textContent = preview ? String(!!preview.registrable) : '—';
-      const lockedReason = identityWriteLockedReason(preview) || (rootNodeMismatch ? 'ROOT_NODE mismatch blocks identity writes until contract/root alignment is restored.' : '');
+      const lockedReason = rootNodeMismatch ? 'ROOT_NODE mismatch blocks identity writes.' : identityWriteLockedReason(preview);
       const registerEnabled = !lockedReason && preview?.registrable;
       const claimEnabled = !lockedReason && preview?.claimable;
       const syncEnabled = !lockedReason && preview?.identityExists && (preview.status===3 || preview.status===4);
@@ -4045,17 +4071,22 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         else if(claimEnabled) el('alphaIdentityActionStatus').textContent = 'Ready: claimIdentity(label) for an existing wrapped name you already own.';
         else if(syncEnabled) el('alphaIdentityActionStatus').textContent = 'Ready: syncIdentityByLabel(label) repair path.';
         else el('alphaIdentityActionStatus').textContent = 'No eligible identity write action for current preview state.';
+        if(mismatchWarnings.length) el('alphaIdentityActionStatus').textContent += ` Warning: ${mismatchWarnings.join(' ')}`;
       }
       if(preview?.identityExists && preview?.tokenId){
-        const [ownerOf, labelData, tokenURI] = await Promise.all([
+        const [ownerOf, isLocked, labelData, tokenURI] = await Promise.all([
           freeTrialRegistrarIdentity.methods.ownerOf(preview.tokenId).call().catch(()=>''),
+          freeTrialRegistrarIdentity.methods.locked(preview.tokenId).call().catch(()=>true),
           freeTrialRegistrarIdentity.methods.labelData(preview.tokenId).call().catch(()=>null),
           freeTrialRegistrarIdentity.methods.tokenURI(preview.tokenId).call().catch(()=>''),
         ]);
         if(el('alphaIdentityTokenOwner')) el('alphaIdentityTokenOwner').textContent = ownerOf || '—';
         const ld = labelData ? (Array.isArray(labelData) ? {label:String(labelData[0]||''), labelhash:String(labelData[1]||''), mintedAt:Number(labelData[2]||0)} : labelData) : null;
-        if(el('alphaIdentityLabelhash')) el('alphaIdentityLabelhash').textContent = ld?.labelhash || preview?.labelhash || '—';
+        if(el('alphaIdentityWrappedOwner')) el('alphaIdentityWrappedOwner').textContent = preview?.wrappedOwner || '—';
+        if(el('alphaIdentityResolver')) el('alphaIdentityResolver').textContent = preview?.resolver || '—';
+        if(el('alphaIdentityWrappedExpiry')) el('alphaIdentityWrappedExpiry').textContent = formatTimestamp(preview?.currentWrappedExpiry || 0);
         if(el('alphaIdentityMintedAt')) el('alphaIdentityMintedAt').textContent = ld ? formatTimestamp(ld.mintedAt) : '—';
+        if(el('alphaIdentityStatusPill') && isLocked===false) el('alphaIdentityStatusPill').textContent += ' · unlock anomaly';
         if(tokenURI && tokenURI.startsWith('data:application/json;base64,')){
           try{
             const payload = JSON.parse(atob(tokenURI.split(',')[1] || ''));
@@ -4067,11 +4098,28 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
               if(img){ node.style.display='block'; node.src = img; }
               else{ node.style.display='none'; node.removeAttribute('src'); }
             }
-          }catch{}
+          }catch{
+            if(el('alphaIdentityTokenMetaName')) el('alphaIdentityTokenMetaName').textContent = '—';
+            if(el('alphaIdentityTokenMetaDescription')) el('alphaIdentityTokenMetaDescription').textContent = '—';
+            const node = el('alphaIdentityTokenImage');
+            if(node){ node.style.display='none'; node.removeAttribute('src'); }
+          }
+        }else{
+          if(el('alphaIdentityTokenMetaName')) el('alphaIdentityTokenMetaName').textContent = '—';
+          if(el('alphaIdentityTokenMetaDescription')) el('alphaIdentityTokenMetaDescription').textContent = '—';
+          const node = el('alphaIdentityTokenImage');
+          if(node){ node.style.display='none'; node.removeAttribute('src'); }
         }
       }else{
-        ['alphaIdentityTokenOwner','alphaIdentityLabelhash','alphaIdentityMintedAt','alphaIdentityTokenMetaName','alphaIdentityTokenMetaDescription'].forEach(id=>{ if(el(id)) el(id).textContent='—'; });
-        if(el('alphaIdentityTokenImage')){ el('alphaIdentityTokenImage').style.display='none'; el('alphaIdentityTokenImage').removeAttribute('src'); }
+        if(el('alphaIdentityTokenOwner')) el('alphaIdentityTokenOwner').textContent = '—';
+        if(el('alphaIdentityWrappedOwner')) el('alphaIdentityWrappedOwner').textContent = '—';
+        if(el('alphaIdentityResolver')) el('alphaIdentityResolver').textContent = '—';
+        if(el('alphaIdentityWrappedExpiry')) el('alphaIdentityWrappedExpiry').textContent = '—';
+        if(el('alphaIdentityMintedAt')) el('alphaIdentityMintedAt').textContent = '—';
+        if(el('alphaIdentityTokenMetaName')) el('alphaIdentityTokenMetaName').textContent = '—';
+        if(el('alphaIdentityTokenMetaDescription')) el('alphaIdentityTokenMetaDescription').textContent = '—';
+        const node = el('alphaIdentityTokenImage');
+        if(node){ node.style.display='none'; node.removeAttribute('src'); }
       }
       renderIdentityAdminControls(owner, pendingOwner);
       updateMissionControl();
@@ -5579,9 +5627,10 @@ async function updateSummary(){
       try{
         const full = `${sub}.${suffix}`;
         const tokenID = namehash(full);
-        const managerWrapper = await agiJobManager.methods.nameWrapper().call().catch(()=>"");
-        const wrapperAddr = !isZeroAddress(managerWrapper) ? managerWrapper : FALLBACK_NAME_WRAPPER;
-        const nw = new web3.eth.Contract(NameWrapperABI, wrapperAddr);
+        const managerWrapperAddr = await agiJobManager?.methods?.nameWrapper?.().call().catch(()=> '');
+        const wrapperCheckDegraded = !managerWrapperAddr || isZeroAddress(managerWrapperAddr);
+        const runtimeNameWrapper = wrapperCheckDegraded ? NAME_WRAPPER : managerWrapperAddr;
+        const nw = new web3.eth.Contract(NameWrapperABI, runtimeNameWrapper);
         const owner = await nw.methods.ownerOf(tokenID).call();
         const acct = String(userAccount || '').toLowerCase();
         const ownerLc = String(owner || '').toLowerCase();
