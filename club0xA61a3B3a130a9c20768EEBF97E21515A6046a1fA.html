@@ -87,7 +87,7 @@
 
                 const agiTokenContract = new ethers.Contract(agiTokenAddress, agiTokenAbi, signer);
                 const allowance = await agiTokenContract.allowance(userAddress, contractAddress);
-                if (allowance.lt(ethers.utils.parseUnits("250", 18))) {
+                if (allowance.lt(ethers.utils.parseUnits("50000", 18))) {
                     const approvalTx = await agiTokenContract.approve(contractAddress, ethers.utils.parseUnits("250", 18));
                     await approvalTx.wait();
                     alert('AGI token approval successful. Please proceed with registration.');
