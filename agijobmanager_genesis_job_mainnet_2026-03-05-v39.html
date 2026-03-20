@@ -4816,10 +4816,36 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       }
       refreshIdentityState().catch(()=>{});
     }
-    function openAlphaMintReview(){
+    async function openAlphaMintReview(){
+      if(!requireConnected() || !mustBeReadyToWrite()) return;
       const local = validateAlphaLabelLocal(el('mintAlphaLabel')?.value || '');
+      if(!local.ok){
+        await updateAlphaMintPreview().catch(()=>{});
+        return setToast(local.reason, 'warn');
+      }
       const recipient = String(el('mintAlphaRecipient')?.value || '').trim() || userAccount;
+      if(!web3?.utils?.isAddress(recipient)){
+        await updateAlphaMintPreview().catch(()=>{});
+        return setToast('Recipient address is invalid.', 'bad');
+      }
+      if(!APP_STATE.registrar.parentUsable){
+        await refreshFreeTrialRegistrarState().catch(()=>{});
+        return setToast('Parent not usable right now. Refresh registrar state and retry.', 'warn');
+      }
+      if(!freeTrialRegistrar){
+        if(!web3) return setToast('Wallet provider unavailable. Reconnect wallet and retry.', 'bad');
+        freeTrialRegistrar = new web3.eth.Contract(FreeTrialSubdomainRegistrarABI, FREE_TRIAL_REGISTRAR);
+      }
       const full = `${local.label}.${ALPHA_AGENT_PARENT}`;
+      const node = namehash(full);
+      const [available, labelValid] = await Promise.all([
+        freeTrialRegistrar.methods.available(node).call().catch(()=>null),
+        freeTrialRegistrar.methods.validateLabel(local.label).call().catch(()=>null)
+      ]);
+      await updateAlphaMintPreview().catch(()=>{});
+      if(available === null) return setToast('Registrar availability read failed. Refresh registrar state and retry.', 'warn');
+      if(labelValid === null || labelValid === false || String(labelValid).toLowerCase() === 'false' || String(labelValid) === '0') return setToast('Label is invalid for this registrar.', 'warn');
+      if(!available) return setToast('Label unavailable.', 'warn');
       if(el('alphaMintReviewFacts')) el('alphaMintReviewFacts').innerHTML = [
         ['Target contract', FREE_TRIAL_REGISTRAR],
         ['Method', 'registerSimple'],
@@ -4860,10 +4886,11 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       setToast(`Minted ${local.label}.${ALPHA_AGENT_PARENT} · expiry ${expiry}`, 'ok');
       saveRecentAlphaAgentName(local.label);
       if(el('agentSub')) el('agentSub').value = local.label;
-      await verifySubdomain('agent', true);
-      await refreshFreeTrialRegistrarState();
-      await refreshIdentityState().catch(()=>{});
-      await updateMissionControl();
+      await refreshFreeTrialRegistrarState().catch((e)=>setToast(`Registrar state refresh warning: ${e.message||String(e)}`, 'warn'));
+      await updateAlphaMintPreview().catch(()=>{});
+      await verifySubdomain('agent', true).catch((e)=>setToast(`Alpha verification refresh warning: ${e.message||String(e)}`, 'warn'));
+      await refreshIdentityState().catch((e)=>setToast(`Alpha identity refresh warning: ${e.message||String(e)}`, 'warn'));
+      await updateMissionControl().catch((e)=>setToast(`Mission control refresh warning: ${e.message||String(e)}`, 'warn'));
     }
     function renderRegistrarAdminControls(){
       const box = el('registrarAdminControls');
@@ -7662,7 +7689,7 @@ function normalizeIpfsToHttp(uri){
       if(el("mintAlphaLabel")) el("mintAlphaLabel").addEventListener("input", ()=>updateAlphaMintPreview().catch(()=>{}));
       if(el("mintAlphaRecipient")) el("mintAlphaRecipient").addEventListener("input", ()=>updateAlphaMintPreview().catch(()=>{}));
       if(el("refreshRegistrarStateBtn")) el("refreshRegistrarStateBtn").addEventListener("click", ()=>refreshFreeTrialRegistrarState().catch(e=>setToast(e.message||String(e),"bad")));
-      if(el("mintAlphaAgentBtn")) el("mintAlphaAgentBtn").addEventListener("click", ()=>openAlphaMintReview());
+      if(el("mintAlphaAgentBtn")) el("mintAlphaAgentBtn").addEventListener("click", ()=>openAlphaMintReview().catch(e=>setToast(e.message||String(e),"bad")));
       if(el("closeAlphaMintReviewBtn")) el("closeAlphaMintReviewBtn").addEventListener("click", closeAlphaMintReview);
       if(el("cancelAlphaMintReviewBtn")) el("cancelAlphaMintReviewBtn").addEventListener("click", closeAlphaMintReview);
       if(el("confirmAlphaMintReviewBtn")) el("confirmAlphaMintReviewBtn").addEventListener("click", ()=>mintAlphaAgentName().catch(e=>setToast(e.message||String(e),"bad")));
