@@ -3166,7 +3166,7 @@ Evaluation methodology"></textarea>
     const verified = { agent:null, club:null, agentAlpha:false, clubAlpha:false };
     const APP_STATE = {
       wallet:{account:null, chainId:null, isMainnet:false, termsAccepted:false},
-      protocol:{}, jobsReadDegraded:false, admin:{managerOwner:null, ensOwner:null, isModerator:false}, registrar:{wrapper:null,parentUsable:false,parentActive:false,managerAuthorized:false}, identity:{preview:null,rootHealth:null,label:"",tokenData:null}
+      protocol:{}, jobsReadDegraded:false, admin:{managerOwner:null, ensOwner:null, isModerator:false}, registrar:{wrapper:null,parentUsable:null,parentActive:false,managerAuthorized:false}, identity:{preview:null,rootHealth:null,label:"",tokenData:null}
     };
 
     let isMainnet = false;
@@ -3660,7 +3660,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       latestJobs = [];
       APP_STATE.jobsReadDegraded = false;
       APP_STATE.admin = {managerOwner:null, ensOwner:null, isModerator:false};
-      APP_STATE.registrar = {wrapper:null,parentUsable:false,parentActive:false,managerAuthorized:false};
+      APP_STATE.registrar = {wrapper:null,parentUsable:null,parentActive:false,managerAuthorized:false};
       APP_STATE.identity = {preview:null,rootHealth:null,label:"",tokenData:null};
       resolvedEnsJobPagesAddress = '';
       resolvedEnsJobPagesSource = 'unavailable';
@@ -4165,6 +4165,13 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
     function clearToast(){const t=el("toast"); if(t){t.style.display="none"; t.textContent="";}}
     function requireConnected(){
       if(!web3 || !userAccount || !agiJobManager){
+        setToast("Connect your wallet first.", "warn");
+        return false;
+      }
+      return true;
+    }
+    function requireWalletConnection(){
+      if(!web3 || !userAccount){
         setToast("Connect your wallet first.", "warn");
         return false;
       }
@@ -4708,7 +4715,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       if(!web3){ return; }
       if(!freeTrialRegistrar) freeTrialRegistrar = new web3.eth.Contract(FreeTrialSubdomainRegistrarABI, FREE_TRIAL_REGISTRAR);
       if(el('freeTrialRegistrarAddress')) el('freeTrialRegistrarAddress').textContent = FREE_TRIAL_REGISTRAR;
-      APP_STATE.registrar.parentUsable = false;
+      APP_STATE.registrar.parentUsable = null;
       APP_STATE.registrar.parentActive = false;
       APP_STATE.registrar.managerAuthorized = false;
       if(el('freeTrialParentActive')) el('freeTrialParentActive').textContent = 'unknown (read failed or unavailable)';
@@ -4803,21 +4810,23 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       const recipientRaw = String(el('mintAlphaRecipient')?.value || '').trim();
       const recipient = recipientRaw || userAccount || '';
       const badRecipient = recipient && !web3?.utils?.isAddress(recipient);
-      const blocked = !userAccount || !isMainnet || !hasAcceptedTerms || !local.ok || !APP_STATE.registrar.parentUsable || badRecipient || !isAvailable || !isContractValid;
+      const parentExplicitlyUnusable = APP_STATE.registrar.parentUsable === false;
+      const blocked = !userAccount || !isMainnet || !hasAcceptedTerms || !local.ok || parentExplicitlyUnusable || badRecipient || !isAvailable || !isContractValid;
       if(el('mintAlphaAgentBtn')) el('mintAlphaAgentBtn').disabled = !!blocked;
       if(el('mintAlphaStatus')){
         if(!userAccount) el('mintAlphaStatus').textContent = 'Connect wallet to mint.';
         else if(!isMainnet) el('mintAlphaStatus').textContent = 'Switch to Ethereum mainnet.';
         else if(!hasAcceptedTerms) el('mintAlphaStatus').textContent = 'Accept terms to unlock writes.';
-        else if(!APP_STATE.registrar.parentUsable) el('mintAlphaStatus').textContent = 'Parent not usable right now.';
-        else if(badRecipient) el('mintAlphaStatus').textContent = 'Recipient is not a valid address.';
         else if(!local.ok) el('mintAlphaStatus').textContent = local.reason;
+        else if(badRecipient) el('mintAlphaStatus').textContent = 'Recipient is not a valid address.';
+        else if(APP_STATE.registrar.parentUsable === false) el('mintAlphaStatus').textContent = 'Parent not usable right now.';
+        else if(APP_STATE.registrar.parentUsable === null) el('mintAlphaStatus').textContent = `Ready to mint ${full} (free, gas only). Parent status read is degraded; transaction safety will be enforced onchain.`;
         else el('mintAlphaStatus').textContent = `Ready to mint ${full} (free, gas only).`;
       }
       refreshIdentityState().catch(()=>{});
     }
     async function openAlphaMintReview(){
-      if(!requireConnected() || !mustBeReadyToWrite()) return;
+      if(!requireWalletConnection() || !mustBeReadyToWrite()) return;
       const local = validateAlphaLabelLocal(el('mintAlphaLabel')?.value || '');
       if(!local.ok){
         await updateAlphaMintPreview().catch(()=>{});
@@ -4828,7 +4837,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         await updateAlphaMintPreview().catch(()=>{});
         return setToast('Recipient address is invalid.', 'bad');
       }
-      if(!APP_STATE.registrar.parentUsable){
+      if(APP_STATE.registrar.parentUsable === false){
         await refreshFreeTrialRegistrarState().catch(()=>{});
         return setToast('Parent not usable right now. Refresh registrar state and retry.', 'warn');
       }
@@ -4862,7 +4871,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
     }
     function closeAlphaMintReview(){ const modal = el('alphaMintReviewModal'); if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); } }
     async function mintAlphaAgentName(){
-      if(!requireConnected() || !mustBeReadyToWrite()) return;
+      if(!requireWalletConnection() || !mustBeReadyToWrite()) return;
       if(!freeTrialRegistrar){
         if(!web3) return setToast('Wallet provider unavailable. Reconnect wallet and retry.', 'bad');
         freeTrialRegistrar = new web3.eth.Contract(FreeTrialSubdomainRegistrarABI, FREE_TRIAL_REGISTRAR);
