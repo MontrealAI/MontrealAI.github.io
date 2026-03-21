@@ -326,6 +326,19 @@
     .preflightItem.good .state{color:#9bf7c4}
     .preflightItem.warn .state{color:#ffd37a}
     .preflightItem.bad .state{color:#ff9a9a}
+    .preflightStatusGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+    .preflightStatusCard{padding:14px 16px;border-radius:18px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.78);display:grid;gap:6px;min-width:0}
+    .preflightStatusCard .k{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-soft)}
+    .preflightStatusCard .v{font-size:1rem;font-weight:700;line-height:1.4;overflow-wrap:anywhere}
+    .preflightStatusCard .helper{font-size:.84rem;line-height:1.45}
+    .preflightCompactCard{padding:16px 18px;border-radius:20px;border:1px solid rgba(121,96,150,.14);background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,243,251,.86));display:grid;gap:12px;box-shadow:0 12px 28px rgba(91,69,120,.06)}
+    .preflightCompactHeader{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+    .preflightCompactActions{display:flex;gap:8px;flex-wrap:wrap}
+    .preflightInlineCheck{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:18px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.82)}
+    .preflightInlineCheck input{margin-top:3px}
+    .preflightSignalList{display:grid;gap:10px}
+    .preflightSignal{padding:11px 13px;border-radius:14px;border:1px solid rgba(121,96,150,.1);background:rgba(255,255,255,.72);display:grid;gap:4px}
+    .preflightSignal b{font-size:.92rem}
     .noteArea{width:100%;min-height:110px;padding:12px;border-radius:14px;border:1px solid hsl(var(--border));background:rgba(255,255,255,.04);color:hsl(var(--foreground));font:inherit;resize:vertical}
     .noteArea:focus{outline:none;box-shadow:0 0 0 3px rgba(122,63,242,.18);border-color:rgba(122,63,242,.7)}
     .exportBox{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85rem;line-height:1.5;padding:12px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid hsl(var(--border));max-height:240px;overflow:auto}
@@ -429,6 +442,8 @@
     .reviewCheck{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.02)}
     .reviewMethodBox{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84rem;line-height:1.5;padding:12px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid hsl(var(--border));margin-top:14px}
     .reviewFooter{position:sticky;bottom:0;z-index:3;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin:16px -18px -24px;padding:14px 18px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(18,7,34,0),rgba(18,7,34,.92) 18%,rgba(18,7,34,.995));box-shadow:0 -18px 36px rgba(5,8,18,.34)}
+    .reviewFooter .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .reviewFooter .actions .btn{min-width:140px}
     .reviewFooter .helper{margin:0}
     #alphaMintReviewModal .modalCard,
     #alphaIdentityReviewModal .modalCard{width:min(820px,96vw);height:auto;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
@@ -672,10 +687,12 @@
       .packetTab,.roleTab,.miniPill,.pill,.syncBadge,.chip,.missionPill,.anchorNav a{white-space:nowrap;flex:0 0 auto}
       .stickyBar,.stickySubsection{position:static;top:auto}
       .scrollTerms{height:auto;min-height:0;max-height:none;padding-right:0}
-      .preflightIntro,.preflightGrid,.preflightChecklist{grid-template-columns:1fr}
-      .preflightAnchorRow,.preflightActions{display:grid;grid-template-columns:1fr}
-      .reviewFooter{bottom:0!important;margin:16px -12px -24px!important;padding:14px 12px calc(22px + env(safe-area-inset-bottom))!important;gap:10px}
+      .preflightIntro,.preflightGrid,.preflightChecklist,.preflightStatusGrid{grid-template-columns:1fr}
+      .preflightAnchorRow,.preflightActions,.preflightCompactActions{display:grid;grid-template-columns:1fr}
+      .preflightInlineCheck{flex-direction:column}
+      .reviewFooter{position:static!important;bottom:auto!important;margin:18px 0 0!important;padding:14px 0 calc(18px + env(safe-area-inset-bottom))!important;gap:10px;box-shadow:none;background:none;border-top:1px solid rgba(121,96,150,.12)}
       .reviewFooter,.reviewFooter .actions,.premiumRoleActionRow,.heroActions,.actions,.builderActions{grid-template-columns:1fr}
+      .reviewFooter .actions{display:grid;width:100%}
       .reviewFooter .btn-primary,.reviewFooter .btn[data-primary="true"],.actions .btn-primary,.builderActions .btn-primary,.heroActions .btn-primary,.premiumRoleActionRow .btn-primary{order:-2}
       .reviewFooter .btn-danger,.actions .btn-danger,.builderActions .btn-danger,.premiumRoleActionRow .btn-danger{order:3}
       .premiumStickyBar{position:sticky;bottom:0;border-radius:20px 20px 0 0;padding:14px 16px calc(22px + env(safe-area-inset-bottom));margin:18px -4px 0;box-shadow:0 -18px 34px rgba(88,67,119,.12)}
@@ -709,6 +726,7 @@
       .container{padding:10px 8px calc(24px + env(safe-area-inset-bottom))}
       .card{padding:12px}
       .actions,.builderActions,.heroActions,.packetActions,.modalTools,.bridgeSecondaryActions,.bridgeActionsRow,.syncControls,.draftTools,.jobs-table .actions,.reviewFooter .actions{grid-template-columns:1fr}
+      .reviewFooter .actions .btn{min-width:0}
       .heroStatusCard .v,.syncCard .v,.bridgeStatusCard .v,.kpi .value{font-size:.96rem}
       .debridgeWidgetMount,#debridgeWidgetMount,.debridgeWidgetMount iframe{min-height:620px !important}
       .missionTitle{font-size:1.12rem}
@@ -1760,6 +1778,12 @@
             <a class="btn" href="#verifyEnsSection">Verification</a>
             <a class="btn" href="#premiumDiscoverySection">Main next step</a>
           </div>
+          <div class="preflightStatusGrid" aria-label="Preflight readiness summary">
+            <div class="preflightStatusCard"><span class="k">Wallet + mainnet</span><span class="v" id="preflightWalletValue">Connect wallet</span><span class="helper" id="preflightWalletHint">Live wallet and network posture appears here.</span></div>
+            <div class="preflightStatusCard"><span class="k">Terms + cautions</span><span class="v" id="preflightTermsValue">Acceptance pending</span><span class="helper" id="preflightTermsHint">Review the caution summary and confirm terms before any write.</span></div>
+            <div class="preflightStatusCard"><span class="k">Role verification</span><span class="v" id="preflightVerifyValue">Verify ENS role</span><span class="helper" id="preflightVerifyHint">Agent and club posture stays grouped for one-pass setup.</span></div>
+            <div class="preflightStatusCard"><span class="k">Next action</span><span class="v" id="preflightActionValue">Open the readiness lane</span><span class="helper" id="preflightActionHint">This highlights the calmest next step without changing write semantics.</span></div>
+          </div>
           <div class="preflightRestored" id="preflightRestoreBanner" data-visible="false"></div>
         </div>
         <div class="preflightChecklist">
@@ -1770,6 +1794,21 @@
         </div>
       </div>
       <div class="preflightGrid" id="preflightFlowGrid"></div>
+      <div class="preflightCompactCard" id="preflightAlphaCard">
+        <div class="preflightCompactHeader">
+          <div>
+            <div class="eyebrow">Alpha identity readiness</div>
+            <div class="missionTitle" style="font-size:1.08rem;margin:0">Alpha-Agent access is surfaced here before you scroll into the full console.</div>
+          </div>
+          <div class="preflightCompactActions">
+            <a class="btn" href="#alphaAgentMintSection">Open full Alpha console</a>
+            <button class="btn" type="button" id="preflightOpenAlphaDiagnosticsBtn">Inspect Alpha readiness</button>
+          </div>
+        </div>
+        <div class="preflightSignalList">
+          <div class="preflightSignal"><b id="preflightAlphaStatus">Alpha identity posture pending</b><span class="helper" id="preflightAlphaHint">Connect wallet, confirm mainnet, and accept the shared terms state to preview the recommended path.</span></div>
+        </div>
+      </div>
     </section>
 
     <div class="card">
@@ -3605,6 +3644,7 @@ Evaluation methodology"></textarea>
       for(const id of ids){const b=document.getElementById(id); if(b) b.disabled=!enabled;}
       document.querySelectorAll('button[data-tx="1"]').forEach(b=>{b.disabled=!enabled;});
       updateReadinessUI();
+      updatePreflightSummary();
       updatePrimaryActionHints();
       if(uiBootstrapped) return;
       uiBootstrapped = true;
@@ -4608,7 +4648,8 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         fields[id] = node.type === 'checkbox' ? !!node.checked : String(node.value || '');
       });
       const activePremiumTab = document.querySelector('[data-premium-surface].active')?.dataset.premiumSurface || '';
-      continuitySave({fields, activePremiumTab, lastWallet:userAccount || '', lastChainId: chainId || null});
+      const activeHash = location.hash || '';
+      continuitySave({fields, activePremiumTab, activeHash, lastWallet:userAccount || '', lastChainId: chainId || null});
     }
     function announceContinuity(message, tone=''){ const note = el('sessionRestoreNote'); if(note) note.textContent = message; const banner = el('preflightRestoreBanner'); if(banner){ banner.textContent = message; banner.dataset.visible = 'true'; banner.dataset.tone = tone || 'restored'; } }
     function restoreUiContinuity(){
@@ -4629,6 +4670,10 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       if(stored.activePremiumTab){
         const tab = document.querySelector(`[data-premium-surface="${stored.activePremiumTab}"]`);
         tab?.click();
+      }
+      if(stored.activeHash){
+        const target = document.querySelector(stored.activeHash);
+        if(target) requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
       }
       const topTerms = el('alphaTermsAcceptedTop');
       const baseTerms = el('termsAccepted');
@@ -4658,14 +4703,44 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       const grid = el('preflightFlowGrid');
       if(!grid || grid.dataset.ready === 'true') return;
       ['accessWalletCard','readinessSection'].forEach(id=>{ const node = el(id); if(node) grid.appendChild(node); });
-      ['verifyEnsSection'].forEach(id=>{ const node = el(id); if(node) grid.appendChild(node); });
       const notice = document.querySelector('.heroNotice');
-      if(notice) grid.insertBefore(notice, grid.children[1] || null);
+      if(notice) grid.appendChild(notice);
+      ['verifyEnsSection'].forEach(id=>{ const node = el(id); if(node) grid.appendChild(node); });
       grid.dataset.ready = 'true';
     }
     function updateViewportVars(){
       const viewportHeight = window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight || 0;
       if(viewportHeight) document.documentElement.style.setProperty('--app-vh', `${viewportHeight * 0.01}px`);
+      const viewportOffsetTop = window.visualViewport?.offsetTop || 0;
+      document.documentElement.style.setProperty('--vv-offset-top', `${Math.max(0, viewportOffsetTop)}px`);
+    }
+    function updatePreflightSummary(){
+      const walletValue = !userAccount ? 'Connect wallet' : isMainnet ? 'Mainnet ready' : 'Switch to mainnet';
+      const walletHint = !userAccount ? 'Connect the wallet you intend to use for review-first writes.' : isMainnet ? `Connected as ${shortAddr(userAccount)} on Ethereum Mainnet.` : 'Wallet connected, but write access stays paused until Ethereum Mainnet is active.';
+      if(el('preflightWalletValue')) el('preflightWalletValue').textContent = walletValue;
+      if(el('preflightWalletHint')) el('preflightWalletHint').textContent = walletHint;
+      const termsValue = hasAcceptedTerms ? 'Accepted + cautions reviewed' : 'Acceptance pending';
+      const termsHint = hasAcceptedTerms ? 'Shared terms state is active here, in Before You Transact, and in the lower canonical terms section.' : 'Use the compact acceptance block near the top, then the full legal text remains available below.';
+      if(el('preflightTermsValue')) el('preflightTermsValue').textContent = termsValue;
+      if(el('preflightTermsHint')) el('preflightTermsHint').textContent = termsHint;
+      const roleReady = verified.agent || verified.club || verified.agentAlpha || verified.clubAlpha;
+      const verifyValue = roleReady ? 'Verification in progress / restored' : 'Verify ENS role';
+      const verifyHint = verified.agent && verified.club ? 'Agent and validator / club posture both have local context; reconnect or refresh to reconfirm live ownership.' : verified.agent || verified.agentAlpha ? 'Agent identity context is present. Add club / validator verification if you need to vote or validate.' : verified.club || verified.clubAlpha ? 'Validator / club context is present. Add agent verification only if you also need applicant flows.' : 'Verify agent and club paths in one pass before you open any approval or submission flow.';
+      if(el('preflightVerifyValue')) el('preflightVerifyValue').textContent = verifyValue;
+      if(el('preflightVerifyHint')) el('preflightVerifyHint').textContent = verifyHint;
+      let nextValue = 'Open the readiness lane';
+      let nextHint = 'Complete wallet, legal, and role prerequisites before moving into deeper operational tools.';
+      if(!userAccount){ nextValue = 'Connect wallet'; nextHint = 'Wallet posture is the first required step for every live read and write review.'; }
+      else if(!isMainnet){ nextValue = 'Switch network'; nextHint = 'Ethereum Mainnet is required before approvals, mints, or job writes can proceed.'; }
+      else if(!hasAcceptedTerms){ nextValue = 'Accept terms'; nextHint = 'Use the compact acceptance control near the top. The canonical long-form terms remain unchanged below.'; }
+      else if(!roleReady){ nextValue = 'Verify role'; nextHint = 'Finish agent or club verification now so the correct transaction path is obvious later.'; }
+      else { nextValue = 'Proceed to review-first actions'; nextHint = 'Prerequisites are visible and locally restorable; continue into the relevant creation, approval, or identity console.'; }
+      if(el('preflightActionValue')) el('preflightActionValue').textContent = nextValue;
+      if(el('preflightActionHint')) el('preflightActionHint').textContent = nextHint;
+      const alphaStatus = !userAccount ? 'Alpha identity posture pending' : !isMainnet ? 'Alpha route blocked until mainnet' : !hasAcceptedTerms ? 'Alpha route waiting on shared terms acceptance' : 'Alpha preview ready for label inspection';
+      const alphaHint = !userAccount ? 'Connect wallet, then return here to continue without losing local label or verification inputs.' : !isMainnet ? 'Reconnect on Ethereum Mainnet to confirm registrar and identity-readiness state.' : !hasAcceptedTerms ? 'Terms acceptance is shared across the preflight lane and Alpha console for one-pass readiness.' : 'Open the full Alpha-Agent console when you want the full preview, recommended route, and diagnostics.';
+      if(el('preflightAlphaStatus')) el('preflightAlphaStatus').textContent = alphaStatus;
+      if(el('preflightAlphaHint')) el('preflightAlphaHint').textContent = alphaHint;
     }
     function syncModalState(){
       const anyOpenModal = !!document.querySelector('.modalBackdrop.open');
@@ -9742,6 +9817,7 @@ The designated winner enters SelectedAgentOnly settlement, has 72 hours to accep
       updateViewportVars();
       syncModalState();
       window.visualViewport?.addEventListener('resize', updateViewportVars);
+      window.visualViewport?.addEventListener('scroll', updateViewportVars);
       window.addEventListener('resize', updateViewportVars);
       window.addEventListener('pageshow', ()=>{ updateViewportVars(); syncModalState(); });
       window.addEventListener('focus', ()=>{ updateViewportVars(); syncModalState(); });
@@ -9760,7 +9836,7 @@ The designated winner enters SelectedAgentOnly settlement, has 72 hours to accep
       }
       function relabelTabs(){ const claimsBtn=document.querySelector('[data-premium-surface="claims"]'); if(claimsBtn) claimsBtn.textContent='Claims & participant actions'; }
       function syncInspectorIds(){ if($('premiumInspectorNextActionReadable') && $('premiumInspectorNextActionMeta')) $('premiumInspectorNextActionMeta').textContent = $('premiumInspectorNextActionMeta').textContent || 'Load a procurement to translate live state.'; }
-      function boot(){ relabelTabs(); updateCoach(); syncInspectorIds(); assemblePreflightBand(); restoreUiContinuity(); bindUiContinuity(); persistUiContinuity(); document.querySelectorAll("[data-premium-role-action]").forEach(btn=>btn.addEventListener("click", ()=>{ const pid=$("premiumInspectorProcurementId")?.value||""; if($("premiumActionProcurementId")) $("premiumActionProcurementId").value=pid; const agent=$("premiumInspectorApplicationAgent")?.value||""; if(agent && $("premiumActionFinalist")) $("premiumActionFinalist").value=agent; const map={commit:"premiumActionCommitApplicationBtn",reveal:"premiumActionRevealApplicationBtn",accept:"premiumActionAcceptFinalistBtn",trial:"premiumActionSubmitTrialBtn","score-commit":"premiumActionCommitScoreBtn","score-reveal":"premiumActionRevealScoreBtn"}; const target=map[btn.dataset.premiumRoleAction]; if(target && $(target)) $(target).click(); })); ['input','change'].forEach(evt=>document.addEventListener(evt, e=>{ if(e.target && String(e.target.id||'').startsWith('premiumDiscovery')) updateCoach(); })); setInterval(updateCoach, 1200); }
+      function boot(){ relabelTabs(); updateCoach(); syncInspectorIds(); assemblePreflightBand(); restoreUiContinuity(); bindUiContinuity(); persistUiContinuity(); $('preflightOpenAlphaDiagnosticsBtn')?.addEventListener('click', ()=>{ $('alphaJumpDiagnosticsBtn')?.click(); document.getElementById('alphaAgentMintSection')?.scrollIntoView({behavior:'smooth', block:'start'}); }); document.querySelectorAll("[data-premium-role-action]").forEach(btn=>btn.addEventListener("click", ()=>{ const pid=$("premiumInspectorProcurementId")?.value||""; if($("premiumActionProcurementId")) $("premiumActionProcurementId").value=pid; const agent=$("premiumInspectorApplicationAgent")?.value||""; if(agent && $("premiumActionFinalist")) $("premiumActionFinalist").value=agent; const map={commit:"premiumActionCommitApplicationBtn",reveal:"premiumActionRevealApplicationBtn",accept:"premiumActionAcceptFinalistBtn",trial:"premiumActionSubmitTrialBtn","score-commit":"premiumActionCommitScoreBtn","score-reveal":"premiumActionRevealScoreBtn"}; const target=map[btn.dataset.premiumRoleAction]; if(target && $(target)) $(target).click(); })); ['input','change'].forEach(evt=>document.addEventListener(evt, e=>{ if(e.target && String(e.target.id||'').startsWith('premiumDiscovery')) updateCoach(); if(e.target && ['termsAccepted','agentSub','clubSub','alphaTermsAcceptedTop'].includes(String(e.target.id||''))) updatePreflightSummary(); })); window.addEventListener('hashchange', persistUiContinuity); updatePreflightSummary(); setInterval(updateCoach, 1200); }
       if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true}); else boot();
     })();
 
