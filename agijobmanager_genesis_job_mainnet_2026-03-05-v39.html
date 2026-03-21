@@ -431,7 +431,9 @@
     .reviewFooter{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom));z-index:2;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin:16px -18px -24px;padding:14px 18px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(18,7,34,0),rgba(18,7,34,.92) 18%,rgba(18,7,34,.995))}
     .reviewFooter .helper{margin:0}
     #alphaMintReviewModal .modalCard,
-    #alphaIdentityReviewModal .modalCard{width:min(820px,96vw);height:auto;min-height:0}
+    #alphaIdentityReviewModal .modalCard{width:min(820px,96vw);height:auto;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
+    #alphaMintReviewModal .modalCard > :not(.modalHeader):not(.reviewFooter),
+    #alphaIdentityReviewModal .modalCard > :not(.modalHeader):not(.reviewFooter){min-height:0;overflow:auto;padding-right:2px}
     #alphaAgentMintSection .mintGrid,#alphaAgentMintSection .actions,#alphaAgentMintSection .reviewFacts{align-items:start}
     #alphaAgentMintSection .mintPreview,#alphaAgentMintSection #alphaIdentityRootHealthCard{height:auto;min-height:0;overflow:hidden}
     #alphaAgentMintSection .miniTable td:last-child,#alphaAgentMintSection .reviewFact .v{overflow-wrap:anywhere;word-break:break-word}
@@ -485,10 +487,19 @@
     .alphaRecipientField{display:grid;gap:8px;padding:14px;border-radius:16px;border:1px dashed rgba(121,96,150,.2);background:rgba(255,255,255,.62);transition:opacity .2s ease,transform .2s ease,border-color .2s ease,background-color .2s ease}
     .alphaRecipientField[data-emphasis="muted"]{opacity:.72}
     .alphaRecipientField[data-emphasis="active"]{opacity:1;border-style:solid;border-color:rgba(111,75,195,.24);background:rgba(111,75,195,.06)}
+    #alphaAgentMintSection[data-alpha-mode="recommended"] .alphaPrimaryRail{order:1}
+    #alphaAgentMintSection[data-alpha-mode="recommended"] .alphaSecondaryRail{order:2;opacity:.88}
+    #alphaAgentMintSection[data-alpha-mode="recommended"] #alphaIdentityPreviewCard,
+    #alphaAgentMintSection[data-alpha-mode="recommended"] #alphaIdentityTokenCard{border-color:rgba(111,75,195,.18);box-shadow:0 16px 36px rgba(91,69,120,.08)}
+    #alphaAgentMintSection[data-alpha-mode="recommended"] #mintAlphaAgentBtn{opacity:.9}
+    #alphaAgentMintSection[data-alpha-mode="ens-only"] .alphaSecondaryRail{order:1}
+    #alphaAgentMintSection[data-alpha-mode="ens-only"] .alphaPrimaryRail{order:2}
+    #alphaAgentMintSection[data-alpha-mode="ens-only"] #alphaIdentityPreviewCard,
+    #alphaAgentMintSection[data-alpha-mode="ens-only"] #alphaIdentityTokenCard{opacity:.94}
     .alphaPrimaryActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-    .alphaPrimaryActions .btn{width:100%;justify-content:center}
+    .alphaPrimaryActions .btn{width:100%;justify-content:center;min-height:46px}
     .alphaIdentityActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-    .alphaIdentityActions .btn{width:100%;justify-content:center}
+    .alphaIdentityActions .btn{width:100%;justify-content:center;min-height:46px}
     .alphaActionGuide{padding:14px 16px;border-radius:18px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.76)}
     .alphaActionGuideGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
     .alphaGuideItem{padding:12px;border-radius:14px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.74)}
@@ -499,7 +510,7 @@
     .alphaMetric{padding:12px 14px;border-radius:14px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.72)}
     .alphaMetric .k{display:block;font-size:.78rem;color:var(--text-soft);margin-bottom:4px}
     .alphaMetric .v{display:block;font-weight:700;line-height:1.45}
-    .alphaIdentityStatusPill{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid rgba(121,96,150,.16);background:rgba(255,255,255,.84);white-space:nowrap;max-width:100%}
+    .alphaIdentityStatusPill{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid rgba(121,96,150,.16);background:rgba(255,255,255,.84);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
     .alphaDecisionList{display:grid;gap:8px}
     .alphaDecisionItem{display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px;padding-top:8px;border-top:1px solid rgba(121,96,150,.1)}
     .alphaDecisionItem:first-child{padding-top:0;border-top:none}
@@ -522,6 +533,10 @@
       .modalBackdrop{align-items:flex-end;padding:0}
       .modalCard,.commandModalCard,.reviewModalCard,#alphaMintReviewModal .modalCard,#alphaIdentityReviewModal .modalCard{width:100vw;max-width:100vw;max-height:calc(var(--app-vh,1vh) * 100);border-radius:22px 22px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
       .modalHeader{border-radius:22px 22px 0 0}
+      #alphaMintReviewModal .modalCard,#alphaIdentityReviewModal .modalCard{max-height:calc(var(--app-vh,1vh) * 100 - env(safe-area-inset-top));padding-bottom:0}
+      #alphaMintReviewModal .reviewFacts,#alphaIdentityReviewModal .reviewFacts{grid-template-columns:1fr}
+      #alphaMintReviewModal .reviewFooter,#alphaIdentityReviewModal .reviewFooter{margin-left:-16px;margin-right:-16px;margin-bottom:0;padding-left:16px;padding-right:16px}
+      .alphaIdentityStatusPill{white-space:normal}
     }
 
 
@@ -4381,6 +4396,16 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
     function syncModalState(){
       const anyOpenModal = !!document.querySelector('.modalBackdrop.open');
       document.body.classList.toggle('has-open-modal', anyOpenModal);
+      if(anyOpenModal){
+        document.body.style.overflow = 'hidden';
+        const sheet = document.getElementById('v26MobileSheet');
+        if(sheet?.classList.contains('open')){
+          sheet.classList.remove('open');
+          sheet.setAttribute('aria-hidden','true');
+        }
+      }else if(!document.getElementById('v26MobileSheet')?.classList.contains('open')){
+        document.body.style.overflow = '';
+      }
     }
 
     function parseAmountToUnits(s){
@@ -5072,7 +5097,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         ['Expected trial expiry', el('mintAlphaExpectedExpiry')?.textContent || '—']
       ].map(([k,v])=>`<div class="reviewFact"><span class="k">${escapeHtml(k)}</span><span class="v">${escapeHtml(String(v||''))}</span></div>`).join('');
       const modal = el('alphaMintReviewModal');
-      if(modal){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); }
+      if(modal){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); modal.setAttribute('role','dialog'); modal.setAttribute('aria-modal','true'); }
       syncModalState();
     }
     function closeAlphaMintReview(){ const modal = el('alphaMintReviewModal'); if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); } syncModalState(); }
@@ -5299,6 +5324,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       const preview = parseIdentityPreviewResult(previewRaw);
       APP_STATE.identity.preview = preview;
       if(el('alphaIdentityStatusPill')) el('alphaIdentityStatusPill').textContent = preview ? `${preview.statusLabel} (${preview.status})` : '—';
+      if(el('alphaIdentityStatusPill')) el('alphaIdentityStatusPill').title = preview ? `preview(label) status ${preview.status}: ${preview.statusLabel}` : 'No preview loaded';
       updateAlphaIdentityExperience();
       if(el('alphaIdentityFullName')) el('alphaIdentityFullName').textContent = preview?.fullName || (local.ok ? `${local.label}.${ALPHA_AGENT_PARENT}` : '—');
       if(el('alphaIdentityTokenId')) el('alphaIdentityTokenId').textContent = preview?.tokenId || '—';
@@ -5395,7 +5421,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         el('confirmAlphaIdentityReviewBtn').dataset.identityAction = action;
         el('confirmAlphaIdentityReviewBtn').textContent = actionMeta.cta;
       }
-      const m=el('alphaIdentityReviewModal'); if(m){ m.classList.add('open'); m.setAttribute('aria-hidden','false'); }
+      const m=el('alphaIdentityReviewModal'); if(m){ m.classList.add('open'); m.setAttribute('aria-hidden','false'); m.setAttribute('role','dialog'); m.setAttribute('aria-modal','true'); }
       syncModalState();
     }
     function closeAlphaIdentityReview(){ const m=el('alphaIdentityReviewModal'); if(m){ m.classList.remove('open'); m.setAttribute('aria-hidden','true'); } if(el('confirmAlphaIdentityReviewBtn')) el('confirmAlphaIdentityReviewBtn').textContent = 'Submit'; syncModalState(); }
