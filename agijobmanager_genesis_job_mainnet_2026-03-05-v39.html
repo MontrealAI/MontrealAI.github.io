@@ -441,8 +441,8 @@
     .reviewChecklist{display:grid;gap:8px;margin-top:14px}
     .reviewCheck{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.02)}
     .reviewMethodBox{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84rem;line-height:1.5;padding:12px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid hsl(var(--border));margin-top:14px}
-    .reviewFooter{position:sticky;bottom:0;z-index:3;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin:16px -18px -40px;padding:16px 18px calc(22px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(18,7,34,0),rgba(18,7,34,.92) 18%,rgba(18,7,34,.995));box-shadow:0 -18px 36px rgba(5,8,18,.34)}
-    .reviewFooter .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .reviewFooter{position:sticky;bottom:max(0px, env(safe-area-inset-bottom));z-index:3;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin:16px -18px -40px;padding:16px 18px calc(30px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(18,7,34,0),rgba(18,7,34,.92) 18%,rgba(18,7,34,.995));box-shadow:0 -18px 36px rgba(5,8,18,.34);scroll-margin-bottom:calc(148px + env(safe-area-inset-bottom))}
+    .reviewFooter .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;width:min(100%,560px)}
     .reviewFooter .actions .btn-primary,.reviewFooter .actions .btn[data-primary="true"]{order:1}
     .reviewFooter .actions .btn:not(.btn-primary):not([data-primary="true"]):not(.btn-danger){order:2}
     .reviewFooter .actions .btn-danger,.reviewFooter .actions .btn[id*='cancel'],.reviewFooter .actions .btn[id*='Cancel']{order:3}
@@ -485,6 +485,19 @@
     .alphaWorkbench{display:grid;gap:18px}
     .alphaQuickStartGrid{display:grid;grid-template-columns:minmax(0,1.16fr) minmax(360px,.84fr);gap:18px;align-items:start}
     .alphaPrimaryWorkbench{display:grid;gap:16px}
+    .alphaFlowStack{display:grid;gap:14px}
+    .alphaLabelField{display:grid;gap:12px}
+    .alphaLabelDossier{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .alphaMetric{min-width:0}
+    .alphaMetric .v,.alphaDecisionItem span:last-child,.alphaQuickFact .v,#alphaIdentityContractAddress{overflow-wrap:anywhere;word-break:break-word}
+    .alphaMetric .v code,.alphaDecisionItem span:last-child code{white-space:pre-wrap}
+    .alphaCompactList{display:grid;gap:10px}
+    .alphaCompactItem{display:grid;gap:4px;padding:12px 14px;border-radius:16px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.76)}
+    .alphaCompactItem .k{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
+    .alphaCompactItem .v{font-weight:700;line-height:1.5;overflow-wrap:anywhere;word-break:break-word}
+    .alphaActionCluster{display:grid;gap:12px}
+    .alphaRecommendedRoute{display:grid;gap:10px;padding:14px 16px;border-radius:18px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.76)}
+    .alphaActionAux{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
     .alphaExpertDetails{border:1px solid rgba(121,96,150,.14);border-radius:22px;background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(248,244,252,.82));overflow:hidden;transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease,opacity .22s ease,transform .22s ease}
     .alphaExpertDetails summary{cursor:pointer;list-style:none;padding:0}
     .alphaExpertDetails summary::-webkit-details-marker{display:none}
@@ -550,6 +563,8 @@
     .alphaMethodPill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid rgba(111,75,195,.16);background:rgba(255,255,255,.86);font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis}
     .alphaPrimaryActions{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:10px}
     .alphaSecondaryActions{display:flex;gap:8px;flex-wrap:wrap}
+    .alphaActionStatusNote{padding:12px 14px;border-radius:16px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.84);font-size:.9rem;line-height:1.52;color:#4e3b5c}
+    .alphaActionStatusNote b{display:block;margin-bottom:4px}
     .alphaPrimaryActions .btn,.alphaIdentityActions .btn{width:100%;justify-content:center;min-height:48px}
     .alphaIdentityActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
     .alphaActionGuide{padding:14px 16px;border-radius:18px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.78)}
@@ -567,6 +582,7 @@
     .alphaMetric{padding:12px 14px;border-radius:15px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.76);display:grid;gap:4px}
     .alphaMetric .k{display:block;font-size:.78rem;color:var(--text-soft);margin-bottom:2px}
     .alphaMetric .v{display:block;font-weight:700;line-height:1.5;overflow-wrap:anywhere}
+    #mintAlphaEnsUri,#mintAlphaNode,#alphaIdentityTokenId,#alphaIdentityTokenOwner,#alphaIdentityWrappedOwner,#alphaIdentityResolver,#alphaIdentityContractAddress{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;word-break:break-word;overflow-wrap:anywhere}
     .alphaIdentityStatusPill{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid rgba(121,96,150,.16);background:rgba(255,255,255,.84);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
     .alphaDecisionList{display:grid;gap:8px}
     .alphaDecisionItem{display:grid;grid-template-columns:140px minmax(0,1fr);gap:10px;padding-top:9px;border-top:1px solid rgba(121,96,150,.1)}
@@ -604,7 +620,7 @@
     @media (max-width:1040px){.opsGrid,.syncGrid,.reviewFacts,#alphaAgentMintSection .mintGrid,.alphaSectionIntro,.alphaQuickStartGrid,.alphaPreviewGrid,.alphaIntroStats,.alphaActionGuideGrid,.alphaPrimaryActions,.alphaIdentityActions,.alphaControlGrid,.alphaPreviewMetrics,.alphaQuickFacts,.alphaPreviewSupport,.alphaReadinessFoot,.alphaModeGrid,.alphaLabelDossier{grid-template-columns:1fr}}
     @media (max-width:700px){
       .modalBackdrop{align-items:flex-end;padding:0}
-      .modalCard,.commandModalCard,.reviewModalCard,#alphaMintReviewModal .modalCard,#alphaIdentityReviewModal .modalCard{width:100vw;max-width:100vw;max-height:calc(var(--app-vh,1vh) * 100);border-radius:22px 22px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+      .modalCard,.commandModalCard,.reviewModalCard,#alphaMintReviewModal .modalCard,#alphaIdentityReviewModal .modalCard{width:100vw;max-width:100vw;max-height:calc(var(--app-vh,1vh) * 100);border-radius:22px 22px 0 0;padding-bottom:calc(32px + env(safe-area-inset-bottom));scroll-padding-bottom:calc(220px + env(safe-area-inset-bottom))}
       .modalHeader{border-radius:22px 22px 0 0}
       #alphaMintReviewModal .modalCard,#alphaIdentityReviewModal .modalCard{max-height:calc(var(--app-vh,1vh) * 100 - env(safe-area-inset-top));padding-bottom:0}
       #alphaMintReviewModal .reviewFacts,#alphaIdentityReviewModal .reviewFacts{grid-template-columns:1fr}
@@ -612,6 +628,9 @@
       .alphaIdentityStatusPill{white-space:normal}
       .alphaTermsInline{flex-direction:column}
       .alphaSecondaryActions{flex-direction:column}
+      .alphaRecommendationBlock,.alphaPreviewHeader,.alphaCardHeader{gap:10px}
+      .alphaActionStatusNote{order:-1}
+      .alphaDecisionItem{grid-template-columns:1fr;gap:4px}
     }
 
 
@@ -696,7 +715,7 @@
       .preflightIntro,.preflightGrid,.preflightChecklist,.preflightStatusGrid{grid-template-columns:1fr}
       .preflightAnchorRow,.preflightActions,.preflightCompactActions{display:grid;grid-template-columns:1fr}
       .preflightInlineCheck{flex-direction:column}
-      .reviewFooter{position:static!important;bottom:auto!important;margin:18px 0 0!important;padding:14px 0 calc(26px + env(safe-area-inset-bottom))!important;gap:10px;box-shadow:none;background:none;border-top:1px solid rgba(121,96,150,.12)}
+      .reviewFooter{position:static!important;bottom:auto!important;margin:18px 0 0!important;padding:14px 0 calc(34px + env(safe-area-inset-bottom))!important;gap:10px;box-shadow:none;background:none;border-top:1px solid rgba(121,96,150,.12)}
       .reviewFooter,.reviewFooter .actions,.premiumRoleActionRow,.heroActions,.actions,.builderActions{grid-template-columns:1fr}
       .reviewFooter .actions{display:grid;width:100%}
       .reviewFooter .btn-primary,.reviewFooter .btn[data-primary="true"],.actions .btn-primary,.builderActions .btn-primary,.heroActions .btn-primary,.premiumRoleActionRow .btn-primary{order:-2}
@@ -739,6 +758,18 @@
       .noticeTitle,.subtleTitle{font-size:1rem}
       .starBtn{width:44px;min-width:44px;height:44px}
       .reviewFooter{gap:10px}
+      .alphaSectionIntro,.alphaQuickStartGrid,.alphaPreviewGrid,.alphaModeGrid,.alphaReadinessGrid,.alphaReadinessFoot,.alphaLabelDossier,.alphaPreviewMetrics,.alphaPreviewSupport,.alphaActionGuideGrid,.alphaActionGuideRow,.alphaDecisionList,.alphaIntroStats{grid-template-columns:1fr!important}
+      .alphaQuickFacts{grid-template-columns:1fr}
+      .alphaPrimaryActions,.alphaSecondaryActions,.alphaModeTabs,.alphaTermsInlineActions{grid-template-columns:1fr!important;display:grid}
+      .alphaRecommendedRoute,.alphaActionStatusNote,.alphaActionGuide,.alphaReadinessMemo,.alphaTermsInline{padding:14px}
+      .alphaActionAux{display:grid;grid-template-columns:1fr}
+      .alphaMethodPill,.alphaRoutePill,.alphaIdentityStatusPill{max-width:100%;white-space:normal;text-align:left}
+      .alphaQuickStartHeader,.alphaReadinessHeader,.alphaModeHeader,.alphaPreviewHeader,.alphaCardHeader,.alphaExpertHeader{align-items:flex-start}
+      .alphaStateBanner,.alphaKickoff,.alphaWorkbenchCard,.alphaReadinessCard,.alphaModeSurface,.alphaIntroCard{border-radius:18px}
+      #alphaAgentMintSection .mintGrid{grid-template-columns:1fr!important}
+      #alphaAgentMintSection .reviewFacts{grid-template-columns:1fr!important}
+      #alphaAgentMintSection .reviewFooter{padding-bottom:calc(40px + env(safe-area-inset-bottom))!important}
+      #alphaAgentMintSection .miniTable td:last-child,.alphaMetric .v,.alphaDecisionItem span:last-child,#mintAlphaFullName,#mintAlphaEnsUri,#mintAlphaNode,#alphaIdentityFullName,#alphaIdentityTokenId,#alphaIdentityTokenOwner,#alphaIdentityWrappedOwner,#alphaIdentityResolver{overflow-wrap:anywhere;word-break:break-word}
     }
 
 
@@ -768,6 +799,7 @@
     }
     h1{font-weight:700;letter-spacing:-.03em;color:#2f2137;margin-top:34px;}
     .subtitle{color:rgba(74,52,89,.76);max-width:980px;margin:0 auto 24px;line-height:1.6;}
+    #accessWalletCard,#readinessSection,#verifyEnsSection,#alphaAgentMintSection,#termsSection,#missionControlSection,#premiumDiscoverySection{scroll-margin-top:88px}
     .card,.softCard,.stepCard,.miniStat,.kpi,.accordion,.term-block,.heroStatusCard,.syncCard,.modal,.detailSection,.simCard,.ensRecord,.metaStat,.kvCard,.mintPreview,.noticeBox,.statusline{
       background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,244,251,.98));
       border:1px solid rgba(124,98,156,.16)!important;
@@ -1803,16 +1835,28 @@
       <div class="preflightCompactCard" id="preflightAlphaCard">
         <div class="preflightCompactHeader">
           <div>
-            <div class="eyebrow">Alpha identity readiness</div>
-            <div class="missionTitle" style="font-size:1.08rem;margin:0">Alpha-Agent access is surfaced here before you scroll into the full console.</div>
+            <div class="eyebrow">Operational preflight</div>
+            <div class="missionTitle" style="font-size:1.08rem;margin:0">Terms, Before You Transact, ENS verification, and Alpha identity readiness stay connected before write review.</div>
           </div>
           <div class="preflightCompactActions">
             <a class="btn" href="#alphaAgentMintSection">Open full Alpha console</a>
             <button class="btn" type="button" id="preflightOpenAlphaDiagnosticsBtn">Inspect Alpha readiness</button>
           </div>
         </div>
+        <div class="preflightInlineCheck">
+          <input type="checkbox" id="preflightTermsAccepted" aria-describedby="preflightTermsHelper">
+          <div>
+            <label for="preflightTermsAccepted" style="margin:0">I have read and accept the AGIJobManager Terms &amp; Conditions shown below.</label>
+            <div class="helper" id="preflightTermsHelper">This is the shared write gate. It stays synchronized with the compact Alpha readiness control and the lower canonical terms section.</div>
+            <div class="preflightCompactActions">
+              <a class="btn" href="#termsSection">Review full terms</a>
+              <a class="btn" href="#accessWalletCard">Refresh wallet posture</a>
+            </div>
+          </div>
+        </div>
         <div class="preflightSignalList">
-          <div class="preflightSignal"><b id="preflightAlphaStatus">Alpha identity posture pending</b><span class="helper" id="preflightAlphaHint">Connect wallet, confirm mainnet, and accept the shared terms state to preview the recommended path.</span></div>
+          <div class="preflightSignal"><b>Before You Transact</b><span class="helper">Experimental protocol, independent review, and transaction finality cautions now sit inside the same operating lane as terms and verification.</span></div>
+          <div class="preflightSignal"><b id="preflightAlphaStatus">Alpha identity posture pending</b><span class="helper" id="preflightAlphaHint">Connect wallet, confirm mainnet, accept the shared terms state, then preview the recommended name + identity route.</span></div>
         </div>
       </div>
     </section>
@@ -2305,6 +2349,7 @@
 
     <div class="card" id="verifyEnsSection">
       <h2 style="margin:0 0 12px">1) Verify ENS Subdomain Ownership</h2>
+      <div class="helper" style="margin-bottom:12px">Verify agent, validator / club, and Alpha posture here before opening approval, review, or write flows. This section is intentionally surfaced inside the preflight band.</div>
       <div class="twoCol">
         <div>
           <label for="agentSub">Agent subdomain (agent.agi.eth)</label>
@@ -2335,7 +2380,7 @@
         <div class="alphaIntroCopy">
           <div class="alphaIntroCard">
             <h2 style="margin:0 0 10px">1.5) Alpha-Agent Free Trial &amp; Identity Console</h2>
-            <div class="helper">This operational console is the canonical onboarding surface for <b>*.alpha.agent.agi.eth</b>. The recommended route uses <b>FreeTrialSubdomainRegistrarIdentity</b> to mint the wrapped ENS name and the soulbound Alpha-Agent identity together in one transaction. Trial names are free except gas, and ENS-only remains available as a quieter expert path.</div>
+            <div class="helper">This operational console is the canonical onboarding surface for <b>*.alpha.agent.agi.eth</b>. The recommended route uses <b>FreeTrialSubdomainRegistrarIdentity</b> to mint the wrapped ENS name and the soulbound Alpha-Agent identity together in one transaction. Trial names are free except gas, and this flagship console now foregrounds the canonical combined name + identity route while leaving diagnostics available below for expert review.</div>
           </div>
           <div class="alphaIntroStats">
             <div class="alphaStat"><span class="k">Recommended route</span><span class="v">register(label) · wrapped name + identity together</span></div>
@@ -2385,18 +2430,18 @@
         <div class="alphaModeHeader">
           <div>
             <div class="alphaModeLabel">Primary route selection</div>
-            <div class="subtleTitle" style="margin:4px 0 0">Recommended identity flow leads; ENS-only remains available for expert operators</div>
+            <div class="subtleTitle" style="margin:4px 0 0">Recommended identity flow leads, and the console now keeps registration focused on the canonical combined route.</div>
           </div>
           <span class="alphaRoutePill" id="alphaRoutePill">Recommended route active</span>
         </div>
         <div class="alphaModeGrid">
           <div class="actions alphaModeTabs" id="alphaIdentityModeTabs" style="margin-top:0">
             <button class="btn btn-primary" id="alphaIdentityModeRecommended" type="button" aria-pressed="true">Recommended: Name + Identity</button>
-            <button class="btn" id="alphaIdentityModeEnsOnly" type="button" aria-pressed="false">Alternative: ENS-only</button>
+            <button class="btn" id="alphaIdentityModeEnsOnly" type="button" aria-pressed="false" hidden aria-hidden="true" tabindex="-1">Alternative: ENS-only</button>
           </div>
           <div class="alphaModePrimer" id="alphaModePrimer">
             <div class="alphaModeSummary" id="alphaModeSummary">Recommended path: <b>register(label)</b> mints the wrapped subname and soulbound identity to the connected wallet in one transaction. No recipient override. Gas only, no registration fee.</div>
-            <div class="alphaModeNote" id="alphaModeNote">Use ENS-only only when you explicitly want the name-only registrar flow and optional recipient override without identity minting.</div>
+            <div class="alphaModeNote" id="alphaModeNote">The combined route is now the only registration action surfaced in this console. Lower diagnostics remain available for expert verification and maintenance review.</div>
           </div>
         </div>
       </div>
@@ -2427,7 +2472,7 @@
                 <div class="alphaStateTitle" id="alphaIdentityBannerTitle">Enter a label to evaluate the recommended identity path.</div>
                 <div class="alphaStateText" id="alphaIdentityBannerText">preview(label) is the primary decision panel. It determines whether this label is available, active, claimable, expired, desynced, or unavailable.</div>
               </div>
-              <div class="alphaControlGrid">
+              <div class="alphaFlowStack">
                 <div class="alphaLabelField">
                   <div>
                     <label for="mintAlphaLabel">Desired label</label>
@@ -2435,14 +2480,14 @@
                     <div class="alphaFieldHint">The recommended identity route issues only to the connected wallet. Lowercase letters and digits only, with length between 8 and 63. Full issuance remains beneath <b>alpha.agent.agi.eth</b>.</div>
                     <div class="inlineError" id="mintLabelValidation">Enter a label to begin.</div>
                   </div>
-                  <div class="alphaLabelDossier">
-                    <div class="alphaMetric"><span class="k">Full name</span><span class="v" id="mintAlphaFullName">—</span></div>
-                    <div class="alphaMetric"><span class="k">ENS URI</span><span class="v" id="mintAlphaEnsUri">—</span></div>
-                    <div class="alphaMetric"><span class="k">Child node</span><span class="v" id="mintAlphaNode">—</span></div>
-                    <div class="alphaMetric"><span class="k">Parent posture</span><span class="v" id="mintAlphaParentUsable">—</span></div>
+                  <div class="alphaCompactList alphaLabelDossier">
+                    <div class="alphaCompactItem"><span class="k">Full name</span><span class="v" id="mintAlphaFullName">—</span></div>
+                    <div class="alphaCompactItem"><span class="k">ENS URI</span><span class="v" id="mintAlphaEnsUri">—</span></div>
+                    <div class="alphaCompactItem"><span class="k">Child node</span><span class="v" id="mintAlphaNode">—</span></div>
+                    <div class="alphaCompactItem"><span class="k">Parent posture</span><span class="v" id="mintAlphaParentUsable">—</span></div>
                   </div>
                 </div>
-                <div class="alphaRecommendationBlock">
+                <div class="alphaRecommendationBlock alphaActionCluster">
                   <div class="alphaActionGuide" style="margin:0">
                     <div class="alphaReadinessHeader" style="align-items:center">
                       <div>
@@ -2452,13 +2497,21 @@
                       <span class="alphaMethodPill" id="alphaIdentitySuggestedMethod">Awaiting preview(label)</span>
                     </div>
                   </div>
-                  <div class="alphaPrimaryActions">
-                    <button class="btn btn-primary" id="alphaIdentityRegisterBtn" type="button">Register name + identity</button>
-                    <button class="btn" id="refreshRegistrarStateBtn">Refresh contract state</button>
-                  </div>
-                  <div class="alphaSecondaryActions">
-                    <button class="btn" id="alphaIdentityClaimBtn" type="button">Claim existing identity</button>
-                    <button class="btn" id="alphaIdentitySyncBtn" type="button">Sync stale identity</button>
+                  <div class="alphaActionStatusNote" id="alphaIdentityBlockedNote"><b>Current write gate</b><span id="alphaIdentityBlockedReason">Identity flow locked until wallet + mainnet + terms + valid label.</span></div>
+                  <div class="alphaRecommendedRoute">
+                    <div class="subtleTitle" style="margin:0">Recommended route action cluster</div>
+                    <div class="smallNote">The canonical write path is now centered on <b>register(label)</b> for combined name + identity issuance, with recovery actions immediately below it.</div>
+                    <div class="alphaPrimaryActions">
+                      <button class="btn btn-primary" id="alphaIdentityRegisterBtn" type="button">Register name + identity</button>
+                      <button class="btn" id="refreshRegistrarStateBtn">Refresh contract state</button>
+                    </div>
+                    <div class="alphaSecondaryActions">
+                      <button class="btn" id="alphaIdentityClaimBtn" type="button">Claim existing identity</button>
+                      <button class="btn" id="alphaIdentitySyncBtn" type="button">Sync stale identity</button>
+                    </div>
+                    <div class="alphaActionAux">
+                      <button class="btn" type="button" onclick="document.getElementById('freeTrialRegistrarState')?.scrollIntoView({behavior:'smooth',block:'center'})">Review registrar diagnostics</button>
+                    </div>
                   </div>
                   <div class="statusline" id="alphaIdentityActionStatus">Identity flow locked until wallet + mainnet + terms + valid label.</div>
                 </div>
@@ -2485,33 +2538,24 @@
                 <div class="alphaExpertCard">
                   <div class="alphaExpertHeader">
                     <div class="alphaExpertSummaryMeta">
-                      <div class="alphaModeLabel">Alternative / expert path</div>
-                      <div class="subtleTitle" style="margin:0">ENS-only registrar flow</div>
-                      <div class="smallNote">Useful when you intentionally want name-only registration without identity minting. Recipient override applies only here.</div>
+                      <div class="alphaModeLabel">Expert reference</div>
+                      <div class="subtleTitle" style="margin:0">Registrar diagnostics and protocol posture</div>
+                      <div class="smallNote">The console no longer surfaces a name-only registration action here. This disclosure is retained for expert inspection of registrar state, wrapper posture, and trial parameters.</div>
                     </div>
                     <div class="alphaExpertSummaryPills">
-                      <span class="pill">Recipient override</span>
-                      <span class="pill">registerSimple(...)</span>
+                      <span class="pill">Diagnostics only</span>
+                      <span class="pill">No name-only mint action</span>
                     </div>
                   </div>
                 </div>
               </summary>
               <div class="alphaExpertDetailsBody">
-                <div class="alphaExpertBodyLead">Recipient override and <b>registerSimple(parentNode,label,newOwner)</b> belong only to this alternative registrar path. The recommended identity route above never asks for a recipient because issuance is always to the connected wallet.</div>
-                <div class="alphaRecipientField" id="alphaRecipientField" data-emphasis="muted">
-                  <label for="mintAlphaRecipient" style="margin:0">ENS-only recipient override</label>
-                  <input id="mintAlphaRecipient" type="text" placeholder="0x... (optional)">
-                  <div class="alphaFieldHint">Applies only to <b>registerSimple(parentNode,label,newOwner)</b>. The recommended identity route always issues to <b>msg.sender</b>.</div>
-                </div>
-                <div class="alphaPrimaryActions" style="margin-top:0">
-                  <button class="btn" id="mintAlphaAgentBtn">Mint ENS-only name</button>
-                  <button class="btn" type="button" onclick="document.getElementById('freeTrialRegistrarState')?.scrollIntoView({behavior:'smooth',block:'center'})">Review ENS-only diagnostics</button>
-                </div>
-                <div class="statusline" id="mintAlphaStatus">Waiting for wallet + mainnet + terms.</div>
+                <div class="alphaExpertBodyLead">Registration in this console is intentionally centered on <b>register(label)</b> through <b>FreeTrialSubdomainRegistrarIdentity</b>, which issues both the wrapped name and the Alpha-Agent identity to the connected wallet. Use the diagnostics below to inspect registrar posture without opening a separate write path.</div>
+                <div class="statusline" id="mintAlphaStatus">Name-only registration has been removed from this onboarding surface. Use the canonical combined route above.</div>
                 <div class="alphaDecisionList">
                   <div class="alphaDecisionItem"><span>Availability</span><span id="mintAlphaAvailability">—</span></div>
                   <div class="alphaDecisionItem"><span>Expected trial expiry</span><span id="mintAlphaExpectedExpiry">—</span></div>
-                  <div class="alphaDecisionItem"><span>Write cost</span><span>Free registration · gas only</span></div>
+                  <div class="alphaDecisionItem"><span>Canonical write cost</span><span>0 ETH value · gas only</span></div>
                 </div>
               </div>
             </details>
@@ -2605,9 +2649,9 @@
         </details>
 
         <details>
-          <summary><span>Expert diagnostics · ENS-only registrar state</span><span class="pill">Alternative path</span></summary>
+          <summary><span>Expert diagnostics · registrar state reference</span><span class="pill">Alternative path</span></summary>
           <div class="alphaDiagnosticsBody">
-            <div class="alphaDiagnosticsNote">Name-only flow diagnostics for operators who need the raw registrar posture, wrapper references, and trial parameters.</div>
+            <div class="alphaDiagnosticsNote">Registrar reference diagnostics for operators who need the raw posture, wrapper references, and trial parameters without surfacing a separate name-only registration control.</div>
             <div class="alphaDiagnosticsCard" id="freeTrialRegistrarState"><table class="miniTable">
               <tr><td>Registrar</td><td><span id="freeTrialRegistrarAddress">0x7aae649184182a01ac7d8d5d7873903015c08761</span></td></tr>
               <tr><td>NameWrapper</td><td><span id="freeTrialWrapperAddress">—</span></td></tr>
@@ -2647,7 +2691,7 @@
           <div>
             <div class="eyebrow">Transaction Review</div>
             <h2 style="margin:4px 0 6px">Mint free alpha-agent ENS</h2>
-            <div class="helper">registerSimple(parentNode,label,newOwner) · 0 ETH value · free registration, gas only.</div>
+            <div class="helper">Legacy review surface retained for protocol compatibility. New onboarding now routes registration through register(label) for combined name + identity issuance.</div>
           </div>
           <button class="modalClose" id="closeAlphaMintReviewBtn" aria-label="Close">×</button>
         </div>
@@ -4523,13 +4567,13 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       }else if(connected && isMainnet && hasAcceptedTerms && repairNeeded){
         title='Repair Alpha Agent Identity state'; body='preview(label) shows desynced or expired identity posture. Run syncIdentityByLabel(label) to repair or clean up stale identity state.'; pill='Identity repair recommended'; primary={label:'Sync Alpha Agent Identity',action:'sync-alpha-identity'}; secondary={label:'Refresh identity preview',action:'refresh-identity-preview'};
       }else if(connected && isMainnet && hasAcceptedTerms && p?.registrable){
-        title='Mint Alpha Agent Identity (recommended path)'; body='Use register(label) to mint wrapped alpha-agent ENS plus the soulbound Alpha Agent Identity in one transaction.'; pill='Identity register ready'; primary={label:'Mint Alpha Agent Identity',action:'mint-alpha-identity'}; secondary={label:'Open ENS-only alpha-agent path',action:'mint-alpha'};
+        title='Mint Alpha Agent Identity (recommended path)'; body='Use register(label) to mint wrapped alpha-agent ENS plus the soulbound Alpha Agent Identity in one transaction.'; pill='Identity register ready'; primary={label:'Mint Alpha Agent Identity',action:'mint-alpha-identity'}; secondary={label:'Open Alpha identity console',action:'mint-alpha'};
       }else if(connected && isMainnet && hasAcceptedTerms && jobStats.completion > 0 && verified.club){
         title='Review jobs waiting for validator attention'; body=`${jobStats.completion} job${jobStats.completion === 1 ? '' : 's'} currently show a live completion-review surface. Open the board, inspect the details modal, and vote only after independent evidence review.`; pill='Validator attention available'; primary={label:'Open Jobs',action:'jobs'}; secondary={label:'Activity Concierge',action:'activity'};
       }else if(connected && isMainnet && hasAcceptedTerms && jobStats.open > 0 && verified.agent){
         title='Apply for a live job'; body=`${jobStats.open} open job${jobStats.open === 1 ? '' : 's'} are currently visible. If the fit is good and your bond exposure is acceptable, apply from the jobs table.`; pill='Agent mode ready'; primary={label:'Browse open jobs',action:'jobs'};
       }else if(connected && isMainnet && hasAcceptedTerms && !verified.agentAlpha){
-        title='Alpha-agent posture not verified yet'; body='Open the alpha-agent section to mint or verify. Recommended route is Alpha Agent Identity register(label); ENS-only remains available for expert operators.'; pill='Alpha-agent action recommended'; primary={label:'Open alpha-agent section',action:'mint-alpha'}; secondary={label:'Verify ENS',action:'verify'};
+        title='Alpha-agent posture not verified yet'; body='Open the alpha-agent section to mint or verify. Recommended route is Alpha Agent Identity register(label); combined name + identity registration is the surfaced write path.'; pill='Alpha-agent action recommended'; primary={label:'Open alpha-agent section',action:'mint-alpha'}; secondary={label:'Verify ENS',action:'verify'};
       }else if(connected && isMainnet && hasAcceptedTerms){
         title='System ready'; body='Wallet, network, and write-gating are in a good state. You can create a job, inspect live jobs, or use the command palette for faster navigation.'; pill='Ready for production use'; primary={label:'Open Create Job',action:'create'}; secondary={label:'Open Jobs',action:'jobs'};
       }
@@ -4552,9 +4596,9 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         {title:'Claim Alpha Agent Identity', subtitle:'Use claimIdentity(label) when wrapped name already exists.', tags:'alpha identity claim', action:'claim-alpha-identity'},
         {title:'Sync Alpha Agent Identity', subtitle:'Repair desynced/expired identity state with syncIdentityByLabel(label).', tags:'alpha identity sync repair', action:'sync-alpha-identity'},
         {title:'Refresh identity preview', subtitle:'Reload preview(label) and rootHealth() from identity registrar.', tags:'alpha identity preview refresh roothealth', action:'refresh-identity-preview'},
-        {title:'Open ENS-only alpha-agent mint path', subtitle:'Alternative expert path: registerSimple(parentNode,label,newOwner).', tags:'alpha ens only expert', action:'mint-alpha'},
+        {title:'Open Alpha identity console', subtitle:'Review canonical register(label) flow and registrar diagnostics.', tags:'alpha identity diagnostics', action:'mint-alpha'},
         {title:'Refresh registrar state', subtitle:'Reload FreeTrialSubdomainRegistrar + parent status + availability posture.', tags:'registrar refresh parent wrapper', action:'refresh-registrar'},
-        {title:'Copy minted alpha-agent name', subtitle:'Copy ENS-only preview full name.', tags:'alpha agent copy ens', action:'copy-minted-alpha'},
+        {title:'Copy selected alpha-agent name', subtitle:'Copy the current preview full name.', tags:'alpha agent copy ens', action:'copy-minted-alpha'},
         {title:'Copy identity tokenId', subtitle:'Copy selected-label identity tokenId (node-based).', tags:'alpha identity tokenid copy', action:'copy-identity-tokenid'},
         {title:'Copy identity full name', subtitle:'Copy selected-label identity full ENS name.', tags:'alpha identity fullname copy', action:'copy-identity-fullname'},
         {title:'Read terms & conditions', subtitle:'Jump to the embedded terms section before signing.', tags:'terms legal read', action:'terms'},
@@ -4642,7 +4686,8 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       return true;
     }
     const UI_CONTINUITY_KEY = 'agijobmanagerprime.v39.uiContinuity';
-    const UI_CONTINUITY_FIELDS = ['termsAccepted','alphaTermsAcceptedTop','agentSub','clubSub','mintAlphaLabel','alphaMintRecipient','premiumActionProcurementId','premiumActionSubdomain','premiumActionProof','premiumActionCommitment','premiumActionSalt','premiumActionApplicationUri','premiumActionFinalist','premiumActionScore','premiumInspectorProcurementId','premiumInspectorJobId','premiumDiscoveryApplicationInspectProcurementId','premiumDiscoveryApplicationInspectAgent','premiumAttachJobId','premiumDiscoveryJobSpecURI','premiumDiscoveryDetails'];
+    const UI_CONTINUITY_FIELDS = ['termsAccepted','alphaTermsAcceptedTop','preflightTermsAccepted','agentSub','clubSub','mintAlphaLabel','alphaMintRecipient','premiumActionProcurementId','premiumActionSubdomain','premiumActionProof','premiumActionCommitment','premiumActionSalt','premiumActionApplicationUri','premiumActionFinalist','premiumActionScore','premiumInspectorProcurementId','premiumInspectorJobId','premiumDiscoveryApplicationInspectProcurementId','premiumDiscoveryApplicationInspectAgent','premiumAttachJobId','premiumDiscoveryJobSpecURI','premiumDiscoveryDetails'];
+    const UI_CONTINUITY_TOGGLES = ['alphaEnsExpertDetails'];
     function continuityLoad(){
       try{ return JSON.parse(localStorage.getItem(UI_CONTINUITY_KEY) || '{}') || {}; }catch(_){ return {}; }
     }
@@ -4661,7 +4706,8 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       const activeHash = location.hash || '';
       const alphaMode = el('alphaAgentMintSection')?.dataset.alphaMode || 'recommended';
       const activeModal = document.querySelector('.modalBackdrop.open')?.id || '';
-      continuitySave({fields, activePremiumTab, activeHash, alphaMode, activeModal, lastWallet:userAccount || '', lastChainId: chainId || null});
+      const openToggles = UI_CONTINUITY_TOGGLES.reduce((acc, id)=>{ const node = el(id); if(node) acc[id] = !!node.open; return acc; }, {});
+      continuitySave({fields, activePremiumTab, activeHash, alphaMode, activeModal, openToggles, lastWallet:userAccount || '', lastChainId: chainId || null});
     }
     function announceContinuity(message, tone=''){ const note = el('sessionRestoreNote'); if(note) note.textContent = message; const banner = el('preflightRestoreBanner'); if(banner){ banner.textContent = message; banner.dataset.visible = 'true'; banner.dataset.tone = tone || 'restored'; } }
     function restoreUiContinuity(){
@@ -4684,13 +4730,16 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         tab?.click();
       }
       if(stored.alphaMode === 'ens-only' || stored.alphaMode === 'recommended') setAlphaIdentityMode(stored.alphaMode, {silent:true});
+      Object.entries(stored.openToggles || {}).forEach(([id, open])=>{ const node = el(id); if(node && 'open' in node) node.open = !!open; });
       if(stored.activeHash){
         const target = document.querySelector(stored.activeHash);
         if(target) requestAnimationFrame(()=>target.scrollIntoView({block:'start'}));
       }
       const topTerms = el('alphaTermsAcceptedTop');
+      const preflightTerms = el('preflightTermsAccepted');
       const baseTerms = el('termsAccepted');
       if(topTerms && baseTerms && topTerms.checked !== baseTerms.checked) topTerms.checked = baseTerms.checked;
+      if(preflightTerms && baseTerms && preflightTerms.checked !== baseTerms.checked) preflightTerms.checked = baseTerms.checked;
       if(baseTerms){ hasAcceptedTerms = !!baseTerms.checked; APP_STATE.wallet.termsAccepted = hasAcceptedTerms; }
       updateWriteGate();
       const walletChanged = !!stored.lastWallet && !!userAccount && stored.lastWallet.toLowerCase() !== String(userAccount).toLowerCase();
@@ -4716,7 +4765,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
     function assemblePreflightBand(){
       const grid = el('preflightFlowGrid');
       if(!grid || grid.dataset.ready === 'true') return;
-      ['accessWalletCard','readinessSection'].forEach(id=>{ const node = el(id); if(node) grid.appendChild(node); });
+      ['accessWalletCard'].forEach(id=>{ const node = el(id); if(node) grid.appendChild(node); });
       const notice = document.querySelector('.heroNotice');
       if(notice) grid.appendChild(notice);
       ['verifyEnsSection','alphaAgentMintSection'].forEach(id=>{ const node = el(id); if(node) grid.appendChild(node); });
@@ -4755,6 +4804,8 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       const alphaHint = !userAccount ? 'Connect wallet, then return here to continue without losing local label or verification inputs.' : !isMainnet ? 'Reconnect on Ethereum Mainnet to confirm registrar and identity-readiness state.' : !hasAcceptedTerms ? 'Terms acceptance is shared across the preflight lane and Alpha console for one-pass readiness.' : 'Open the full Alpha-Agent console when you want the full preview, recommended route, and diagnostics.';
       if(el('preflightAlphaStatus')) el('preflightAlphaStatus').textContent = alphaStatus;
       if(el('preflightAlphaHint')) el('preflightAlphaHint').textContent = alphaHint;
+      const blockedReason = !userAccount ? 'Connect the wallet you want to issue to.' : !isMainnet ? 'Switch the wallet to Ethereum Mainnet.' : !hasAcceptedTerms ? 'Accept the shared Terms & Conditions near the top of the page.' : !(el('mintAlphaLabel')?.value || '').trim() ? 'Enter a valid alpha label to let preview(label) determine the correct path.' : 'Review the recommendation, then use the primary action first.';
+      if(el('alphaIdentityBlockedReason')) el('alphaIdentityBlockedReason').textContent = blockedReason;
     }
     function syncModalState(){
       const anyOpenModal = !!document.querySelector('.modalBackdrop.open');
@@ -4769,6 +4820,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       }else if(!document.getElementById('v26MobileSheet')?.classList.contains('open')){
         document.body.style.overflow = '';
       }
+      persistUiContinuity();
     }
 
     function parseAmountToUnits(s){
@@ -5538,7 +5590,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       return '';
     }
     function setAlphaIdentityMode(mode){
-      const nextMode = mode === 'ens-only' ? 'ens-only' : 'recommended';
+      const nextMode = 'recommended';
       APP_STATE.identity = APP_STATE.identity || {};
       APP_STATE.identity.mode = nextMode;
       const section = el('alphaAgentMintSection');
@@ -5559,18 +5611,16 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       const mintBtn = el('mintAlphaAgentBtn');
       const recipientField = el('alphaRecipientField');
       const expertDetails = el('alphaEnsExpertDetails');
-      if(modeSummary) modeSummary.innerHTML = recommended
-        ? 'Recommended path: <b>register(label)</b> mints the wrapped subname and soulbound identity to the connected wallet in one transaction. No recipient override. Gas only, no registration fee.'
-        : 'Alternative / expert path: <b>registerSimple(parentNode,label,newOwner)</b> performs the name-only registrar flow. Use it when you intentionally want the ENS subname without identity minting.';
-      if(modeNote) modeNote.textContent = recommended
-        ? 'Recommended for first-time operators. The recipient field is intentionally demoted because the identity contract always issues to the connected wallet.'
-        : 'ENS-only mode surfaces the recipient override and name-only mint path more directly. Identity preview remains available so experts can compare both surfaces before writing.';
+      if(modeSummary) modeSummary.innerHTML = 'Recommended path: <b>register(label)</b> mints the wrapped subname and soulbound identity to the connected wallet in one transaction. No recipient override. Gas only, no registration fee.';
+      if(modeNote) modeNote.textContent = 'Recommended for first-time operators. Combined name + identity issuance is the canonical surfaced route in this console.';
       const routePill = el('alphaRoutePill');
-      if(routePill) routePill.textContent = recommended ? 'Recommended route active' : 'ENS-only expert route active';
-      if(expertDetails) expertDetails.open = !recommended;
+      if(routePill) routePill.textContent = 'Recommended route active';
+      if(expertDetails) expertDetails.open = false;
       if(mintBtn){
-        mintBtn.classList.toggle('btn-primary', !recommended);
-        mintBtn.textContent = recommended ? 'Mint ENS-only name' : 'Mint ENS-only name';
+        mintBtn.classList.remove('btn-primary');
+        mintBtn.hidden = true;
+        mintBtn.setAttribute('aria-hidden','true');
+        mintBtn.tabIndex = -1;
       }
       const registerBtn = el('alphaIdentityRegisterBtn');
       if(registerBtn) registerBtn.classList.toggle('btn-primary', recommended);
@@ -5581,7 +5631,6 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
     function updateAlphaIdentityReadiness(){
       const preview = APP_STATE.identity?.preview || null;
       const health = APP_STATE.identity?.rootHealth || null;
-      const mode = APP_STATE.identity?.mode || 'recommended';
       const setItem = (id, value, state='caution')=>{
         const row = el(id);
         if(row) row.dataset.state = state;
@@ -5591,7 +5640,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       setItem('alphaReadinessWallet', userAccount ? shortAddr(userAccount) : 'Not connected', userAccount ? 'ready' : 'blocked');
       setItem('alphaReadinessNetwork', isMainnet ? 'Ethereum Mainnet' : 'Mainnet required', isMainnet ? 'ready' : 'blocked');
       setItem('alphaReadinessTerms', hasAcceptedTerms ? 'Accepted' : 'Pending', hasAcceptedTerms ? 'ready' : 'blocked');
-      setItem('alphaReadinessRoute', mode === 'recommended' ? 'Recommended identity path' : 'ENS-only expert path', mode === 'recommended' ? 'ready' : 'caution');
+      setItem('alphaReadinessRoute', 'Recommended identity path', 'ready');
       let rootValue = 'Checking…';
       let rootState = 'caution';
       if(preview?.status === 6 || health?.active === false || preview?.rootActiveOut === false){ rootValue = 'Inactive'; rootState = 'blocked'; }
@@ -5599,8 +5648,10 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       else if(health?.rootUsable === true || preview?.rootUsable === true){ rootValue = 'Usable'; rootState = 'ready'; }
       setItem('alphaReadinessRoot', rootValue, rootState);
       const topTerms = el('alphaTermsAcceptedTop');
+      const preflightTerms = el('preflightTermsAccepted');
       const baseTerms = el('termsAccepted');
       if(topTerms && baseTerms && topTerms.checked !== baseTerms.checked) topTerms.checked = baseTerms.checked;
+      if(preflightTerms && baseTerms && preflightTerms.checked !== baseTerms.checked) preflightTerms.checked = baseTerms.checked;
       const narrative = el('alphaReadinessNarrative');
       if(narrative){
         let msg = 'Connect a wallet, switch to Ethereum mainnet, accept the terms, and enter a valid label to let preview(label) determine the exact write path.';
@@ -5617,19 +5668,14 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
 
     function updateAlphaIdentityExperience(){
       const preview = APP_STATE.identity?.preview || null;
-      const mode = APP_STATE.identity?.mode || 'recommended';
       const lockedReason = identityWriteLockedReason(preview);
       const banner = el('alphaIdentityStateBanner');
       const title = el('alphaIdentityBannerTitle');
       const textNode = el('alphaIdentityBannerText');
       let tone = 'active';
-      let heading = mode === 'ens-only'
-        ? 'ENS-only expert mode is active.'
-        : 'Enter a label to evaluate the recommended identity path.';
-      let body = mode === 'ens-only'
-        ? 'The identity decision panel remains visible, but the quick-start rail now emphasizes the alternative name-only registrar flow and recipient override.'
-        : 'preview(label) is the primary decision panel. It determines whether this label is available, active, claimable, expired, desynced, or unavailable.';
-      let suggestedMethod = mode === 'ens-only' ? 'Alternative registrar path active' : 'Awaiting preview(label)';
+      let heading = 'Enter a label to evaluate the recommended identity path.';
+      let body = 'preview(label) is the primary decision panel. It determines whether this label is available, active, claimable, expired, desynced, or unavailable.';
+      let suggestedMethod = 'Awaiting preview(label)';
       let writePosture = lockedReason || 'Ready to evaluate after preview.';
       if(lockedReason){
         tone = 'blocked';
@@ -5691,14 +5737,6 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
           body = 'The name cannot be registered at the moment. If the wrapped name is already yours, check whether claimIdentity(label) becomes available instead.';
           suggestedMethod = 'No write available';
           writePosture = 'Label unavailable under current root posture.';
-        }
-      }
-      if(mode === 'ens-only' && !lockedReason){
-        suggestedMethod = 'registerSimple(parentNode,label,newOwner)';
-        writePosture = 'Alternative name-only registrar path with optional recipient override';
-        if(!preview){
-          heading = 'ENS-only expert mode is active.';
-          body = 'The recommended identity preview remains authoritative above, while this mode foregrounds the alternative name-only registrar flow for operators who explicitly want recipient control.';
         }
       }
       if(banner) banner.dataset.tone = tone;
@@ -8520,15 +8558,16 @@ function normalizeIpfsToHttp(uri){
       if(el("alphaIdentityReviewModal")) el("alphaIdentityReviewModal").addEventListener("click", (e)=>{ if(e.target.id === "alphaIdentityReviewModal") closeAlphaIdentityReview(); });
       if(el('alphaJumpDiagnosticsBtn')) el('alphaJumpDiagnosticsBtn').addEventListener('click', ()=>document.getElementById('alphaIdentityRootHealthCard')?.scrollIntoView({behavior:'smooth', block:'center'}));
       if(el("alphaIdentityModeRecommended")) el("alphaIdentityModeRecommended").addEventListener("click", ()=>{ setAlphaIdentityMode('recommended'); persistUiContinuity(); setToast('Recommended path selected: register(label) = ENS name + soulbound identity.', 'ok'); });
-      if(el("alphaIdentityModeEnsOnly")) el("alphaIdentityModeEnsOnly").addEventListener("click", ()=>{ setAlphaIdentityMode('ens-only'); persistUiContinuity(); setToast('ENS-only expert path selected: registerSimple(parentNode,label,newOwner).', 'warn'); });
+      if(el("alphaIdentityModeEnsOnly")) el("alphaIdentityModeEnsOnly").addEventListener("click", ()=>{ setAlphaIdentityMode('recommended'); persistUiContinuity(); setToast('Alpha registration stays on the canonical combined name + identity route in this console.', 'ok'); });
       setAlphaIdentityMode('recommended');
       updateAlphaIdentityExperience();
       renderRecentAlphaAgentNames();
       refreshIdentityState().catch(()=>{});
       el("createJobBtn").addEventListener("click", createJob);
 
-      el("termsAccepted").addEventListener("change", (e)=>{ hasAcceptedTerms = !!e.target.checked; APP_STATE.wallet.termsAccepted = hasAcceptedTerms; continuitySave({ lastWallet:userAccount || '', lastChainId: chainId || null }); const mirror = el('alphaTermsAcceptedTop'); if(mirror && mirror.checked !== hasAcceptedTerms) mirror.checked = hasAcceptedTerms; updateWriteGate(); updateAlphaIdentityReadiness(); updateAlphaIdentityExperience(); persistUiContinuity(); });
+      el("termsAccepted").addEventListener("change", (e)=>{ hasAcceptedTerms = !!e.target.checked; APP_STATE.wallet.termsAccepted = hasAcceptedTerms; continuitySave({ lastWallet:userAccount || '', lastChainId: chainId || null }); const mirror = el('alphaTermsAcceptedTop'); if(mirror && mirror.checked !== hasAcceptedTerms) mirror.checked = hasAcceptedTerms; const preflightMirror = el('preflightTermsAccepted'); if(preflightMirror && preflightMirror.checked !== hasAcceptedTerms) preflightMirror.checked = hasAcceptedTerms; updateWriteGate(); updateAlphaIdentityReadiness(); updateAlphaIdentityExperience(); persistUiContinuity(); });
       if(el('alphaTermsAcceptedTop')) el('alphaTermsAcceptedTop').addEventListener('change', (e)=>{ const checked = !!e.target.checked; const base = el('termsAccepted'); if(base && base.checked !== checked){ base.checked = checked; base.dispatchEvent(new Event('change', {bubbles:true})); } else { hasAcceptedTerms = checked; updateWriteGate(); updateAlphaIdentityReadiness(); updateAlphaIdentityExperience(); } });
+      if(el('preflightTermsAccepted')) el('preflightTermsAccepted').addEventListener('change', (e)=>{ const checked = !!e.target.checked; const base = el('termsAccepted'); if(base && base.checked !== checked){ base.checked = checked; base.dispatchEvent(new Event('change', {bubbles:true})); } else { hasAcceptedTerms = checked; updateWriteGate(); updateAlphaIdentityReadiness(); updateAlphaIdentityExperience(); } });
       el("jumpToTermsBtn").addEventListener("click", ()=>document.getElementById("termsSection")?.scrollIntoView({behavior:"smooth", block:"start"}));
       el("expandTermsBtn").addEventListener("click", ()=>document.querySelectorAll(".term-block").forEach(d=>d.open=true));
       el("collapseTermsBtn").addEventListener("click", ()=>document.querySelectorAll(".term-block").forEach((d,i)=>d.open=i<2));
@@ -8606,7 +8645,7 @@ function normalizeIpfsToHttp(uri){
         window.ethereum.on("accountsChanged", async (accounts)=>{
           userAccount = accounts && accounts[0] ? accounts[0] : null; APP_STATE.wallet.account = userAccount;
           el("walletStatus").textContent = userAccount ? shortAddr(userAccount) : "Not connected";
-          verified.agent = null; verified.club = null; verified.agentAlpha=false; verified.clubAlpha=false; hasAcceptedTerms=false; const tac=el("termsAccepted"); if(tac) tac.checked=false; const topTac=el('alphaTermsAcceptedTop'); if(topTac) topTac.checked=false; updateWriteGate(); updateAlphaIdentityReadiness();
+          verified.agent = null; verified.club = null; verified.agentAlpha=false; verified.clubAlpha=false; hasAcceptedTerms=false; const tac=el("termsAccepted"); if(tac) tac.checked=false; const topTac=el('alphaTermsAcceptedTop'); if(topTac) topTac.checked=false; const preflightTac=el('preflightTermsAccepted'); if(preflightTac) preflightTac.checked=false; updateWriteGate(); updateAlphaIdentityReadiness();
           el("agentPill").className="pill"; el("agentPill").textContent="Agent ENS: not verified";
           const aab=el("agentAlphaBadge"); if(aab) aab.style.display="none";
           el("clubPill").className="pill"; el("clubPill").textContent="Club ENS: not verified";
@@ -8770,7 +8809,7 @@ function normalizeIpfsToHttp(uri){
                 <button type="button" class="v26-sheet-btn" id="v26MirrorSecondaryBtn">Secondary action</button>
                 <button type="button" class="v26-sheet-btn" data-v26-run="refresh">Refresh live data</button>
                 <button type="button" class="v26-sheet-btn" data-v26-run="command">Open command palette</button>
-                <button type="button" class="v26-sheet-btn primary" data-v26-run="mint-alpha-identity">Mint Alpha Agent Identity</button><button type="button" class="v26-sheet-btn" data-v26-run="claim-alpha-identity">Claim Alpha Agent Identity</button><button type="button" class="v26-sheet-btn" data-v26-run="sync-alpha-identity">Sync Alpha Agent Identity</button><button type="button" class="v26-sheet-btn" data-v26-run="mint-alpha">Open ENS-only alpha-agent path</button>
+                <button type="button" class="v26-sheet-btn primary" data-v26-run="mint-alpha-identity">Mint Alpha Agent Identity</button><button type="button" class="v26-sheet-btn" data-v26-run="claim-alpha-identity">Claim Alpha Agent Identity</button><button type="button" class="v26-sheet-btn" data-v26-run="sync-alpha-identity">Sync Alpha Agent Identity</button><button type="button" class="v26-sheet-btn" data-v26-run="mint-alpha">Open Alpha identity console</button>
                 <button type="button" class="v26-sheet-btn" data-v26-run="expand-terms">Expand all terms</button>
                 <button type="button" class="v26-sheet-btn" data-v26-run="collapse-terms">Collapse terms</button>
                 <button type="button" class="v26-sheet-btn" data-v26-run="top">Back to top</button>
@@ -9850,7 +9889,7 @@ The designated winner enters SelectedAgentOnly settlement, has 72 hours to accep
       }
       function relabelTabs(){ const claimsBtn=document.querySelector('[data-premium-surface="claims"]'); if(claimsBtn) claimsBtn.textContent='Claims & participant actions'; }
       function syncInspectorIds(){ if($('premiumInspectorNextActionReadable') && $('premiumInspectorNextActionMeta')) $('premiumInspectorNextActionMeta').textContent = $('premiumInspectorNextActionMeta').textContent || 'Load a procurement to translate live state.'; }
-      function boot(){ relabelTabs(); updateCoach(); syncInspectorIds(); assemblePreflightBand(); restoreUiContinuity(); bindUiContinuity(); persistUiContinuity(); $('preflightOpenAlphaDiagnosticsBtn')?.addEventListener('click', ()=>{ $('alphaJumpDiagnosticsBtn')?.click(); document.getElementById('alphaAgentMintSection')?.scrollIntoView({behavior:'smooth', block:'start'}); }); document.querySelectorAll("[data-premium-role-action]").forEach(btn=>btn.addEventListener("click", ()=>{ const pid=$("premiumInspectorProcurementId")?.value||""; if($("premiumActionProcurementId")) $("premiumActionProcurementId").value=pid; const agent=$("premiumInspectorApplicationAgent")?.value||""; if(agent && $("premiumActionFinalist")) $("premiumActionFinalist").value=agent; const map={commit:"premiumActionCommitApplicationBtn",reveal:"premiumActionRevealApplicationBtn",accept:"premiumActionAcceptFinalistBtn",trial:"premiumActionSubmitTrialBtn","score-commit":"premiumActionCommitScoreBtn","score-reveal":"premiumActionRevealScoreBtn"}; const target=map[btn.dataset.premiumRoleAction]; if(target && $(target)) $(target).click(); })); ['input','change'].forEach(evt=>document.addEventListener(evt, e=>{ if(e.target && String(e.target.id||'').startsWith('premiumDiscovery')) updateCoach(); if(e.target && ['termsAccepted','agentSub','clubSub','alphaTermsAcceptedTop','mintAlphaLabel','alphaMintRecipient'].includes(String(e.target.id||''))) updatePreflightSummary(); })); window.addEventListener('hashchange', persistUiContinuity); updatePreflightSummary(); setInterval(updateCoach, 1200); }
+      function boot(){ relabelTabs(); updateCoach(); syncInspectorIds(); assemblePreflightBand(); restoreUiContinuity(); bindUiContinuity(); persistUiContinuity(); $('preflightOpenAlphaDiagnosticsBtn')?.addEventListener('click', ()=>{ $('alphaJumpDiagnosticsBtn')?.click(); document.getElementById('alphaAgentMintSection')?.scrollIntoView({behavior:'smooth', block:'start'}); }); document.querySelectorAll("[data-premium-role-action]").forEach(btn=>btn.addEventListener("click", ()=>{ const pid=$("premiumInspectorProcurementId")?.value||""; if($("premiumActionProcurementId")) $("premiumActionProcurementId").value=pid; const agent=$("premiumInspectorApplicationAgent")?.value||""; if(agent && $("premiumActionFinalist")) $("premiumActionFinalist").value=agent; const map={commit:"premiumActionCommitApplicationBtn",reveal:"premiumActionRevealApplicationBtn",accept:"premiumActionAcceptFinalistBtn",trial:"premiumActionSubmitTrialBtn","score-commit":"premiumActionCommitScoreBtn","score-reveal":"premiumActionRevealScoreBtn"}; const target=map[btn.dataset.premiumRoleAction]; if(target && $(target)) $(target).click(); })); ['input','change'].forEach(evt=>document.addEventListener(evt, e=>{ if(e.target && String(e.target.id||'').startsWith('premiumDiscovery')) updateCoach(); if(e.target && ['termsAccepted','preflightTermsAccepted','agentSub','clubSub','alphaTermsAcceptedTop','mintAlphaLabel','alphaMintRecipient'].includes(String(e.target.id||''))) updatePreflightSummary(); })); window.addEventListener('hashchange', persistUiContinuity); window.addEventListener('pagehide', persistUiContinuity); document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState === 'hidden') persistUiContinuity(); }); updatePreflightSummary(); setInterval(updateCoach, 1200); }
       if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true}); else boot();
     })();
 
