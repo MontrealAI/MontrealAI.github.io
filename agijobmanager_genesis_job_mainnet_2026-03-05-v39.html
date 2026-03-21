@@ -1860,6 +1860,10 @@
           <div class="preflightSignal"><b>Verification posture</b><span class="helper">Agent: <span id="preflightAgentStatus">Not verified</span> · Validator / club: <span id="preflightClubStatus">Not verified</span>. Inputs persist on same-wallet same-chain return so IPFS checks do not wipe your progress.</span></div>
           <div class="preflightSignal"><b id="preflightAlphaStatus">Alpha identity posture pending</b><span class="helper" id="preflightAlphaHint">Connect wallet, confirm mainnet, accept the shared terms state, verify early if needed, then preview the recommended combined name + identity route.</span></div>
         </div>
+        <div class="preflightCompactActions" style="margin-top:12px;justify-content:flex-start">
+          <a class="btn" href="#verifyEnsSection">Verify agent / validator</a>
+          <a class="btn" href="#alphaAgentMintSection">Open Alpha quick start</a>
+        </div>
       </div>
     </section>
 
@@ -2350,7 +2354,7 @@
     </div>
 
     <div class="card" id="verifyEnsSection">
-      <h2 style="margin:0 0 12px">1) Verify ENS Subdomain Ownership</h2>
+      <h2 style="margin:0 0 12px">1) Verify ENS ownership posture</h2>
       <div class="helper" style="margin-bottom:12px">Verify agent, validator / club, and Alpha posture here before opening approval, review, or write flows. This section now sits directly beneath wallet + terms readiness so mobile users can connect, accept, verify, and proceed in one pass before leaving for IPFS or MetaMask confirmations, then return without losing the local verification setup for the same wallet and chain.</div>
       <div class="alphaQuickFacts" style="margin-bottom:14px">
         <div class="alphaQuickFact"><span class="k">Agent posture</span><span class="v" id="verifyAgentSummary">Not verified</span></div>
@@ -3619,6 +3623,7 @@ Evaluation methodology"></textarea>
 </script>
   <script>
     let web3, userAccount, agiJobManager, agiJobDiscovery, agiToken, ensJobPages, completionNftContract, freeTrialRegistrar, freeTrialRegistrarIdentity, registrarWrapperContract, tokenDecimals = 18;
+    let chainId = null;
     let bridgedAgiToken, officialAgiToken, agiAlphaEqualMinterVault, bridgedTokenDecimals = 18, officialTokenDecimals = 18;
     let lastGeneratedMetadata = null;
     let lastUploadedMetadataURI = "";
@@ -4820,7 +4825,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         if(typeof storedVerified.clubAlpha === 'boolean') verified.clubAlpha = storedVerified.clubAlpha;
         if(restored.length || storedVerified.agent || storedVerified.club || storedVerified.agentAlpha || storedVerified.clubAlpha){
           const restoredModal = stored.activeModal ? ` Last open review surface: ${stored.activeModal}.` : '';
-          announceContinuity(`Restored local terms, verification inputs, Alpha label context, and draft transaction context for this device.${restoredModal} Same-wallet returns keep local posture and then refresh live checks when possible.`, 'restored');
+          announceContinuity(`Restored local terms, verification inputs, Alpha label context, and draft transaction context for this device after return-from-IPFS or wallet-browser context switches.${restoredModal} Same-wallet returns keep local posture and then refresh live checks when possible.`, 'restored');
         }
       }
       updateVerificationSummary();
@@ -5065,7 +5070,16 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       return `${prefix}${jobId}`;
     }
     async function currentChainIdSafe(){
-      try{return Number(await web3.eth.getChainId());}catch{return null;}
+      try{
+        if(window.ethereum?.request){
+          const raw = await window.ethereum.request({method:'eth_chainId'});
+          if(raw != null){ chainId = Number(raw); return chainId; }
+        }
+      }catch{}
+      try{
+        if(web3?.eth?.getChainId){ chainId = Number(await web3.eth.getChainId()); return chainId; }
+      }catch{}
+      return chainId == null ? null : Number(chainId);
     }
 
     const BUILDER_DRAFT_KEY = "agijobmanager_builder_draft_v11_1";
@@ -5752,25 +5766,25 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
           tone = 'blocked';
           heading = 'Label is invalid for alpha.agent.agi.eth.';
           body = 'Valid labels use lowercase a-z and digits 0-9 only, with length between 8 and 63 characters.';
-          suggestedMethod = 'No write available';
+          suggestedMethod = 'No write recommended';
           writePosture = 'Correct the label, then preview again.';
         } else if(preview.status === 6){
           tone = 'blocked';
           heading = 'Identity root is inactive.';
           body = 'The registrar identity root is not operational right now, so no identity write action can proceed until rootActive returns true.';
-          suggestedMethod = 'No write available';
+          suggestedMethod = 'No write recommended';
           writePosture = 'Await root recovery.';
         } else if(preview.status === 7){
           tone = 'blocked';
           heading = 'Parent is not usable.';
           body = 'The parent wrapper, authorization, or expiry posture prevents registration right now. Refresh diagnostics and verify root health.';
-          suggestedMethod = 'No write available';
+          suggestedMethod = 'No write recommended';
           writePosture = 'Parent wrapper or authorization posture is blocking writes.';
         } else if(preview.status === 8){
           tone = 'blocked';
           heading = 'This label is unavailable right now.';
           body = 'The name cannot be registered at the moment. If the wrapped name is already yours, check whether claimIdentity(label) becomes available instead.';
-          suggestedMethod = 'No write available';
+          suggestedMethod = 'No write recommended';
           writePosture = 'Label unavailable under current root posture.';
         }
       }
@@ -6555,10 +6569,10 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         if(!userAccount){el("walletStatus").textContent="Not connected";return;}
         el("walletStatus").textContent = shortAddr(userAccount);
 
-        const chainId = await web3.eth.getChainId();
-        APP_STATE.wallet.chainId = Number(chainId);
+        chainId = Number(await web3.eth.getChainId());
+        APP_STATE.wallet.chainId = chainId;
         APP_STATE.wallet.account = userAccount;
-        APP_STATE.wallet.isMainnet = (Number(chainId) === 1);
+        APP_STATE.wallet.isMainnet = (chainId === 1);
         isMainnet = APP_STATE.wallet.isMainnet;
         el("chainStatus").textContent = `chainId ${chainId}` + (isMainnet ? " (Mainnet)" : " (Not Mainnet)");
         updateWriteGate();
@@ -8716,9 +8730,10 @@ function normalizeIpfsToHttp(uri){
           try{
             if(!web3) web3 = new Web3(window.ethereum);
             const cid = await web3.eth.getChainId();
+            chainId = Number(cid);
             isMainnet = (Number(cid)===1);
-      APP_STATE.wallet.chainId = Number(cid);
-      APP_STATE.wallet.isMainnet = isMainnet;
+            APP_STATE.wallet.chainId = Number(cid);
+            APP_STATE.wallet.isMainnet = isMainnet;
             el("chainStatus").textContent = `chainId ${cid}` + (isMainnet ? " (Mainnet)" : " (Not Mainnet)");
 
             if(!agiJobManager) agiJobManager = new web3.eth.Contract(AGIJobManagerABI, AGI_JOB_MANAGER);
