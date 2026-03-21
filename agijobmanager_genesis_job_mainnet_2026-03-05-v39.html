@@ -428,7 +428,7 @@
     .reviewChecklist{display:grid;gap:8px;margin-top:14px}
     .reviewCheck{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.02)}
     .reviewMethodBox{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84rem;line-height:1.5;padding:12px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid hsl(var(--border));margin-top:14px}
-    .reviewFooter{position:sticky;bottom:calc(-24px - env(safe-area-inset-bottom));z-index:2;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin:16px -18px -24px;padding:14px 18px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(18,7,34,0),rgba(18,7,34,.92) 18%,rgba(18,7,34,.995))}
+    .reviewFooter{position:sticky;bottom:0;z-index:3;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin:16px -18px -24px;padding:14px 18px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(18,7,34,0),rgba(18,7,34,.92) 18%,rgba(18,7,34,.995));box-shadow:0 -18px 36px rgba(5,8,18,.34)}
     .reviewFooter .helper{margin:0}
     #alphaMintReviewModal .modalCard,
     #alphaIdentityReviewModal .modalCard{width:min(820px,96vw);height:auto;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto}
@@ -642,7 +642,7 @@
 
     /* v22 mobile-first refinements: additive overrides only */
     html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-    body{overflow-x:hidden;padding-bottom:max(16px, env(safe-area-inset-bottom))}
+    body{overflow-x:hidden;padding-bottom:max(120px, calc(96px + env(safe-area-inset-bottom)));min-height:100dvh}
     img,svg,iframe,video,canvas{max-width:100%}
     button,.btn,input,select,textarea{touch-action:manipulation}
     .btn{min-height:44px}
@@ -672,8 +672,15 @@
       .packetTab,.roleTab,.miniPill,.pill,.syncBadge,.chip,.missionPill,.anchorNav a{white-space:nowrap;flex:0 0 auto}
       .stickyBar,.stickySubsection{position:static;top:auto}
       .scrollTerms{height:auto;min-height:0;max-height:none;padding-right:0}
+      .preflightIntro,.preflightGrid,.preflightChecklist{grid-template-columns:1fr}
+      .preflightAnchorRow,.preflightActions{display:grid;grid-template-columns:1fr}
+      .reviewFooter{bottom:0!important;margin:16px -12px -24px!important;padding:14px 12px calc(22px + env(safe-area-inset-bottom))!important;gap:10px}
+      .reviewFooter,.reviewFooter .actions,.premiumRoleActionRow,.heroActions,.actions,.builderActions{grid-template-columns:1fr}
+      .reviewFooter .btn-primary,.reviewFooter .btn[data-primary="true"],.actions .btn-primary,.builderActions .btn-primary,.heroActions .btn-primary,.premiumRoleActionRow .btn-primary{order:-2}
+      .reviewFooter .btn-danger,.actions .btn-danger,.builderActions .btn-danger,.premiumRoleActionRow .btn-danger{order:3}
+      .premiumStickyBar{position:sticky;bottom:0;border-radius:20px 20px 0 0;padding:14px 16px calc(22px + env(safe-area-inset-bottom));margin:18px -4px 0;box-shadow:0 -18px 34px rgba(88,67,119,.12)}
       .modalBackdrop{padding:0;align-items:flex-end}
-      .modalCard,.commandModalCard,.reviewModalCard{width:100vw;max-width:100vw;height:auto;max-height:calc(var(--app-vh,1vh) * 100);border-radius:18px 18px 0 0;padding:14px 12px calc(24px + env(safe-area-inset-bottom));margin-top:auto}
+      .modalCard,.commandModalCard,.reviewModalCard{width:100vw;max-width:100vw;height:auto;max-height:calc(var(--app-vh,1vh) * 100);border-radius:18px 18px 0 0;padding:14px 12px calc(32px + env(safe-area-inset-bottom));margin-top:auto;overflow-y:auto;-webkit-overflow-scrolling:touch}
       .modalHeader{position:sticky;top:0;z-index:2;background:linear-gradient(180deg,rgba(27,10,52,.98),rgba(27,10,52,.92));padding-bottom:10px}
       .modalClose{min-width:44px;height:44px}
       .codeBox,.exportBox,.packetBox,.reviewMethodBox,.bridgeRouteBox{font-size:.8rem;max-height:260px}
@@ -1141,7 +1148,7 @@
       .v35-actionChips,.v35-stateRow,.primeBadgeRow{overflow:auto;flex-wrap:nowrap;padding-bottom:4px}
       .v35-actionChip,.v35-stateChip,.primeBadgeRow .pill{white-space:nowrap}
       .modalCard,.commandModalCard,.reviewModalCard{padding-bottom:calc(24px + env(safe-area-inset-bottom))!important}
-      .reviewFooter{bottom:calc(-24px - env(safe-area-inset-bottom))!important;margin:16px -12px -24px!important;padding:14px 12px calc(18px + env(safe-area-inset-bottom))!important}
+      .reviewFooter{bottom:0!important;margin:16px -12px -24px!important;padding:14px 12px calc(22px + env(safe-area-inset-bottom))!important}
       .modalHeader{background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(247,242,250,.95))!important;border-bottom:1px solid rgba(121,96,150,.12)!important;color:#261d2d!important}
       .modalHeader .eyebrow,.modalHeader .helper,.modalHeader .muted{color:rgba(82,63,98,.68)!important}
       .modalClose{background:rgba(255,255,255,.92)!important;border-color:rgba(121,96,150,.16)!important;color:#382543!important}
@@ -1738,6 +1745,32 @@
       </div>
     </div>
 
+
+    <section class="preflightBand" id="preflightBand" aria-labelledby="preflightBandTitle">
+      <div class="card elitePanel preflightIntro">
+        <div class="preflightLead">
+          <div>
+            <div class="eyebrow">Complete these first</div>
+            <div class="missionTitle" id="preflightBandTitle" style="font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:8px">Wallet posture, terms, cautions, and verification now live in one preflight band.</div>
+            <div class="helper">This keeps the wallet connect area, terms acceptance, <b>Before You Transact</b>, and role verification in one calm operating lane before critical writes.</div>
+          </div>
+          <div class="preflightAnchorRow">
+            <a class="btn" href="#accessWalletCard">Wallet posture</a>
+            <a class="btn" href="#termsSection">Terms</a>
+            <a class="btn" href="#verifyEnsSection">Verification</a>
+            <a class="btn" href="#premiumDiscoverySection">Main next step</a>
+          </div>
+          <div class="preflightRestored" id="preflightRestoreBanner" data-visible="false"></div>
+        </div>
+        <div class="preflightChecklist">
+          <div class="preflightMini"><b>1 · Connect + refresh</b><span class="helper">Keep wallet and network posture visible before you review or sign anything.</span></div>
+          <div class="preflightMini"><b>2 · Accept terms</b><span class="helper">Terms remain the canonical write gate and are mirrored here near the top.</span></div>
+          <div class="preflightMini"><b>3 · Review cautions</b><span class="helper">The experimental-protocol warning now sits beside the write gate instead of far below it.</span></div>
+          <div class="preflightMini"><b>4 · Verify roles</b><span class="helper">Agent and validator / club verification stay together so prerequisites can be completed in one pass.</span></div>
+        </div>
+      </div>
+      <div class="preflightGrid" id="preflightFlowGrid"></div>
+    </section>
 
     <div class="card">
       <div class="row" style="align-items:flex-start">
@@ -4557,6 +4590,78 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       if(!isMainnet){ setToast('Switch to Ethereum Mainnet to transact.', 'warn'); return false; }
       if(!hasAcceptedTerms){ setToast('Accept the Terms & Conditions before sending any write transaction.', 'warn'); return false; }
       return true;
+    }
+    const UI_CONTINUITY_KEY = 'agijobmanagerprime.v39.uiContinuity';
+    const UI_CONTINUITY_FIELDS = ['termsAccepted','agentSub','clubSub','premiumActionProcurementId','premiumActionSubdomain','premiumActionProof','premiumActionCommitment','premiumActionSalt','premiumActionApplicationUri','premiumActionFinalist','premiumActionScore','premiumInspectorProcurementId','premiumInspectorJobId','premiumDiscoveryApplicationInspectProcurementId','premiumDiscoveryApplicationInspectAgent','premiumAttachJobId','premiumDiscoveryJobSpecURI','premiumDiscoveryDetails'];
+    function continuityLoad(){
+      try{ return JSON.parse(localStorage.getItem(UI_CONTINUITY_KEY) || '{}') || {}; }catch(_){ return {}; }
+    }
+    function continuitySave(patch={}){
+      const next = {...continuityLoad(), ...patch, savedAt: Date.now()};
+      try{ localStorage.setItem(UI_CONTINUITY_KEY, JSON.stringify(next)); }catch{}
+    }
+    function persistUiContinuity(){
+      const fields = {};
+      UI_CONTINUITY_FIELDS.forEach(id=>{
+        const node = el(id);
+        if(!node) return;
+        fields[id] = node.type === 'checkbox' ? !!node.checked : String(node.value || '');
+      });
+      const activePremiumTab = document.querySelector('[data-premium-surface].active')?.dataset.premiumSurface || '';
+      continuitySave({fields, activePremiumTab, lastWallet:userAccount || '', lastChainId: chainId || null});
+    }
+    function announceContinuity(message, tone=''){ const note = el('sessionRestoreNote'); if(note) note.textContent = message; const banner = el('preflightRestoreBanner'); if(banner){ banner.textContent = message; banner.dataset.visible = 'true'; banner.dataset.tone = tone || 'restored'; } }
+    function restoreUiContinuity(){
+      const stored = continuityLoad();
+      const fields = stored.fields || {};
+      let restored = [];
+      Object.entries(fields).forEach(([id, value])=>{
+        const node = el(id);
+        if(!node) return;
+        if(node.type === 'checkbox'){
+          const checked = !!value;
+          if(node.checked !== checked){ node.checked = checked; restored.push(id); }
+        }else if(value !== '' && node.value !== String(value)){
+          node.value = String(value);
+          restored.push(id);
+        }
+      });
+      if(stored.activePremiumTab){
+        const tab = document.querySelector(`[data-premium-surface="${stored.activePremiumTab}"]`);
+        tab?.click();
+      }
+      const topTerms = el('alphaTermsAcceptedTop');
+      const baseTerms = el('termsAccepted');
+      if(topTerms && baseTerms && topTerms.checked !== baseTerms.checked) topTerms.checked = baseTerms.checked;
+      if(baseTerms){ hasAcceptedTerms = !!baseTerms.checked; APP_STATE.wallet.termsAccepted = hasAcceptedTerms; }
+      updateWriteGate();
+      const walletChanged = !!stored.lastWallet && !!userAccount && stored.lastWallet.toLowerCase() !== String(userAccount).toLowerCase();
+      const chainChanged = stored.lastChainId && chainId && String(stored.lastChainId) !== String(chainId);
+      if(walletChanged || chainChanged){
+        verified.agent = null; verified.club = null; verified.agentAlpha = false; verified.clubAlpha = false;
+        announceContinuity('Local draft context was restored, but role verification posture was cleared because the connected wallet or chain changed.', 'warning');
+      }else if(restored.length){
+        announceContinuity('Restored local terms, verification inputs, and draft transaction context for this device. Wallet connection and live role checks still require fresh confirmation.', 'restored');
+      }
+    }
+    function bindUiContinuity(){
+      UI_CONTINUITY_FIELDS.forEach(id=>{
+        const node = el(id);
+        if(!node) return;
+        const evt = node.type === 'checkbox' ? 'change' : 'input';
+        node.addEventListener(evt, persistUiContinuity);
+        if(evt !== 'change') node.addEventListener('change', persistUiContinuity);
+      });
+      document.querySelectorAll('[data-premium-surface]').forEach(btn=>btn.addEventListener('click', ()=>persistUiContinuity()));
+    }
+    function assemblePreflightBand(){
+      const grid = el('preflightFlowGrid');
+      if(!grid || grid.dataset.ready === 'true') return;
+      ['accessWalletCard','readinessSection'].forEach(id=>{ const node = el(id); if(node) grid.appendChild(node); });
+      ['verifyEnsSection'].forEach(id=>{ const node = el(id); if(node) grid.appendChild(node); });
+      const notice = document.querySelector('.heroNotice');
+      if(notice) grid.insertBefore(notice, grid.children[1] || null);
+      grid.dataset.ready = 'true';
     }
     function updateViewportVars(){
       const viewportHeight = window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight || 0;
@@ -8333,7 +8438,7 @@ function normalizeIpfsToHttp(uri){
       refreshIdentityState().catch(()=>{});
       el("createJobBtn").addEventListener("click", createJob);
 
-      el("termsAccepted").addEventListener("change", (e)=>{ hasAcceptedTerms = !!e.target.checked; const mirror = el('alphaTermsAcceptedTop'); if(mirror && mirror.checked !== hasAcceptedTerms) mirror.checked = hasAcceptedTerms; updateWriteGate(); updateAlphaIdentityReadiness(); updateAlphaIdentityExperience(); });
+      el("termsAccepted").addEventListener("change", (e)=>{ hasAcceptedTerms = !!e.target.checked; APP_STATE.wallet.termsAccepted = hasAcceptedTerms; continuitySave({ lastWallet:userAccount || '', lastChainId: chainId || null }); const mirror = el('alphaTermsAcceptedTop'); if(mirror && mirror.checked !== hasAcceptedTerms) mirror.checked = hasAcceptedTerms; updateWriteGate(); updateAlphaIdentityReadiness(); updateAlphaIdentityExperience(); persistUiContinuity(); });
       if(el('alphaTermsAcceptedTop')) el('alphaTermsAcceptedTop').addEventListener('change', (e)=>{ const checked = !!e.target.checked; const base = el('termsAccepted'); if(base && base.checked !== checked){ base.checked = checked; base.dispatchEvent(new Event('change', {bubbles:true})); } else { hasAcceptedTerms = checked; updateWriteGate(); updateAlphaIdentityReadiness(); updateAlphaIdentityExperience(); } });
       el("jumpToTermsBtn").addEventListener("click", ()=>document.getElementById("termsSection")?.scrollIntoView({behavior:"smooth", block:"start"}));
       el("expandTermsBtn").addEventListener("click", ()=>document.querySelectorAll(".term-block").forEach(d=>d.open=true));
@@ -9655,7 +9760,7 @@ The designated winner enters SelectedAgentOnly settlement, has 72 hours to accep
       }
       function relabelTabs(){ const claimsBtn=document.querySelector('[data-premium-surface="claims"]'); if(claimsBtn) claimsBtn.textContent='Claims & participant actions'; }
       function syncInspectorIds(){ if($('premiumInspectorNextActionReadable') && $('premiumInspectorNextActionMeta')) $('premiumInspectorNextActionMeta').textContent = $('premiumInspectorNextActionMeta').textContent || 'Load a procurement to translate live state.'; }
-      function boot(){ relabelTabs(); updateCoach(); syncInspectorIds(); document.querySelectorAll("[data-premium-role-action]").forEach(btn=>btn.addEventListener("click", ()=>{ const pid=$("premiumInspectorProcurementId")?.value||""; if($("premiumActionProcurementId")) $("premiumActionProcurementId").value=pid; const agent=$("premiumInspectorApplicationAgent")?.value||""; if(agent && $("premiumActionFinalist")) $("premiumActionFinalist").value=agent; const map={commit:"premiumActionCommitApplicationBtn",reveal:"premiumActionRevealApplicationBtn",accept:"premiumActionAcceptFinalistBtn",trial:"premiumActionSubmitTrialBtn","score-commit":"premiumActionCommitScoreBtn","score-reveal":"premiumActionRevealScoreBtn"}; const target=map[btn.dataset.premiumRoleAction]; if(target && $(target)) $(target).click(); })); ['input','change'].forEach(evt=>document.addEventListener(evt, e=>{ if(e.target && String(e.target.id||'').startsWith('premiumDiscovery')) updateCoach(); })); setInterval(updateCoach, 1200); }
+      function boot(){ relabelTabs(); updateCoach(); syncInspectorIds(); assemblePreflightBand(); restoreUiContinuity(); bindUiContinuity(); persistUiContinuity(); document.querySelectorAll("[data-premium-role-action]").forEach(btn=>btn.addEventListener("click", ()=>{ const pid=$("premiumInspectorProcurementId")?.value||""; if($("premiumActionProcurementId")) $("premiumActionProcurementId").value=pid; const agent=$("premiumInspectorApplicationAgent")?.value||""; if(agent && $("premiumActionFinalist")) $("premiumActionFinalist").value=agent; const map={commit:"premiumActionCommitApplicationBtn",reveal:"premiumActionRevealApplicationBtn",accept:"premiumActionAcceptFinalistBtn",trial:"premiumActionSubmitTrialBtn","score-commit":"premiumActionCommitScoreBtn","score-reveal":"premiumActionRevealScoreBtn"}; const target=map[btn.dataset.premiumRoleAction]; if(target && $(target)) $(target).click(); })); ['input','change'].forEach(evt=>document.addEventListener(evt, e=>{ if(e.target && String(e.target.id||'').startsWith('premiumDiscovery')) updateCoach(); })); setInterval(updateCoach, 1200); }
       if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, {once:true}); else boot();
     })();
 
