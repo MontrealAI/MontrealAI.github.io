@@ -443,15 +443,15 @@
     .reviewCheck{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.02)}
     .reviewMethodBox{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84rem;line-height:1.5;padding:12px;border-radius:14px;background:rgba(0,0,0,.22);border:1px solid hsl(var(--border));margin-top:14px}
     .reviewFooter{position:sticky;bottom:max(0px, env(safe-area-inset-bottom));z-index:3;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin:16px -18px -40px;padding:16px 18px calc(30px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(18,7,34,0),rgba(18,7,34,.92) 18%,rgba(18,7,34,.995));box-shadow:0 -18px 36px rgba(5,8,18,.34);scroll-margin-bottom:calc(148px + env(safe-area-inset-bottom))}
-    .reviewFooter .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;width:min(100%,560px)}
+    .reviewFooter .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;width:min(100%,560px);margin-left:auto}
     .reviewFooter .actions .btn-primary,.reviewFooter .actions .btn[data-primary="true"]{order:1}
     .reviewFooter .actions .btn:not(.btn-primary):not([data-primary="true"]):not(.btn-danger){order:2}
     .reviewFooter .actions .btn-danger,.reviewFooter .actions .btn[id*='cancel'],.reviewFooter .actions .btn[id*='Cancel']{order:3}
     .reviewFooter .actions .btn{min-width:140px}
     .reviewFooter .helper{margin:0}
     .legacyInert{display:none!important;pointer-events:none!important}
-    .modalBackdrop{overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:clamp(12px,2vw,24px) clamp(12px,2vw,24px) calc(12px + env(safe-area-inset-bottom))}
-    .modalCard,.commandModalCard,.reviewModalCard{display:flex;flex-direction:column;max-height:min(calc(var(--app-vh,1vh) * 100 - 24px),96vh);min-height:0}
+    .modalBackdrop{overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:clamp(12px,2vw,24px) clamp(12px,2vw,24px) calc(12px + env(safe-area-inset-bottom));touch-action:pan-y;max-width:100vw}
+    .modalCard,.commandModalCard,.reviewModalCard{display:flex;flex-direction:column;max-height:min(calc(var(--app-vh,1vh) * 100 - 24px),96vh);min-height:0;min-width:0}
     .modalCard > :not(.modalHeader):not(.reviewFooter),.commandModalCard > :not(.modalHeader):not(.reviewFooter),.reviewModalCard > :not(.modalHeader):not(.reviewFooter){min-height:0;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
     .reviewModalCard{overflow-y:auto;overflow-x:hidden}
     .reviewModalCard > :not(.modalHeader):not(.reviewFooter){overflow:visible}
@@ -524,6 +524,11 @@
     .alphaModeLabel{font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-soft)}
     .alphaReadinessGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
     .alphaReadinessFoot{display:grid;grid-template-columns:1fr;gap:12px;align-items:start}
+    .alphaReadinessVerification{display:grid;gap:10px;padding:14px 16px;border-radius:18px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.8)}
+    .alphaReadinessVerificationGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .alphaReadinessVerificationItem{padding:12px 14px;border-radius:15px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.76);display:grid;gap:4px}
+    .alphaReadinessVerificationItem .k{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
+    .alphaReadinessVerificationItem .v{font-weight:700;line-height:1.45;overflow-wrap:anywhere;word-break:break-word}
     .alphaReadinessItem{padding:12px 13px;border-radius:16px;border:1px solid rgba(121,96,150,.12);background:rgba(255,255,255,.82);display:grid;gap:4px}
     .alphaReadinessItem .k{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft)}
     .alphaReadinessItem .v{font-weight:700;line-height:1.45}
@@ -636,11 +641,14 @@
     @media (max-width:1040px){.opsGrid,.syncGrid,.reviewFacts,#alphaAgentMintSection .mintGrid,.alphaSectionIntro,.alphaQuickStartGrid,.alphaPreviewGrid,.alphaIntroStats,.alphaActionGuideGrid,.alphaPrimaryActions,.alphaIdentityActions,.alphaControlGrid,.alphaPreviewMetrics,.alphaQuickFacts,.alphaPreviewSupport,.alphaReadinessFoot,.alphaModeGrid,.alphaLabelDossier,.alphaVerificationSignals{grid-template-columns:1fr}}
     @media (max-width:700px){
       .modalBackdrop{align-items:flex-end;padding:0;overflow:auto}
-      .modalCard,.commandModalCard,.reviewModalCard,#alphaMintReviewModal .modalCard,#alphaIdentityReviewModal .modalCard{width:100vw;max-width:100vw;max-height:calc(var(--app-vh,1vh) * 100);border-radius:22px 22px 0 0;padding-bottom:calc(32px + env(safe-area-inset-bottom));scroll-padding-bottom:calc(220px + env(safe-area-inset-bottom))}
+      .modalCard,.commandModalCard,.reviewModalCard{width:100vw;max-width:100vw;max-height:calc(var(--app-vh,1vh) * 100);border-radius:22px 22px 0 0;padding-bottom:calc(32px + env(safe-area-inset-bottom));scroll-padding-bottom:calc(220px + env(safe-area-inset-bottom));min-height:calc(var(--app-vh,1vh) * 100)}
       .modalHeader{border-radius:22px 22px 0 0}
-      #alphaMintReviewModal .modalCard,#alphaIdentityReviewModal .modalCard{max-height:calc(var(--app-vh,1vh) * 100 - env(safe-area-inset-top));padding-bottom:0}
+      #alphaMintReviewModal .modalCard,#alphaIdentityReviewModal .modalCard{width:100vw;max-width:100vw;max-height:calc(var(--app-vh,1vh) * 100 - env(safe-area-inset-top));min-height:0;border-radius:22px 22px 0 0;padding-bottom:0;scroll-padding-bottom:calc(220px + env(safe-area-inset-bottom))}
       #alphaMintReviewModal .reviewFacts,#alphaIdentityReviewModal .reviewFacts{grid-template-columns:1fr}
       #alphaMintReviewModal .reviewFooter,#alphaIdentityReviewModal .reviewFooter{margin-left:-16px;margin-right:-16px;margin-bottom:0;padding-left:16px;padding-right:16px}
+      .reviewFooter{padding-bottom:calc(22px + env(safe-area-inset-bottom));scroll-margin-bottom:calc(188px + env(safe-area-inset-bottom))}
+      .reviewFooter .actions{width:100%;display:grid;grid-template-columns:1fr;justify-content:stretch}
+      .reviewFooter .actions .btn{width:100%;min-height:52px}
       .reviewFooter .actions{display:grid;grid-template-columns:1fr;width:100%}
       .reviewFooter .actions .btn{width:100%;min-width:0}
       .alphaIdentityStatusPill{white-space:normal}
@@ -1890,7 +1898,7 @@
     </section>
 
 <div class="card" id="verifyEnsSection">
-      <h2 style="margin:0 0 12px">1) Verify ENS ownership posture</h2>
+      <h2 style="margin:0 0 12px">4) Agent / validator verification</h2>
       <div class="helper" style="margin-bottom:12px">Verify agent, validator / club, and Alpha posture here before opening approval, review, or write flows. This section now sits directly beneath wallet + terms readiness so mobile users can connect, accept, verify, and proceed in one pass before leaving for IPFS or MetaMask confirmations, then return without losing the local verification setup for the same wallet and chain.</div>
       <div class="alphaQuickFacts" style="margin-bottom:14px">
         <div class="alphaQuickFact"><span class="k">Agent posture</span><span class="v" id="verifyAgentSummary">Not verified</span></div>
@@ -1948,7 +1956,7 @@
       <div class="alphaSectionIntro">
         <div class="alphaIntroCopy">
           <div class="alphaIntroCard">
-            <h2 style="margin:0 0 10px">1.5) Alpha-Agent Free Trial &amp; Identity Console</h2>
+            <h2 style="margin:0 0 10px">5) Alpha-Agent Free Trial &amp; Identity Console</h2>
             <div class="helper">This operational console is the canonical onboarding surface for <b>*.alpha.agent.agi.eth</b>. It uses only <b>FreeTrialSubdomainRegistrarIdentity</b> at <b>0x7811993CbcCa3b8bb35a3d919F3BA59eeFbeAA9a</b> to mint the wrapped ENS name and the soulbound Alpha-Agent identity together in one transaction. Issuance always goes to the connected wallet, costs gas only, and no separate name-only path is surfaced.</div>
           </div>
           <div class="alphaIntroStats">
@@ -1986,6 +1994,20 @@
                   <button class="btn" type="button" id="alphaJumpDiagnosticsBtn">Inspect root diagnostics</button>
                 </div>
               </div>
+            </div>
+            <div class="alphaReadinessVerification">
+              <div class="alphaReadinessHeader" style="align-items:center">
+                <div>
+                  <div class="alphaModeLabel">Verification posture</div>
+                  <div class="subtleTitle" style="margin:4px 0 0">Verify agent and validator / club status here near the top, then continue with the combined Alpha-Agent route.</div>
+                </div>
+                <a class="btn" href="#verifyEnsSection">Open verification</a>
+              </div>
+              <div class="alphaReadinessVerificationGrid">
+                <div class="alphaReadinessVerificationItem"><span class="k">Agent</span><span class="v" id="alphaReadinessAgentVerifyValue">Not verified</span></div>
+                <div class="alphaReadinessVerificationItem"><span class="k">Validator / club</span><span class="v" id="alphaReadinessClubVerifyValue">Not verified</span></div>
+              </div>
+              <div class="helper" id="alphaReadinessVerificationHint">Verification inputs restore on same-wallet same-chain return, so leaving for IPFS or MetaMask confirmation does not force a full reset.</div>
             </div>
             <div class="alphaReadinessMemo">
               <div class="alphaReadinessMemoTitle">Current write posture</div>
@@ -4686,8 +4708,8 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         {title:'Claim Alpha Agent Identity', subtitle:'Use claimIdentity(label) when wrapped name already exists.', tags:'alpha identity claim', action:'claim-alpha-identity'},
         {title:'Sync Alpha Agent Identity', subtitle:'Repair desynced/expired identity state with syncIdentityByLabel(label).', tags:'alpha identity sync repair', action:'sync-alpha-identity'},
         {title:'Refresh identity preview', subtitle:'Reload preview(label) and rootHealth() from identity registrar.', tags:'alpha identity preview refresh roothealth', action:'refresh-identity-preview'},
-        {title:'Open Alpha identity console', subtitle:'Review canonical register(label) flow and registrar diagnostics.', tags:'alpha identity diagnostics', action:'mint-alpha'},
-        {title:'Refresh Alpha root diagnostics', subtitle:'Reload rootHealth(), preview posture, parent status, and quiet compatibility diagnostics.', tags:'registrar refresh parent wrapper identity diagnostics', action:'refresh-registrar'},
+        {title:'Open Alpha identity console', subtitle:'Review the combined register(label) flow, live preview, and quiet root diagnostics.', tags:'alpha identity combined preview diagnostics', action:'mint-alpha'},
+        {title:'Refresh Alpha root diagnostics', subtitle:'Reload rootHealth(), preview posture, parent status, and quiet compatibility diagnostics.', tags:'alpha root refresh parent wrapper identity diagnostics', action:'refresh-registrar'},
         {title:'Copy selected Alpha-Agent full name', subtitle:'Copy the current preview full name.', tags:'alpha agent copy ens', action:'copy-minted-alpha'},
         {title:'Copy identity tokenId', subtitle:'Copy selected-label identity tokenId (node-based).', tags:'alpha identity tokenid copy', action:'copy-identity-tokenid'},
         {title:'Copy identity full name', subtitle:'Copy selected-label identity full ENS name.', tags:'alpha identity fullname copy', action:'copy-identity-fullname'},
@@ -4922,6 +4944,11 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
         }
       }
       updateVerificationSummary();
+      const agentReady = verified.agent ? `${verified.agent}${verified.agentAlpha ? ' · alpha' : ''}` : 'Not verified';
+      const clubReady = verified.club ? `${verified.club}${verified.clubAlpha ? ' · alpha' : ''}` : 'Not verified';
+      if(el('alphaReadinessAgentVerifyValue')) el('alphaReadinessAgentVerifyValue').textContent = agentReady;
+      if(el('alphaReadinessClubVerifyValue')) el('alphaReadinessClubVerifyValue').textContent = clubReady;
+      if(el('alphaReadinessVerificationHint')) el('alphaReadinessVerificationHint').textContent = sameSessionContext ? 'Verification inputs restore on same-wallet same-chain return, then live reads refresh when possible.' : 'Verification inputs can restore locally, but live posture clears when the wallet or chain truly changes.';
     }
     function bindUiContinuity(){
       UI_CONTINUITY_FIELDS.forEach(id=>{
@@ -4963,6 +4990,9 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       if(el('preflightClubStatus')) el('preflightClubStatus').textContent = clubSummary;
       if(el('verifyAgentLiveStatus')) el('verifyAgentLiveStatus').textContent = agentSummary;
       if(el('verifyClubLiveStatus')) el('verifyClubLiveStatus').textContent = clubSummary;
+      if(el('alphaReadinessAgentVerifyValue')) el('alphaReadinessAgentVerifyValue').textContent = verified.agent ? `${verified.agent}${verified.agentAlpha ? ' · alpha' : ''}` : 'Not verified';
+      if(el('alphaReadinessClubVerifyValue')) el('alphaReadinessClubVerifyValue').textContent = verified.club ? `${verified.club}${verified.clubAlpha ? ' · alpha' : ''}` : 'Not verified';
+      if(el('alphaReadinessVerificationHint')) el('alphaReadinessVerificationHint').textContent = continuity;
       if(el('verifyWalletEcho')) el('verifyWalletEcho').textContent = userAccount ? `${shortAddr(userAccount)} · ${isMainnet ? 'Ethereum Mainnet' : 'wrong network'}` : 'Reconnect restores same-wallet context';
       if(el('verifyAgentAlphaSummary')) el('verifyAgentAlphaSummary').textContent = verified.agentAlpha ? 'Alpha agent verified' : 'Use Verify Alpha when needed';
       if(el('verifyValidatorSummary')) el('verifyValidatorSummary').textContent = verified.clubAlpha ? 'Alpha validator verified' : (verified.club ? 'Club verified for validator posture' : 'Club verification enables review posture');
@@ -4995,9 +5025,18 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       const alphaHint = !userAccount ? 'Connect wallet, then return here to continue without losing local label or verification inputs.' : !isMainnet ? 'Reconnect on Ethereum Mainnet to confirm registrar and identity-readiness state.' : !hasAcceptedTerms ? 'Terms acceptance is shared across the preflight lane and Alpha console for one-pass readiness.' : 'Open the full Alpha-Agent console when you want the full preview, recommended route, and diagnostics.';
       if(el('preflightAlphaStatus')) el('preflightAlphaStatus').textContent = alphaStatus;
       if(el('preflightAlphaHint')) el('preflightAlphaHint').textContent = alphaHint;
-      const blockedReason = !userAccount ? 'Connect the wallet you want to issue to.' : !isMainnet ? 'Switch the wallet to Ethereum Mainnet.' : !hasAcceptedTerms ? 'Accept the shared Terms & Conditions near the top of the page.' : !(el('mintAlphaLabel')?.value || '').trim() ? 'Enter a valid alpha label to let preview(label) determine the correct path.' : 'Review the recommendation, then use the primary action first.';
+      const blockedReason = !userAccount ? 'Connect the wallet you want to issue to.' : !isMainnet ? 'Switch the wallet to Ethereum Mainnet.' : !hasAcceptedTerms ? 'Accept the shared Terms & Conditions near the top of the page.' : !(el('mintAlphaLabel')?.value || '').trim() ? 'Enter a valid alpha label to let preview(label) determine the correct path.' : 'Review the recommendation, then use the primary combined action first.';
       if(el('alphaIdentityBlockedReason')) el('alphaIdentityBlockedReason').textContent = blockedReason;
       updateVerificationSummary();
+    }
+    function refreshOpenModalViewportLock(){
+      if(!document.querySelector('.modalBackdrop.open')) return;
+      const vv = window.visualViewport;
+      const viewportHeight = vv ? vv.height : window.innerHeight;
+      document.documentElement.style.height = `${viewportHeight}px`;
+      document.body.style.height = `${viewportHeight}px`;
+      document.body.style.maxHeight = `${viewportHeight}px`;
+      document.body.style.minHeight = `${viewportHeight}px`;
     }
     function syncModalState(){
       const anyOpenModal = !!document.querySelector('.modalBackdrop.open');
@@ -5005,6 +5044,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       if(anyOpenModal){
         document.body.style.overflow = 'hidden';
         document.documentElement.style.overflow = 'hidden';
+        refreshOpenModalViewportLock();
         const sheet = document.getElementById('v26MobileSheet');
         if(sheet?.classList.contains('open')){
           sheet.classList.remove('open');
@@ -5013,6 +5053,10 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       }else if(!document.getElementById('v26MobileSheet')?.classList.contains('open')){
         document.body.style.overflow = '';
         document.documentElement.style.overflow = '';
+        document.documentElement.style.height = '';
+        document.body.style.height = '';
+        document.body.style.maxHeight = '';
+        document.body.style.minHeight = '';
       }
       persistUiContinuity();
     }
@@ -5724,11 +5768,16 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       const registerEnabled = !lockedReason && !!preview?.registrable;
       const claimEnabled = !lockedReason && !!preview?.claimable;
       const syncEnabled = !lockedReason && !!preview?.identityExists && (preview?.status===3 || preview?.status===4);
-      let recommendation = 'Await preview(label)';
+      let recommendation = local.ok ? 'Loading preview(label)' : 'Await preview(label)';
       let tone = 'active';
       let title = 'Enter a label to evaluate the combined route.';
       let body = 'preview(label) and rootHealth() determine whether register(label), claimIdentity(label), or syncIdentityByLabel(label) is appropriate.';
-      if(baseLockedReason){
+      if(!baseLockedReason && local.ok && !preview){
+        tone = 'active';
+        recommendation = 'Loading preview(label)';
+        title = 'Loading live preview for the combined route.';
+        body = 'preview(label) and rootHealth() are loading for this label. Stay on the combined register(label) route while the live recommendation resolves.';
+      }else if(baseLockedReason){
         tone = 'blocked';
         recommendation = 'Readiness incomplete';
         title = 'Complete the shared readiness steps first.';
@@ -5843,7 +5892,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       let heading = ui.title;
       let body = ui.body;
       let suggestedMethod = ui.recommendation;
-      let writePosture = lockedReason || 'Ready to evaluate after preview.';
+      let writePosture = lockedReason || ((ui.local?.ok && !preview) ? 'Loading live preview and root posture.' : 'Ready to evaluate after preview.');
       if(lockedReason){
         tone = 'blocked';
         heading = 'Identity writes are currently blocked.';
@@ -5906,6 +5955,9 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
           writePosture = 'Label unavailable under current root posture.';
         }
       }
+      if(!lockedReason && ui.local?.ok && !preview){
+        suggestedMethod = 'Loading preview(label)';
+      }
       if(banner) banner.dataset.tone = tone;
       if(title) title.textContent = heading;
       if(textNode) textNode.textContent = body;
@@ -5918,7 +5970,7 @@ function abiHas(name){ return (x)=>x.type==='function' && x.name===name; }
       const dockPill = el('alphaQuickStartDockPill');
       if(dockPill) dockPill.textContent = suggestedMethod;
       const dockStatus = el('alphaQuickStartDockStatus');
-      if(dockStatus) dockStatus.textContent = lockedReason ? `${lockedReason} Final transaction review keeps the authorize control pinned within reach on mobile.` : `${body} Final review keeps Cancel and the primary authorize action visible in a sticky footer on mobile.`;
+      if(dockStatus) dockStatus.textContent = lockedReason ? `${lockedReason} Final transaction review keeps the authorize control pinned within reach on mobile.` : `${body} Final review keeps Cancel and the primary authorize action visible in a sticky footer on mobile, including MetaMask browser return flows.`;
     }
     async function refreshIdentityState(){
       if(!web3) return;
@@ -10070,9 +10122,9 @@ The designated winner enters SelectedAgentOnly settlement, has 72 hours to accep
       }
       updateViewportVars();
       syncModalState();
-      window.visualViewport?.addEventListener('resize', updateViewportVars);
-      window.visualViewport?.addEventListener('scroll', updateViewportVars);
-      window.addEventListener('resize', updateViewportVars);
+      window.visualViewport?.addEventListener('resize', ()=>{ updateViewportVars(); refreshOpenModalViewportLock(); });
+      window.visualViewport?.addEventListener('scroll', ()=>{ updateViewportVars(); refreshOpenModalViewportLock(); });
+      window.addEventListener('resize', ()=>{ updateViewportVars(); refreshOpenModalViewportLock(); });
       const gentleReturnRefresh = ()=>{
         updateViewportVars();
         syncModalState();
