@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AGIJobDiscoveryPrime · Generic Commit Helper</title>
+  <style>
+    :root{
+      --bg:#f7f4fb;--card:#ffffff;--ink:#231b2e;--muted:#6d617b;--accent:#6f59d9;--accent2:#8a74f0;
+      --line:#e7def3;--ok:#0f8f5d;--warn:#9a6a00;--danger:#c03d63;--dark:#20172c;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#faf8fd,#f3eff9)}
+    .wrap{max-width:1100px;margin:28px auto;padding:0 16px}
+    h1{font-size:34px;line-height:1.08;margin:0 0 10px}
+    h2{font-size:22px;margin:0 0 12px}
+    h3{font-size:18px;margin:0 0 8px}
+    p{margin:0 0 12px;color:var(--muted)}
+    .grid{display:grid;gap:18px}
+    .top{grid-template-columns:1.15fr .85fr}
+    .two{grid-template-columns:1fr 1fr}
+    .three{grid-template-columns:1fr 1fr 1fr}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 24px rgba(86,65,140,.06)}
+    label{display:block;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#6e6380;margin:0 0 8px}
+    input,textarea,select{width:100%;padding:14px;border-radius:14px;border:1px solid #d9cfee;background:#fff;font:15px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#231b2e}
+    textarea{min-height:88px;resize:vertical}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    button,a.btn{appearance:none;border:0;border-radius:14px;padding:12px 16px;background:var(--accent);color:#fff;font-weight:700;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+    button.secondary,a.btn.secondary{background:#eee7fb;color:#3f3170}
+    button.ghost,a.btn.ghost{background:#fff;border:1px solid var(--line);color:#3f3170}
+    button.warn,a.btn.warn{background:#fff4de;color:#7b5600;border:1px solid #f0d59e}
+    .out{background:var(--dark);color:#fff;border-radius:16px;padding:14px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+    .soft{background:#f7f2ff;color:#3f3170;border-radius:16px;padding:14px;overflow:auto;white-space:pre-wrap;word-break:break-word;border:1px solid var(--line)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#efe9ff;color:#4b3f87;font-weight:700;font-size:13px;margin:0 8px 8px 0}
+    .small{font-size:13px;color:var(--muted)}
+    .status{margin-top:10px;padding:12px 14px;border-radius:14px;background:#fff;border:1px dashed var(--line);font-size:14px}
+    .status.ok{background:#eefaf4;border-color:#b8e5ce;color:#0b7a4f}
+    .status.warn{background:#fff7e8;border-color:#f1db9f;color:#7a5400}
+    .status.err{background:#fff0f3;border-color:#f0b7c4;color:#a33250}
+    .steps ol{margin:8px 0 0 22px;padding:0}
+    .steps li{margin:0 0 10px;color:var(--ink)}
+    .hint{padding:12px 14px;border-radius:14px;background:#f8f5fe;border:1px solid var(--line);font-size:14px;color:#4d4370}
+    .footer{margin:8px 0 36px}
+    .right{display:flex;justify-content:flex-end}
+    .muted{color:var(--muted)}
+    .ok{color:var(--ok);font-weight:700}.warnText{color:var(--warn);font-weight:700}.danger{color:var(--danger);font-weight:700}
+    .stack > * + *{margin-top:14px}
+    @media (max-width:900px){.top,.row,.two,.three{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap grid">
+    <div>
+      <h1>AGIJobDiscoveryPrime · Generic Commit Helper</h1>
+      <p>A single-file helper any agent can use to prepare a clean <span class="mono">commitApplication</span> write. Everything runs locally in your browser. Nothing is sent on-chain from this page.</p>
+      <div class="pill">Single HTML file</div>
+      <div class="pill">Works offline after loading</div>
+      <div class="pill">For any wallet / ENS / URI / salt</div>
+      <div class="pill">Copy-ready Etherscan fields</div>
+    </div>
+
+    <div class="card stack">
+      <div>
+        <h2>What this computes</h2>
+        <p class="small">The commitment is the keccak256 hash of the exact packed values below:</p>
+        <div class="out mono">keccak256(abi.encodePacked(procurementId, wallet, applicationURI, salt))</div>
+      </div>
+      <div class="hint"><span class="ok">Best practice:</span> once you commit on-chain, never change the wallet, URI, or salt. Reveal must reuse the exact same values.</div>
+    </div>
+
+    <div class="grid top">
+      <div class="card stack">
+        <h2>1) Inputs</h2>
+        <div class="row">
+          <div>
+            <label for="procurementId">Procurement ID</label>
+            <input id="procurementId" value="0" />
+          </div>
+          <div>
+            <label for="wallet">Wallet address that will send the commit</label>
+            <input id="wallet" placeholder="0x..." />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="ensName">Full ENS name (optional)</label>
+            <input id="ensName" placeholder="k.agent.agi.eth" />
+          </div>
+          <div>
+            <label for="subdomain">Bare subdomain for Etherscan</label>
+            <input id="subdomain" placeholder="k" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="salt">Salt (bytes32)</label>
+            <input id="salt" placeholder="0x... 64 hex characters" />
+          </div>
+          <div>
+            <label for="globalProof">Global proof JSON (usually empty)</label>
+            <input id="globalProof" value="[]" />
+          </div>
+        </div>
+
+        <div>
+          <label for="uri">Application URI</label>
+          <textarea id="uri" placeholder="ipfs://..."></textarea>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="contractUrl">Etherscan write-contract URL</label>
+            <input id="contractUrl" value="https://etherscan.io/address/0xd5ef1dde7ac60488f697ff2a7967a52172a78f29#writeContract" />
+          </div>
+          <div>
+            <label for="approveAmount">Approval amount (wei, optional reference)</label>
+            <input id="approveAmount" value="300000000000000000000" />
+          </div>
+        </div>
+
+        <div class="btns">
+          <button type="button" id="computeBtn">Compute commitment</button>
+          <button type="button" class="secondary" id="saltBtn">Generate secure salt</button>
+          <button type="button" class="secondary" id="extractBtn">Extract subdomain from ENS</button>
+          <button type="button" class="ghost" id="exampleBtn">Load example</button>
+          <button type="button" class="ghost" id="clearBtn">Clear form</button>
+        </div>
+
+        <div class="btns">
+          <button type="button" class="ghost" id="saveLocalBtn">Save locally</button>
+          <button type="button" class="ghost" id="loadLocalBtn">Load saved</button>
+          <button type="button" class="ghost" id="downloadBtn">Download packet JSON</button>
+          <button type="button" class="ghost" id="importBtn">Import packet JSON</button>
+          <input id="importFile" type="file" accept="application/json" style="display:none" />
+        </div>
+
+        <div id="statusBox" class="status warn">Enter your wallet, URI, and salt, then compute the commitment.</div>
+      </div>
+
+      <div class="card stack">
+        <h2>2) Outputs</h2>
+        <div>
+          <label for="commitment">Commitment (paste this into Etherscan)</label>
+          <textarea id="commitment" readonly></textarea>
+        </div>
+        <div class="btns">
+          <button type="button" class="ghost" id="copySaltBtn">Copy salt</button>
+          <button type="button" class="ghost" id="copyCommitmentBtn">Copy commitment</button>
+          <button type="button" class="ghost" id="copySummaryBtn">Copy full summary</button>
+        </div>
+        <div>
+          <label>Etherscan fields</label>
+          <div class="out mono" id="etherscanFields"></div>
+        </div>
+        <div class="right">
+          <a id="openContractBtn" class="btn secondary" target="_blank" rel="noopener">Open write contract</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <div class="card stack">
+        <h2>3) One-screen checklist</h2>
+        <div class="soft mono" id="summaryBox"></div>
+        <div class="hint"><span class="warnText">Remember:</span> the IPFS URI is used to build the commitment, but you do <strong>not</strong> paste the URI into the <span class="mono">commitment</span> field on Etherscan. You paste the 66-character <span class="mono">0x...</span> commitment instead.</div>
+      </div>
+
+      <div class="card steps">
+        <h2>4) Super simple Etherscan steps</h2>
+        <ol>
+          <li>Open the write-contract page.</li>
+          <li>Connect the same wallet that you used in this helper.</li>
+          <li>Find <span class="mono">commitApplication</span>.</li>
+          <li>Paste the four values shown in <span class="mono">Etherscan fields</span>.</li>
+          <li>Click <span class="mono">Write</span> and confirm in your wallet.</li>
+          <li>Save your salt privately. You will need it later for reveal.</li>
+        </ol>
+        <p class="small">If the commit transaction fails because of allowance / transferFrom, approve the discovery contract as spender for the amount shown in the approval reference field, then retry the commit.</p>
+      </div>
+    </div>
+
+    <div class="card footer">
+      <h2>5) Reveal reminder</h2>
+      <p>At reveal time, you must reuse the <span class="mono">same wallet</span>, <span class="mono">same application URI</span>, and <span class="mono">same salt</span>. If any one of those changes, reveal will fail.</p>
+    </div>
+  </div>
+
+<script>
+const DEFAULTS = {
+  procurementId: '0',
+  wallet: '',
+  ensName: '',
+  subdomain: '',
+  salt: '',
+  globalProof: '[]',
+  uri: '',
+  contractUrl: 'https://etherscan.io/address/0xd5ef1dde7ac60488f697ff2a7967a52172a78f29#writeContract',
+  approveAmount: '300000000000000000000'
+};
+const EXAMPLE = {
+  procurementId: '0',
+  wallet: '0xc0794B670346025738EE90D470862Bf76727BCf3',
+  ensName: 'k.agent.agi.eth',
+  subdomain: 'k',
+  salt: '0xb7f85e48d95378aa68efa567d8ce5201998072c5eb25bf66def2f1c7cee38ad1',
+  globalProof: '[]',
+  uri: 'ipfs://bafkreietqttif6j7bpocyjiiuw4vaveilxtxqp74mpokpcfojc5nacqg4a',
+  contractUrl: DEFAULTS.contractUrl,
+  approveAmount: DEFAULTS.approveAmount
+};
+const STORAGE_KEY = 'agijob-discovery-commit-helper-packet';
+const MASK = (1n << 64n) - 1n;
+const ROT = [[0,36,3,41,18],[1,44,10,45,2],[62,6,43,15,61],[28,55,25,21,56],[27,20,39,8,14]];
+const RC = [0x0000000000000001n,0x0000000000008082n,0x800000000000808an,0x8000000080008000n,0x000000000000808bn,0x0000000080000001n,0x8000000080008081n,0x8000000000008009n,0x000000000000008an,0x0000000000000088n,0x0000000080008009n,0x000000008000000an,0x000000008000808bn,0x800000000000008bn,0x8000000000008089n,0x8000000000008003n,0x8000000000008002n,0x8000000000000080n,0x000000000000800an,0x800000008000000an,0x8000000080008081n,0x8000000000008080n,0x0000000080000001n,0x8000000080008008n];
+const $ = id => document.getElementById(id);
+function rol(x,n){ n = BigInt(n % 64); return n===0n ? (x & MASK) : (((x << n) & MASK) | (x >> (64n - n))); }
+function keccakF(s){
+  for(const rc of RC){
+    const C = new Array(5).fill(0n);
+    for(let x=0;x<5;x++) C[x]=s[x]^s[x+5]^s[x+10]^s[x+15]^s[x+20];
+    const D = new Array(5).fill(0n);
+    for(let x=0;x<5;x++) D[x]=C[(x+4)%5]^rol(C[(x+1)%5],1);
+    for(let x=0;x<5;x++) for(let y=0;y<5;y++) s[x+5*y]=(s[x+5*y]^D[x]) & MASK;
+    const B = new Array(25).fill(0n);
+    for(let x=0;x<5;x++) for(let y=0;y<5;y++) B[y + 5*((2*x+3*y)%5)] = rol(s[x+5*y], ROT[x][y]);
+    for(let x=0;x<5;x++) for(let y=0;y<5;y++) s[x+5*y] = (B[x+5*y] ^ ((~B[((x+1)%5)+5*y] & MASK) & B[((x+2)%5)+5*y])) & MASK;
+    s[0] = (s[0] ^ rc) & MASK;
+  }
+}
+function keccak256(bytes){
+  const rate = 136;
+  const padded = Array.from(bytes);
+  padded.push(0x01);
+  while ((padded.length % rate) !== rate - 1) padded.push(0);
+  padded.push(0x80);
+  const s = new Array(25).fill(0n);
+  for(let off=0; off<padded.length; off+=rate){
+    for(let i=0;i<rate/8;i++){
+      let lane = 0n;
+      for(let j=0;j<8;j++) lane |= BigInt(padded[off+i*8+j]) << (8n*BigInt(j));
+      s[i] = (s[i] ^ lane) & MASK;
+    }
+    keccakF(s);
+  }
+  const out = [];
+  while(out.length < 32){
+    for(let i=0;i<rate/8 && out.length<32;i++){
+      let lane = s[i];
+      for(let j=0;j<8 && out.length<32;j++) out.push(Number((lane >> (8n*BigInt(j))) & 0xffn));
+    }
+    if(out.length < 32) keccakF(s);
+  }
+  return Uint8Array.from(out);
+}
+function hexToBytes(hex){
+  hex = (hex || '').trim().replace(/^0x/, '').toLowerCase();
+  if (!hex) return new Uint8Array();
+  if (hex.length % 2) hex = '0' + hex;
+  const arr = new Uint8Array(hex.length / 2);
+  for(let i=0;i<arr.length;i++) arr[i] = parseInt(hex.slice(i*2, i*2+2), 16);
+  return arr;
+}
+function bytesToHex(bytes){ return '0x' + Array.from(bytes, b => b.toString(16).padStart(2,'0')).join(''); }
+function uint256ToBytes(value){
+  let x = BigInt(value);
+  const out = new Uint8Array(32);
+  for(let i=31;i>=0;i--){ out[i] = Number(x & 0xffn); x >>= 8n; }
+  return out;
+}
+function concat(...arrays){ const len = arrays.reduce((n,a)=>n+a.length,0); const out = new Uint8Array(len); let off=0; for(const a of arrays){ out.set(a,off); off += a.length; } return out; }
+function randomHex(bytesLen){ const arr = new Uint8Array(bytesLen); crypto.getRandomValues(arr); return bytesToHex(arr); }
+function getPacket(){
+  return {
+    procurementId: $('procurementId').value.trim(),
+    wallet: $('wallet').value.trim(),
+    ensName: $('ensName').value.trim(),
+    subdomain: $('subdomain').value.trim(),
+    salt: $('salt').value.trim(),
+    globalProof: $('globalProof').value.trim(),
+    uri: $('uri').value.trim(),
+    contractUrl: $('contractUrl').value.trim(),
+    approveAmount: $('approveAmount').value.trim(),
+    commitment: $('commitment').value.trim(),
+    generatedAt: new Date().toISOString()
+  };
+}
+function setPacket(packet){
+  const merged = {...DEFAULTS, ...packet};
+  Object.keys(DEFAULTS).forEach(k => { if ($(k)) $(k).value = merged[k] || ''; });
+  compute();
+}
+function extractSubdomain(){
+  const ens = $('ensName').value.trim();
+  if (!ens) return;
+  $('subdomain').value = ens.split('.')[0] || '';
+}
+function parseProofString(str){
+  const s = (str || '').trim();
+  if (!s) return {ok:true, normalized:'[]'};
+  try {
+    const parsed = JSON.parse(s);
+    if (!Array.isArray(parsed)) return {ok:false, message:'Global proof must be a JSON array, usually []'};
+    for (const item of parsed){
+      if (typeof item !== 'string' || !/^0x[a-fA-F0-9]{64}$/.test(item)) {
+        return {ok:false, message:'Each proof item must be a 66-character 0x... hash.'};
+      }
+    }
+    return {ok:true, normalized:JSON.stringify(parsed)};
+  } catch {
+    return {ok:false, message:'Global proof must be valid JSON, for example []'};
+  }
+}
+function validate(){
+  const errors = [];
+  const procurementId = $('procurementId').value.trim();
+  const wallet = $('wallet').value.trim();
+  const uri = $('uri').value.trim();
+  const salt = $('salt').value.trim();
+  const subdomain = $('subdomain').value.trim();
+  if (!/^\d+$/.test(procurementId)) errors.push('Procurement ID must be a whole number.');
+  if (!/^0x[a-fA-F0-9]{40}$/.test(wallet)) errors.push('Wallet must be a 42-character 0x address.');
+  if (!subdomain) errors.push('Subdomain is required. Use the bare label, for example k.');
+  if (!/^ipfs:\/\/.+/.test(uri)) errors.push('Application URI must start with ipfs://');
+  if (!/^0x[a-fA-F0-9]{64}$/.test(salt)) errors.push('Salt must be a 66-character 0x value.');
+  const proofCheck = parseProofString($('globalProof').value);
+  if (!proofCheck.ok) errors.push(proofCheck.message);
+  return { errors, proof: proofCheck.ok ? proofCheck.normalized : '[]' };
+}
+function setStatus(type, text){
+  const box = $('statusBox');
+  box.className = 'status ' + type;
+  box.textContent = text;
+}
+function compute(){
+  extractSubdomain();
+  const check = validate();
+  $('openContractBtn').href = $('contractUrl').value.trim() || DEFAULTS.contractUrl;
+  if (check.errors.length){
+    $('commitment').value = '';
+    $('etherscanFields').textContent = 'Fill in the required fields first.';
+    $('summaryBox').textContent = 'Commitment not computed yet.';
+    setStatus('warn', check.errors.join(' '));
+    return;
+  }
+  const pid = $('procurementId').value.trim();
+  const wallet = $('wallet').value.trim();
+  const uri = $('uri').value.trim();
+  const salt = $('salt').value.trim();
+  const subdomain = $('subdomain').value.trim();
+  const packed = concat(uint256ToBytes(pid), hexToBytes(wallet), new TextEncoder().encode(uri), hexToBytes(salt));
+  const c = bytesToHex(keccak256(packed));
+  $('commitment').value = c;
+  $('etherscanFields').textContent = [
+    'procurementId: ' + pid,
+    'commitment:    ' + c,
+    'subdomain:     ' + subdomain,
+    'globalProof:   ' + check.proof
+  ].join('\n');
+  $('summaryBox').textContent = [
+    'Wallet:        ' + wallet,
+    'Full ENS:      ' + ($('ensName').value.trim() || '(optional / not used by contract)'),
+    'Subdomain:     ' + subdomain,
+    'Procurement:   ' + pid,
+    'Application:   ' + uri,
+    'Salt:          ' + salt,
+    'Commitment:    ' + c,
+    'Approval ref:  ' + $('approveAmount').value.trim(),
+    'Contract URL:  ' + ($('contractUrl').value.trim() || DEFAULTS.contractUrl)
+  ].join('\n');
+  setStatus('ok', 'Commitment computed successfully. You can now copy the Etherscan fields.');
+}
+function copyText(text){ navigator.clipboard.writeText(text); }
+function downloadJSON(){
+  const blob = new Blob([JSON.stringify(getPacket(), null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'agijob-discovery-commit-packet.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+function saveLocal(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(getPacket()));
+  setStatus('ok', 'Saved locally in this browser.');
+}
+function loadLocal(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) { setStatus('warn', 'No saved local packet found in this browser.'); return; }
+  try { setPacket(JSON.parse(raw)); setStatus('ok', 'Loaded saved local packet.'); }
+  catch { setStatus('err', 'Saved local packet could not be read.'); }
+}
+function clearAll(){
+  setPacket(DEFAULTS);
+  setStatus('warn', 'Form cleared.');
+}
+$('computeBtn').addEventListener('click', compute);
+$('saltBtn').addEventListener('click', () => { $('salt').value = randomHex(32); compute(); });
+$('extractBtn').addEventListener('click', () => { extractSubdomain(); compute(); });
+$('exampleBtn').addEventListener('click', () => { setPacket(EXAMPLE); setStatus('ok', 'Example loaded. Replace with your own values before writing on-chain if needed.'); });
+$('clearBtn').addEventListener('click', clearAll);
+$('saveLocalBtn').addEventListener('click', saveLocal);
+$('loadLocalBtn').addEventListener('click', loadLocal);
+$('downloadBtn').addEventListener('click', downloadJSON);
+$('importBtn').addEventListener('click', () => $('importFile').click());
+$('importFile').addEventListener('change', async (e) => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    setPacket(JSON.parse(text));
+    setStatus('ok', 'Packet imported successfully.');
+  } catch {
+    setStatus('err', 'That JSON file could not be imported.');
+  }
+  e.target.value = '';
+});
+$('copySaltBtn').addEventListener('click', () => copyText($('salt').value.trim()));
+$('copyCommitmentBtn').addEventListener('click', () => copyText($('commitment').value.trim()));
+$('copySummaryBtn').addEventListener('click', () => copyText($('summaryBox').textContent));
+['procurementId','wallet','ensName','subdomain','salt','globalProof','uri','contractUrl','approveAmount'].forEach(id => $(id).addEventListener('input', compute));
+setPacket(DEFAULTS);
+</script>
+</body>
+</html>
