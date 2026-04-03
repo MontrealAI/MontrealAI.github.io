@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AGIJobManagerPrime Helper · Commit / Reveal UI</title>
+  <style>
+    :root{
+      --bg:#f7f4fb;--card:#ffffff;--ink:#231b2e;--muted:#6d617b;--accent:#6f59d9;--accent2:#8a74f0;
+      --line:#e7def3;--ok:#0f8f5d;--warn:#9a6a00;--danger:#c03d63;--dark:#20172c;--soft:#f7f2ff;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#faf8fd,#f3eff9)}
+    .wrap{max-width:1280px;margin:28px auto;padding:0 16px}
+    h1{font-size:38px;line-height:1.08;margin:0 0 10px}
+    h2{font-size:24px;line-height:1.2;margin:0 0 12px}
+    h3{font-size:19px;line-height:1.2;margin:0 0 10px}
+    p{margin:0 0 12px;color:var(--muted)}
+    .grid{display:grid;gap:18px}
+    .top{grid-template-columns:1.2fr .8fr}
+    .two{grid-template-columns:1fr 1fr}
+    .three{grid-template-columns:1fr 1fr 1fr}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 10px 24px rgba(86,65,140,.06)}
+    .softCard{background:var(--soft)}
+    label{display:block;font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#6e6380;margin:0 0 8px}
+    input,textarea,select{width:100%;padding:14px;border-radius:14px;border:1px solid #d9cfee;background:#fff;font:15px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#231b2e}
+    textarea{min-height:96px;resize:vertical}
+    input[readonly],textarea[readonly]{background:#fcfbff}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    button,a.btn{appearance:none;border:0;border-radius:14px;padding:12px 16px;background:var(--accent);color:#fff;font-weight:800;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    button.secondary,a.btn.secondary{background:#eee7fb;color:#3f3170}
+    button.ghost,a.btn.ghost{background:#fff;border:1px solid var(--line);color:#3f3170}
+    button.warn,a.btn.warn{background:#fff4de;color:#7b5600;border:1px solid #f0d59e}
+    button.danger,a.btn.danger{background:#fff0f3;color:#9b2347;border:1px solid #f0b7c4}
+    button:disabled{opacity:.55;cursor:not-allowed;filter:saturate(.4)}
+    .out{background:var(--dark);color:#fff;border-radius:16px;padding:14px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+    .soft{background:#f7f2ff;color:#3f3170;border-radius:16px;padding:14px;overflow:auto;white-space:pre-wrap;word-break:break-word;border:1px solid var(--line)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#efe9ff;color:#4b3f87;font-weight:800;font-size:13px;margin:0 8px 8px 0}
+    .small{font-size:13px;color:var(--muted)}
+    .status{margin-top:10px;padding:12px 14px;border-radius:14px;background:#fff;border:1px dashed var(--line);font-size:14px}
+    .status.ok{background:#eefaf4;border-color:#b8e5ce;color:#0b7a4f}
+    .status.warn{background:#fff7e8;border-color:#f1db9f;color:#7a5400}
+    .status.err{background:#fff0f3;border-color:#f0b7c4;color:#a33250}
+    .checklist{display:grid;gap:8px}
+    .item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+    .dot{width:12px;height:12px;border-radius:999px;margin-top:5px;flex:0 0 12px;background:#c8bfd8}
+    .item.ok .dot{background:var(--ok)}
+    .item.warn .dot{background:var(--warn)}
+    .item.err .dot{background:var(--danger)}
+    .steps ol{margin:8px 0 0 22px;padding:0}
+    .steps li{margin:0 0 10px;color:var(--ink)}
+    .hint{padding:12px 14px;border-radius:14px;background:#f8f5fe;border:1px solid var(--line);font-size:14px;color:#4d4370}
+    .right{display:flex;justify-content:flex-end}
+    .okText{color:var(--ok);font-weight:800}.warnText{color:var(--warn);font-weight:800}.dangerText{color:var(--danger);font-weight:800}
+    .muted{color:var(--muted)}
+    .txList{display:grid;gap:10px}
+    .txRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff}
+    .kv{display:grid;grid-template-columns:170px 1fr;gap:6px 12px}
+    .stack > * + *{margin-top:14px}
+    .hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+    .hero .controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+    .banner{padding:14px 16px;border-radius:16px;background:#eefaf4;border:1px solid #b8e5ce;color:#0b7a4f;font-size:14px}
+    .toggle{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:10px 12px;border-radius:14px}
+    .spacer{height:4px}
+    @media (max-width:980px){.top,.row,.two,.three{grid-template-columns:1fr}.hero{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="wrap grid">
+    <div class="hero">
+      <div>
+        <h1>AGIJobManagerPrime Helper · Direct MetaMask UI</h1>
+        <p>A single-file helper that computes commitments locally, checks on-chain readiness, and sends <span class="mono">approve</span>, <span class="mono">commitApplication</span>, and <span class="mono">revealApplication</span> directly from this page through MetaMask.</p>
+        <div class="pill">Single HTML file</div>
+        <div class="pill">MetaMask-first</div>
+        <div class="pill">Direct contract writes</div>
+        <div class="pill">Readable blockers</div>
+        <div class="pill">Save / import packet JSON</div>
+      </div>
+      <div class="controls">
+        <button type="button" id="connectBtn">Connect MetaMask</button>
+        <button type="button" class="secondary" id="switchBtn">Switch to Ethereum mainnet</button>
+        <button type="button" class="ghost" id="refreshBtn">Refresh on-chain checks</button>
+      </div>
+    </div>
+
+    <div class="banner" id="topBanner">This page does not need Etherscan for the main flow. Best practice: connect MetaMask, refresh checks, approve if needed, then commit directly here. Later, use the same wallet, URI, and salt to reveal.</div>
+
+    <div class="grid top">
+      <div class="card stack">
+        <h2>1) Inputs</h2>
+        <div class="row">
+          <div>
+            <label for="discoveryAddress">Discovery contract</label>
+            <input id="discoveryAddress" value="0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29" />
+          </div>
+          <div>
+            <label for="procurementId">Procurement ID</label>
+            <input id="procurementId" value="0" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="wallet">Connected wallet that will send the transactions</label>
+            <input id="wallet" placeholder="Connect MetaMask or paste 0x..." />
+          </div>
+          <div>
+            <label for="ensName">Full ENS name (optional helper field)</label>
+            <input id="ensName" placeholder="k.agent.agi.eth" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="subdomain">Bare subdomain used on-chain</label>
+            <input id="subdomain" placeholder="k" />
+          </div>
+          <div>
+            <label for="globalProof">Global proof JSON (usually empty)</label>
+            <input id="globalProof" value="[]" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="salt">Salt (bytes32)</label>
+            <input id="salt" placeholder="0x... 64 hex characters" />
+          </div>
+          <div>
+            <label for="applicationUri">Application URI</label>
+            <input id="applicationUri" placeholder="ipfs://..." />
+          </div>
+        </div>
+
+        <div class="btns">
+          <button type="button" id="useWalletBtn" class="secondary">Use connected wallet</button>
+          <button type="button" id="extractBtn" class="secondary">Extract subdomain from ENS</button>
+          <button type="button" id="generateSaltBtn" class="secondary">Generate secure salt</button>
+          <button type="button" id="computeBtn">Compute commitment</button>
+          <button type="button" id="loadExampleBtn" class="ghost">Load example</button>
+          <button type="button" id="clearBtn" class="ghost">Clear form</button>
+        </div>
+
+        <div class="btns">
+          <button type="button" id="saveLocalBtn" class="ghost">Save locally</button>
+          <button type="button" id="loadLocalBtn" class="ghost">Load saved</button>
+          <button type="button" id="downloadBtn" class="ghost">Download packet JSON</button>
+          <button type="button" id="importBtn" class="ghost">Import packet JSON</button>
+          <input id="importFile" type="file" accept="application/json" style="display:none" />
+        </div>
+
+        <div id="formStatus" class="status warn">Connect MetaMask, fill the fields, then compute the commitment.</div>
+      </div>
+
+      <div class="card stack softCard">
+        <h2>2) Live on-chain state</h2>
+        <div class="kv mono small">
+          <div>Network</div><div id="networkLine">—</div>
+          <div>Discovery</div><div id="discoveryLine">—</div>
+          <div>Settlement</div><div id="settlementLine">—</div>
+          <div>Token</div><div id="tokenLine">—</div>
+          <div>Wallet balance</div><div id="balanceLine">—</div>
+          <div>Allowance</div><div id="allowanceLine">—</div>
+          <div>Application stake</div><div id="stakeLine">—</div>
+          <div>Reputation</div><div id="reputationLine">—</div>
+          <div>Required minimum</div><div id="minRepLine">—</div>
+          <div>Current phase</div><div id="phaseLine">—</div>
+          <div>Stored commitment</div><div id="storedCommitmentLine">—</div>
+        </div>
+        <div class="hint"><span class="warnText">Ledger users:</span> open the Ethereum app on Ledger and enable <strong>blind signing</strong> or <strong>smart contract data</strong> before approving or committing.</div>
+        <div id="chainStatus" class="status warn">On-chain checks have not run yet.</div>
+      </div>
+    </div>
+
+    <div class="grid top">
+      <div class="card stack">
+        <h2>3) Commitment output</h2>
+        <div class="hint">The commitment uses the exact packed values below. The connected wallet and the wallet field must match before you commit on-chain.</div>
+        <div class="out mono">keccak256(abi.encodePacked(procurementId, wallet, applicationURI, salt))</div>
+        <div>
+          <label for="commitment">Commitment</label>
+          <textarea id="commitment" readonly></textarea>
+        </div>
+        <div class="btns">
+          <button type="button" class="ghost" id="copyCommitmentBtn">Copy commitment</button>
+          <button type="button" class="ghost" id="copySaltBtn">Copy salt</button>
+          <button type="button" class="ghost" id="copySummaryBtn">Copy full summary</button>
+        </div>
+        <div>
+          <label>Etherscan-style fields (copy if you ever need fallback)</label>
+          <div class="out mono" id="etherscanFields">Fill the form and compute the commitment.</div>
+        </div>
+      </div>
+
+      <div class="card stack">
+        <h2>4) Preflight checks</h2>
+        <div class="checklist" id="checklist"></div>
+      </div>
+    </div>
+
+    <div class="grid three">
+      <div class="card stack">
+        <h2>5) Approve</h2>
+        <p>Approval lets the Discovery contract pull the application stake from your wallet. This is usually one separate MetaMask confirmation.</p>
+        <div class="soft mono" id="approveSummary">Stake / allowance not loaded yet.</div>
+        <div class="btns">
+          <button type="button" id="approveBtn">Approve exact stake</button>
+        </div>
+        <div id="approveStatus" class="status warn">Run refresh checks first.</div>
+      </div>
+
+      <div class="card stack">
+        <h2>6) Commit</h2>
+        <p>Commit sends your sealed entry on-chain. The URI remains hidden at this stage.</p>
+        <div class="soft mono" id="commitSummary">Commitment not ready yet.</div>
+        <div class="btns">
+          <button type="button" id="approveCommitBtn" class="secondary">Approve + Commit</button>
+          <button type="button" id="commitBtn">Commit application</button>
+        </div>
+        <div id="commitStatus" class="status warn">Resolve the blockers above before committing.</div>
+      </div>
+
+      <div class="card stack">
+        <h2>7) Reveal</h2>
+        <p>Later, during reveal, you must reuse the same wallet, subdomain, URI, and salt.</p>
+        <div class="soft mono" id="revealSummary">Reveal becomes available later when the on-chain phase changes to reveal.</div>
+        <div class="btns">
+          <button type="button" id="revealBtn" class="warn">Reveal application</button>
+        </div>
+        <div id="revealStatus" class="status warn">Reveal is not ready yet.</div>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <div class="card stack">
+        <h2>8) Transaction activity</h2>
+        <div class="txList" id="txList">
+          <div class="txRow"><div class="muted">No transactions sent from this page yet.</div></div>
+        </div>
+      </div>
+
+      <div class="card stack steps">
+        <h2>9) Best-practice reminders</h2>
+        <ol>
+          <li>Use the same wallet for compute, approve, commit, and reveal.</li>
+          <li>Do not change the application URI after you commit.</li>
+          <li>Do not lose your salt. Save it in at least two places.</li>
+          <li>If MetaMask shows a pending transaction, wait for it to confirm before sending the next one.</li>
+          <li>If a transaction is likely to fail, use the blockers shown here instead of guessing.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+  <script>
+    const APP = {};
+    const STORAGE_KEY = 'agijobmanagerprimehelperv0-packet';
+    const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
+    const ZERO_HASH = '0x' + '00'.repeat(32);
+    const ETH_MAINNET_CHAIN_ID = 1;
+    const DISCOVERY_DEFAULT = '0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29';
+    const EXAMPLE = {
+      discoveryAddress: DISCOVERY_DEFAULT,
+      procurementId: '0',
+      wallet: '0xc0794B670346025738EE90D470862Bf76727BCf3',
+      ensName: 'k.agent.agi.eth',
+      subdomain: 'k',
+      salt: '0xb7f85e48d95378aa68efa567d8ce5201998072c5eb25bf66def2f1c7cee38ad1',
+      globalProof: '[]',
+      applicationUri: 'ipfs://bafkreietqttif6j7bpocyjiiuw4vaveilxtxqp74mpokpcfojc5nacqg4a'
+    };
+
+    const DISCOVERY_ABI = [
+      'function agiToken() view returns (address)',
+      'function settlement() view returns (address)',
+      'function paused() view returns (bool)',
+      'function procurements(uint256) view returns (address employer,uint256 jobId,uint64 pauseSecondsBaseline,uint64 commitDeadline,uint64 revealDeadline,uint64 finalistAcceptDeadline,uint64 trialDeadline,uint64 scoreCommitDeadline,uint64 scoreRevealDeadline,uint64 selectedAcceptanceWindow,uint64 checkpointWindow,uint8 finalistCount,uint8 minValidatorReveals,uint8 maxValidatorRevealsPerFinalist,uint16 historicalWeightBps,uint16 trialWeightBps,uint256 minReputation,uint256 applicationStake,uint256 finalistStakeTotal,uint256 stipendPerFinalist,uint256 validatorRewardPerReveal,uint256 validatorScoreBond,bool shortlistFinalized,bool winnerFinalized,bool cancelled)',
+      'function applications(uint256,address) view returns (bytes32 commitment,bool revealed,bool shortlisted,bool finalistAccepted,bool trialSubmitted,bool settled,bool everPromoted,uint256 lockedStake,string applicationURI,string trialURI,uint256 historicalScoreBps,uint256 trialScoreBps,uint256 compositeScoreBps)',
+      'function nextActionForProcurement(uint256) view returns (string)',
+      'function commitApplication(uint256,bytes32,string,bytes32[])',
+      'function revealApplication(uint256,string,bytes32[],bytes32,string)',
+      'event ApplicationCommitted(uint256 indexed procurementId,address indexed agent)',
+      'event ApplicationRevealed(uint256 indexed procurementId,address indexed agent,string applicationURI)'
+    ];
+
+    const TOKEN_ABI = [
+      'function approve(address spender,uint256 value) returns (bool)',
+      'function allowance(address owner,address spender) view returns (uint256)',
+      'function balanceOf(address account) view returns (uint256)',
+      'function decimals() view returns (uint8)',
+      'function symbol() view returns (string)',
+      'function name() view returns (string)'
+    ];
+
+    const MANAGER_ABI = [
+      'function isAuthorizedAgent(address claimant,string subdomain,bytes32[] proof) view returns (bool)',
+      'function reputation(address agent) view returns (uint256)',
+      'function premiumReputationThreshold() view returns (uint256)',
+      'function paused() view returns (bool)',
+      'function settlementPaused() view returns (bool)'
+    ];
+
+    const $ = (id) => document.getElementById(id);
+    const fmtAddr = (v) => v ? v.slice(0, 6) + '…' + v.slice(-4) : '—';
+    const toNum = (v) => Number(v ?? 0);
+    const safeText = (v) => (v === undefined || v === null || v === '') ? '—' : String(v);
+    const phaseLabels = {
+      WC: 'Commit window open',
+      RA: 'Reveal window open',
+      FA: 'Finalist acceptance',
+      ST: 'Trial submission',
+      CS: 'Validator score commit',
+      RS: 'Validator score reveal',
+      FW: 'Finalize winner',
+      PF: 'Fallback promotion',
+      X: 'Cancelled',
+      P: 'Paused',
+      LMP: 'Settlement manager paused',
+      LSF: 'Settlement paused',
+      SP: 'Paused',
+      WA: 'Waiting on assigned agent',
+      WSA: 'Waiting on selected agent',
+      FS: 'Finalize shortlist',
+      NPF: 'No fallback finalist',
+      LJM: 'Job manager lookup needed',
+      SSF: 'Settlement paused',
+      NP: 'Not ready'
+    };
+
+    function setStatus(id, type, text){
+      const el = $(id);
+      el.className = 'status ' + type;
+      el.textContent = text;
+    }
+
+    function setBanner(text, type='ok'){
+      const el = $('topBanner');
+      el.className = type === 'err' ? 'banner status err' : type === 'warn' ? 'banner status warn' : 'banner';
+      el.textContent = text;
+    }
+
+    function normalizeDiscoveryAddress(v){
+      const s = (v || '').trim();
+      if (!s) return DISCOVERY_DEFAULT;
+      return s;
+    }
+
+    function extractSubdomain(){
+      const ens = $('ensName').value.trim();
+      if (!ens) return;
+      const label = ens.split('.')[0] || '';
+      if (label) $('subdomain').value = label;
+    }
+
+    function parseProof(){
+      const raw = $('globalProof').value.trim();
+      if (!raw) return { ok: true, value: [] };
+      try {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return { ok: false, message: 'Global proof must be a JSON array, usually []' };
+        for (const item of parsed){
+          if (typeof item !== 'string' || !/^0x[a-fA-F0-9]{64}$/.test(item)) {
+            return { ok: false, message: 'Each proof item must be a 66-character 0x hash.' };
+          }
+        }
+        return { ok: true, value: parsed };
+      } catch {
+        return { ok: false, message: 'Global proof must be valid JSON, for example []' };
+      }
+    }
+
+    function validateForm(){
+      const errors = [];
+      const proof = parseProof();
+      if (!/^\d+$/.test($('procurementId').value.trim())) errors.push('Procurement ID must be a whole number.');
+      if (!/^0x[a-fA-F0-9]{40}$/.test($('wallet').value.trim())) errors.push('Wallet must be a 42-character 0x address.');
+      if (!$('subdomain').value.trim()) errors.push('Subdomain is required.');
+      if (!/^ipfs:\/\/.+/.test($('applicationUri').value.trim())) errors.push('Application URI must start with ipfs://');
+      if (!/^0x[a-fA-F0-9]{64}$/.test($('salt').value.trim())) errors.push('Salt must be a 66-character 0x value.');
+      if (!proof.ok) errors.push(proof.message);
+      return { errors, proof: proof.ok ? proof.value : [] };
+    }
+
+    function getPacket(){
+      return {
+        discoveryAddress: $('discoveryAddress').value.trim(),
+        procurementId: $('procurementId').value.trim(),
+        wallet: $('wallet').value.trim(),
+        ensName: $('ensName').value.trim(),
+        subdomain: $('subdomain').value.trim(),
+        salt: $('salt').value.trim(),
+        globalProof: $('globalProof').value.trim(),
+        applicationUri: $('applicationUri').value.trim(),
+        commitment: $('commitment').value.trim(),
+        generatedAt: new Date().toISOString(),
+        tokenAddress: APP.state?.tokenAddress || '',
+        settlementAddress: APP.state?.settlementAddress || '',
+        lastTxs: APP.txs || []
+      };
+    }
+
+    function setPacket(packet){
+      $('discoveryAddress').value = packet.discoveryAddress || DISCOVERY_DEFAULT;
+      $('procurementId').value = packet.procurementId || '0';
+      $('wallet').value = packet.wallet || '';
+      $('ensName').value = packet.ensName || '';
+      $('subdomain').value = packet.subdomain || '';
+      $('salt').value = packet.salt || '';
+      $('globalProof').value = packet.globalProof || '[]';
+      $('applicationUri').value = packet.applicationUri || '';
+      $('commitment').value = packet.commitment || '';
+      computeCommitment();
+    }
+
+    function saveLocal(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(getPacket()));
+      setStatus('formStatus', 'ok', 'Saved locally in this browser.');
+    }
+
+    function loadLocal(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return setStatus('formStatus', 'warn', 'No saved packet found in this browser.');
+      try {
+        setPacket(JSON.parse(raw));
+        setStatus('formStatus', 'ok', 'Loaded saved packet from this browser.');
+      } catch {
+        setStatus('formStatus', 'err', 'Saved packet could not be read.');
+      }
+    }
+
+    function downloadJson(){
+      const blob = new Blob([JSON.stringify(getPacket(), null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'agijobmanagerprimehelperv0-packet.json';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 600);
+    }
+
+    async function importJson(file){
+      const text = await file.text();
+      setPacket(JSON.parse(text));
+      setStatus('formStatus', 'ok', 'Imported packet JSON successfully.');
+    }
+
+    function clearForm(){
+      $('procurementId').value = '0';
+      $('wallet').value = '';
+      $('ensName').value = '';
+      $('subdomain').value = '';
+      $('salt').value = '';
+      $('globalProof').value = '[]';
+      $('applicationUri').value = '';
+      $('commitment').value = '';
+      APP.state = undefined;
+      APP.txs = [];
+      renderChecks([]);
+      renderTxs();
+      setStatus('formStatus', 'warn', 'Form cleared.');
+      setStatus('chainStatus', 'warn', 'On-chain checks have not run yet.');
+      setStatus('approveStatus', 'warn', 'Run refresh checks first.');
+      setStatus('commitStatus', 'warn', 'Resolve the blockers above before committing.');
+      setStatus('revealStatus', 'warn', 'Reveal is not ready yet.');
+      ['networkLine','discoveryLine','settlementLine','tokenLine','balanceLine','allowanceLine','stakeLine','reputationLine','minRepLine','phaseLine','storedCommitmentLine'].forEach(id => $(id).textContent='—');
+      $('approveSummary').textContent = 'Stake / allowance not loaded yet.';
+      $('commitSummary').textContent = 'Commitment not ready yet.';
+      $('revealSummary').textContent = 'Reveal becomes available later when the on-chain phase changes to reveal.';
+      $('etherscanFields').textContent = 'Fill the form and compute the commitment.';
+    }
+
+    function formatUnits(v, decimals=18, symbol=''){ try { return ethers.formatUnits(v, decimals) + (symbol ? ' ' + symbol : ''); } catch { return safeText(v); } }
+    function formatBn(v){ try { return v.toString(); } catch { return safeText(v); } }
+
+    function computeCommitment(){
+      extractSubdomain();
+      const { errors } = validateForm();
+      if (errors.length){
+        $('commitment').value = '';
+        $('etherscanFields').textContent = 'Fix the form issues first.';
+        $('commitSummary').textContent = 'Commitment not computed yet.';
+        setStatus('formStatus', 'warn', errors.join(' '));
+        return;
+      }
+      const procurementId = BigInt($('procurementId').value.trim());
+      const wallet = $('wallet').value.trim();
+      const uri = $('applicationUri').value.trim();
+      const salt = $('salt').value.trim();
+      const commitment = ethers.solidityPackedKeccak256(['uint256','address','string','bytes32'], [procurementId, wallet, uri, salt]);
+      $('commitment').value = commitment;
+      const proofRaw = $('globalProof').value.trim() || '[]';
+      $('etherscanFields').textContent = [
+        'procurementId: ' + procurementId,
+        'commitment:    ' + commitment,
+        'subdomain:     ' + $('subdomain').value.trim(),
+        'globalProof:   ' + proofRaw
+      ].join('\n');
+      $('commitSummary').textContent = [
+        'Wallet:       ' + wallet,
+        'ENS:          ' + ($('ensName').value.trim() || '(optional)'),
+        'Subdomain:    ' + $('subdomain').value.trim(),
+        'Procurement:  ' + procurementId,
+        'Application:  ' + uri,
+        'Salt:         ' + salt,
+        'Commitment:   ' + commitment
+      ].join('\n');
+      setStatus('formStatus', 'ok', 'Commitment computed successfully.');
+    }
+
+    async function ensureProvider(){
+      if (!window.ethereum){
+        throw new Error('MetaMask was not detected in this browser.');
+      }
+      if (!APP.provider){
+        APP.provider = new ethers.BrowserProvider(window.ethereum, 'any');
+      }
+      return APP.provider;
+    }
+
+    async function connectWallet(){
+      const provider = await ensureProvider();
+      await provider.send('eth_requestAccounts', []);
+      APP.signer = await provider.getSigner();
+      const wallet = await APP.signer.getAddress();
+      $('wallet').value = wallet;
+      const network = await provider.getNetwork();
+      APP.chainId = Number(network.chainId);
+      setBanner('Wallet connected. Refresh on-chain checks to load live procurement, allowance, authorization, and phase.', 'ok');
+      setStatus('formStatus', 'ok', 'Wallet connected.');
+      computeCommitment();
+      return wallet;
+    }
+
+    async function switchToMainnet(){
+      if (!window.ethereum) throw new Error('MetaMask was not detected.');
+      await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x1' }] });
+      APP.chainId = 1;
+      setBanner('Switched to Ethereum mainnet.', 'ok');
+      await refreshState();
+    }
+
+    function shortPhase(code){ return phaseLabels[code] || code || 'Unknown'; }
+
+    function explainError(err){
+      const candidates = [
+        err?.shortMessage,
+        err?.reason,
+        err?.message,
+        err?.info?.error?.message,
+        err?.info?.payload?.params?.[0]?.data,
+        err?.data?.message
+      ].filter(Boolean).map(String);
+      let msg = candidates[0] || 'Unknown error.';
+      msg = msg.replace(/execution reverted:?/i, '').trim();
+      msg = msg.replace(/See: https:\/\/links\.ethers\.org\/v6-errors-[^\s]+/g, '').trim();
+      if (/user rejected|user denied|rejected/i.test(msg)) return 'The wallet request was cancelled.';
+      if (/insufficient funds/i.test(msg)) return 'Your wallet does not have enough ETH for gas.';
+      if (/notauthorized|not authorized/i.test(msg)) return 'The connected wallet is not authorized for that subdomain / proof.';
+      if (/invalidstate|invalid state/i.test(msg)) return 'The contract says the action is not allowed in the current phase or state.';
+      if (/erc20insufficientallowance|insufficient allowance/i.test(msg)) return 'Approval is missing or too small for the application stake.';
+      if (/erc20insufficientbalance|insufficient balance/i.test(msg)) return 'The connected wallet does not have enough AGIALPHA.';
+      if (/blind signing|contract data/i.test(msg)) return 'If you are using Ledger, enable blind signing / smart contract data in the Ethereum app.';
+      return msg || 'Unknown error.';
+    }
+
+    function addTx(kind, tx, extra = {}){
+      APP.txs = APP.txs || [];
+      const base = APP.state?.chainId === 1 ? 'https://etherscan.io/tx/' : '';
+      APP.txs.unshift({
+        kind,
+        hash: tx.hash,
+        url: base ? base + tx.hash : '',
+        at: new Date().toISOString(),
+        ...extra
+      });
+      APP.txs = APP.txs.slice(0, 6);
+      renderTxs();
+    }
+
+    function renderTxs(){
+      const list = $('txList');
+      list.innerHTML = '';
+      if (!APP.txs || APP.txs.length === 0){
+        list.innerHTML = '<div class="txRow"><div class="muted">No transactions sent from this page yet.</div></div>';
+        return;
+      }
+      for (const tx of APP.txs){
+        const row = document.createElement('div');
+        row.className = 'txRow';
+        const left = document.createElement('div');
+        left.innerHTML = '<div><strong>' + tx.kind + '</strong></div><div class="small mono">' + tx.hash + '</div><div class="small muted">' + new Date(tx.at).toLocaleString() + '</div>';
+        const right = document.createElement('div');
+        right.innerHTML = tx.url ? '<a class="btn ghost" target="_blank" rel="noopener" href="' + tx.url + '">Open</a>' : '<span class="small muted">Pending</span>';
+        row.appendChild(left); row.appendChild(right); list.appendChild(row);
+      }
+    }
+
+    function renderChecks(items){
+      const container = $('checklist');
+      container.innerHTML = '';
+      if (!items.length){
+        container.innerHTML = '<div class="item warn"><div class="dot"></div><div>Run <strong>Refresh on-chain checks</strong> to see live readiness.</div></div>';
+        return;
+      }
+      for (const item of items){
+        const div = document.createElement('div');
+        div.className = 'item ' + item.type;
+        div.innerHTML = '<div class="dot"></div><div><div><strong>' + item.label + '</strong></div><div class="small">' + item.text + '</div></div>';
+        container.appendChild(div);
+      }
+    }
+
+    function refreshButtons(){
+      const s = APP.state || {};
+      $('approveBtn').disabled = !!(s.blockersApprove && s.blockersApprove.length);
+      $('commitBtn').disabled = !!(s.blockersCommit && s.blockersCommit.length);
+      $('approveCommitBtn').disabled = !!(s.blockersApproveCommit && s.blockersApproveCommit.length);
+      $('revealBtn').disabled = !!(s.blockersReveal && s.blockersReveal.length);
+    }
+
+    function buildCheckItems(state){
+      const items = [];
+      items.push({ type: state.hasProvider ? 'ok' : 'err', label: 'MetaMask', text: state.hasProvider ? 'Detected in this browser.' : 'Install or unlock MetaMask.' });
+      items.push({ type: state.chainOk ? 'ok' : 'err', label: 'Network', text: state.chainOk ? 'Ethereum mainnet connected.' : 'Switch MetaMask to Ethereum mainnet.' });
+      items.push({ type: state.walletConnected ? 'ok' : 'err', label: 'Wallet', text: state.walletConnected ? 'Connected wallet: ' + state.connectedWallet : 'Connect MetaMask first.' });
+      items.push({ type: state.walletMatch ? 'ok' : 'err', label: 'Wallet match', text: state.walletMatch ? 'Connected wallet matches the wallet field.' : 'The wallet field must match the connected MetaMask account.' });
+      items.push({ type: state.procurementFound ? 'ok' : 'err', label: 'Procurement', text: state.procurementFound ? 'Procurement loaded successfully.' : 'That procurement ID was not found on the discovery contract.' });
+      items.push({ type: state.phaseOkForCommit ? 'ok' : state.phaseLoaded ? 'warn' : 'warn', label: 'Phase', text: state.phaseLoaded ? ('Current phase: ' + shortPhase(state.phaseCode) + '.') : 'Phase not loaded yet.' });
+      items.push({ type: state.discoveryPaused ? 'err' : 'ok', label: 'Discovery pause', text: state.discoveryPaused ? 'Discovery contract is paused.' : 'Discovery contract is not paused.' });
+      items.push({ type: state.managerPaused ? 'warn' : 'ok', label: 'Manager pause', text: state.managerPaused ? 'Settlement manager is paused.' : 'Settlement manager is not paused.' });
+      items.push({ type: state.authorized ? 'ok' : 'err', label: 'Authorization', text: state.authorized ? 'Connected wallet is authorized for the subdomain.' : 'Authorization check did not pass for this wallet / subdomain / proof.' });
+      items.push({ type: state.reputationOk ? 'ok' : 'err', label: 'Reputation', text: state.reputationLoaded ? ('Wallet reputation ' + state.reputation + ' / minimum ' + state.minReputation + '.') : 'Reputation not loaded yet.' });
+      items.push({ type: state.balanceOk ? 'ok' : 'err', label: 'AGIALPHA balance', text: state.balanceLoaded ? ('Balance ' + state.balanceHuman + ' / required stake ' + state.stakeHuman + '.') : 'Balance not loaded yet.' });
+      items.push({ type: state.allowanceOk ? 'ok' : 'warn', label: 'Allowance', text: state.allowanceLoaded ? ('Allowance ' + state.allowanceHuman + (state.allowanceOk ? ' is sufficient.' : ' is below the required stake.')) : 'Allowance not loaded yet.' });
+      items.push({ type: state.commitmentMatchesStored ? 'ok' : state.hasStoredCommitment ? 'warn' : 'ok', label: 'Stored commitment', text: state.hasStoredCommitment ? (state.commitmentMatchesStored ? 'Stored commitment matches the local commitment.' : 'A stored commitment already exists and does not match the local fields.') : 'No stored commitment yet for this wallet / procurement.' });
+      return items;
+    }
+
+    async function refreshState(){
+      computeCommitment();
+      const state = {
+        hasProvider: !!window.ethereum,
+        chainOk: false,
+        walletConnected: false,
+        walletMatch: false,
+        procurementFound: false,
+        phaseLoaded: false,
+        phaseOkForCommit: false,
+        phaseOkForReveal: false,
+        discoveryPaused: false,
+        managerPaused: false,
+        authorized: false,
+        reputationLoaded: false,
+        reputationOk: false,
+        balanceLoaded: false,
+        balanceOk: false,
+        allowanceLoaded: false,
+        allowanceOk: false,
+        hasStoredCommitment: false,
+        commitmentMatchesStored: false,
+        blockersApprove: [],
+        blockersCommit: [],
+        blockersApproveCommit: [],
+        blockersReveal: []
+      };
+      APP.state = state;
+      $('networkLine').textContent = '—';
+      $('discoveryLine').textContent = normalizeDiscoveryAddress($('discoveryAddress').value);
+      $('settlementLine').textContent = '—';
+      $('tokenLine').textContent = '—';
+      renderChecks(buildCheckItems(state));
+      refreshButtons();
+
+      try {
+        const provider = await ensureProvider();
+        APP.provider = provider;
+        const network = await provider.getNetwork();
+        const chainId = Number(network.chainId);
+        state.chainId = chainId;
+        state.chainOk = chainId === ETH_MAINNET_CHAIN_ID;
+        $('networkLine').textContent = state.chainOk ? 'Ethereum mainnet (chainId 1)' : ('Wrong network (chainId ' + chainId + ')');
+
+        try {
+          APP.signer = await provider.getSigner();
+          const connectedWallet = await APP.signer.getAddress();
+          state.connectedWallet = connectedWallet;
+          state.walletConnected = true;
+          if (!$('wallet').value.trim()) $('wallet').value = connectedWallet;
+          state.walletMatch = $('wallet').value.trim().toLowerCase() === connectedWallet.toLowerCase();
+        } catch {}
+
+        const discoveryAddress = normalizeDiscoveryAddress($('discoveryAddress').value);
+        APP.discoveryRead = new ethers.Contract(discoveryAddress, DISCOVERY_ABI, provider);
+        const [tokenAddress, settlementAddress] = await Promise.all([
+          APP.discoveryRead.agiToken(),
+          APP.discoveryRead.settlement()
+        ]);
+        state.tokenAddress = tokenAddress;
+        state.settlementAddress = settlementAddress;
+        $('discoveryLine').textContent = discoveryAddress;
+        $('settlementLine').textContent = settlementAddress;
+        $('tokenLine').textContent = tokenAddress;
+
+        APP.tokenRead = new ethers.Contract(tokenAddress, TOKEN_ABI, provider);
+        APP.managerRead = new ethers.Contract(settlementAddress, MANAGER_ABI, provider);
+        if (state.walletConnected) {
+          APP.discoveryWrite = new ethers.Contract(discoveryAddress, DISCOVERY_ABI, APP.signer);
+          APP.tokenWrite = new ethers.Contract(tokenAddress, TOKEN_ABI, APP.signer);
+        }
+
+        const pid = BigInt($('procurementId').value.trim());
+        const packetCheck = validateForm();
+        if (!packetCheck.errors.length){
+          computeCommitment();
+        }
+        const proof = packetCheck.proof;
+
+        const discoveryPaused = await APP.discoveryRead.paused().catch(() => false);
+        state.discoveryPaused = !!discoveryPaused;
+        const [managerPaused, managerSettlementPaused] = await Promise.all([
+          APP.managerRead.paused().catch(() => false),
+          APP.managerRead.settlementPaused().catch(() => false)
+        ]);
+        state.managerPaused = !!managerPaused || !!managerSettlementPaused;
+
+        let procurement;
+        try {
+          procurement = await APP.discoveryRead.procurements(pid);
+          state.procurementFound = procurement && procurement.employer && procurement.employer !== ZERO_ADDR;
+        } catch {
+          state.procurementFound = false;
+        }
+
+        if (state.procurementFound){
+          state.minReputation = procurement.minReputation;
+          state.applicationStake = procurement.applicationStake;
+          state.stakeHuman = formatUnits(procurement.applicationStake, 18, 'AGIALPHA');
+          $('stakeLine').textContent = state.stakeHuman;
+
+          try {
+            state.phaseCode = await APP.discoveryRead.nextActionForProcurement(pid);
+            state.phaseLoaded = true;
+            state.phaseOkForCommit = state.phaseCode === 'WC';
+            state.phaseOkForReveal = state.phaseCode === 'RA';
+            $('phaseLine').textContent = state.phaseCode + ' · ' + shortPhase(state.phaseCode);
+          } catch {
+            $('phaseLine').textContent = '—';
+          }
+        } else {
+          $('stakeLine').textContent = '—';
+          $('phaseLine').textContent = '—';
+        }
+
+        if (state.walletConnected){
+          const wallet = state.connectedWallet;
+          const [decimals, symbol, name] = await Promise.all([
+            APP.tokenRead.decimals().catch(() => 18),
+            APP.tokenRead.symbol().catch(() => 'TOKEN'),
+            APP.tokenRead.name().catch(() => 'Token')
+          ]);
+          state.tokenDecimals = Number(decimals);
+          state.tokenSymbol = symbol;
+          state.tokenName = name;
+          $('tokenLine').textContent = tokenAddress + ' · ' + name + ' (' + symbol + ')';
+
+          if (state.procurementFound){
+            const [balance, allowance] = await Promise.all([
+              APP.tokenRead.balanceOf(wallet).catch(() => 0n),
+              APP.tokenRead.allowance(wallet, discoveryAddress).catch(() => 0n)
+            ]);
+            state.balanceLoaded = true;
+            state.allowanceLoaded = true;
+            state.balance = balance;
+            state.allowance = allowance;
+            state.balanceHuman = formatUnits(balance, state.tokenDecimals, symbol);
+            state.allowanceHuman = formatUnits(allowance, state.tokenDecimals, symbol);
+            state.balanceOk = balance >= state.applicationStake;
+            state.allowanceOk = allowance >= state.applicationStake;
+            $('balanceLine').textContent = state.balanceHuman;
+            $('allowanceLine').textContent = state.allowanceHuman;
+          }
+
+          if ($('subdomain').value.trim() && parseProof().ok){
+            try {
+              state.authorized = await APP.managerRead.isAuthorizedAgent(wallet, $('subdomain').value.trim(), proof);
+            } catch {
+              state.authorized = false;
+            }
+          }
+
+          if (state.procurementFound){
+            try {
+              const rep = await APP.managerRead.reputation(wallet);
+              state.reputationLoaded = true;
+              state.reputation = rep;
+              state.reputationOk = rep >= state.minReputation;
+              $('reputationLine').textContent = rep.toString();
+              $('minRepLine').textContent = state.minReputation.toString();
+            } catch {}
+
+            try {
+              const app = await APP.discoveryRead.applications(pid, wallet);
+              state.storedCommitment = app.commitment;
+              state.revealed = !!app.revealed;
+              state.hasStoredCommitment = app.commitment && app.commitment !== ZERO_HASH;
+              $('storedCommitmentLine').textContent = state.hasStoredCommitment ? app.commitment : 'None yet';
+              const localCommitment = $('commitment').value.trim();
+              if (state.hasStoredCommitment && /^0x[a-fA-F0-9]{64}$/.test(localCommitment)) {
+                state.commitmentMatchesStored = app.commitment.toLowerCase() === localCommitment.toLowerCase();
+              } else if (!state.hasStoredCommitment) {
+                state.commitmentMatchesStored = true;
+              }
+            } catch {
+              $('storedCommitmentLine').textContent = '—';
+            }
+          }
+        }
+
+        const formErrors = validateForm().errors;
+        const connectedWallet = state.connectedWallet || '';
+        const manualWallet = $('wallet').value.trim();
+
+        const blockersCommon = [];
+        if (!state.hasProvider) blockersCommon.push('MetaMask was not detected.');
+        if (!state.walletConnected) blockersCommon.push('Connect MetaMask first.');
+        if (!state.chainOk) blockersCommon.push('Switch MetaMask to Ethereum mainnet.');
+        if (!state.walletMatch) blockersCommon.push('The wallet field must match the connected MetaMask account.');
+        if (!state.procurementFound) blockersCommon.push('The procurement ID was not found on the discovery contract.');
+        if (state.discoveryPaused) blockersCommon.push('The discovery contract is paused.');
+        if (formErrors.length) blockersCommon.push(...formErrors);
+
+        const blockersApprove = [...blockersCommon];
+        if (state.procurementFound && state.applicationStake === 0n) blockersApprove.push('This procurement does not require an application stake. Approval is not needed.');
+        if (state.procurementFound && state.balanceLoaded && !state.balanceOk) blockersApprove.push('The connected wallet does not have enough AGIALPHA for the application stake.');
+        if (state.procurementFound && state.allowanceLoaded && state.allowanceOk) blockersApprove.push('Allowance is already sufficient. You do not need to approve again.');
+
+        const blockersCommit = [...blockersCommon];
+        if (state.phaseLoaded && !state.phaseOkForCommit) blockersCommit.push('Commit is only allowed during the commit window. Current phase: ' + shortPhase(state.phaseCode) + '.');
+        if (!state.authorized) blockersCommit.push('The connected wallet is not authorized for this subdomain / proof.');
+        if (state.reputationLoaded && !state.reputationOk) blockersCommit.push('Wallet reputation is below the required minimum.');
+        if (state.allowanceLoaded && !state.allowanceOk) blockersCommit.push('Allowance is below the required application stake. Approve first.');
+        if (state.balanceLoaded && !state.balanceOk) blockersCommit.push('AGIALPHA balance is below the required application stake.');
+        if (state.hasStoredCommitment) blockersCommit.push(state.commitmentMatchesStored ? 'A commitment already exists for this wallet and procurement.' : 'A different commitment is already stored for this wallet and procurement.');
+
+        const blockersApproveCommit = [...blockersCommon];
+        if (state.phaseLoaded && !state.phaseOkForCommit) blockersApproveCommit.push('Commit is only allowed during the commit window. Current phase: ' + shortPhase(state.phaseCode) + '.');
+        if (!state.authorized) blockersApproveCommit.push('The connected wallet is not authorized for this subdomain / proof.');
+        if (state.reputationLoaded && !state.reputationOk) blockersApproveCommit.push('Wallet reputation is below the required minimum.');
+        if (state.balanceLoaded && !state.balanceOk) blockersApproveCommit.push('AGIALPHA balance is below the required application stake.');
+        if (state.hasStoredCommitment) blockersApproveCommit.push(state.commitmentMatchesStored ? 'A commitment already exists for this wallet and procurement.' : 'A different commitment is already stored for this wallet and procurement.');
+
+        const blockersReveal = [...blockersCommon];
+        if (state.phaseLoaded && !state.phaseOkForReveal) blockersReveal.push('Reveal is only allowed during the reveal window. Current phase: ' + shortPhase(state.phaseCode) + '.');
+        if (!state.authorized) blockersReveal.push('The connected wallet is not authorized for this subdomain / proof.');
+        if (state.reputationLoaded && !state.reputationOk) blockersReveal.push('Wallet reputation is below the required minimum.');
+        if (!state.hasStoredCommitment) blockersReveal.push('No commitment is stored yet for this wallet and procurement.');
+        if (state.revealed) blockersReveal.push('This application is already revealed.');
+        if (state.hasStoredCommitment && !state.commitmentMatchesStored) blockersReveal.push('The local fields do not match the stored commitment. Check the URI or salt.');
+
+        state.blockersApprove = blockersApprove.filter(Boolean);
+        state.blockersCommit = blockersCommit.filter(Boolean);
+        state.blockersApproveCommit = blockersApproveCommit.filter(Boolean);
+        state.blockersReveal = blockersReveal.filter(Boolean);
+
+        renderChecks(buildCheckItems(state));
+        refreshButtons();
+
+        setStatus('chainStatus', state.blockersCommit.length === 0 ? 'ok' : 'warn', state.blockersCommit.length === 0 ? 'Preflight checks passed for commit.' : ('Blockers found: ' + state.blockersCommit[0]));
+        setStatus('approveStatus', state.blockersApprove.length === 0 ? 'ok' : state.blockersApprove.every(v => /already sufficient|not require/i.test(v)) ? 'ok' : 'warn', state.blockersApprove.length === 0 ? 'Approval is ready.' : state.blockersApprove.join(' '));
+        setStatus('commitStatus', state.blockersCommit.length === 0 ? 'ok' : 'warn', state.blockersCommit.length === 0 ? 'Commit is ready.' : state.blockersCommit.join(' '));
+        setStatus('revealStatus', state.blockersReveal.length === 0 ? 'ok' : 'warn', state.blockersReveal.length === 0 ? 'Reveal is ready.' : state.blockersReveal.join(' '));
+
+        $('approveSummary').textContent = [
+          'Connected wallet: ' + (connectedWallet || '—'),
+          'Discovery contract: ' + discoveryAddress,
+          'Token: ' + (state.tokenName ? (state.tokenName + ' (' + state.tokenSymbol + ')') : '—'),
+          'Required stake: ' + (state.stakeHuman || '—'),
+          'Current allowance: ' + (state.allowanceHuman || '—')
+        ].join('\n');
+
+        $('revealSummary').textContent = [
+          'Stored commitment: ' + (state.hasStoredCommitment ? state.storedCommitment : 'None yet'),
+          'Local commitment:  ' + ($('commitment').value.trim() || '—'),
+          'Application URI:   ' + ($('applicationUri').value.trim() || '—'),
+          'Salt:              ' + ($('salt').value.trim() || '—'),
+          'Current phase:     ' + (state.phaseLoaded ? (state.phaseCode + ' · ' + shortPhase(state.phaseCode)) : '—')
+        ].join('\n');
+
+        setBanner(state.blockersCommit.length === 0 ? 'Everything needed for commit is ready. You can commit directly from this page.' : 'The UI is now doing the hard checks for you. Fix the blockers shown below instead of guessing.', state.blockersCommit.length === 0 ? 'ok' : 'warn');
+      } catch (err){
+        renderChecks(buildCheckItems(state));
+        refreshButtons();
+        setStatus('chainStatus', 'err', explainError(err));
+        setBanner('On-chain checks could not be completed: ' + explainError(err), 'err');
+      }
+    }
+
+    async function estimateOrThrow(contract, method, args){
+      try {
+        const estimate = await contract[method].estimateGas(...args);
+        return (estimate * 120n) / 100n;
+      } catch (err) {
+        throw new Error(explainError(err));
+      }
+    }
+
+    async function approveExactStake(){
+      try {
+        await connectWallet();
+        await refreshState();
+        const s = APP.state;
+        if (s.blockersApprove.some(v => !/already sufficient/i.test(v) && !/does not require/i.test(v))) {
+          throw new Error(s.blockersApprove.join(' '));
+        }
+        if (!s.procurementFound || s.applicationStake === 0n){
+          setStatus('approveStatus', 'ok', 'This procurement does not require an application stake.');
+          return;
+        }
+        if (s.allowanceOk){
+          setStatus('approveStatus', 'ok', 'Allowance is already sufficient.');
+          return;
+        }
+        const discoveryAddress = normalizeDiscoveryAddress($('discoveryAddress').value);
+        const gasLimit = await estimateOrThrow(APP.tokenWrite, 'approve', [discoveryAddress, s.applicationStake]);
+        setStatus('approveStatus', 'warn', 'MetaMask opened. Confirm the approval transaction.');
+        const tx = await APP.tokenWrite.approve(discoveryAddress, s.applicationStake, { gasLimit });
+        addTx('Approve exact stake', tx);
+        setStatus('approveStatus', 'warn', 'Approval submitted. Waiting for confirmation…');
+        await tx.wait();
+        setStatus('approveStatus', 'ok', 'Approval confirmed successfully.');
+        await refreshState();
+      } catch (err){
+        setStatus('approveStatus', 'err', explainError(err));
+      }
+    }
+
+    async function commitApplication(){
+      try {
+        await connectWallet();
+        await refreshState();
+        const s = APP.state;
+        if (s.blockersCommit.length) throw new Error(s.blockersCommit.join(' '));
+        const proof = parseProof().value;
+        const pid = BigInt($('procurementId').value.trim());
+        const commitment = $('commitment').value.trim();
+        const subdomain = $('subdomain').value.trim();
+        const gasLimit = await estimateOrThrow(APP.discoveryWrite, 'commitApplication', [pid, commitment, subdomain, proof]);
+        setStatus('commitStatus', 'warn', 'MetaMask opened. Confirm the commit transaction.');
+        const tx = await APP.discoveryWrite.commitApplication(pid, commitment, subdomain, proof, { gasLimit });
+        addTx('Commit application', tx);
+        setStatus('commitStatus', 'warn', 'Commit submitted. Waiting for confirmation…');
+        await tx.wait();
+        setStatus('commitStatus', 'ok', 'Commit confirmed successfully.');
+        await refreshState();
+      } catch (err){
+        setStatus('commitStatus', 'err', explainError(err));
+      }
+    }
+
+    async function approveAndCommit(){
+      try {
+        await connectWallet();
+        await refreshState();
+        const s = APP.state;
+        if (s.blockersApproveCommit.length) throw new Error(s.blockersApproveCommit.join(' '));
+        if (!s.allowanceOk) {
+          await approveExactStake();
+          await refreshState();
+        }
+        if (APP.state.blockersCommit.length) throw new Error(APP.state.blockersCommit.join(' '));
+        await commitApplication();
+      } catch (err){
+        setStatus('commitStatus', 'err', explainError(err));
+      }
+    }
+
+    async function revealApplication(){
+      try {
+        await connectWallet();
+        await refreshState();
+        const s = APP.state;
+        if (s.blockersReveal.length) throw new Error(s.blockersReveal.join(' '));
+        const proof = parseProof().value;
+        const pid = BigInt($('procurementId').value.trim());
+        const subdomain = $('subdomain').value.trim();
+        const salt = $('salt').value.trim();
+        const uri = $('applicationUri').value.trim();
+        const gasLimit = await estimateOrThrow(APP.discoveryWrite, 'revealApplication', [pid, subdomain, proof, salt, uri]);
+        setStatus('revealStatus', 'warn', 'MetaMask opened. Confirm the reveal transaction.');
+        const tx = await APP.discoveryWrite.revealApplication(pid, subdomain, proof, salt, uri, { gasLimit });
+        addTx('Reveal application', tx);
+        setStatus('revealStatus', 'warn', 'Reveal submitted. Waiting for confirmation…');
+        await tx.wait();
+        setStatus('revealStatus', 'ok', 'Reveal confirmed successfully.');
+        await refreshState();
+      } catch (err){
+        setStatus('revealStatus', 'err', explainError(err));
+      }
+    }
+
+    function useConnectedWallet(){
+      if (APP.state?.connectedWallet) {
+        $('wallet').value = APP.state.connectedWallet;
+        computeCommitment();
+        setStatus('formStatus', 'ok', 'Copied the connected wallet into the wallet field.');
+      } else {
+        setStatus('formStatus', 'warn', 'Connect MetaMask first.');
+      }
+    }
+
+    function randomSalt(){
+      $('salt').value = ethers.hexlify(ethers.randomBytes(32));
+      computeCommitment();
+    }
+
+    function copyText(text, messageId){
+      navigator.clipboard.writeText(text).then(() => {
+        if (messageId) setStatus(messageId, 'ok', 'Copied to clipboard.');
+      }).catch(() => {
+        if (messageId) setStatus(messageId, 'warn', 'Copy failed. Copy it manually.');
+      });
+    }
+
+    function loadExample(){
+      setPacket(EXAMPLE);
+      setStatus('formStatus', 'ok', 'Example loaded. Replace the values with your own before sending any live transaction.');
+    }
+
+    $('connectBtn').addEventListener('click', connectWallet);
+    $('switchBtn').addEventListener('click', switchToMainnet);
+    $('refreshBtn').addEventListener('click', refreshState);
+    $('useWalletBtn').addEventListener('click', useConnectedWallet);
+    $('extractBtn').addEventListener('click', () => { extractSubdomain(); computeCommitment(); });
+    $('generateSaltBtn').addEventListener('click', randomSalt);
+    $('computeBtn').addEventListener('click', computeCommitment);
+    $('loadExampleBtn').addEventListener('click', loadExample);
+    $('clearBtn').addEventListener('click', clearForm);
+    $('saveLocalBtn').addEventListener('click', saveLocal);
+    $('loadLocalBtn').addEventListener('click', loadLocal);
+    $('downloadBtn').addEventListener('click', downloadJson);
+    $('importBtn').addEventListener('click', () => $('importFile').click());
+    $('importFile').addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      try { await importJson(file); } catch { setStatus('formStatus', 'err', 'That JSON file could not be imported.'); }
+      e.target.value = '';
+    });
+    $('copyCommitmentBtn').addEventListener('click', () => copyText($('commitment').value.trim(), 'formStatus'));
+    $('copySaltBtn').addEventListener('click', () => copyText($('salt').value.trim(), 'formStatus'));
+    $('copySummaryBtn').addEventListener('click', () => copyText($('commitSummary').textContent, 'formStatus'));
+    $('approveBtn').addEventListener('click', approveExactStake);
+    $('commitBtn').addEventListener('click', commitApplication);
+    $('approveCommitBtn').addEventListener('click', approveAndCommit);
+    $('revealBtn').addEventListener('click', revealApplication);
+
+    ['discoveryAddress','procurementId','wallet','ensName','subdomain','salt','globalProof','applicationUri'].forEach(id => $(id).addEventListener('input', computeCommitment));
+
+    if (window.ethereum){
+      window.ethereum.on?.('accountsChanged', async () => { APP.provider = undefined; APP.signer = undefined; try { await connectWallet(); await refreshState(); } catch {} });
+      window.ethereum.on?.('chainChanged', async () => { APP.provider = undefined; APP.signer = undefined; try { await refreshState(); } catch {} });
+    }
+
+    clearForm();
+    renderTxs();
+    computeCommitment();
+  </script>
+</body>
+</html>
