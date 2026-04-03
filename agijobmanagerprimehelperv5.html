@@ -1,0 +1,1449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AGIJobDiscoveryPrime · Elite Lifecycle Console</title>
+  <style>
+    :root{
+      --bg:#f6f5f2;
+      --bg2:#f5f1fb;
+      --card:#ffffff;
+      --ink:#121216;
+      --muted:#7e7a86;
+      --muted2:#a4a0aa;
+      --accent:#7a5cff;
+      --accent2:#9b86ff;
+      --accentSoft:#f0ebff;
+      --accentSoft2:#f7f4ff;
+      --line:#ece7f4;
+      --lineStrong:#dfd8eb;
+      --ok:#1f9d62;
+      --okSoft:#e9f8ef;
+      --warn:#9b6a00;
+      --warnSoft:#fff6df;
+      --danger:#c2466e;
+      --dangerSoft:#fff0f4;
+      --dark:#17131f;
+      --soft:#faf8ff;
+      --shadow:0 20px 60px rgba(54,31,117,.07);
+      --shadowSoft:0 10px 28px rgba(54,31,117,.05);
+      --radius:28px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font:16px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 520px at 100% -10%, rgba(151,125,255,.16), transparent 55%),
+        radial-gradient(1000px 380px at 0% 0%, rgba(122,92,255,.08), transparent 50%),
+        linear-gradient(180deg, #faf9f6 0%, #f4f1f8 100%);
+    }
+    a{color:inherit}
+    .wrap{max-width:1220px;margin:0 auto;padding:34px 24px 84px}
+    .grid{display:grid;gap:30px}
+    h1{
+      margin:0;
+      font-size:clamp(52px,8vw,82px);
+      line-height:.94;
+      letter-spacing:-.055em;
+      font-weight:800;
+    }
+    h2{margin:0 0 12px;font-size:clamp(28px,4vw,42px);line-height:1.04;letter-spacing:-.04em;font-weight:750}
+    h3{margin:0 0 10px;font-size:24px;line-height:1.12;letter-spacing:-.03em}
+    p{margin:0 0 14px;color:var(--muted)}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      margin-bottom:18px;
+      font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+      color:#8d8597;
+    }
+    .heroLead{padding:8px 0 0;align-self:start}
+    .heroLead .heroKicker{
+      margin-top:10px;
+      max-width:860px;
+      font-size:clamp(28px,4vw,56px);
+      line-height:1.02;
+      letter-spacing:-.045em;
+      font-weight:320;
+      color:#8a8791;
+    }
+    .heroLead p{max-width:760px;margin-top:18px;font-size:20px;line-height:1.7;color:#5f5a68}
+    .heroShell{display:grid;grid-template-columns:1.18fr .82fr;gap:30px;align-items:start}
+    .heroTags{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .pill{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:10px 14px;border-radius:999px;
+      background:var(--accentSoft);color:#4c3d92;
+      border:1px solid rgba(122,92,255,.08);
+      font-size:14px;font-weight:700;white-space:nowrap;
+    }
+    .grid.top{grid-template-columns:1.18fr .82fr}
+    .two{grid-template-columns:1fr 1fr}
+    .three{grid-template-columns:1fr 1fr 1fr}
+    .four{grid-template-columns:repeat(4,1fr)}
+    .card{
+      background:rgba(255,255,255,.84);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border:1px solid rgba(223,216,235,.95);
+      border-radius:var(--radius);
+      padding:28px 30px;
+      box-shadow:var(--shadow);
+    }
+    .card.compact{padding:24px}
+    .softCard{background:linear-gradient(180deg,#ffffff,#fbf9ff)}
+    .stack > * + *{margin-top:16px}
+    .section{scroll-margin-top:24px}
+    label{
+      display:block;
+      margin:0 0 10px;
+      font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+      color:#8f889b;
+    }
+    input,textarea,select{
+      width:100%;padding:16px 18px;
+      border-radius:18px;border:1px solid #e7e0ee;background:rgba(255,255,255,.96);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+      font:15px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      color:#21192d;
+      transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+    }
+    input:focus,textarea:focus,select:focus{outline:none;border-color:#c5b8ff;box-shadow:0 0 0 4px rgba(122,92,255,.11)}
+    textarea{min-height:110px;resize:vertical}
+    input[readonly],textarea[readonly],select[readonly]{background:#fdfcff;color:#3c3450}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .small{font-size:13px;color:var(--muted)}
+    .microcopy{margin-top:8px;font-size:13px;line-height:1.55;color:#6d6678}
+    .microcopy code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--accentSoft);padding:2px 6px;border-radius:8px;color:#433576}
+    .mini{font-size:12px}
+    .muted{color:var(--muted)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+    .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+    button,a.btn{
+      appearance:none;border:1px solid transparent;border-radius:18px;
+      padding:14px 18px;min-height:50px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#fff;font-weight:800;font-size:15px;letter-spacing:-.01em;text-decoration:none;
+      cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      box-shadow:0 12px 26px rgba(122,92,255,.18);
+      transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease, filter .18s ease;
+    }
+    button:hover,a.btn:hover{transform:translateY(-1px);box-shadow:0 16px 34px rgba(122,92,255,.22)}
+    button.secondary,a.btn.secondary{background:var(--accentSoft);color:#44357c;box-shadow:none;border-color:#e4ddfb}
+    button.ghost,a.btn.ghost{background:#fff;color:#3b324c;border-color:var(--lineStrong);box-shadow:var(--shadowSoft)}
+    button.warn,a.btn.warn{background:var(--warnSoft);color:#7c5500;border-color:#efd391;box-shadow:none}
+    button.danger,a.btn.danger{background:var(--dangerSoft);color:#9a254c;border-color:#f1bad0;box-shadow:none}
+    button.linky,a.btn.linky{background:#eef4ff;color:#224ba7;border-color:#d5e3ff;box-shadow:none}
+    button:disabled{opacity:.56;cursor:not-allowed;filter:saturate(.35);transform:none;box-shadow:none}
+    .soft,.out{
+      border-radius:22px;padding:18px 20px;overflow:auto;white-space:pre-wrap;word-break:break-word;
+    }
+    .soft{background:linear-gradient(180deg,#fbf8ff,#f6f1ff);color:#3f3170;border:1px solid var(--line)}
+    .out{background:linear-gradient(180deg,#1a1523,#14101c);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+    .banner{
+      padding:18px 20px;border-radius:22px;background:linear-gradient(180deg,#effbf4,#e8f7ee);
+      border:1px solid #bfe6cd;color:#106c46;font-size:14px;line-height:1.6;
+    }
+    .status{margin-top:10px;padding:16px 18px;border-radius:20px;border:1px dashed var(--lineStrong);background:#fff;font-size:14px;line-height:1.6}
+    .status.ok{background:var(--okSoft);border-color:#bee6cf;color:#0d7a4f}
+    .status.warn{background:var(--warnSoft);border-color:#f2da9f;color:#7a5400}
+    .status.err{background:var(--dangerSoft);border-color:#f0b7c4;color:#a43253}
+    .checklist{display:grid;gap:10px}
+    .item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.92)}
+    .dot{width:12px;height:12px;border-radius:999px;margin-top:7px;flex:0 0 12px;background:#ccc4d8;box-shadow:0 0 0 4px rgba(122,92,255,.06)}
+    .item.ok .dot{background:var(--ok)}
+    .item.warn .dot{background:var(--warn)}
+    .item.err .dot{background:var(--danger)}
+    .kv{display:grid;grid-template-columns:190px 1fr;gap:8px 14px}
+    .okText{color:var(--ok);font-weight:800}.warnText{color:var(--warn);font-weight:800}.dangerText{color:var(--danger);font-weight:800}.infoText{color:#2a5ad8;font-weight:800}
+    .txList{display:grid;gap:12px}
+    .txRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:var(--shadowSoft)}
+    .stageGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+    .stageCard{background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(250,247,255,.95));border:1px solid var(--line);border-radius:28px;padding:22px;min-height:252px;box-shadow:var(--shadowSoft)}
+    .stageNum{font-size:12px;font-weight:900;letter-spacing:.18em;color:#8c8298;text-transform:uppercase;margin-bottom:16px}
+    .stageRole{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-weight:800;color:#473971;margin-bottom:16px}
+    .stageFn{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#281f37;word-break:break-word;font-size:15px}
+    .hr{height:1px;background:var(--line);margin:14px 0}
+    .dataTable{width:100%;border-collapse:separate;border-spacing:0 10px}
+    .dataTable th,.dataTable td{text-align:left;padding:10px 12px;vertical-align:top}
+    .dataTable th{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#8e8796}
+    .dataTable td{background:#fff;border:1px solid var(--line);border-radius:16px}
+    .nav{display:flex;flex-wrap:wrap;gap:12px}
+    .nav a{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:999px;text-decoration:none;color:#35313b;border:1px solid var(--lineStrong);background:#fff;font-weight:750;box-shadow:var(--shadowSoft)}
+    details{border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.92);padding:14px 18px;box-shadow:var(--shadowSoft)}
+    summary{cursor:pointer;font-weight:800;color:#3e3268;list-style:none}
+    summary::-webkit-details-marker{display:none}
+    summary::after{content:'+';float:right;color:#8a7df3;font-size:22px;line-height:1}
+    details[open] summary::after{content:'−'}
+    code.inline{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--accentSoft);padding:4px 8px;border-radius:10px}
+    .right{display:flex;justify-content:flex-end}
+    .hint{padding:14px 16px;border-radius:18px;background:#faf7ff;border:1px solid var(--line);color:#5a506a}
+    .microcopy{margin-top:8px;font-size:12px;line-height:1.58;color:var(--muted)}
+    .microcopy code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--accentSoft);padding:2px 7px;border-radius:8px;color:#46387f}
+    .navCard{padding:24px 26px}
+    .quickSteps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .quickStep{padding:18px 18px;border-radius:22px;background:linear-gradient(180deg,#fff,#fbf8ff);border:1px solid var(--line);box-shadow:var(--shadowSoft)}
+    .stepNo{width:36px;height:36px;border-radius:999px;background:var(--accentSoft);color:#4f3e93;font-weight:900;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px}
+    .quickStep strong{display:block;font-size:16px;margin-bottom:6px}
+    .quickStep span{display:block;color:var(--muted);font-size:14px;line-height:1.55}
+    .connectCard{padding:24px 26px;align-self:start}
+    .connectCard h3{font-size:24px;margin-bottom:8px;line-height:1.06}
+    .connectCard p{font-size:15px;line-height:1.7}
+    .controls{display:flex;flex-wrap:wrap;gap:12px}
+    .overviewIntro{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:4px}
+    .overviewIntro p{max-width:760px}
+    .subtleBox{padding:16px 18px;border-radius:20px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadowSoft)}
+    .microcopy{margin-top:8px;font-size:13px;line-height:1.55;color:#6d6679}
+    .microcopy code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--accentSoft);padding:3px 7px;border-radius:10px;color:#4b3d8f}
+    .sectionTag{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);color:#4a3c87;font-weight:800;font-size:13px}
+    @media (max-width:1200px){.stageGrid,.quickSteps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:980px){.heroShell,.grid.top,.row,.row3,.two,.three,.four,.stageGrid,.quickSteps{grid-template-columns:1fr}.connectCard{position:static}}
+    @media (max-width:760px){
+      .wrap{padding:32px 16px 60px}
+      .card{padding:22px 20px;border-radius:24px}
+      h1{font-size:56px}
+      .heroLead .heroKicker{font-size:34px}
+      .nav a,.pill,button,a.btn{width:100%}
+      .controls{display:grid;grid-template-columns:1fr}
+      .kv{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap grid">
+    <div class="heroShell">
+      <div class="heroLead">
+        <div class="eyebrow">Prime mainnet · Discovery lifecycle console</div>
+        <h1>AGIJobDiscoveryPrime</h1>
+        <div class="heroKicker">Operate the full on-chain lifecycle from one calm, elegant, MetaMask-first console.</div>
+        <p>Designed for discerning but non-technical users, this helper turns a complicated smart-contract workflow into a guided sequence of clear next steps: connect, approve, commit, reveal, trial, score, designate, and settle — with direct writes from the page whenever the contracts allow it.</p>
+        <div class="heroTags">
+          <span class="pill">Single HTML file</span>
+          <span class="pill">MetaMask-first</span>
+          <span class="pill">Direct contract writes</span>
+          <span class="pill">Readable blockers</span>
+          <span class="pill">First-live fixture included</span>
+        </div>
+      </div>
+
+      <div class="card connectCard">
+        <div class="eyebrow">Quick connect</div>
+        <h3>Start safely in under a minute</h3>
+        <p>Connect the wallet that will actually sign, switch to Ethereum mainnet, and refresh once. This panel keeps the contract addresses, balances, allowances, and blockers visible in plain language so a non-technical user always sees the next safe step.</p>
+        <div class="controls">
+          <button type="button" id="connectBtn">Connect MetaMask</button>
+          <button type="button" class="secondary" id="switchBtn">Switch to Ethereum mainnet</button>
+          <button type="button" class="ghost" id="refreshBtn">Refresh all on-chain checks</button>
+        </div>
+        <div id="topBanner" class="banner">Best practice: connect MetaMask, load the procurement, refresh checks, and then only click the next action that shows as ready. This helper prefers direct MetaMask writes and only uses local storage for salts and helper packets.</div>
+      </div>
+    </div>
+
+    <div class="card navCard">
+      <div class="eyebrow">Recommended path</div>
+      <div class="quickSteps">
+        <div class="quickStep"><div class="stepNo">1</div><strong>Connect</strong><span>Use the same wallet that will sign your transaction. The helper will read balances, allowances, authorization, and current phase from live contracts.</span></div>
+        <div class="quickStep"><div class="stepNo">2</div><strong>Load & check</strong><span>Load the procurement or the first-live fixture, refresh all checks, and confirm that the next action is actually ready before you spend gas.</span></div>
+        <div class="quickStep"><div class="stepNo">3</div><strong>Write deliberately</strong><span>Approve the exact amount only when needed, then send the direct MetaMask write from the correct contract section.</span></div>
+        <div class="quickStep"><div class="stepNo">4</div><strong>Preserve evidence</strong><span>Save salts, URIs, and packet JSON locally. The helper is built to keep reveal, trial, scoring, and handoff data legible and recoverable.</span></div>
+      </div>
+    </div>
+
+    <div class="card navCard">
+      <div class="eyebrow">Authorization roots</div>
+      <div class="stack small">
+        <p><strong>Agents</strong> are checked through <code>isAuthorizedAgent(...)</code> and should normally use ENS names under <code>*.agent.agi.eth</code> or <code>*.alpha.agent.agi.eth</code>.</p>
+        <p><strong>Validators</strong> are checked through <code>isAuthorizedValidator(...)</code> and should normally use ENS names under <code>*.club.agi.eth</code> or <code>*.alpha.club.agi.eth</code>. Do not use <code>club.validator.agi.eth</code>.</p>
+      </div>
+    </div>
+
+    <div class="card navCard">
+      <div class="eyebrow">Navigate the lifecycle</div>
+      <div class="nav">
+        <a href="#section-overview">Overview</a>
+        <a href="#section-create">Stage 1 · Posting</a>
+        <a href="#section-applicant">Stages 2–3 · Applicant</a>
+        <a href="#section-shortlist">Stages 4–5 · Shortlist / Finalist</a>
+        <a href="#section-validator">Stage 6 · Validator scoring</a>
+        <a href="#section-designation">Stage 7 · Designation</a>
+        <a href="#section-manager">Stage 8 · ManagerPrime handoff</a>
+      </div>
+    </div>
+
+    <div class="card section" id="section-overview">
+      <div class="overviewIntro"><div><div class="eyebrow">Lifecycle map</div><h2>What each stage actually does on-chain</h2><p>This is the one-screen mental model. The cards below map the human workflow to the real contract functions, roles, and capital / evidence flow so users understand what they are about to do before they sign anything.</p></div><div class="sectionTag">8-stage flow</div></div>
+      <div class="stageGrid">
+        <div class="stageCard"><div class="stageNum">Stage 1</div><div class="stageRole">Strategos / employer</div><h3>Posting</h3><div class="stageFn">createPremiumJobWithDiscovery(...)</div><p>Atomic ManagerPrime settlement creation + DiscoveryPrime procurement creation.</p><div class="hr"></div><p><strong>Capital / evidence flow</strong> Employer must approve payout escrow to ManagerPrime and the discovery budget to DiscoveryPrime before posting.</p></div>
+        <div class="stageCard"><div class="stageNum">Stage 2</div><div class="stageRole">Applicant</div><h3>Commitment</h3><div class="stageFn">commitApplication(...)</div><p>Sealed entry with the 30&nbsp;bps application stake.</p><div class="hr"></div><p><strong>Capital / evidence flow</strong> Small admission stake deters spam without pricing out challengers.</p></div>
+        <div class="stageCard"><div class="stageNum">Stage 3</div><div class="stageRole">Applicant</div><h3>Reveal</h3><div class="stageFn">revealApplication(...)</div><p>Visible application and stake recovery logic.</p><div class="hr"></div><p><strong>Capital / evidence flow</strong> Properly revealed but unshortlisted applicants recover stake; unrevealed commitments can forfeit.</p></div>
+        <div class="stageCard"><div class="stageNum">Stage 4</div><div class="stageRole">Strategos / operator</div><h3>Shortlisting</h3><div class="stageFn">finalizeShortlist(...) / advanceProcurement(...)</div><p>Moves exactly the configured number of finalists forward.</p><div class="hr"></div><p><strong>Capital / evidence flow</strong> History governs shortlist entry; no stipend is paid yet.</p></div>
+        <div class="stageCard"><div class="stageNum">Stage 5</div><div class="stageRole">Finalist</div><h3>Trials</h3><div class="stageFn">acceptFinalist(...) + submitTrial(...)</div><p>Accepting may require a top-up to the finalist stake total; trial submission unlocks serious scoring.</p><div class="hr"></div><p><strong>Capital / evidence flow</strong> Paid work plus stake return make serious finalist participation economically worthwhile.</p></div>
+        <div class="stageCard"><div class="stageNum">Stage 6</div><div class="stageRole">Validator</div><h3>Validator scoring</h3><div class="stageFn">commitFinalistScore(...) + revealFinalistScore(...)</div><p>Validators score finalists with a separate commit / reveal and a score-bond.</p><div class="hr"></div><p><strong>Capital / evidence flow</strong> The score-bond materially exceeds the per-reveal reward, so careful scoring matters.</p></div>
+        <div class="stageCard"><div class="stageNum">Stage 7</div><div class="stageRole">Strategos / operator</div><h3>Designation</h3><div class="stageFn">finalizeWinner(...) / promoteFallbackFinalist(...)</div><p>The weighted composite decides the winner; fallback promotion exists if the designated winner stalls.</p><div class="hr"></div><p><strong>Capital / evidence flow</strong> Trial quality dominates final designation when quorum exists.</p></div>
+        <div class="stageCard"><div class="stageNum">Stage 8</div><div class="stageRole">Designated winner + settlement validators</div><h3>Handoff to ManagerPrime</h3><div class="stageFn">applyForJob(...) + submitCheckpoint(...) + requestJobCompletion(...) + validateJob(...)</div><p>Designation is not payout; the selected agent must still claim the slot, post the ManagerPrime bond, submit checkpoint and completion, and pass settlement.</p><div class="hr"></div><p><strong>Capital / evidence flow</strong> Final settlement-side payout share depends on current ManagerPrime configuration at assignment time.</p></div>
+      </div>
+    </div>
+
+    <div class="grid top">
+      <div class="card stack">
+        <div class="eyebrow">Workspace</div><h2>Your working context</h2><p>Use this panel to define the procurement, wallet, ENS labels, proofs, and helper packet that every later stage relies on.</p>
+        <div class="row">
+          <div>
+            <label for="discoveryAddress">AGIJobDiscoveryPrime contract</label>
+            <input id="discoveryAddress" data-persist value="0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29" />
+          </div>
+          <div>
+            <label for="procurementId">Loaded procurement ID</label>
+            <input id="procurementId" data-persist value="0" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="connectedWallet">Connected wallet (source of truth for direct writes)</label>
+            <input id="connectedWallet" readonly placeholder="Connect MetaMask" />
+          </div>
+          <div>
+            <label for="jobIdField">Loaded job ID (from discovery procurement)</label>
+            <input id="jobIdField" readonly placeholder="Refresh checks to load" />
+          </div>
+        </div>
+        <div class="row3">
+          <div>
+            <label for="agentEns">Agent ENS (helper field · use the agent root family)</label>
+            <input id="agentEns" data-persist placeholder="k.agent.agi.eth" />
+            <div class="microcopy">Valid examples: <code>alice.agent.agi.eth</code> or <code>alice.alpha.agent.agi.eth</code>. The bare on-chain subdomain is usually just the first label, such as <code>alice</code>.</div>
+          </div>
+          <div>
+            <label for="agentSubdomain">Agent subdomain used on-chain</label>
+            <input id="agentSubdomain" data-persist placeholder="k" />
+          </div>
+          <div>
+            <label for="agentProof">Agent globalProof JSON (usually [])</label>
+            <input id="agentProof" data-persist value="[]" />
+          </div>
+        </div>
+        <div class="row3">
+          <div>
+            <label for="validatorEns">Validator ENS (helper field · use the club root family)</label>
+            <input id="validatorEns" data-persist placeholder="alice.club.agi.eth" />
+            <div class="microcopy">Valid examples: <code>alice.club.agi.eth</code> or <code>alice.alpha.club.agi.eth</code>. The validator read checks the club roots via <code>isAuthorizedValidator(...)</code>. Do not use <code>club.validator.agi.eth</code>.</div>
+          </div>
+          <div>
+            <label for="validatorSubdomain">Validator subdomain used on-chain</label>
+            <input id="validatorSubdomain" data-persist placeholder="alice" />
+          </div>
+          <div>
+            <label for="validatorProof">Validator proof JSON (usually [] unless using a Merkle validator proof)</label>
+            <input id="validatorProof" data-persist value="[]" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="perJobProof">Per-job proof JSON (usually [] for SelectedAgentOnly)</label>
+            <input id="perJobProof" data-persist value="[]" />
+          </div>
+          <div>
+            <label for="managerApproveAmount">ManagerPrime bond approval amount (AGIALPHA, human units)</label>
+            <input id="managerApproveAmount" data-persist value="0" />
+          </div>
+        </div>
+        <div class="btns">
+          <button type="button" class="secondary" id="extractAgentBtn">Extract agent subdomain from ENS</button>
+          <button type="button" class="secondary" id="extractValidatorBtn">Extract validator subdomain from ENS</button>
+          <button type="button" class="ghost" id="saveLocalBtn">Save locally</button>
+          <button type="button" class="ghost" id="loadLocalBtn">Load saved</button>
+          <button type="button" class="ghost" id="downloadPacketBtn">Download packet JSON</button>
+          <button type="button" class="ghost" id="importPacketBtn">Import packet JSON</button>
+          <input id="importPacketFile" type="file" accept="application/json" style="display:none" />
+          <button type="button" class="ghost" id="loadFirstLiveAllBtn">Load first-live fixture</button>
+        </div>
+        <div id="globalStatus" class="status warn">Connect MetaMask, then refresh all on-chain checks.</div>
+      </div>
+
+      <div class="card stack softCard">
+        <div class="eyebrow">Live status</div><h2>What the chain says right now</h2><p>This panel is read-only. It exists so users can verify the network, balances, allowances, phase, and deadlines without hunting through explorers.</p>
+        <div class="kv mono small">
+          <div>Network</div><div id="networkLine">—</div>
+          <div>Discovery</div><div id="discoveryLine">—</div>
+          <div>ManagerPrime</div><div id="managerLine">—</div>
+          <div>AGIALPHA token</div><div id="tokenLine">—</div>
+          <div>Wallet balance</div><div id="balanceLine">—</div>
+          <div>Discovery allowance</div><div id="discoveryAllowanceLine">—</div>
+          <div>Manager allowance</div><div id="managerAllowanceLine">—</div>
+          <div>Current phase</div><div id="phaseLine">—</div>
+          <div>Commit deadline</div><div id="commitDeadlineLine">—</div>
+          <div>Reveal deadline</div><div id="revealDeadlineLine">—</div>
+          <div>Finalists / max</div><div id="finalistsLine">—</div>
+          <div>Applicants</div><div id="applicantsLine">—</div>
+          <div>Claimable balance</div><div id="claimableLine">—</div>
+          <div>Selection state</div><div id="selectionLine">—</div>
+        </div>
+        <div class="hint"><span class="warnText">Ledger users:</span> open the Ethereum app on Ledger and enable <strong>blind signing</strong> / <strong>smart contract data</strong> before approving or sending writes.</div>
+        <div id="chainStatus" class="status warn">On-chain checks have not run yet.</div>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <div class="card stack">
+        <div class="eyebrow">Readiness</div><h2>At-a-glance safety checks</h2><p>A calm, plain-language readiness list before you sign anything.</p>
+        <div class="checklist" id="checklist"></div>
+      </div>
+      <div class="card stack">
+        <div class="eyebrow">Recent writes</div><h2>Transactions sent from this helper</h2><p>Every write you send from this page appears here with an Etherscan link.</p>
+        <div class="txList" id="txList"><div class="txRow"><div class="muted">No transactions sent from this page yet.</div></div></div>
+      </div>
+    </div>
+
+    <div class="card section" id="section-create">
+      <div class="eyebrow">Stage 1 · Posting</div><h2>Create a premium job with discovery</h2>
+      <p>Use this section if you are the employer / strategist posting a new premium discovery procurement directly from the UI.</p>
+      <div class="btns">
+        <button type="button" class="ghost" id="loadFirstLiveCreateBtn">Load first-live create fixture</button>
+        <button type="button" class="ghost" id="copyLoadedToGlobalBtn">Copy loaded procurement ID + job meta into workflow</button>
+      </div>
+      <div class="row">
+        <div>
+          <label for="create_jobSpecURI">Job spec URI</label>
+          <input id="create_jobSpecURI" data-persist />
+        </div>
+        <div>
+          <label for="create_payoutHuman">Payout escrow (AGIALPHA, human units)</label>
+          <input id="create_payoutHuman" data-persist placeholder="100000" />
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label for="create_duration">Settlement duration (seconds)</label>
+          <input id="create_duration" data-persist placeholder="604800" />
+        </div>
+        <div>
+          <label for="create_details">Details</label>
+          <textarea id="create_details" data-persist></textarea>
+        </div>
+      </div>
+      <details>
+        <summary>Discovery procurement parameters</summary>
+        <div class="stack" style="margin-top:12px">
+          <div class="row3">
+            <div><label for="create_commitDeadline">Commit deadline (unix seconds)</label><input id="create_commitDeadline" data-persist /></div>
+            <div><label for="create_revealDeadline">Reveal deadline (unix seconds)</label><input id="create_revealDeadline" data-persist /></div>
+            <div><label for="create_finalistAcceptDeadline">Finalist accept deadline (unix seconds)</label><input id="create_finalistAcceptDeadline" data-persist /></div>
+          </div>
+          <div class="row3">
+            <div><label for="create_trialDeadline">Trial deadline (unix seconds)</label><input id="create_trialDeadline" data-persist /></div>
+            <div><label for="create_scoreCommitDeadline">Score commit deadline (unix seconds)</label><input id="create_scoreCommitDeadline" data-persist /></div>
+            <div><label for="create_scoreRevealDeadline">Score reveal deadline (unix seconds)</label><input id="create_scoreRevealDeadline" data-persist /></div>
+          </div>
+          <div class="row3">
+            <div><label for="create_selectedAcceptanceWindow">Selected acceptance window (seconds)</label><input id="create_selectedAcceptanceWindow" data-persist /></div>
+            <div><label for="create_checkpointWindow">Checkpoint window (seconds)</label><input id="create_checkpointWindow" data-persist /></div>
+            <div><label for="create_finalistCount">Finalist count</label><input id="create_finalistCount" data-persist /></div>
+          </div>
+          <div class="row3">
+            <div><label for="create_minValidatorReveals">Min validator reveals</label><input id="create_minValidatorReveals" data-persist /></div>
+            <div><label for="create_maxValidatorRevealsPerFinalist">Max validator reveals per finalist</label><input id="create_maxValidatorRevealsPerFinalist" data-persist /></div>
+            <div><label for="create_minReputation">Min reputation (0 inherits premium threshold)</label><input id="create_minReputation" data-persist /></div>
+          </div>
+          <div class="row3">
+            <div><label for="create_historicalWeightBps">Historical weight (bps)</label><input id="create_historicalWeightBps" data-persist /></div>
+            <div><label for="create_trialWeightBps">Trial weight (bps)</label><input id="create_trialWeightBps" data-persist /></div>
+            <div><label for="create_applicationStakeHuman">Application stake (AGIALPHA)</label><input id="create_applicationStakeHuman" data-persist /></div>
+          </div>
+          <div class="row3">
+            <div><label for="create_finalistStakeTotalHuman">Finalist stake total (AGIALPHA)</label><input id="create_finalistStakeTotalHuman" data-persist /></div>
+            <div><label for="create_stipendPerFinalistHuman">Stipend per finalist (AGIALPHA)</label><input id="create_stipendPerFinalistHuman" data-persist /></div>
+            <div><label for="create_validatorRewardPerRevealHuman">Validator reward per reveal (AGIALPHA)</label><input id="create_validatorRewardPerRevealHuman" data-persist /></div>
+          </div>
+          <div class="row3">
+            <div><label for="create_validatorScoreBondHuman">Validator score bond (AGIALPHA)</label><input id="create_validatorScoreBondHuman" data-persist /></div>
+            <div><label>Discovery budget preview</label><div class="soft mono" id="create_budgetPreview">—</div></div>
+            <div><label>Dual approvals needed</label><div class="soft mono" id="create_dualApprovalPreview">—</div></div>
+          </div>
+        </div>
+      </details>
+      <div class="btns">
+        <button type="button" id="createApprovePayoutBtn">Approve payout to ManagerPrime</button>
+        <button type="button" class="secondary" id="createApproveBudgetBtn">Approve budget to DiscoveryPrime</button>
+        <button type="button" class="secondary" id="createApproveBothBtn">Approve both</button>
+        <button type="button" class="warn" id="createWriteBtn">Create premium job with discovery</button>
+      </div>
+      <div id="createStatus" class="status warn">Load the fixture or fill the form, then refresh checks before approving or creating.</div>
+    </div>
+
+    <div class="grid two section" id="section-applicant">
+      <div class="card stack">
+        <div class="eyebrow">Stages 2–3 · Applicant</div><h2>Commit, then reveal</h2>
+        <div class="row">
+          <div>
+            <label for="app_uri">Application URI</label>
+            <input id="app_uri" data-persist placeholder="ipfs://..." />
+          </div>
+          <div>
+            <label for="app_salt">Applicant salt (bytes32)</label>
+            <input id="app_salt" data-persist placeholder="0x..." />
+          </div>
+        </div>
+        <div>
+          <label for="app_commitment">Applicant commitment</label>
+          <textarea id="app_commitment" readonly></textarea>
+        </div>
+        <div class="btns">
+          <button type="button" class="secondary" id="appGenerateSaltBtn">Generate secure salt</button>
+          <button type="button" id="appComputeBtn">Compute applicant commitment</button>
+          <button type="button" class="ghost" id="copyApplicantSummaryBtn">Copy applicant summary</button>
+        </div>
+        <div class="soft mono" id="appSummary">Fill the applicant fields and compute the commitment.</div>
+        <div class="btns">
+          <button type="button" id="appApproveStakeBtn">Approve exact application stake</button>
+          <button type="button" class="secondary" id="appApproveCommitBtn">Approve + Commit</button>
+          <button type="button" id="appCommitBtn">Commit application</button>
+          <button type="button" class="warn" id="appRevealBtn">Reveal application</button>
+        </div>
+        <div id="appStatus" class="status warn">This panel explains applicant blockers in plain language before you sign.</div>
+      </div>
+
+      <div class="card stack">
+        <div class="eyebrow">Applicant state</div><h2>What the contract currently stores for this wallet</h2>
+        <div class="kv mono small">
+          <div>Stored commitment</div><div id="appStoredCommitmentLine">—</div>
+          <div>Revealed</div><div id="appRevealedLine">—</div>
+          <div>Shortlisted</div><div id="appShortlistedLine">—</div>
+          <div>Finalist accepted</div><div id="appAcceptedLine">—</div>
+          <div>Trial submitted</div><div id="appTrialSubmittedLine">—</div>
+          <div>Locked stake</div><div id="appLockedStakeLine">—</div>
+          <div>Historical score</div><div id="appHistoricalLine">—</div>
+          <div>Trial score</div><div id="appTrialScoreLine">—</div>
+          <div>Composite score</div><div id="appCompositeLine">—</div>
+          <div>Discovery defaults</div><div id="appDefaultsLine">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid two section" id="section-shortlist">
+      <div class="card stack">
+        <div class="eyebrow">Stages 4–5 · Shortlist / Finalist</div><h2>Advance the shortlist, accept finalist status, and submit the trial</h2>
+        <div class="btns">
+          <button type="button" id="advanceBtn">Advance procurement</button>
+          <button type="button" class="secondary" id="finalizeShortlistBtn">Finalize shortlist</button>
+          <button type="button" class="ghost" id="reloadListsBtn">Reload applicants + finalists</button>
+        </div>
+        <div class="soft mono" id="shortlistSummary">Use advanceProcurement for the safest public progression when appropriate.</div>
+        <div class="row">
+          <div>
+            <label for="trialUri">Trial URI (finalists only)</label>
+            <input id="trialUri" data-persist placeholder="ipfs://..." />
+          </div>
+          <div>
+            <label for="finalistTopupPreview">Finalist top-up needed</label>
+            <input id="finalistTopupPreview" readonly />
+          </div>
+        </div>
+        <div class="btns">
+          <button type="button" id="finalistApproveTopupBtn">Approve finalist top-up</button>
+          <button type="button" class="secondary" id="acceptFinalistBtn">Accept finalist</button>
+          <button type="button" class="warn" id="submitTrialBtn">Submit trial</button>
+        </div>
+        <div id="shortlistStatus" class="status warn">This panel explains shortlist and finalist blockers before you sign.</div>
+      </div>
+
+      <div class="card stack">
+        <div class="eyebrow">Lists</div><h2>Applicants and finalists</h2>
+        <div>
+          <label>Applicants</label>
+          <div class="soft mono" id="applicantsList">—</div>
+        </div>
+        <div>
+          <label>Finalists</label>
+          <div class="soft mono" id="finalistsList">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid two section" id="section-validator">
+      <div class="card stack">
+        <div class="eyebrow">Stage 6 · Validator scoring</div><h2>Commit and reveal finalist scores</h2>
+        <div class="row3">
+          <div>
+            <label for="validatorFinalist">Finalist address</label>
+            <input id="validatorFinalist" data-persist placeholder="0x..." />
+          </div>
+          <div>
+            <label for="validatorScore">Score (0–100)</label>
+            <input id="validatorScore" data-persist placeholder="87" />
+          </div>
+          <div>
+            <label for="validatorSalt">Validator salt (bytes32)</label>
+            <input id="validatorSalt" data-persist placeholder="0x..." />
+          </div>
+        </div>
+        <div>
+          <label for="validatorCommitment">Validator score commitment</label>
+          <textarea id="validatorCommitment" readonly></textarea>
+        </div>
+        <div class="btns">
+          <button type="button" class="secondary" id="validatorGenerateSaltBtn">Generate validator salt</button>
+          <button type="button" id="validatorComputeBtn">Compute validator commitment</button>
+          <button type="button" class="ghost" id="copyValidatorSummaryBtn">Copy validator summary</button>
+        </div>
+        <div class="soft mono" id="validatorSummary">Fill the validator fields and compute the score commitment.</div>
+        <div class="btns">
+          <button type="button" id="validatorApproveBondBtn">Approve exact validator score bond</button>
+          <button type="button" class="secondary" id="validatorCommitBtn">Commit finalist score</button>
+          <button type="button" class="warn" id="validatorRevealBtn">Reveal finalist score</button>
+        </div>
+        <div id="validatorStatus" class="status warn">This panel explains validator blockers before you sign.</div>
+      </div>
+
+      <div class="card stack">
+        <div class="eyebrow">Scoring state</div><h2>Validator economics and winner readiness</h2>
+        <div class="kv mono small">
+          <div>Validator score bond</div><div id="validatorBondLine">—</div>
+          <div>Per reveal reward</div><div id="validatorRewardLine">—</div>
+          <div>Min reveals</div><div id="validatorMinRevealLine">—</div>
+          <div>Max reveals / finalist</div><div id="validatorMaxRevealLine">—</div>
+          <div>Winner finalizable</div><div id="winnerFinalizableLine">—</div>
+          <div>Fallback promotable</div><div id="fallbackPromotableLine">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid two section" id="section-designation">
+      <div class="card stack">
+        <div class="eyebrow">Stage 7 · Designation</div><h2>Finalize the winner or promote a fallback</h2>
+        <p>Use <span class="mono">advanceProcurement</span> when you want the contract to move itself to the next sensible public action. Use the more specific buttons only when you intentionally want that exact write.</p>
+        <div class="btns">
+          <button type="button" id="designationAdvanceBtn">Advance procurement</button>
+          <button type="button" class="secondary" id="finalizeWinnerBtn">Finalize winner</button>
+          <button type="button" class="warn" id="promoteFallbackBtn">Promote fallback finalist</button>
+          <button type="button" class="ghost" id="claimBtn">Claim claimable balance</button>
+        </div>
+        <div id="designationStatus" class="status warn">This panel explains winner designation, fallback, and claim blockers before you sign.</div>
+      </div>
+
+      <div class="card stack">
+        <div class="eyebrow">Designation state</div><h2>What the procurement can do next</h2>
+        <div class="kv mono small">
+          <div>Next action code</div><div id="nextActionLine">—</div>
+          <div>Shortlist finalizable</div><div id="shortlistFinalizableLine">—</div>
+          <div>Winner finalizable</div><div id="winnerFinalizableLine2">—</div>
+          <div>Fallback promotable</div><div id="fallbackPromotableLine2">—</div>
+          <div>Winner finalized</div><div id="winnerFinalizedLine">—</div>
+          <div>Shortlist finalized</div><div id="shortlistFinalizedLine">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid two section" id="section-manager">
+      <div class="card stack">
+        <div class="eyebrow">Stage 8 · ManagerPrime handoff</div><h2>Claim the job, submit checkpoint, complete, and settle</h2>
+        <div class="soft mono" id="managerSummary">After designation, the selected winner must still apply for the job on ManagerPrime, submit checkpoint / completion, and pass validation.</div>
+        <div class="btns">
+          <button type="button" id="managerApproveBondBtn">Approve ManagerPrime bond amount</button>
+          <button type="button" class="secondary" id="applyForJobBtn">Apply for designated job</button>
+        </div>
+        <div class="row">
+          <div>
+            <label for="checkpointUri">Checkpoint URI</label>
+            <input id="checkpointUri" data-persist placeholder="ipfs://..." />
+          </div>
+          <div>
+            <label for="completionUri">Completion URI</label>
+            <input id="completionUri" data-persist placeholder="ipfs://..." />
+          </div>
+        </div>
+        <div class="btns">
+          <button type="button" class="secondary" id="checkpointBtn">Submit checkpoint</button>
+          <button type="button" class="secondary" id="completionBtn">Request completion</button>
+          <button type="button" class="ghost" id="validateBtn">Validate job</button>
+          <button type="button" class="ghost" id="disapproveBtn">Disapprove job</button>
+          <button type="button" class="warn" id="finalizeJobBtn">Finalize job</button>
+        </div>
+        <details>
+          <summary>Advanced settlement controls</summary>
+          <div class="btns" style="margin-top:12px">
+            <button type="button" class="danger" id="disputeBtn">Open dispute</button>
+            <button type="button" class="danger" id="expireBtn">Expire job</button>
+          </div>
+        </details>
+        <div id="managerStatus" class="status warn">This panel explains settlement-side blockers before you sign.</div>
+      </div>
+
+      <div class="card stack">
+        <div class="eyebrow">ManagerPrime</div><h2>Settlement-side live state</h2>
+        <div class="kv mono small">
+          <div>Selected agent</div><div id="selectedAgentLine">—</div>
+          <div>Selection expires</div><div id="selectionExpiryLine">—</div>
+          <div>Assigned agent</div><div id="assignedAgentLine">—</div>
+          <div>Checkpoint window</div><div id="checkpointWindowLine">—</div>
+          <div>Checkpoint deadline</div><div id="checkpointDeadlineLine">—</div>
+          <div>Checkpoint submitted</div><div id="checkpointSubmittedLine">—</div>
+          <div>Agent payout % eligibility</div><div id="agentPayoutPctLine">—</div>
+          <div>Active jobs / max</div><div id="activeJobsLine">—</div>
+          <div>Recommended bond approval</div><div id="recommendedBondLine">—</div>
+          <div>Manager paused</div><div id="managerPausedLine">—</div>
+          <div>Settlement paused</div><div id="managerSettlementPausedLine">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <h2>Best-practice reminders</h2>
+      <ol>
+        <li>Use the same wallet for compute, approve, commit, reveal, and the later ManagerPrime handoff unless you intentionally intend a different actor to perform a different role.</li>
+        <li>Do not change the applicant URI after you commit. Reveal must reuse the exact same URI and salt.</li>
+        <li>Do not lose either salt. Save them in at least two places.</li>
+        <li>If MetaMask shows a pending transaction, wait for it to confirm before sending the next one.</li>
+        <li>If a transaction is likely to fail, read the blockers shown here instead of guessing.</li>
+      </ol>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+  <script>
+    const APP = { txs: [], localJobMetaByProcurement: {} };
+    const STORAGE_KEY = 'agijobmanagerprimehelperv2-packet';
+    const ETH_MAINNET_CHAIN_ID = 1;
+    const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
+    const ZERO_HASH = '0x' + '00'.repeat(32);
+    const DEFAULT_DISCOVERY = '0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29';
+    const DEFAULT_TOKEN = '0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA';
+    const FIRST_LIVE = {"procurementId": "0", "jobSpecURI": "ipfs://bafkreihrscquk3h2zo6rsgtycp7lwxz2fqk24fmwcfkvvx3dapfmaxyyca", "payoutHuman": "100000", "duration": "604800", "details": "Premium discovery press-release procurement for AGIJobDiscoveryPrime, AGIJobManagerPrime, and ENSJobPages: tournament-style talent discovery, paid finalist trials, validator scoring, selected-slot settlement, and public IPFS memory.", "commitDeadline": "1775258936", "revealDeadline": "1775345336", "finalistAcceptDeadline": "1775518136", "trialDeadline": "1776122936", "scoreCommitDeadline": "1776209336", "scoreRevealDeadline": "1776295736", "selectedAcceptanceWindow": "259200", "checkpointWindow": "172800", "finalistCount": "3", "minValidatorReveals": "5", "maxValidatorRevealsPerFinalist": "7", "historicalWeightBps": "3500", "trialWeightBps": "6500", "minReputation": "0", "applicationStakeHuman": "300", "finalistStakeTotalHuman": "1250", "stipendPerFinalistHuman": "1500", "validatorRewardPerRevealHuman": "120", "validatorScoreBondHuman": "350"};
+
+    APP.localJobMetaByProcurement['0'] = { payoutWei: ethers.parseUnits(FIRST_LIVE.payoutHuman, 18), duration: BigInt(FIRST_LIVE.duration) };
+
+    const DISCOVERY_ABI = [
+      'function agiToken() view returns (address)',
+      'function settlement() view returns (address)',
+      'function paused() view returns (bool)',
+      'function intakePaused() view returns (bool)',
+      'function quoteProcurementBudget(uint8,uint8,uint256,uint256) view returns (uint256)',
+      'function createPremiumJobWithDiscovery((string jobSpecURI,uint256 payout,uint256 duration,string details),(uint64 commitDeadline,uint64 revealDeadline,uint64 finalistAcceptDeadline,uint64 trialDeadline,uint64 scoreCommitDeadline,uint64 scoreRevealDeadline,uint64 selectedAcceptanceWindow,uint64 checkpointWindow,uint8 finalistCount,uint8 minValidatorReveals,uint8 maxValidatorRevealsPerFinalist,uint16 historicalWeightBps,uint16 trialWeightBps,uint256 minReputation,uint256 applicationStake,uint256 finalistStakeTotal,uint256 stipendPerFinalist,uint256 validatorRewardPerReveal,uint256 validatorScoreBond)) returns (uint256 jobId,uint256 procurementId)',
+      'function procurements(uint256) view returns (address employer,uint256 jobId,uint64 pauseSecondsBaseline,uint64 commitDeadline,uint64 revealDeadline,uint64 finalistAcceptDeadline,uint64 trialDeadline,uint64 scoreCommitDeadline,uint64 scoreRevealDeadline,uint64 selectedAcceptanceWindow,uint64 checkpointWindow,uint8 finalistCount,uint8 minValidatorReveals,uint8 maxValidatorRevealsPerFinalist,uint16 historicalWeightBps,uint16 trialWeightBps,uint256 minReputation,uint256 applicationStake,uint256 finalistStakeTotal,uint256 stipendPerFinalist,uint256 validatorRewardPerReveal,uint256 validatorScoreBond,bool shortlistFinalized,bool winnerFinalized,bool cancelled)',
+      'function applicationView(uint256,address) view returns (bool revealed,bool shortlisted,bool finalistAccepted,bool trialSubmitted,uint256 lockedStake,string applicationURI,string trialURI,uint256 historicalScoreBps,uint256 trialScoreBps,uint256 compositeScoreBps,bool everPromoted)',
+      'function applications(uint256,address) view returns (bytes32 commitment,bool revealed,bool shortlisted,bool finalistAccepted,bool trialSubmitted,bool settled,bool everPromoted,uint256 lockedStake,string applicationURI,string trialURI,uint256 historicalScoreBps,uint256 trialScoreBps,uint256 compositeScoreBps)',
+      'function procurementApplicants(uint256) view returns (address[])',
+      'function procurementFinalists(uint256) view returns (address[])',
+      'function nextActionForProcurement(uint256) view returns (string)',
+      'function getDiscoveryStats(address) view returns (uint32 unrevealedApplications,uint32 unacceptedFinals,uint32 noTrialFinals,uint64 lastDefaultAt,uint256 penaltyBps)',
+      'function claimable(address) view returns (uint256)',
+      'function isShortlistFinalizable(uint256) view returns (bool)',
+      'function isWinnerFinalizable(uint256) view returns (bool)',
+      'function isFallbackPromotable(uint256) view returns (bool)',
+      'function commitApplication(uint256,bytes32,string,bytes32[])',
+      'function revealApplication(uint256,string,bytes32[],bytes32,string)',
+      'function advanceProcurement(uint256)',
+      'function finalizeShortlist(uint256)',
+      'function acceptFinalist(uint256)',
+      'function submitTrial(uint256,string)',
+      'function commitFinalistScore(uint256,address,bytes32,string,bytes32[])',
+      'function revealFinalistScore(uint256,address,uint8,bytes32,string,bytes32[])',
+      'function finalizeWinner(uint256)',
+      'function promoteFallbackFinalist(uint256)',
+      'function claim()',
+      'event ProcurementCreated(uint256 indexed procurementId,uint256 indexed jobId,address indexed employer)',
+      'event PremiumJobCreated(uint256 indexed procurementId,uint256 indexed jobId,address indexed employer)',
+      'event ApplicationCommitted(uint256 indexed procurementId,address indexed agent)',
+      'event ApplicationRevealed(uint256 indexed procurementId,address indexed agent,string applicationURI)',
+      'event ShortlistFinalized(uint256 indexed procurementId,address[] finalists)',
+      'event FinalistAccepted(uint256 indexed procurementId,address indexed finalist,uint256 totalLockedStake)',
+      'event TrialSubmitted(uint256 indexed procurementId,address indexed finalist,string trialURI)',
+      'event ScoreCommitted(uint256 indexed procurementId,address indexed finalist,address indexed validator)',
+      'event ScoreRevealed(uint256 indexed procurementId,address indexed finalist,address indexed validator,uint8 score)',
+      'event WinnerDesignated(uint256 indexed procurementId,address indexed finalist,uint256 compositeScoreBps)',
+      'event FallbackPromoted(uint256 indexed procurementId,address indexed finalist,uint256 compositeScoreBps)',
+      'event Claimed(address indexed user,uint256 amount)'
+    ];
+
+    const TOKEN_ABI = [
+      'function approve(address spender,uint256 value) returns (bool)',
+      'function allowance(address owner,address spender) view returns (uint256)',
+      'function balanceOf(address account) view returns (uint256)',
+      'function decimals() view returns (uint8)',
+      'function symbol() view returns (string)',
+      'function name() view returns (string)'
+    ];
+
+    const MANAGER_ABI = [
+      'function agiToken() view returns (address)',
+      'function paused() view returns (bool)',
+      'function settlementPaused() view returns (bool)',
+      'function premiumReputationThreshold() view returns (uint256)',
+      'function reputation(address) view returns (uint256)',
+      'function isAuthorizedAgent(address claimant,string subdomain,bytes32[] proof) view returns (bool)',
+      'function isAuthorizedValidator(address claimant,string subdomain,bytes32[] proof) view returns (bool)',
+      'function getJobSelectionInfo(uint256 jobId) view returns (uint8 intakeMode,address selectedAgent,bytes32 perJobAgentRoot,uint64 selectionExpiresAt,uint64 checkpointWindow,uint64 checkpointDeadline,bool checkpointSubmitted,address assignedAgent)',
+      'function getJobSelectionRuntimeState(uint256 jobId) view returns (bool selectionExpiredOrOpen,address assignedAgent)',
+      'function getHighestPayoutPercentage(address agent) view returns (uint256)',
+      'function activeJobsByAgent(address agent) view returns (uint256)',
+      'function maxActiveJobsPerAgent() view returns (uint256)',
+      'function agentBond() view returns (uint256)',
+      'function agentBondBps() view returns (uint256)',
+      'function agentBondMax() view returns (uint256)',
+      'function validatorBondBps() view returns (uint256)',
+      'function validatorBondMin() view returns (uint256)',
+      'function validatorBondMax() view returns (uint256)',
+      'function jobDurationLimit() view returns (uint256)',
+      'function applyForJob(uint256,string,bytes32[],bytes32[])',
+      'function submitCheckpoint(uint256,string)',
+      'function requestJobCompletion(uint256,string)',
+      'function validateJob(uint256,string,bytes32[])',
+      'function disapproveJob(uint256,string,bytes32[])',
+      'function finalizeJob(uint256)',
+      'function disputeJob(uint256)',
+      'function expireJob(uint256)'
+    ];
+
+    const $ = (id) => document.getElementById(id);
+    const allPersistEls = () => Array.from(document.querySelectorAll('[data-persist]'));
+    const shortAddr = (v) => v ? v.slice(0,6) + '…' + v.slice(-4) : '—';
+    const toStr = (v) => (v === undefined || v === null) ? '' : String(v);
+    const safeText = (v) => (v === undefined || v === null || v === '') ? '—' : String(v);
+    const phaseLabels = { WC:'Commit window open', RA:'Reveal window open', FS:'Finalize shortlist', FA:'Finalist acceptance', ST:'Trial submission', CS:'Validator score commit', RS:'Validator score reveal', FW:'Finalize winner', PF:'Promote fallback finalist', WA:'Waiting on assigned agent', WSA:'Waiting on selected agent', NPF:'No fallback finalist', P:'Paused', X:'Cancelled', SP:'Settlement paused', LMP:'Manager paused', LSF:'Settlement paused', LJM:'Manager lookup issue' };
+
+    function setStatus(id, type, text){ const el=$(id); el.className='status '+type; el.textContent=text; }
+    function setBanner(text, type='ok'){ const el=$('topBanner'); el.className = type==='err' ? 'banner status err' : type==='warn' ? 'banner status warn' : 'banner'; el.textContent=text; }
+    function fmtTs(v){ if(!v || v===0n || v==='0') return '—'; const n = Number(v); if(!Number.isFinite(n) || n<=0) return safeText(v); return new Date(n*1000).toLocaleString(); }
+    function weiToHuman(v, decimals=18){ try{ return ethers.formatUnits(v, decimals); }catch{ return safeText(v); } }
+    function humanToWei(v, decimals=18){ return ethers.parseUnits(String(v || '0').trim() || '0', decimals); }
+    function parseUint(v, label){ const s = String(v ?? '').trim(); if(!/^\d+$/.test(s)) throw new Error(label + ' must be a whole number.'); return BigInt(s); }
+    function parseJsonArray(raw, label){ const s = String(raw ?? '').trim() || '[]'; let parsed; try{ parsed = JSON.parse(s); }catch{ throw new Error(label + ' must be valid JSON, usually [].'); } if(!Array.isArray(parsed)) throw new Error(label + ' must be a JSON array.'); return parsed; }
+    function parseHexArray(raw, label){ const arr = parseJsonArray(raw, label); for(const item of arr){ if(typeof item !== 'string' || !/^0x[a-fA-F0-9]{64}$/.test(item)) throw new Error(label + ' items must each be a 66-character 0x hash.'); } return arr; }
+    function ensureIpfs(uri, label){ if(!/^ipfs:\/\/.+/.test(String(uri || '').trim())) throw new Error(label + ' must start with ipfs://'); return String(uri).trim(); }
+    function ensureBytes32(v, label){ const s = String(v || '').trim(); if(!/^0x[a-fA-F0-9]{64}$/.test(s)) throw new Error(label + ' must be a 66-character 0x value.'); return s; }
+    function ensureAddress(v, label){ const s = String(v || '').trim(); if(!/^0x[a-fA-F0-9]{40}$/.test(s)) throw new Error(label + ' must be a valid 0x address.'); return ethers.getAddress(s); }
+    function currentWallet(){ return $('connectedWallet').value.trim(); }
+    function discoveryAddress(){ return ensureAddress($('discoveryAddress').value.trim() || DEFAULT_DISCOVERY, 'Discovery contract'); }
+    function procurementIdBN(){ return parseUint($('procurementId').value.trim(), 'Procurement ID'); }
+    function jobIdBN(){ const s = $('jobIdField').value.trim(); if(!s) throw new Error('Load a procurement first to get the job ID.'); return parseUint(s, 'Job ID'); }
+    function parseProofField(id, label){ return parseHexArray($(id).value, label); }
+    function extractSubdomainFromEns(sourceId, targetId){ const ens = $(sourceId).value.trim(); if(!ens) return; const label = ens.split('.')[0] || ''; if(label) $(targetId).value = label; }
+    function randomSaltInto(id){ $(id).value = ethers.hexlify(ethers.randomBytes(32)); }
+    function copyText(text, statusId){ navigator.clipboard.writeText(text).then(()=>{ if(statusId) setStatus(statusId,'ok','Copied to clipboard.'); }).catch(()=>{ if(statusId) setStatus(statusId,'warn','Copy failed. Copy it manually.'); }); }
+
+    function collectPacket(){
+      const packet = {};
+      for(const el of allPersistEls()) packet[el.id] = el.value;
+      packet.discoveryAddress = $('discoveryAddress').value;
+      packet.procurementId = $('procurementId').value;
+      packet.connectedWallet = $('connectedWallet').value;
+      packet.jobIdField = $('jobIdField').value;
+      packet.app_commitment = $('app_commitment').value;
+      packet.validatorCommitment = $('validatorCommitment').value;
+      packet.generatedAt = new Date().toISOString();
+      return packet;
+    }
+    function applyPacket(packet){
+      if(!packet || typeof packet !== 'object') return;
+      for(const el of allPersistEls()){ if(packet.hasOwnProperty(el.id)) el.value = packet[el.id]; }
+      if(packet.discoveryAddress) $('discoveryAddress').value = packet.discoveryAddress;
+      if(packet.procurementId) $('procurementId').value = packet.procurementId;
+      computeApplicantCommitment();
+      computeValidatorCommitment();
+      updateCreatePreview();
+    }
+    function saveLocal(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(collectPacket())); setStatus('globalStatus','ok','Saved locally in this browser.'); }
+    function loadLocal(){ const raw = localStorage.getItem(STORAGE_KEY); if(!raw) return setStatus('globalStatus','warn','No saved packet found in this browser.'); try{ applyPacket(JSON.parse(raw)); setStatus('globalStatus','ok','Loaded the saved packet from this browser.'); }catch{ setStatus('globalStatus','err','Saved packet could not be read.'); } }
+    function downloadPacket(){ const blob = new Blob([JSON.stringify(collectPacket(), null, 2)], {type:'application/json'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='agijobmanagerprimehelperv4-packet.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(url), 600); }
+    async function importPacket(file){ const text = await file.text(); applyPacket(JSON.parse(text)); setStatus('globalStatus','ok','Packet imported successfully.'); }
+
+    function loadFirstLiveCreate(){
+      $('create_jobSpecURI').value = FIRST_LIVE.jobSpecURI;
+      $('create_payoutHuman').value = FIRST_LIVE.payoutHuman;
+      $('create_duration').value = FIRST_LIVE.duration;
+      $('create_details').value = FIRST_LIVE.details;
+      $('create_commitDeadline').value = FIRST_LIVE.commitDeadline;
+      $('create_revealDeadline').value = FIRST_LIVE.revealDeadline;
+      $('create_finalistAcceptDeadline').value = FIRST_LIVE.finalistAcceptDeadline;
+      $('create_trialDeadline').value = FIRST_LIVE.trialDeadline;
+      $('create_scoreCommitDeadline').value = FIRST_LIVE.scoreCommitDeadline;
+      $('create_scoreRevealDeadline').value = FIRST_LIVE.scoreRevealDeadline;
+      $('create_selectedAcceptanceWindow').value = FIRST_LIVE.selectedAcceptanceWindow;
+      $('create_checkpointWindow').value = FIRST_LIVE.checkpointWindow;
+      $('create_finalistCount').value = FIRST_LIVE.finalistCount;
+      $('create_minValidatorReveals').value = FIRST_LIVE.minValidatorReveals;
+      $('create_maxValidatorRevealsPerFinalist').value = FIRST_LIVE.maxValidatorRevealsPerFinalist;
+      $('create_historicalWeightBps').value = FIRST_LIVE.historicalWeightBps;
+      $('create_trialWeightBps').value = FIRST_LIVE.trialWeightBps;
+      $('create_minReputation').value = FIRST_LIVE.minReputation;
+      $('create_applicationStakeHuman').value = FIRST_LIVE.applicationStakeHuman;
+      $('create_finalistStakeTotalHuman').value = FIRST_LIVE.finalistStakeTotalHuman;
+      $('create_stipendPerFinalistHuman').value = FIRST_LIVE.stipendPerFinalistHuman;
+      $('create_validatorRewardPerRevealHuman').value = FIRST_LIVE.validatorRewardPerRevealHuman;
+      $('create_validatorScoreBondHuman').value = FIRST_LIVE.validatorScoreBondHuman;
+      updateCreatePreview();
+      setStatus('createStatus','ok','Loaded the first-live creation fixture from Mar-31-2026 11:36:23 PM +UTC.');
+    }
+    function loadFirstLiveAll(){
+      $('procurementId').value = FIRST_LIVE.procurementId;
+      loadFirstLiveCreate();
+      if(!$('app_uri').value) $('app_uri').value = 'ipfs://';
+      updateCreatePreview();
+      computeApplicantCommitment();
+      computeValidatorCommitment();
+      setStatus('globalStatus','ok','Loaded the first-live fixture into the helper.');
+    }
+
+    function getCreateForm(){
+      const dec = APP.state?.tokenDecimals ?? 18;
+      const job = {
+        jobSpecURI: ensureIpfs($('create_jobSpecURI').value, 'Job spec URI'),
+        payout: humanToWei($('create_payoutHuman').value, dec),
+        duration: parseUint($('create_duration').value, 'Duration'),
+        details: String($('create_details').value || '').trim()
+      };
+      const proc = {
+        commitDeadline: parseUint($('create_commitDeadline').value, 'Commit deadline'),
+        revealDeadline: parseUint($('create_revealDeadline').value, 'Reveal deadline'),
+        finalistAcceptDeadline: parseUint($('create_finalistAcceptDeadline').value, 'Finalist accept deadline'),
+        trialDeadline: parseUint($('create_trialDeadline').value, 'Trial deadline'),
+        scoreCommitDeadline: parseUint($('create_scoreCommitDeadline').value, 'Score commit deadline'),
+        scoreRevealDeadline: parseUint($('create_scoreRevealDeadline').value, 'Score reveal deadline'),
+        selectedAcceptanceWindow: parseUint($('create_selectedAcceptanceWindow').value, 'Selected acceptance window'),
+        checkpointWindow: parseUint($('create_checkpointWindow').value, 'Checkpoint window'),
+        finalistCount: Number(parseUint($('create_finalistCount').value, 'Finalist count')),
+        minValidatorReveals: Number(parseUint($('create_minValidatorReveals').value, 'Min validator reveals')),
+        maxValidatorRevealsPerFinalist: Number(parseUint($('create_maxValidatorRevealsPerFinalist').value, 'Max validator reveals per finalist')),
+        historicalWeightBps: Number(parseUint($('create_historicalWeightBps').value, 'Historical weight')),
+        trialWeightBps: Number(parseUint($('create_trialWeightBps').value, 'Trial weight')),
+        minReputation: parseUint($('create_minReputation').value || '0', 'Minimum reputation'),
+        applicationStake: humanToWei($('create_applicationStakeHuman').value, dec),
+        finalistStakeTotal: humanToWei($('create_finalistStakeTotalHuman').value, dec),
+        stipendPerFinalist: humanToWei($('create_stipendPerFinalistHuman').value, dec),
+        validatorRewardPerReveal: humanToWei($('create_validatorRewardPerRevealHuman').value, dec),
+        validatorScoreBond: humanToWei($('create_validatorScoreBondHuman').value, dec)
+      };
+      return { job, proc };
+    }
+    function updateCreatePreview(){
+      try{
+        const dec = APP.state?.tokenDecimals ?? 18;
+        const {job, proc} = getCreateForm();
+        const budget = BigInt(proc.finalistCount) * proc.stipendPerFinalist + BigInt(proc.finalistCount) * BigInt(proc.maxValidatorRevealsPerFinalist) * proc.validatorRewardPerReveal;
+        $('create_budgetPreview').textContent = [
+          'Budget (wei):      ' + budget.toString(),
+          'Budget (human):    ' + weiToHuman(budget, dec),
+          'Formula: finalists × stipend + finalists × max reveals × validator reward'
+        ].join('\n');
+        $('create_dualApprovalPreview').textContent = [
+          'ManagerPrime payout approval:    ' + weiToHuman(job.payout, dec),
+          'DiscoveryPrime budget approval:  ' + weiToHuman(budget, dec)
+        ].join('\n');
+      }catch(err){
+        $('create_budgetPreview').textContent = 'Fill the create form to preview the budget.';
+        $('create_dualApprovalPreview').textContent = 'Two approvals are needed before posting.';
+      }
+    }
+
+    function computeApplicantCommitment(){
+      try{
+        const wallet = ensureAddress(currentWallet() || $('connectedWallet').value, 'Connected wallet');
+        const pid = procurementIdBN();
+        const uri = ensureIpfs($('app_uri').value, 'Application URI');
+        const salt = ensureBytes32($('app_salt').value, 'Applicant salt');
+        const commitment = ethers.solidityPackedKeccak256(['uint256','address','string','bytes32'], [pid, wallet, uri, salt]);
+        $('app_commitment').value = commitment;
+        $('appSummary').textContent = [
+          'Wallet:        ' + wallet,
+          'Subdomain:     ' + ($('agentSubdomain').value.trim() || '—'),
+          'Procurement:   ' + pid.toString(),
+          'Application:   ' + uri,
+          'Salt:          ' + salt,
+          'Commitment:    ' + commitment
+        ].join('\n');
+        return commitment;
+      }catch(err){
+        $('app_commitment').value='';
+        $('appSummary').textContent = 'Applicant commitment is not ready yet. ' + err.message;
+        return '';
+      }
+    }
+    function computeValidatorCommitment(){
+      try{
+        const wallet = ensureAddress(currentWallet() || $('connectedWallet').value, 'Connected wallet');
+        const pid = procurementIdBN();
+        const finalist = ensureAddress($('validatorFinalist').value, 'Finalist address');
+        const score = Number(parseUint($('validatorScore').value, 'Validator score'));
+        if(score < 0 || score > 100) throw new Error('Validator score must be between 0 and 100.');
+        const salt = ensureBytes32($('validatorSalt').value, 'Validator salt');
+        const commitment = ethers.solidityPackedKeccak256(['uint256','address','address','uint8','bytes32'], [pid, finalist, wallet, score, salt]);
+        $('validatorCommitment').value = commitment;
+        $('validatorSummary').textContent = [
+          'Validator wallet: ' + wallet,
+          'Subdomain:        ' + ($('validatorSubdomain').value.trim() || '—'),
+          'Procurement:      ' + pid.toString(),
+          'Finalist:         ' + finalist,
+          'Score:            ' + score,
+          'Salt:             ' + salt,
+          'Commitment:       ' + commitment
+        ].join('\n');
+        return commitment;
+      }catch(err){
+        $('validatorCommitment').value='';
+        $('validatorSummary').textContent = 'Validator commitment is not ready yet. ' + err.message;
+        return '';
+      }
+    }
+
+    async function ensureProvider(){
+      if(!window.ethereum) throw new Error('MetaMask was not detected in this browser.');
+      if(!APP.provider) APP.provider = new ethers.BrowserProvider(window.ethereum, 'any');
+      return APP.provider;
+    }
+    async function connectWallet(){
+      const provider = await ensureProvider();
+      await provider.send('eth_requestAccounts', []);
+      APP.signer = await provider.getSigner();
+      const wallet = await APP.signer.getAddress();
+      $('connectedWallet').value = wallet;
+      APP.chainId = Number((await provider.getNetwork()).chainId);
+      computeApplicantCommitment();
+      computeValidatorCommitment();
+      setStatus('globalStatus','ok','Wallet connected successfully.');
+      return wallet;
+    }
+    async function switchToMainnet(){
+      if(!window.ethereum) throw new Error('MetaMask was not detected.');
+      await window.ethereum.request({ method:'wallet_switchEthereumChain', params:[{chainId:'0x1'}] });
+      APP.provider = undefined; APP.signer = undefined;
+      await connectWallet();
+      await refreshAll();
+    }
+
+    function discoveryInterface(){ return new ethers.Interface(DISCOVERY_ABI); }
+    function explainError(err){
+      const texts = [err?.shortMessage, err?.reason, err?.message, err?.info?.error?.message, err?.data?.message].filter(Boolean).map(String);
+      let msg = texts[0] || 'Unknown error.';
+      msg = msg.replace(/execution reverted:?/ig,'').trim();
+      if(/user denied|user rejected|rejected/i.test(msg)) return 'The wallet request was cancelled.';
+      if(/insufficient funds/i.test(msg)) return 'The connected wallet does not have enough ETH for gas.';
+      if(/erc20insufficientallowance|allowance|transferfrom/i.test(msg)) return 'Approval is missing or too small for the amount this transaction needs.';
+      if(/erc20insufficientbalance|insufficient balance/i.test(msg)) return 'The connected wallet does not have enough AGIALPHA.';
+      if(/notauthorized|not authorized/i.test(msg)) return 'The connected wallet is not authorized for that role / subdomain / proof.';
+      if(/invalidstate|invalid state/i.test(msg)) return 'The contract says this action is not allowed in the current phase or state.';
+      if(/blind signing|contract data/i.test(msg)) return 'If you are using Ledger, enable blind signing / smart contract data in the Ethereum app.';
+      return msg || 'Unknown error.';
+    }
+    function addTx(kind, tx, receipt, summary){
+      APP.txs.unshift({ kind, hash: tx.hash, at: new Date().toISOString(), summary: summary || '', url: 'https://etherscan.io/tx/' + tx.hash, status: receipt ? 'confirmed' : 'submitted' });
+      APP.txs = APP.txs.slice(0, 12);
+      renderTxs();
+    }
+    function renderTxs(){
+      const list = $('txList'); list.innerHTML='';
+      if(!APP.txs.length){ list.innerHTML='<div class="txRow"><div class="muted">No transactions sent from this page yet.</div></div>'; return; }
+      for(const tx of APP.txs){
+        const row = document.createElement('div'); row.className='txRow';
+        row.innerHTML = '<div><div><strong>' + tx.kind + '</strong></div><div class="small mono">' + tx.hash + '</div><div class="small muted">' + new Date(tx.at).toLocaleString() + (tx.summary ? ' · ' + tx.summary : '') + '</div></div><div><a class="btn ghost" href="' + tx.url + '" target="_blank" rel="noopener">Open</a></div>';
+        list.appendChild(row);
+      }
+    }
+    function renderChecks(items){
+      const container = $('checklist'); container.innerHTML='';
+      if(!items.length){ container.innerHTML='<div class="item warn"><div class="dot"></div><div>Run <strong>Refresh all on-chain checks</strong> to load readiness.</div></div>'; return; }
+      for(const item of items){ const div=document.createElement('div'); div.className='item '+item.type; div.innerHTML='<div class="dot"></div><div><div><strong>'+item.label+'</strong></div><div class="small">'+item.text+'</div></div>'; container.appendChild(div);}    }
+
+    function computeAgentBondExactForJob(payoutWei, duration, p){
+      let bond = payoutWei * p.agentBondBps / 10000n;
+      if(bond < p.agentBondMin) bond = p.agentBondMin;
+      if(p.jobDurationLimit > 0n){ bond += bond * duration / p.jobDurationLimit; }
+      if(p.agentBondMax > 0n && bond > p.agentBondMax) bond = p.agentBondMax;
+      if(bond > payoutWei) bond = payoutWei;
+      return bond;
+    }
+    function computeValidatorBondFromPayout(payoutWei, p){
+      let bond = payoutWei * p.validatorBondBps / 10000n;
+      if(bond < p.validatorBondMin) bond = p.validatorBondMin;
+      if(p.validatorBondMax > 0n && bond > p.validatorBondMax) bond = p.validatorBondMax;
+      return bond;
+    }
+
+    async function initContracts(readOnly=false){
+      const provider = await ensureProvider();
+      const signer = readOnly ? null : (APP.signer || await provider.getSigner());
+      const dAddr = discoveryAddress();
+      const discoveryRead = new ethers.Contract(dAddr, DISCOVERY_ABI, provider);
+      const tokenAddr = await discoveryRead.agiToken();
+      const managerAddr = await discoveryRead.settlement();
+      const tokenRead = new ethers.Contract(tokenAddr, TOKEN_ABI, provider);
+      const managerRead = new ethers.Contract(managerAddr, MANAGER_ABI, provider);
+      APP.discoveryRead = discoveryRead; APP.tokenRead = tokenRead; APP.managerRead = managerRead;
+      APP.discoveryWrite = signer ? discoveryRead.connect(signer) : null;
+      APP.tokenWrite = signer ? tokenRead.connect(signer) : null;
+      APP.managerWrite = signer ? managerRead.connect(signer) : null;
+      return { discoveryRead, tokenRead, managerRead, tokenAddr, managerAddr };
+    }
+
+    function buildChecklist(state){
+      const items=[];
+      items.push({type:window.ethereum?'ok':'err',label:'MetaMask',text:window.ethereum?'Detected in this browser.':'Install or unlock MetaMask.'});
+      items.push({type:state.chainOk?'ok':'err',label:'Network',text:state.chainOk?'Ethereum mainnet connected.':'Switch MetaMask to Ethereum mainnet.'});
+      items.push({type:state.walletConnected?'ok':'err',label:'Wallet',text:state.walletConnected?('Connected wallet: '+state.wallet):'Connect MetaMask first.'});
+      items.push({type:state.procurementFound?'ok':'warn',label:'Procurement',text:state.procurementFound?('Loaded procurement '+state.procurementId+'.'):'No live procurement loaded yet for that ID.'});
+      items.push({type:state.discoveryPaused?'err':'ok',label:'Discovery pause',text:state.discoveryPaused?'DiscoveryPrime is paused.':'DiscoveryPrime is not paused.'});
+      items.push({type:state.managerPaused?'warn':'ok',label:'Manager pause',text:state.managerPaused?'ManagerPrime is paused.':'ManagerPrime is not paused.'});
+      items.push({type:state.managerSettlementPaused?'warn':'ok',label:'Settlement pause',text:state.managerSettlementPaused?'ManagerPrime settlement is paused.':'ManagerPrime settlement is not paused.'});
+      items.push({type:state.agentAuthorized?'ok':'warn',label:'Agent authorization',text:state.agentAuthorized?'Agent authorization check passed.':'Agent authorization not yet passing for current wallet / subdomain / proof.'});
+      items.push({type:state.validatorAuthorized?'ok':'warn',label:'Validator authorization',text:state.validatorAuthorized?'Validator authorization check passed.':'Validator authorization not yet passing for current wallet / subdomain / proof.'});
+      items.push({type:state.discoveryAllowanceOk?'ok':'warn',label:'Discovery allowance',text:'Discovery allowance ' + (state.discoveryAllowanceHuman || '—') + ' / wallet balance ' + (state.balanceHuman || '—')});
+      items.push({type:state.managerAllowanceOk?'ok':'warn',label:'Manager allowance',text:'Manager allowance ' + (state.managerAllowanceHuman || '—') + (state.recommendedBondHuman ? ' / recommended bond ' + state.recommendedBondHuman : '')});
+      return items;
+    }
+
+    async function refreshAll(){
+      updateCreatePreview();
+      computeApplicantCommitment();
+      computeValidatorCommitment();
+      const state = { wallet: currentWallet(), walletConnected: !!currentWallet(), procurementId: $('procurementId').value.trim(), procurementFound:false, chainOk:false, discoveryPaused:false, managerPaused:false, managerSettlementPaused:false, agentAuthorized:false, validatorAuthorized:false, discoveryAllowanceOk:false, managerAllowanceOk:false };
+      APP.state = state;
+      try{
+        const provider = await ensureProvider();
+        const network = await provider.getNetwork();
+        state.chainId = Number(network.chainId); state.chainOk = state.chainId === ETH_MAINNET_CHAIN_ID;
+        $('networkLine').textContent = state.chainOk ? 'Ethereum mainnet (chainId 1)' : ('Wrong network (chainId ' + state.chainId + ')');
+        if(!currentWallet()) { try{ await connectWallet(); state.wallet=currentWallet(); state.walletConnected=true; }catch{} }
+
+        const { discoveryRead, tokenRead, managerRead, tokenAddr, managerAddr } = await initContracts(true);
+        $('discoveryLine').textContent = discoveryAddress();
+        $('managerLine').textContent = managerAddr;
+        $('tokenLine').textContent = tokenAddr;
+        state.managerAddress = managerAddr; state.tokenAddress = tokenAddr;
+
+        const [tokenName, tokenSymbol, tokenDecimals, walletBalance, discoveryAllowance, managerAllowance, discoveryPaused, intakePaused, managerPaused, managerSettlementPaused] = await Promise.all([
+          tokenRead.name().catch(()=> 'AGIALPHA'),
+          tokenRead.symbol().catch(()=> 'AGIALPHA'),
+          tokenRead.decimals().catch(()=> 18),
+          currentWallet() ? tokenRead.balanceOf(currentWallet()).catch(()=> 0n) : Promise.resolve(0n),
+          currentWallet() ? tokenRead.allowance(currentWallet(), discoveryAddress()).catch(()=> 0n) : Promise.resolve(0n),
+          currentWallet() ? tokenRead.allowance(currentWallet(), managerAddr).catch(()=> 0n) : Promise.resolve(0n),
+          discoveryRead.paused().catch(()=> false),
+          discoveryRead.intakePaused().catch(()=> false),
+          managerRead.paused().catch(()=> false),
+          managerRead.settlementPaused().catch(()=> false)
+        ]);
+        state.tokenName = tokenName; state.tokenSymbol = tokenSymbol; state.tokenDecimals = Number(tokenDecimals);
+        APP.state.tokenDecimals = Number(tokenDecimals);
+        state.walletBalance = walletBalance; state.discoveryAllowance = discoveryAllowance; state.managerAllowance = managerAllowance;
+        state.discoveryPaused = !!discoveryPaused || !!intakePaused; state.managerPaused = !!managerPaused; state.managerSettlementPaused = !!managerSettlementPaused;
+        state.balanceHuman = weiToHuman(walletBalance, tokenDecimals) + ' ' + tokenSymbol;
+        state.discoveryAllowanceHuman = weiToHuman(discoveryAllowance, tokenDecimals) + ' ' + tokenSymbol;
+        state.managerAllowanceHuman = weiToHuman(managerAllowance, tokenDecimals) + ' ' + tokenSymbol;
+        $('balanceLine').textContent = state.balanceHuman;
+        $('discoveryAllowanceLine').textContent = state.discoveryAllowanceHuman;
+        $('managerAllowanceLine').textContent = state.managerAllowanceHuman;
+        $('managerPausedLine').textContent = state.managerPaused ? 'Yes' : 'No';
+        $('managerSettlementPausedLine').textContent = state.managerSettlementPaused ? 'Yes' : 'No';
+
+        const pid = procurementIdBN();
+        const proc = await discoveryRead.procurements(pid).catch(()=> null);
+        if(proc && proc.employer && proc.employer !== ZERO_ADDR){
+          state.procurementFound = true;
+          state.procurement = proc;
+          state.jobId = proc.jobId; $('jobIdField').value = proc.jobId.toString();
+          const phaseCode = await discoveryRead.nextActionForProcurement(pid).catch(()=> '—');
+          state.phaseCode = phaseCode; $('phaseLine').textContent = phaseCode + ' · ' + (phaseLabels[phaseCode] || phaseCode);
+          $('commitDeadlineLine').textContent = fmtTs(proc.commitDeadline);
+          $('revealDeadlineLine').textContent = fmtTs(proc.revealDeadline);
+          $('claimableLine').textContent = state.walletConnected ? (weiToHuman(await discoveryRead.claimable(currentWallet()).catch(()=>0n), tokenDecimals) + ' ' + tokenSymbol) : '—';
+          $('shortlistFinalizedLine').textContent = proc.shortlistFinalized ? 'Yes' : 'No';
+          $('winnerFinalizedLine').textContent = proc.winnerFinalized ? 'Yes' : 'No';
+          $('validatorBondLine').textContent = weiToHuman(proc.validatorScoreBond, tokenDecimals) + ' ' + tokenSymbol;
+          $('validatorRewardLine').textContent = weiToHuman(proc.validatorRewardPerReveal, tokenDecimals) + ' ' + tokenSymbol;
+          $('validatorMinRevealLine').textContent = proc.minValidatorReveals.toString();
+          $('validatorMaxRevealLine').textContent = proc.maxValidatorRevealsPerFinalist.toString();
+
+          const [applicants, finalists, shortlistFinalizable, winnerFinalizable, fallbackPromotable] = await Promise.all([
+            discoveryRead.procurementApplicants(pid).catch(()=> []),
+            discoveryRead.procurementFinalists(pid).catch(()=> []),
+            discoveryRead.isShortlistFinalizable(pid).catch(()=> false),
+            discoveryRead.isWinnerFinalizable(pid).catch(()=> false),
+            discoveryRead.isFallbackPromotable(pid).catch(()=> false)
+          ]);
+          state.applicants = applicants; state.finalists = finalists; state.shortlistFinalizable = shortlistFinalizable; state.winnerFinalizable = winnerFinalizable; state.fallbackPromotable = fallbackPromotable;
+          $('applicantsLine').textContent = String(applicants.length);
+          $('finalistsLine').textContent = finalists.length + ' / ' + proc.finalistCount;
+          $('applicantsList').textContent = applicants.length ? applicants.join('\n') : 'No applicants loaded yet.';
+          $('finalistsList').textContent = finalists.length ? finalists.join('\n') : 'No finalists loaded yet.';
+          $('shortlistFinalizableLine').textContent = shortlistFinalizable ? 'Yes' : 'No';
+          $('winnerFinalizableLine').textContent = winnerFinalizable ? 'Yes' : 'No';
+          $('winnerFinalizableLine2').textContent = winnerFinalizable ? 'Yes' : 'No';
+          $('fallbackPromotableLine').textContent = fallbackPromotable ? 'Yes' : 'No';
+          $('fallbackPromotableLine2').textContent = fallbackPromotable ? 'Yes' : 'No';
+          $('nextActionLine').textContent = phaseCode + ' · ' + (phaseLabels[phaseCode] || phaseCode);
+
+          if(state.walletConnected){
+            const [appView, defaults, agentAuthorized, validatorAuthorized, reputation, selectionInfo, selectionRuntime, highestPct, activeJobs, maxActiveJobs, premiumThreshold, bondMin, bondBps, bondMax, durationLimit] = await Promise.all([
+              discoveryRead.applicationView(pid, currentWallet()).catch(()=> null),
+              discoveryRead.getDiscoveryStats(currentWallet()).catch(()=> null),
+              managerRead.isAuthorizedAgent(currentWallet(), $('agentSubdomain').value.trim() || '', parseProofField('agentProof','Agent proof')).catch(()=> false),
+              managerRead.isAuthorizedValidator(currentWallet(), $('validatorSubdomain').value.trim() || '', parseProofField('validatorProof','Validator proof')).catch(()=> false),
+              managerRead.reputation(currentWallet()).catch(()=> 0n),
+              managerRead.getJobSelectionInfo(proc.jobId).catch(()=> null),
+              managerRead.getJobSelectionRuntimeState(proc.jobId).catch(()=> null),
+              managerRead.getHighestPayoutPercentage(currentWallet()).catch(()=> 0n),
+              managerRead.activeJobsByAgent(currentWallet()).catch(()=> 0n),
+              managerRead.maxActiveJobsPerAgent().catch(()=> 0n),
+              managerRead.premiumReputationThreshold().catch(()=> 0n),
+              managerRead.agentBond().catch(()=> 0n),
+              managerRead.agentBondBps().catch(()=> 0n),
+              managerRead.agentBondMax().catch(()=> 0n),
+              managerRead.jobDurationLimit().catch(()=> 0n)
+            ]);
+            state.agentAuthorized = !!agentAuthorized;
+            state.validatorAuthorized = !!validatorAuthorized;
+            state.reputation = reputation;
+            const minRep = proc.minReputation > 0n ? proc.minReputation : premiumThreshold;
+            state.minReputation = minRep;
+            $('appDefaultsLine').textContent = defaults ? ('unrevealed=' + defaults[0] + ' · unaccepted=' + defaults[1] + ' · noTrial=' + defaults[2] + ' · penaltyBps=' + defaults[4]) : '—';
+            if(appView){
+              state.applicationView = appView;
+              $('appStoredCommitmentLine').textContent = safeText((await discoveryRead.applications(pid, currentWallet()).catch(()=>({commitment:ZERO_HASH}))).commitment || ZERO_HASH);
+              $('appRevealedLine').textContent = appView.revealed ? 'Yes' : 'No';
+              $('appShortlistedLine').textContent = appView.shortlisted ? 'Yes' : 'No';
+              $('appAcceptedLine').textContent = appView.finalistAccepted ? 'Yes' : 'No';
+              $('appTrialSubmittedLine').textContent = appView.trialSubmitted ? 'Yes' : 'No';
+              $('appLockedStakeLine').textContent = weiToHuman(appView.lockedStake, tokenDecimals) + ' ' + tokenSymbol;
+              $('appHistoricalLine').textContent = appView.historicalScoreBps.toString();
+              $('appTrialScoreLine').textContent = appView.trialScoreBps.toString();
+              $('appCompositeLine').textContent = appView.compositeScoreBps.toString();
+              const topup = proc.finalistStakeTotal > appView.lockedStake ? proc.finalistStakeTotal - appView.lockedStake : 0n;
+              state.finalistTopup = topup;
+              $('finalistTopupPreview').value = weiToHuman(topup, tokenDecimals);
+            }
+            if(selectionInfo){
+              $('selectedAgentLine').textContent = selectionInfo.selectedAgent === ZERO_ADDR ? '—' : selectionInfo.selectedAgent;
+              $('selectionExpiryLine').textContent = fmtTs(selectionInfo.selectionExpiresAt);
+              $('assignedAgentLine').textContent = selectionInfo.assignedAgent === ZERO_ADDR ? '—' : selectionInfo.assignedAgent;
+              $('checkpointWindowLine').textContent = selectionInfo.checkpointWindow.toString() + ' s';
+              $('checkpointDeadlineLine').textContent = fmtTs(selectionInfo.checkpointDeadline);
+              $('checkpointSubmittedLine').textContent = selectionInfo.checkpointSubmitted ? 'Yes' : 'No';
+              const meta = APP.localJobMetaByProcurement[String(pid)] || APP.localJobMetaByProcurement['0'];
+              let recommendedBond = null;
+              if(meta){
+                recommendedBond = computeAgentBondExactForJob(BigInt(meta.payoutWei), BigInt(meta.duration), { agentBondMin: bondMin, agentBondBps: bondBps, agentBondMax: bondMax, jobDurationLimit: durationLimit });
+                $('managerApproveAmount').value = weiToHuman(recommendedBond, tokenDecimals);
+                $('recommendedBondLine').textContent = weiToHuman(recommendedBond, tokenDecimals) + ' ' + tokenSymbol;
+                state.recommendedBond = recommendedBond;
+                state.recommendedBondHuman = weiToHuman(recommendedBond, tokenDecimals) + ' ' + tokenSymbol;
+                state.managerAllowanceOk = managerAllowance >= recommendedBond;
+              } else {
+                $('recommendedBondLine').textContent = 'Unknown — supply a custom approval amount if needed.';
+                state.managerAllowanceOk = managerAllowance > 0n;
+              }
+              $('selectionLine').textContent = selectionRuntime ? ((selectionRuntime.selectionExpiredOrOpen ? 'Open / expired' : 'Still reserved') + ' · assigned=' + (selectionRuntime.assignedAgent === ZERO_ADDR ? '—' : selectionRuntime.assignedAgent)) : '—';
+            }
+            $('agentPayoutPctLine').textContent = highestPct.toString() + '%';
+            $('activeJobsLine').textContent = activeJobs.toString() + ' / ' + maxActiveJobs.toString();
+            state.discoveryAllowanceOk = discoveryAllowance >= proc.applicationStake;
+          }
+        } else {
+          $('jobIdField').value = '';
+          $('phaseLine').textContent = '—';
+          $('claimableLine').textContent = '—';
+          $('applicantsList').textContent = 'No live procurement loaded yet.';
+          $('finalistsList').textContent = 'No live procurement loaded yet.';
+        }
+
+        renderChecks(buildChecklist(state));
+        setStatus('chainStatus', 'ok', state.procurementFound ? 'Live procurement and lifecycle state loaded successfully.' : 'Wallet / contracts loaded. Enter a procurement ID to load a live procurement.');
+        setStatus('globalStatus','ok','On-chain checks refreshed successfully.');
+        setBanner(state.procurementFound ? ('Loaded procurement ' + state.procurementId + ' · current phase ' + (phaseLabels[state.phaseCode] || state.phaseCode) + '.') : 'Wallet, contracts, and token state loaded. Load a procurement ID to drive the lifecycle sections.', state.procurementFound ? 'ok' : 'warn');
+      }catch(err){
+        renderChecks(buildChecklist(state));
+        setStatus('chainStatus','err', explainError(err));
+        setStatus('globalStatus','err', explainError(err));
+        setBanner('On-chain checks could not be completed: ' + explainError(err), 'err');
+      }
+    }
+
+    async function estimateOrThrow(contract, method, args){
+      try{ return await contract[method].estimateGas(...args); }catch(err){ throw new Error(explainError(err)); }
+    }
+    async function sendWrite(kind, statusId, contract, method, args, receiptHandler){
+      try{
+        await connectWallet();
+        if(APP.chainId !== 1 && APP.state?.chainId !== 1) throw new Error('Switch MetaMask to Ethereum mainnet first.');
+        setStatus(statusId, 'warn', 'MetaMask opened. Confirm the transaction.');
+        const gas = await estimateOrThrow(contract, method, args);
+        const tx = await contract[method](...args, { gasLimit: gas * 120n / 100n });
+        addTx(kind, tx, null, 'submitted');
+        setStatus(statusId, 'warn', 'Transaction submitted. Waiting for confirmation…');
+        const receipt = await tx.wait();
+        let summary = 'confirmed';
+        if(receiptHandler) summary = (await receiptHandler(receipt)) || summary;
+        addTx(kind, tx, receipt, summary);
+        setStatus(statusId, 'ok', kind + ' confirmed successfully.');
+        await refreshAll();
+        return receipt;
+      }catch(err){ setStatus(statusId, 'err', explainError(err)); throw err; }
+    }
+
+    async function approveTo(spender, amountWei, statusId, kindLabel){
+      await connectWallet();
+      const { tokenAddr } = await initContracts(false);
+      const amount = BigInt(amountWei);
+      if(amount <= 0n) throw new Error('Approval amount must be greater than zero.');
+      return sendWrite(kindLabel, statusId, APP.tokenWrite, 'approve', [spender, amount]);
+    }
+
+    async function approveCreatePayout(){
+      try{ const { job } = getCreateForm(); await initContracts(false); const spender = APP.state?.managerAddress || (await APP.discoveryRead.settlement()); await approveTo(spender, job.payout, 'createStatus', 'Approve payout to ManagerPrime'); }catch(err){ setStatus('createStatus','err', explainError(err)); }
+    }
+    async function approveCreateBudget(){
+      try{ const dec = APP.state?.tokenDecimals ?? 18; const { proc } = getCreateForm(); const budget = BigInt(proc.finalistCount) * proc.stipendPerFinalist + BigInt(proc.finalistCount) * BigInt(proc.maxValidatorRevealsPerFinalist) * proc.validatorRewardPerReveal; await initContracts(false); await approveTo(discoveryAddress(), budget, 'createStatus', 'Approve budget to DiscoveryPrime'); }catch(err){ setStatus('createStatus','err', explainError(err)); }
+    }
+    async function approveCreateBoth(){
+      try{ await approveCreatePayout(); await approveCreateBudget(); }catch{}
+    }
+    async function createPremiumJobWithDiscovery(){
+      try{
+        const {job, proc} = getCreateForm();
+        await initContracts(false);
+        const budget = BigInt(proc.finalistCount) * proc.stipendPerFinalist + BigInt(proc.finalistCount) * BigInt(proc.maxValidatorRevealsPerFinalist) * proc.validatorRewardPerReveal;
+        const wallet = currentWallet();
+        const allowanceMgr = await APP.tokenRead.allowance(wallet, APP.state.managerAddress || await APP.discoveryRead.settlement());
+        const allowanceDisc = await APP.tokenRead.allowance(wallet, discoveryAddress());
+        if(allowanceMgr < job.payout) throw new Error('ManagerPrime payout approval is too small. Approve payout first.');
+        if(allowanceDisc < budget) throw new Error('DiscoveryPrime budget approval is too small. Approve budget first.');
+        const receiptHandler = async (receipt) => {
+          const iface = discoveryInterface();
+          for(const log of receipt.logs){
+            try{
+              const parsed = iface.parseLog(log);
+              if(parsed.name === 'PremiumJobCreated' || parsed.name === 'ProcurementCreated'){
+                const pId = parsed.args.procurementId?.toString?.();
+                const jId = parsed.args.jobId?.toString?.();
+                if(pId){ $('procurementId').value = pId; APP.localJobMetaByProcurement[pId] = { payoutWei: job.payout, duration: job.duration }; }
+                if(jId){ $('jobIdField').value = jId; }
+                return 'procurement ' + (pId || '?') + ' · job ' + (jId || '?');
+              }
+            }catch{}
+          }
+          return 'created';
+        };
+        await sendWrite('Create premium job with discovery', 'createStatus', APP.discoveryWrite, 'createPremiumJobWithDiscovery', [job, proc], receiptHandler);
+      }catch(err){ setStatus('createStatus','err', explainError(err)); }
+    }
+
+    async function approveApplicantStake(){
+      try{ await refreshAll(); const proc = APP.state.procurement; if(!proc) throw new Error('Load a live procurement first.'); await initContracts(false); if(proc.applicationStake === 0n) return setStatus('appStatus','ok','This procurement does not require an application stake.'); if(APP.state.discoveryAllowance >= proc.applicationStake) return setStatus('appStatus','ok','Discovery allowance is already sufficient for the application stake.'); await approveTo(discoveryAddress(), proc.applicationStake, 'appStatus', 'Approve application stake'); }catch(err){ setStatus('appStatus','err', explainError(err)); }
+    }
+    async function commitApplication(){
+      try{
+        await refreshAll();
+        const proc = APP.state.procurement; if(!proc) throw new Error('Load a live procurement first.');
+        const phase = APP.state.phaseCode; if(phase && phase !== 'WC') throw new Error('Commit is only allowed during the commit window. Current phase: ' + (phaseLabels[phase] || phase));
+        if(!APP.state.agentAuthorized) throw new Error('Agent authorization is not passing for the connected wallet / subdomain / proof.');
+        const minRep = APP.state.minReputation || 0n; if(BigInt(APP.state.reputation || 0n) < BigInt(minRep)) throw new Error('Wallet reputation is below the required minimum.');
+        const commitment = ensureBytes32($('app_commitment').value, 'Applicant commitment');
+        const proof = parseProofField('agentProof', 'Agent proof');
+        const pid = procurementIdBN();
+        const subdomain = $('agentSubdomain').value.trim(); if(!subdomain) throw new Error('Agent subdomain is required.');
+        if(proc.applicationStake > 0n && APP.state.discoveryAllowance < proc.applicationStake) throw new Error('Discovery allowance is below the application stake. Approve first.');
+        await initContracts(false);
+        await sendWrite('Commit application', 'appStatus', APP.discoveryWrite, 'commitApplication', [pid, commitment, subdomain, proof]);
+      }catch(err){ setStatus('appStatus','err', explainError(err)); }
+    }
+    async function approveAndCommit(){ try{ await approveApplicantStake(); await commitApplication(); }catch{} }
+    async function revealApplication(){
+      try{
+        await refreshAll();
+        const proc = APP.state.procurement; if(!proc) throw new Error('Load a live procurement first.');
+        const phase = APP.state.phaseCode; if(phase && phase !== 'RA') throw new Error('Reveal is only allowed during the reveal window. Current phase: ' + (phaseLabels[phase] || phase));
+        if(!APP.state.agentAuthorized) throw new Error('Agent authorization is not passing for the connected wallet / subdomain / proof.');
+        const proof = parseProofField('agentProof', 'Agent proof');
+        const pid = procurementIdBN();
+        const subdomain = $('agentSubdomain').value.trim(); if(!subdomain) throw new Error('Agent subdomain is required.');
+        const salt = ensureBytes32($('app_salt').value, 'Applicant salt');
+        const uri = ensureIpfs($('app_uri').value, 'Application URI');
+        computeApplicantCommitment();
+        await initContracts(false);
+        await sendWrite('Reveal application', 'appStatus', APP.discoveryWrite, 'revealApplication', [pid, subdomain, proof, salt, uri]);
+      }catch(err){ setStatus('appStatus','err', explainError(err)); }
+    }
+
+    async function advanceProcurement(){ try{ await refreshAll(); await initContracts(false); await sendWrite('Advance procurement', 'designationStatus', APP.discoveryWrite, 'advanceProcurement', [procurementIdBN()]); }catch(err){ setStatus('designationStatus','err', explainError(err)); setStatus('shortlistStatus','err', explainError(err)); } }
+    async function finalizeShortlist(){ try{ await refreshAll(); if(!(APP.state.phaseCode === 'FS' || APP.state.shortlistFinalizable)) throw new Error('Shortlist is not finalizable yet.'); await initContracts(false); await sendWrite('Finalize shortlist', 'shortlistStatus', APP.discoveryWrite, 'finalizeShortlist', [procurementIdBN()]); }catch(err){ setStatus('shortlistStatus','err', explainError(err)); } }
+    async function reloadLists(){ await refreshAll(); setStatus('shortlistStatus','ok','Applicants and finalists reloaded.'); }
+    async function approveFinalistTopup(){ try{ await refreshAll(); const topup = APP.state.finalistTopup || 0n; if(topup <= 0n) return setStatus('shortlistStatus','ok','No finalist top-up is needed.'); await initContracts(false); await approveTo(discoveryAddress(), topup, 'shortlistStatus', 'Approve finalist top-up'); }catch(err){ setStatus('shortlistStatus','err', explainError(err)); } }
+    async function acceptFinalist(){ try{ await refreshAll(); if(!APP.state.applicationView?.shortlisted) throw new Error('The connected wallet is not currently shortlisted.'); const topup = APP.state.finalistTopup || 0n; if(topup > 0n && APP.state.discoveryAllowance < topup) throw new Error('Approve the finalist top-up first.'); await initContracts(false); await sendWrite('Accept finalist', 'shortlistStatus', APP.discoveryWrite, 'acceptFinalist', [procurementIdBN()]); }catch(err){ setStatus('shortlistStatus','err', explainError(err)); } }
+    async function submitTrial(){ try{ await refreshAll(); if(!APP.state.applicationView?.finalistAccepted) throw new Error('Accept finalist first.'); const uri = ensureIpfs($('trialUri').value, 'Trial URI'); await initContracts(false); await sendWrite('Submit trial', 'shortlistStatus', APP.discoveryWrite, 'submitTrial', [procurementIdBN(), uri]); }catch(err){ setStatus('shortlistStatus','err', explainError(err)); } }
+
+    async function approveValidatorBond(){ try{ await refreshAll(); const proc = APP.state.procurement; if(!proc) throw new Error('Load a live procurement first.'); if(proc.validatorScoreBond === 0n) return setStatus('validatorStatus','ok','This procurement does not require a validator score bond.'); if(APP.state.discoveryAllowance >= proc.validatorScoreBond) return setStatus('validatorStatus','ok','Discovery allowance is already sufficient for the validator score bond.'); await initContracts(false); await approveTo(discoveryAddress(), proc.validatorScoreBond, 'validatorStatus', 'Approve validator score bond'); }catch(err){ setStatus('validatorStatus','err', explainError(err)); } }
+    async function commitValidatorScore(){ try{ await refreshAll(); const phase = APP.state.phaseCode; if(phase && phase !== 'CS') throw new Error('Validator score commit is only allowed during the score-commit window.'); if(!APP.state.validatorAuthorized) throw new Error('Validator authorization is not passing for the connected wallet / validator subdomain / proof.'); const proc = APP.state.procurement; if(!proc) throw new Error('Load a live procurement first.'); const finalist = ensureAddress($('validatorFinalist').value, 'Finalist address'); const commitment = ensureBytes32($('validatorCommitment').value, 'Validator commitment'); const subdomain = $('validatorSubdomain').value.trim(); if(!subdomain) throw new Error('Validator subdomain is required.'); const proof = parseProofField('validatorProof', 'Validator proof'); if(proc.validatorScoreBond > 0n && APP.state.discoveryAllowance < proc.validatorScoreBond) throw new Error('Approve the validator score bond first.'); await initContracts(false); await sendWrite('Commit finalist score', 'validatorStatus', APP.discoveryWrite, 'commitFinalistScore', [procurementIdBN(), finalist, commitment, subdomain, proof]); }catch(err){ setStatus('validatorStatus','err', explainError(err)); } }
+    async function revealValidatorScore(){ try{ await refreshAll(); const phase = APP.state.phaseCode; if(phase && phase !== 'RS') throw new Error('Validator score reveal is only allowed during the score-reveal window.'); if(!APP.state.validatorAuthorized) throw new Error('Validator authorization is not passing for the connected wallet / validator subdomain / proof.'); const finalist = ensureAddress($('validatorFinalist').value, 'Finalist address'); const score = Number(parseUint($('validatorScore').value, 'Validator score')); if(score<0 || score>100) throw new Error('Validator score must be 0 to 100.'); const salt = ensureBytes32($('validatorSalt').value, 'Validator salt'); const subdomain = $('validatorSubdomain').value.trim(); if(!subdomain) throw new Error('Validator subdomain is required.'); const proof = parseProofField('validatorProof', 'Validator proof'); await initContracts(false); await sendWrite('Reveal finalist score', 'validatorStatus', APP.discoveryWrite, 'revealFinalistScore', [procurementIdBN(), finalist, score, salt, subdomain, proof]); }catch(err){ setStatus('validatorStatus','err', explainError(err)); } }
+
+    async function finalizeWinner(){ try{ await refreshAll(); await initContracts(false); await sendWrite('Finalize winner', 'designationStatus', APP.discoveryWrite, 'finalizeWinner', [procurementIdBN()]); }catch(err){ setStatus('designationStatus','err', explainError(err)); } }
+    async function promoteFallback(){ try{ await refreshAll(); await initContracts(false); await sendWrite('Promote fallback finalist', 'designationStatus', APP.discoveryWrite, 'promoteFallbackFinalist', [procurementIdBN()]); }catch(err){ setStatus('designationStatus','err', explainError(err)); } }
+    async function claimDiscovery(){ try{ await refreshAll(); const claimableText = $('claimableLine').textContent; if(/^0(\.0+)?\s/.test(claimableText)) throw new Error('Nothing is currently claimable for the connected wallet.'); await initContracts(false); await sendWrite('Claim discovery balance', 'designationStatus', APP.discoveryWrite, 'claim', []); }catch(err){ setStatus('designationStatus','err', explainError(err)); } }
+
+    async function approveManagerBond(){
+      try{
+        await refreshAll();
+        const amountHuman = String($('managerApproveAmount').value || '0').trim();
+        const amountWei = humanToWei(amountHuman, APP.state.tokenDecimals || 18);
+        if(amountWei <= 0n) throw new Error('Manager bond approval amount must be greater than zero.');
+        await initContracts(false);
+        await approveTo(APP.state.managerAddress, amountWei, 'managerStatus', 'Approve ManagerPrime bond');
+      }catch(err){ setStatus('managerStatus','err', explainError(err)); }
+    }
+    async function applyForJob(){
+      try{
+        await refreshAll();
+        if(!APP.state.agentAuthorized) throw new Error('Agent authorization is not passing for the connected wallet / subdomain / proof.');
+        if(!APP.state.jobId) throw new Error('Load a procurement first to get the job ID.');
+        const subdomain = $('agentSubdomain').value.trim(); if(!subdomain) throw new Error('Agent subdomain is required.');
+        const globalProof = parseProofField('agentProof', 'Agent proof');
+        const perJobProof = parseProofField('perJobProof', 'Per-job proof');
+        if(APP.state.recommendedBond && APP.state.managerAllowance < APP.state.recommendedBond) throw new Error('Manager allowance is below the recommended bond approval. Approve the ManagerPrime bond first.');
+        await initContracts(false);
+        await sendWrite('Apply for designated job', 'managerStatus', APP.managerWrite, 'applyForJob', [jobIdBN(), subdomain, globalProof, perJobProof]);
+      }catch(err){ setStatus('managerStatus','err', explainError(err)); }
+    }
+    async function submitCheckpoint(){ try{ await refreshAll(); const uri = ensureIpfs($('checkpointUri').value, 'Checkpoint URI'); await initContracts(false); await sendWrite('Submit checkpoint', 'managerStatus', APP.managerWrite, 'submitCheckpoint', [jobIdBN(), uri]); }catch(err){ setStatus('managerStatus','err', explainError(err)); } }
+    async function requestCompletion(){ try{ await refreshAll(); const uri = ensureIpfs($('completionUri').value, 'Completion URI'); await initContracts(false); await sendWrite('Request completion', 'managerStatus', APP.managerWrite, 'requestJobCompletion', [jobIdBN(), uri]); }catch(err){ setStatus('managerStatus','err', explainError(err)); } }
+    async function validateJob(){ try{ await refreshAll(); if(!APP.state.validatorAuthorized) throw new Error('Validator authorization is not passing for the connected wallet / validator subdomain / proof.'); const subdomain = $('validatorSubdomain').value.trim(); if(!subdomain) throw new Error('Validator subdomain is required.'); const proof = parseProofField('validatorProof', 'Validator proof'); await initContracts(false); await sendWrite('Validate job', 'managerStatus', APP.managerWrite, 'validateJob', [jobIdBN(), subdomain, proof]); }catch(err){ setStatus('managerStatus','err', explainError(err)); } }
+    async function disapproveJob(){ try{ await refreshAll(); if(!APP.state.validatorAuthorized) throw new Error('Validator authorization is not passing for the connected wallet / validator subdomain / proof.'); const subdomain = $('validatorSubdomain').value.trim(); if(!subdomain) throw new Error('Validator subdomain is required.'); const proof = parseProofField('validatorProof', 'Validator proof'); await initContracts(false); await sendWrite('Disapprove job', 'managerStatus', APP.managerWrite, 'disapproveJob', [jobIdBN(), subdomain, proof]); }catch(err){ setStatus('managerStatus','err', explainError(err)); } }
+    async function finalizeJob(){ try{ await refreshAll(); await initContracts(false); await sendWrite('Finalize job', 'managerStatus', APP.managerWrite, 'finalizeJob', [jobIdBN()]); }catch(err){ setStatus('managerStatus','err', explainError(err)); } }
+    async function disputeJob(){ try{ await refreshAll(); await initContracts(false); await sendWrite('Open dispute', 'managerStatus', APP.managerWrite, 'disputeJob', [jobIdBN()]); }catch(err){ setStatus('managerStatus','err', explainError(err)); } }
+    async function expireJob(){ try{ await refreshAll(); await initContracts(false); await sendWrite('Expire job', 'managerStatus', APP.managerWrite, 'expireJob', [jobIdBN()]); }catch(err){ setStatus('managerStatus','err', explainError(err)); } }
+
+    function copyApplicantSummary(){ copyText($('appSummary').textContent, 'appStatus'); }
+    function copyValidatorSummary(){ copyText($('validatorSummary').textContent, 'validatorStatus'); }
+
+    function bind(id, fn){ $(id).addEventListener('click', fn); }
+    bind('connectBtn', connectWallet);
+    bind('switchBtn', switchToMainnet);
+    bind('refreshBtn', refreshAll);
+    bind('extractAgentBtn', () => { extractSubdomainFromEns('agentEns','agentSubdomain'); computeApplicantCommitment(); setStatus('globalStatus','ok','Extracted the agent subdomain from the ENS name. Valid agent ENS roots are *.agent.agi.eth or *.alpha.agent.agi.eth. Valid agent ENS roots are *.agent.agi.eth or *.alpha.agent.agi.eth.'); });
+    bind('extractValidatorBtn', () => { extractSubdomainFromEns('validatorEns','validatorSubdomain'); computeValidatorCommitment(); setStatus('globalStatus','ok','Extracted the validator subdomain from the ENS name. Valid validator ENS roots are *.club.agi.eth or *.alpha.club.agi.eth.'); });
+    bind('saveLocalBtn', saveLocal); bind('loadLocalBtn', loadLocal); bind('downloadPacketBtn', downloadPacket); bind('importPacketBtn', () => $('importPacketFile').click());
+    $('importPacketFile').addEventListener('change', async (e)=>{ const f = e.target.files && e.target.files[0]; if(!f) return; try{ await importPacket(f); }catch(err){ setStatus('globalStatus','err','That JSON file could not be imported.'); } e.target.value=''; });
+    bind('loadFirstLiveAllBtn', loadFirstLiveAll); bind('loadFirstLiveCreateBtn', loadFirstLiveCreate); bind('copyLoadedToGlobalBtn', () => { if(!$('jobIdField').value && $('procurementId').value==='0') APP.localJobMetaByProcurement['0'] = { payoutWei: ethers.parseUnits(FIRST_LIVE.payoutHuman, 18), duration: BigInt(FIRST_LIVE.duration) }; setStatus('createStatus','ok','Current local job meta is available to the later workflow sections.'); });
+
+    bind('createApprovePayoutBtn', approveCreatePayout); bind('createApproveBudgetBtn', approveCreateBudget); bind('createApproveBothBtn', approveCreateBoth); bind('createWriteBtn', createPremiumJobWithDiscovery);
+    bind('appGenerateSaltBtn', ()=>{ randomSaltInto('app_salt'); computeApplicantCommitment(); }); bind('appComputeBtn', computeApplicantCommitment); bind('copyApplicantSummaryBtn', copyApplicantSummary); bind('appApproveStakeBtn', approveApplicantStake); bind('appApproveCommitBtn', approveAndCommit); bind('appCommitBtn', commitApplication); bind('appRevealBtn', revealApplication);
+    bind('advanceBtn', advanceProcurement); bind('finalizeShortlistBtn', finalizeShortlist); bind('reloadListsBtn', reloadLists); bind('finalistApproveTopupBtn', approveFinalistTopup); bind('acceptFinalistBtn', acceptFinalist); bind('submitTrialBtn', submitTrial);
+    bind('validatorGenerateSaltBtn', ()=>{ randomSaltInto('validatorSalt'); computeValidatorCommitment(); }); bind('validatorComputeBtn', computeValidatorCommitment); bind('copyValidatorSummaryBtn', copyValidatorSummary); bind('validatorApproveBondBtn', approveValidatorBond); bind('validatorCommitBtn', commitValidatorScore); bind('validatorRevealBtn', revealValidatorScore);
+    bind('designationAdvanceBtn', advanceProcurement); bind('finalizeWinnerBtn', finalizeWinner); bind('promoteFallbackBtn', promoteFallback); bind('claimBtn', claimDiscovery);
+    bind('managerApproveBondBtn', approveManagerBond); bind('applyForJobBtn', applyForJob); bind('checkpointBtn', submitCheckpoint); bind('completionBtn', requestCompletion); bind('validateBtn', validateJob); bind('disapproveBtn', disapproveJob); bind('finalizeJobBtn', finalizeJob); bind('disputeBtn', disputeJob); bind('expireBtn', expireJob);
+
+    ['procurementId','agentEns','agentSubdomain','agentProof','validatorEns','validatorSubdomain','validatorProof','perJobProof','app_uri','app_salt','validatorFinalist','validatorScore','validatorSalt','create_jobSpecURI','create_payoutHuman','create_duration','create_details','create_commitDeadline','create_revealDeadline','create_finalistAcceptDeadline','create_trialDeadline','create_scoreCommitDeadline','create_scoreRevealDeadline','create_selectedAcceptanceWindow','create_checkpointWindow','create_finalistCount','create_minValidatorReveals','create_maxValidatorRevealsPerFinalist','create_historicalWeightBps','create_trialWeightBps','create_minReputation','create_applicationStakeHuman','create_finalistStakeTotalHuman','create_stipendPerFinalistHuman','create_validatorRewardPerRevealHuman','create_validatorScoreBondHuman','trialUri','checkpointUri','completionUri','managerApproveAmount'].forEach(id => { $(id).addEventListener('input', ()=>{ if(id.startsWith('create_')) updateCreatePreview(); computeApplicantCommitment(); computeValidatorCommitment(); }); });
+
+    if(window.ethereum){
+      window.ethereum.on?.('accountsChanged', async ()=>{ APP.provider=undefined; APP.signer=undefined; try{ await connectWallet(); await refreshAll(); }catch{} });
+      window.ethereum.on?.('chainChanged', async ()=>{ APP.provider=undefined; APP.signer=undefined; try{ await connectWallet(); await refreshAll(); }catch{} });
+    }
+
+    renderTxs();
+    renderChecks([]);
+    loadFirstLiveAll();
+    updateCreatePreview();
+    computeApplicantCommitment();
+    computeValidatorCommitment();
+  </script>
+</body>
+</html>
