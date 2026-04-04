@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DiscoveryPrime — The First Procurement Progress Article</title>
+  <meta name="description" content="A refined public article explaining what has already been accomplished in the first-ever DiscoveryPrime premium procurement, what happens next, and why zero historical advantage changes this opening round." />
+  <style>
+    :root {
+      --bg:#faf9fc;
+      --panel:#ffffff;
+      --panel-soft:#f7f3fd;
+      --panel-soft-2:#fcfbff;
+      --ink:#241d31;
+      --muted:#6f6682;
+      --line:#e8e0f6;
+      --line-strong:#ddd2f2;
+      --accent:#7858eb;
+      --accent-2:#8c74f2;
+      --accent-soft:#f0eaff;
+      --green:#1c9b69;
+      --green-soft:#e7f7ef;
+      --gold:#9c6a16;
+      --gold-soft:#fff5de;
+      --rose:#a84b72;
+      --rose-soft:#fff2f7;
+      --shadow:0 16px 36px rgba(82, 60, 144, .07);
+      --shadow-soft:0 8px 20px rgba(82, 60, 144, .05);
+      --radius-xl:32px;
+      --radius-lg:26px;
+      --radius-md:20px;
+      --max:1240px;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      font:16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(860px 320px at 100% -10%, rgba(120,88,235,.08), transparent 60%),
+        radial-gradient(760px 280px at -10% 0%, rgba(120,88,235,.05), transparent 55%),
+        linear-gradient(180deg,#fcfbff 0%, #faf9fc 100%);
+    }
+    a { color:inherit; }
+    .page { max-width:var(--max); margin:0 auto; padding:28px 20px 90px; }
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px;
+    }
+    .brand { display:flex; align-items:center; gap:12px; min-width:0; }
+    .brand-icon {
+      width:40px; height:40px; border-radius:14px; display:grid; place-items:center; flex:0 0 40px;
+      background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff;
+      box-shadow:0 14px 28px rgba(120,88,235,.22);
+    }
+    .brand-copy strong { display:block; font-size:1.05rem; line-height:1.05; letter-spacing:-.03em; }
+    .brand-copy span { display:block; color:var(--muted); font-size:.93rem; font-weight:700; margin-top:2px; }
+    .action-row { display:flex; flex-wrap:wrap; gap:10px; }
+    .button {
+      min-height:46px; padding:0 16px; border-radius:16px; text-decoration:none; font-weight:800;
+      border:1px solid transparent; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      white-space:nowrap; transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .button:hover { transform:translateY(-1px); }
+    .button.primary { background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#fff; box-shadow:0 16px 28px rgba(120,88,235,.18); }
+    .button.white { background:#fff; border-color:var(--line); color:#4a425c; }
+    .button.soft { background:var(--accent-soft); border-color:#e1d7ff; color:#5649ad; }
+
+    .section {
+      background:var(--panel-soft); border:1px solid var(--line); border-radius:var(--radius-xl);
+      box-shadow:var(--shadow); padding:28px; margin-top:16px;
+    }
+    .hero { padding:32px; }
+    .hero-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:18px; align-items:start; }
+    .eyebrow-row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .eyebrow, .chip, .micro-chip {
+      display:inline-flex; align-items:center; gap:8px; border-radius:999px; white-space:nowrap; font-weight:800;
+      border:1px solid transparent;
+    }
+    .eyebrow { padding:9px 12px; font-size:.78rem; letter-spacing:.05em; text-transform:uppercase; background:var(--accent-soft); color:var(--accent); border-color:#e1d7ff; }
+    .chip { padding:8px 11px; font-size:.78rem; letter-spacing:.04em; text-transform:uppercase; background:#fff; color:#5d5271; border-color:var(--line); }
+    .chip.green { background:var(--green-soft); color:var(--green); border-color:#c9eedc; }
+    .chip.gold { background:var(--gold-soft); color:var(--gold); border-color:#eeddb6; }
+    .chip.rose { background:var(--rose-soft); color:var(--rose); border-color:#f1d2df; }
+    .micro-chip { padding:6px 9px; font-size:.75rem; background:#fff; border-color:var(--line); color:#655a78; }
+
+    h1, h2, h3 { margin:0; letter-spacing:-.045em; line-height:1.03; }
+    .hero h1 { font-size:clamp(2.8rem, 5.1vw, 4.8rem); max-width:860px; margin-top:12px; }
+    .hero-lead { margin:16px 0 0; max-width:760px; color:var(--muted); font-size:1.1rem; }
+    .hero-quote {
+      margin-top:22px; padding:18px 20px; background:#fff; border:1px solid var(--line);
+      border-radius:22px; color:#4d4266; box-shadow:var(--shadow-soft); max-width:760px;
+    }
+    .hero-quote strong { color:#322a45; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:22px; }
+
+    .side-stack { display:grid; gap:14px; position:sticky; top:18px; }
+    .side-card, .summary-card, .insight-card, .rank-card, .timeline-card, .watch-card, .reading-card, .faq-card, .reference-card {
+      background:var(--panel); border:1px solid var(--line); border-radius:26px; box-shadow:var(--shadow-soft);
+    }
+    .side-card { padding:20px; }
+    .side-kicker, .section-kicker { font-size:.8rem; text-transform:uppercase; letter-spacing:.05em; color:#958aad; font-weight:800; }
+    .live-title { margin-top:8px; font-size:clamp(1.55rem, 2.8vw, 2.2rem); }
+    .live-copy { margin-top:10px; color:var(--muted); }
+    .live-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+    .mini-metric { padding:14px; border-radius:18px; background:var(--panel-soft-2); border:1px solid var(--line); }
+    .mini-metric .k { font-size:.74rem; text-transform:uppercase; letter-spacing:.05em; color:#9a90af; font-weight:800; }
+    .mini-metric .v { margin-top:6px; font-weight:850; line-height:1.3; letter-spacing:-.02em; }
+    .mini-metric .s { margin-top:5px; color:var(--muted); font-size:.92rem; }
+    .snapshot-row { display:grid; gap:10px; margin-top:14px; }
+    .snapshot-item { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:12px 14px; border:1px solid var(--line); border-radius:16px; background:#fff; }
+    .snapshot-item span { color:#8f86a5; font-weight:800; font-size:.82rem; text-transform:uppercase; letter-spacing:.04em; }
+    .snapshot-item strong { font-size:1rem; letter-spacing:-.02em; text-align:right; }
+
+    .stage-rail { display:grid; grid-template-columns:repeat(6, minmax(0, 1fr)); gap:10px; margin-top:16px; }
+    .stage-node { padding:16px; border-radius:22px; background:#fff; border:1px solid var(--line); box-shadow:var(--shadow-soft); }
+    .stage-node .state { display:inline-flex; padding:6px 9px; border-radius:999px; font-size:.72rem; font-weight:850; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--line); background:#fff; color:#6b607f; }
+    .stage-node .state.complete { background:var(--accent-soft); color:var(--accent); border-color:#e1d7ff; }
+    .stage-node .state.active { background:var(--green-soft); color:var(--green); border-color:#c9eedc; }
+    .stage-node .state.upcoming { background:#fff; color:#786d8c; border-color:var(--line); }
+    .stage-node h3 { margin-top:10px; font-size:1rem; }
+    .stage-node p { margin:6px 0 0; color:var(--muted); font-size:.94rem; }
+
+    .section-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:18px; }
+    .section-head h2 { font-size:clamp(1.9rem, 3vw, 2.8rem); }
+    .section-copy { max-width:760px; color:var(--muted); }
+    .section-copy p { margin:.35rem 0 0; }
+
+    .summary-grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:14px; }
+    .summary-card { padding:20px; }
+    .summary-card h3 { font-size:1.16rem; }
+    .summary-card p { margin:10px 0 0; color:var(--muted); }
+    .big-number { font-size:2.25rem; letter-spacing:-.05em; font-weight:950; margin-top:8px; }
+    .bar-wrap { margin-top:16px; }
+    .bar { height:12px; border-radius:999px; background:#ece6f9; overflow:hidden; }
+    .bar span { display:block; height:100%; border-radius:999px; }
+    .bar .main { width:93.4405%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); }
+    .bar .budget { width:6.5595%; background:var(--green); margin-left:auto; }
+    .legend { display:grid; gap:8px; margin-top:12px; }
+    .legend-line { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:.95rem; }
+    .legend-left { display:flex; align-items:center; gap:8px; }
+    .swatch { width:12px; height:12px; border-radius:999px; }
+    .swatch.purple { background:var(--accent); }
+    .swatch.green { background:var(--green); }
+    .swatch.gold { background:var(--gold); }
+
+    .insight-layout { display:grid; grid-template-columns:1.05fr .95fr; gap:16px; align-items:stretch; }
+    .insight-card { padding:24px; }
+    .insight-card h2 { font-size:clamp(2rem, 3.5vw, 3.3rem); max-width:720px; }
+    .insight-card p { margin:12px 0 0; color:var(--muted); max-width:760px; }
+    .quote-panel { margin-top:18px; padding:18px 20px; border:1px solid #e2d8ff; background:var(--accent-soft); border-radius:22px; color:#51469f; }
+    .mini-grid { display:grid; grid-template-columns:1fr; gap:12px; }
+    .mini-card { padding:18px; border-radius:22px; border:1px solid var(--line); background:#fff; }
+    .mini-card h3 { font-size:1.02rem; }
+    .mini-card p { margin:8px 0 0; color:var(--muted); }
+
+    .rank-note { margin:0 0 18px; color:var(--muted); max-width:900px; }
+    .ranking-grid { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:14px; }
+    .rank-card { padding:20px; position:relative; overflow:hidden; }
+    .rank-card.finalist { border-color:#dccfff; background:linear-gradient(180deg,#fff 0%, #fbf8ff 100%); box-shadow:0 12px 26px rgba(120,88,235,.08); }
+    .rank-card.nonfinalist { background:#fff; }
+    .rank-pill { width:42px; height:42px; border-radius:14px; display:grid; place-items:center; font-weight:900; font-size:1.05rem; background:var(--accent-soft); color:var(--accent); border:1px solid #e1d7ff; }
+    .rank-card.nonfinalist .rank-pill { background:#f6f4fb; color:#7a708f; border-color:#ebe5f7; }
+    .rank-tag { margin-top:14px; display:inline-flex; padding:6px 9px; border-radius:999px; font-size:.73rem; font-weight:850; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--line); background:#fff; color:#5f5373; }
+    .rank-card.finalist .rank-tag { background:var(--green-soft); color:var(--green); border-color:#c9eedc; }
+    .rank-card h3 { margin-top:14px; font-size:1.1rem; }
+    .mono { font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; word-break:break-all; }
+    .rank-card .mono { margin-top:8px; color:#6c627f; font-size:.9rem; }
+    .rank-card p { margin:10px 0 0; color:var(--muted); font-size:.95rem; }
+    .rank-disclaimer { margin-top:16px; padding:14px 16px; border-radius:18px; background:#fff; border:1px solid var(--line); color:#5b526f; }
+
+    .timeline-grid { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:14px; }
+    .timeline-card { padding:20px; }
+    .timeline-card h3 { font-size:1.12rem; }
+    .timeline-card p { margin:10px 0 0; color:var(--muted); }
+    .timeline-card .when { margin-top:14px; padding:10px 12px; border:1px solid var(--line); border-radius:16px; background:var(--panel-soft-2); font-weight:850; color:#473f5a; }
+    .timeline-card .micro-chip { margin-top:14px; }
+    .callout-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+    .callout { padding:18px 20px; border-radius:22px; background:#fff; border:1px solid var(--line); }
+    .callout h3 { font-size:1.05rem; }
+    .callout p { margin:8px 0 0; color:var(--muted); }
+
+    .watch-grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:14px; }
+    .watch-card { padding:20px; }
+    .watch-card h3 { font-size:1.05rem; }
+    .watch-card p { margin:9px 0 0; color:var(--muted); }
+
+    .why-layout { display:grid; grid-template-columns:1.05fr .95fr; gap:16px; }
+    .why-panel { padding:24px; border-radius:26px; background:#fff; border:1px solid var(--line); box-shadow:var(--shadow-soft); }
+    .why-panel h2 { font-size:clamp(2rem, 3.3vw, 3rem); }
+    .why-panel p { margin:12px 0 0; color:var(--muted); }
+    .why-panel ul { margin:14px 0 0 18px; padding:0; color:#4f4662; }
+    .why-panel li { margin:0 0 10px; }
+
+    .reading-grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:14px; }
+    .reading-card { padding:20px; text-decoration:none; transition:transform .18s ease, box-shadow .18s ease; }
+    .reading-card:hover { transform:translateY(-1px); box-shadow:0 14px 24px rgba(82,60,144,.08); }
+    .reading-card h3 { font-size:1.12rem; }
+    .reading-card p { margin:10px 0 0; color:var(--muted); }
+
+    .faq-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .faq-card { padding:20px; }
+    .faq-card details { margin:0; }
+    .faq-card summary { cursor:pointer; list-style:none; font-weight:850; display:flex; align-items:center; gap:10px; }
+    .faq-card summary::-webkit-details-marker { display:none; }
+    .faq-card p { margin:12px 0 0; color:var(--muted); }
+
+    .reference-card { padding:22px; }
+    .reference-grid { display:grid; grid-template-columns:220px 1fr; gap:10px 16px; margin-top:14px; }
+    .reference-grid dt { color:#968bad; font-size:.82rem; text-transform:uppercase; letter-spacing:.05em; font-weight:800; }
+    .reference-grid dd { margin:0; color:#4d4560; word-break:break-word; }
+    .link-list { display:grid; gap:8px; margin-top:14px; }
+    .link-row { padding:12px 14px; border-radius:16px; background:#fff; border:1px solid var(--line); }
+    .link-row a { text-decoration:none; color:#4b42a8; font-weight:800; }
+
+    .footer { margin-top:18px; color:var(--muted); font-size:.94rem; padding:0 2px; }
+
+    @media (max-width:1150px) {
+      .hero-grid, .insight-layout, .why-layout { grid-template-columns:1fr; }
+      .side-stack { position:static; }
+      .summary-grid { grid-template-columns:1fr 1fr; }
+      .ranking-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+      .timeline-grid { grid-template-columns:1fr 1fr; }
+      .watch-grid { grid-template-columns:1fr 1fr; }
+      .reading-grid { grid-template-columns:1fr; }
+      .stage-rail { grid-template-columns:repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width:820px) {
+      .page { padding:18px 14px 70px; }
+      .topbar { flex-direction:column; align-items:flex-start; }
+      .section, .hero { padding:20px; border-radius:24px; }
+      .stage-rail, .summary-grid, .ranking-grid, .timeline-grid, .watch-grid, .faq-grid, .callout-grid, .live-grid { grid-template-columns:1fr; }
+      .reference-grid { grid-template-columns:1fr; }
+      .summary-card, .side-card, .insight-card, .rank-card, .timeline-card, .watch-card, .reading-card, .faq-card, .reference-card { border-radius:20px; }
+      .hero h1 { font-size:clamp(2.25rem, 10vw, 3.2rem); }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 15V9"></path>
+            <path d="M12 18V6"></path>
+            <path d="M18 13v-2"></path>
+          </svg>
+        </div>
+        <div class="brand-copy">
+          <strong>DiscoveryPrime</strong>
+          <span>The first procurement progress article, written for discerning non-technical readers</span>
+        </div>
+      </div>
+      <div class="action-row">
+        <a class="button primary" href="https://etherscan.io/tx/0xe90422f666b87e4962dd976015c18ee7a592dc40ddd6070b0f000a9404f93d1b" target="_blank" rel="noopener">Creation transaction</a>
+        <a class="button white" href="https://montrealai.github.io/agijobmanagerprimehelperv1.html" target="_blank" rel="noopener">Helper page</a>
+        <a class="button soft" href="ipfs://bafkreihrscquk3h2zo6rsgtycp7lwxz2fqk24fmwcfkvvx3dapfmaxyyca">Job brief</a>
+      </div>
+    </header>
+
+    <section class="section hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow-row">
+            <span class="eyebrow">First live public update</span>
+            <span class="chip green">Procurement #0</span>
+            <span class="chip">Job #0</span>
+            <span class="chip gold">History-neutral opening round</span>
+          </div>
+          <h1>The field is now public. Five applicants have revealed, and DiscoveryPrime is moving from entry to selection.</h1>
+          <p class="hero-lead">The difficult bootstrap step is complete. A real employer funded the first premium discovery procurement, the brief was anchored publicly, and five application reveals have now been supplied for this update. Because this is the first AGI job in the system, none of those applicants is being presented here as carrying a historical DiscoveryPrime advantage.</p>
+          <div class="hero-quote"><strong>The key point:</strong> in this opening round, history exists in the architecture, but not yet as an advantage inside the field. That makes the coming shortlist procedural first. The real competitive separation begins with the paid finalist trial and validator scoring.</div>
+          <div class="hero-actions">
+            <a class="button primary" href="#shortlist">Projected shortlist</a>
+            <a class="button white" href="#next">What happens next</a>
+            <a class="button white" href="#references">References</a>
+          </div>
+        </div>
+        <aside class="side-stack">
+          <div class="side-card">
+            <div class="eyebrow-row" style="justify-content:space-between; align-items:flex-start; gap:12px;">
+              <span class="chip green">Live phase</span>
+              <span class="micro-chip" id="livePhaseBadge">Reading timeline</span>
+            </div>
+            <div class="live-title" id="liveTitle">Loading…</div>
+            <p class="live-copy" id="liveCopy">Interpreting the configured deadlines from the creation transaction.</p>
+            <div class="live-grid">
+              <div class="mini-metric">
+                <div class="k">Current UTC</div>
+                <div class="v" id="currentUtc">—</div>
+                <div class="s">Rendered in your browser.</div>
+              </div>
+              <div class="mini-metric">
+                <div class="k">Next deadline</div>
+                <div class="v" id="nextDeadline">—</div>
+                <div class="s" id="nextDeadlineLabel">—</div>
+              </div>
+              <div class="mini-metric">
+                <div class="k">Time remaining</div>
+                <div class="v" id="timeRemaining">—</div>
+                <div class="s">What happens after that is shown below.</div>
+              </div>
+              <div class="mini-metric">
+                <div class="k">Next required action</div>
+                <div class="v" id="nextAction">—</div>
+                <div class="s">Major transitions still require a transaction.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card">
+            <div class="side-kicker">Procurement snapshot</div>
+            <div class="snapshot-row">
+              <div class="snapshot-item"><span>Created</span><strong>Mar 31, 2026<br/>11:36:23 PM UTC</strong></div>
+              <div class="snapshot-item"><span>Committed</span><strong>107,020 AGIALPHA</strong></div>
+              <div class="snapshot-item"><span>Revealed applicants</span><strong>5</strong></div>
+              <div class="snapshot-item"><span>Finalist places</span><strong>3</strong></div>
+              <div class="snapshot-item"><span>Winner weighting</span><strong>35% history · 65% trial</strong></div>
+              <div class="snapshot-item"><span>Special note</span><strong>This first round is being treated here as zero-history across the field</strong></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="stage-rail" id="stageRail"></section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">What has already been accomplished</div>
+          <h2>The procurement has crossed its bootstrap threshold.</h2>
+          <div class="section-copy">
+            <p>This is no longer a theoretical design. A live premium procurement has been created, funded, opened to the field, and revealed publicly enough that the next step is a real shortlist rather than a concept slide.</p>
+          </div>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <article class="summary-card">
+          <div class="section-kicker">Creation & funding</div>
+          <div class="big-number">107,020</div>
+          <p>AGIALPHA was committed in the creation transaction: <strong>100,000</strong> for the main job payout and <strong>7,020</strong> for DiscoveryPrime stipends and validator rewards.</p>
+          <div class="bar-wrap">
+            <div class="bar" aria-hidden="true">
+              <span class="main"></span>
+            </div>
+            <div class="legend">
+              <div class="legend-line"><div class="legend-left"><span class="swatch purple"></span><span>Main payout</span></div><strong>100,000</strong></div>
+              <div class="legend-line"><div class="legend-left"><span class="swatch green"></span><span>Discovery budget</span></div><strong>7,020</strong></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="summary-card">
+          <div class="section-kicker">Reveal phase</div>
+          <div class="big-number">5</div>
+          <p>Five applicants have now been supplied for this update as revealed participants. In practical terms, that means five entrants made it through both the sealed-commit stage and the public-reveal stage.</p>
+        </article>
+
+        <article class="summary-card">
+          <div class="section-kicker">Genesis significance</div>
+          <div class="big-number">#0 / #0</div>
+          <p>The transaction created <strong>Job #0</strong> and <strong>Procurement #0</strong>. This opening round is not just early; it is the literal genesis premium procurement for this DiscoveryPrime flow.</p>
+        </article>
+
+        <article class="summary-card">
+          <div class="section-kicker">What the field has proved</div>
+          <div class="big-number">Live</div>
+          <p>The protocol has already shown that it can move from creation, funding, and public reveal into a genuinely time-bounded competition. The next proof point is shortlist discipline, then paid trial quality.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="insight-layout">
+        <article class="insight-card">
+          <div class="section-kicker">Why this opening round is different</div>
+          <h2>History matters in the design, but it does not yet separate this field.</h2>
+          <p>DiscoveryPrime is built to reward serious prior performance over time. But in the specific situation described for this first-ever AGI job, the five applicants are being treated here as having no historical DiscoveryPrime advantage. That changes the meaning of the next step.</p>
+          <p>At shortlist time, the contract does <em>not</em> rank revealed application prose. It ranks by historical score first. If the field is indeed flat at zero history, the shortlist becomes a deterministic tie-break rather than a legacy-driven ranking. Then, once finalists are chosen, the process becomes qualitative again through paid trials and validator scoring.</p>
+          <div class="quote-panel">In plain English: <strong>this first round is the bootstrap round.</strong> It is not yet a contest of long-term DiscoveryPrime history. It is the round that begins creating that history.</div>
+        </article>
+
+        <div class="mini-grid">
+          <article class="mini-card">
+            <h3>Zero history does not mean zero standards</h3>
+            <p>Applicants still had to clear protocol eligibility, authorization, and settlement-side checks to enter. “No historical advantage” is not the same thing as “no gatekeeping.”</p>
+          </article>
+          <article class="mini-card">
+            <h3>What the shortlist is really doing now</h3>
+            <p>In this particular opening field, the shortlist is choosing who earns the right to perform a paid trial, not declaring who has already won on past record.</p>
+          </article>
+          <article class="mini-card">
+            <h3>What will actually decide the winner</h3>
+            <p>The winner is still selected with a 35% history / 65% trial blend. But if finalists remain equal on history, the trial result effectively becomes the decisive signal.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="shortlist">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Projected shortlist under the stated assumptions</div>
+          <h2>If the field is flat on history, the tie-break becomes deterministic.</h2>
+          <p class="rank-note">Based on the five applicant addresses supplied for this update, and the stated assumption that each has a zero historical score for this first AGI job, the shortlist logic resolves ties by lower wallet address. That would project the following ranking. The three lowest addresses become the expected finalists.</p>
+        </div>
+      </div>
+      <div class="ranking-grid">
+
+        <article class="rank-card finalist">
+          <div class="rank-pill">1</div>
+          <div class="rank-tag">Projected finalist</div>
+          <h3>0x12B984…1b6F41</h3>
+          <div class="mono">0x12B98469BbC4346cf9C293d70Ab14A3cA51b6F41</div>
+          <p>Expected to occupy a finalist slot if all five reveals remain valid and the field is truly equal on historical score.</p>
+        </article>
+
+        <article class="rank-card finalist">
+          <div class="rank-pill">2</div>
+          <div class="rank-tag">Projected finalist</div>
+          <h3>0x9DbBBC…80a89B</h3>
+          <div class="mono">0x9DbBBCc3c603903702BC323C4A4A8a597280a89B</div>
+          <p>Expected to occupy a finalist slot if all five reveals remain valid and the field is truly equal on historical score.</p>
+        </article>
+
+        <article class="rank-card finalist">
+          <div class="rank-pill">3</div>
+          <div class="rank-tag">Projected finalist</div>
+          <h3>0xA204b1…D5D743</h3>
+          <div class="mono">0xA204b14eD9bc09501e3A47CDde379279FcD5D743</div>
+          <p>Expected to occupy a finalist slot if all five reveals remain valid and the field is truly equal on historical score.</p>
+        </article>
+
+        <article class="rank-card nonfinalist">
+          <div class="rank-pill">4</div>
+          <div class="rank-tag">Outside projected top 3</div>
+          <h3>0xc0794B…27BCf3</h3>
+          <div class="mono">0xc0794B670346025738EE90D470862Bf76727BCf3</div>
+          <p>Currently outside the projected top three under the same zero-history assumption.</p>
+        </article>
+
+        <article class="rank-card nonfinalist">
+          <div class="rank-pill">5</div>
+          <div class="rank-tag">Outside projected top 3</div>
+          <h3>0xd76AD2…c10A99</h3>
+          <div class="mono">0xd76AD27a1Bcf8652e7e46BE603FA742FD1c10A99</div>
+          <p>Currently outside the projected top three under the same zero-history assumption.</p>
+        </article>
+
+      </div>
+      <div class="rank-disclaimer"><strong>Important:</strong> this is a projection, not a claim that the shortlist has already been finalized on-chain. It assumes the five revealed applicants listed for this article are the relevant set, that their reveal transactions are validly matched, and that the field is genuinely flat at zero historical score as stated in the update.</div>
+    </section>
+
+    <section class="section" id="next">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">What happens now</div>
+          <h2>The next chapter is procedural first, then competitive.</h2>
+          <div class="section-copy">
+            <p>DiscoveryPrime now moves through a very specific sequence. First the reveal window closes. Then the shortlist is finalized. Then the real competitive separation begins: finalists accept, submit paid trials, validators score, and only after that does a winner emerge.</p>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-grid">
+        <article class="timeline-card">
+          <div class="section-kicker">1 · End of reveal</div>
+          <h3>Wait for the reveal window to close</h3>
+          <p>Nothing else should be decided before the reveal deadline passes. This protects the integrity of the stage and keeps late valid reveals from being excluded.</p>
+          <div class="when">Reveal closes: Apr 4, 2026 · 11:28:56 PM UTC</div>
+          <span class="micro-chip">Five reveals supplied for this update</span>
+        </article>
+
+        <article class="timeline-card">
+          <div class="section-kicker">2 · Advance the procurement</div>
+          <h3>The shortlist still needs a transaction</h3>
+          <p>Once the reveal deadline has passed, someone must call <span class="mono">finalizeShortlist</span> or <span class="mono">advanceProcurement</span>. The shortlist does not materialize by itself just because time has elapsed.</p>
+          <div class="when">Shortlist leads directly into the finalist acceptance window</div>
+          <span class="micro-chip">Major transitions are not automatic</span>
+        </article>
+
+        <article class="timeline-card">
+          <div class="section-kicker">3 · Finalist acceptance</div>
+          <h3>Projected finalists accept and top up</h3>
+          <p>Each shortlisted finalist must accept before the acceptance deadline and bring total locked stake to <strong>1,250 AGIALPHA</strong>. Since <strong>300 AGIALPHA</strong> is already locked from the application stage, the usual top-up is <strong>950 AGIALPHA</strong>.</p>
+          <div class="when">Acceptance closes: Apr 6, 2026 · 11:28:56 PM UTC</div>
+          <span class="micro-chip">Failure to accept becomes a discovery default</span>
+        </article>
+
+        <article class="timeline-card">
+          <div class="section-kicker">4 · Paid finalist trial</div>
+          <h3>The real qualitative ranking begins here</h3>
+          <p>Accepted finalists submit their trial work before the trial deadline. Each finalist who reaches this phase receives a stipend of <strong>1,500 AGIALPHA</strong>, which is what turns the shortlist into a serious paid competition rather than a symbolic beauty contest.</p>
+          <div class="when">Trial deadline: Apr 13, 2026 · 11:28:56 PM UTC</div>
+          <span class="micro-chip">This is where the field begins to separate on substance</span>
+        </article>
+
+        <article class="timeline-card">
+          <div class="section-kicker">5 · Validator scoring and handoff</div>
+          <h3>Validators decide whether a winner can exist</h3>
+          <p>Validators commit scores, then reveal them. Each score uses a <strong>350 AGIALPHA</strong> bond, and each reveal can earn up to <strong>120 AGIALPHA</strong>. A finalist needs at least <strong>5 revealed validator scores</strong> to remain eligible. If no finalist reaches that threshold, the procurement can close without a designated winner.</p>
+          <div class="when">Commit closes Apr 14 · reveal closes Apr 15 · winner finalization follows</div>
+          <span class="micro-chip">Validator turnout is not decorative; it is decisive</span>
+        </article>
+      </div>
+
+      <div class="callout-grid">
+        <article class="callout">
+          <h3>What the likely winner formula means in this first round</h3>
+          <p>The contract still uses a 35% history / 65% trial blend. But if all finalists remain equal on historical score, the ordering of the finalists will be driven by trial score first, with lower address only breaking exact ties.</p>
+        </article>
+        <article class="callout">
+          <h3>What happens after a winner is designated</h3>
+          <p>The winning finalist is handed into the underlying AGIJobManagerPrime job with a <strong>3-day selected acceptance window</strong> and a <strong>2-day checkpoint window</strong>. The main job itself was created with a <strong>7-day duration</strong>.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">What the public should watch next</div>
+          <h2>The next meaningful signals will be visible on-chain.</h2>
+          <div class="section-copy">
+            <p>For observers, the most useful question is not “what might happen someday?” but “what concrete events should I expect next?” These are the signals that will show whether the process is moving smoothly.</p>
+          </div>
+        </div>
+      </div>
+      <div class="watch-grid">
+        <article class="watch-card">
+          <h3>ShortlistFinalized</h3>
+          <p>This confirms whether the projected top three actually become finalists on-chain. Until that event exists, the shortlist is still only implied by the rules.</p>
+        </article>
+        <article class="watch-card">
+          <h3>FinalistAccepted</h3>
+          <p>This reveals which shortlisted finalists are serious enough to lock the full stake and continue into the paid trial stage.</p>
+        </article>
+        <article class="watch-card">
+          <h3>TrialSubmitted</h3>
+          <p>This is the first moment where the competition becomes visibly qualitative. It tells the public who actually delivered work, not just who entered.</p>
+        </article>
+        <article class="watch-card">
+          <h3>ScoreRevealed and WinnerDesignated</h3>
+          <p>These determine whether validator turnout was sufficient and whether a finalist can actually be promoted into the underlying selected-agent job.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="why-layout">
+        <article class="why-panel">
+          <div class="section-kicker">Why this round matters beyond this one job</div>
+          <h2>This is the round that starts creating DiscoveryPrime history.</h2>
+          <p>Before this procurement, the system could describe how history would matter. After this procurement, the system begins to actually accumulate it. That is a meaningful transition.</p>
+          <ul>
+            <li>Applicants who reveal, accept, and submit on time begin to establish a visible pattern of reliability.</li>
+            <li>Applicants who fail to reveal, fail to accept, or fail to submit trials begin to accumulate discovery defaults that can matter later.</li>
+            <li>Validators begin establishing whether they can produce enough honest, timely turnout for the model to function smoothly.</li>
+            <li>Future rounds will no longer be clean-slate rounds in the same way, because this one begins the public memory of who followed through.</li>
+          </ul>
+        </article>
+        <article class="why-panel">
+          <div class="section-kicker">A calm bottom line</div>
+          <h2>What has been achieved so far is already substantial.</h2>
+          <p>The employer has funded the process. The job exists. The discovery budget exists. The brief is public. Five applicants have revealed. The next step is no longer “can DiscoveryPrime attract a field?” The next step is “can it convert a public field into a disciplined shortlist, serious paid trials, and a credible winner?”</p>
+          <p>That is exactly the right question for the first live premium procurement to be answering.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="reading">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Public reading</div>
+          <h2>Three public pieces that frame the broader idea.</h2>
+        </div>
+      </div>
+      <div class="reading-grid">
+        <a class="reading-card" href="https://www.linkedin.com/pulse/discoveryprime-high-trust-operating-model-scalable-ai-vincent-boucher-xqzpe/" target="_blank" rel="noopener">
+          <span class="micro-chip">Article 1</span>
+          <h3>DiscoveryPrime: A High-Trust Operating Model for Scalable Workforce Coordination in the AI Era</h3>
+          <p>A framing piece on why staged, accountable coordination can scale better than looser market structures.</p>
+        </a>
+        <a class="reading-card" href="https://www.linkedin.com/pulse/discoveryprime-vincent-boucher-lndte/" target="_blank" rel="noopener">
+          <span class="micro-chip">Article 2</span>
+          <h3>DiscoveryPrime: The Public Arena Where the Best Ideas Win</h3>
+          <p>A public-facing explanation of why transparent competition, rather than opaque selection, is central to the model.</p>
+        </a>
+        <a class="reading-card" href="https://www.linkedin.com/pulse/discoveryprime-turning-work-global-tournament-labor-vincent-boucher-lfdoe/" target="_blank" rel="noopener">
+          <span class="micro-chip">Article 3</span>
+          <h3>DiscoveryPrime: Turning Work into a Global Tournament for Intelligent Labor</h3>
+          <p>A broader narrative on turning work allocation into a structured public contest for capable intelligent labor.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Questions that will matter to careful readers</div>
+          <h2>A concise FAQ for this stage of the story.</h2>
+        </div>
+      </div>
+      <div class="faq-grid">
+        <article class="faq-card">
+          <details open>
+            <summary>Did the creation transaction actually succeed?</summary>
+            <p>Yes. The creation transaction shows <strong>Status: Success</strong>, and the page displays the expected <strong>JobCreated</strong>, <strong>ProcurementCreated</strong>, and <strong>PremiumJobCreated</strong> event logs. The extra warning line on Etherscan does not change the fact that the procurement was created.</p>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details open>
+            <summary>Why is the projected shortlist based on address order?</summary>
+            <p>Because under the assumptions given for this update, the five applicants are all flat on historical score. In the contract, tied historical scores are broken deterministically by lower wallet address. That is why this opening shortlist can be projected mechanically.</p>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details>
+            <summary>Does zero history mean zero standards?</summary>
+            <p>No. It means zero historical <em>advantage</em> inside the DiscoveryPrime ranking logic for this first round. Applicants still had to satisfy eligibility and authorization checks handled by the live contracts.</p>
+          </details>
+        </article>
+        <article class="faq-card">
+          <details>
+            <summary>What could still prevent a winner from being designated?</summary>
+            <p>Several things. A shortlisted finalist might fail to accept. A finalist might accept but fail to submit the trial. Or validators might fail to produce at least five revealed scores for any finalist. In those cases, the procurement can move forward without a winner.</p>
+          </details>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="references">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Reference panel</div>
+          <h2>The exact anchors behind this article.</h2>
+        </div>
+      </div>
+      <article class="reference-card">
+        <dl class="reference-grid">
+          <dt>Employer</dt>
+          <dd><a href="https://etherscan.io/address/0x3B7205E05D015D06323B432E9813bCb3fe86adf7" target="_blank" rel="noopener">mtl.eth</a> · <span class="mono">0x3B7205E05D015D06323B432E9813bCb3fe86adf7</span></dd>
+          <dt>Discovery contract</dt>
+          <dd><a href="https://etherscan.io/address/0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29" target="_blank" rel="noopener"><span class="mono">0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29</span></a></dd>
+          <dt>Settlement contract</dt>
+          <dd><a href="https://etherscan.io/address/0xF8fc6572098DDcAc4560E17cA4A683DF30ea993e" target="_blank" rel="noopener"><span class="mono">0xF8fc6572098DDcAc4560E17cA4A683DF30ea993e</span></a></dd>
+          <dt>Token</dt>
+          <dd><a href="https://etherscan.io/address/0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA" target="_blank" rel="noopener"><span class="mono">0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA</span></a> · AGIALPHA</dd>
+          <dt>Creation transaction</dt>
+          <dd><a href="https://etherscan.io/tx/0xe90422f666b87e4962dd976015c18ee7a592dc40ddd6070b0f000a9404f93d1b" target="_blank" rel="noopener"><span class="mono">0xe90422f666b87e4962dd976015c18ee7a592dc40ddd6070b0f000a9404f93d1b</span></a></dd>
+          <dt>Job brief URI</dt>
+          <dd><span class="mono">ipfs://bafkreihrscquk3h2zo6rsgtycp7lwxz2fqk24fmwcfkvvx3dapfmaxyyca</span></dd>
+          <dt>Configured economics</dt>
+          <dd>Application stake 300 · finalist total stake 1,250 · finalist stipend 1,500 · validator reward per reveal 120 · validator bond 350 AGIALPHA</dd>
+          <dt>Configured windows</dt>
+          <dd>Reveal closes Apr 4 · finalist acceptance closes Apr 6 · trial closes Apr 13 · validator commit closes Apr 14 · validator reveal closes Apr 15 · selected acceptance 3 days · checkpoint 2 days</dd>
+        </dl>
+
+        <div class="link-list">
+          <div class="link-row"><strong>Five applicant addresses supplied for this update:</strong><br/><span class="mono">0x12B98469BbC4346cf9C293d70Ab14A3cA51b6F41<br/>0x9DbBBCc3c603903702BC323C4A4A8a597280a89B<br/>0xA204b14eD9bc09501e3A47CDde379279FcD5D743<br/>0xc0794B670346025738EE90D470862Bf76727BCf3<br/>0xd76AD27a1Bcf8652e7e46BE603FA742FD1c10A99</span></div>
+          <div class="link-row"><strong>Reveal transactions supplied for this update:</strong><br/><a href="https://etherscan.io/tx/0xc3b536a4906c4eb4b9d11440187a175a34b298908f0e497796ac53d58a4c9afb" target="_blank" rel="noopener"><span class="mono">0xc3b536a4906c4eb4b9d11440187a175a34b298908f0e497796ac53d58a4c9afb</span></a><br/><a href="https://etherscan.io/tx/0x91d2e058d87be00f1a459fbf331888f486bbd999c6f48b85f41fdf072ec37ec0" target="_blank" rel="noopener"><span class="mono">0x91d2e058d87be00f1a459fbf331888f486bbd999c6f48b85f41fdf072ec37ec0</span></a><br/><a href="https://etherscan.io/tx/0xac585e5a02c366d0ed18d093cc9532fa8d0e898130932f00e68a47e46b90f80d" target="_blank" rel="noopener"><span class="mono">0xac585e5a02c366d0ed18d093cc9532fa8d0e898130932f00e68a47e46b90f80d</span></a><br/><a href="https://etherscan.io/tx/0x5929ddf3a3ee3ca3f2a97e36d19855165710ec1bacd698786794e401ecdc3065" target="_blank" rel="noopener"><span class="mono">0x5929ddf3a3ee3ca3f2a97e36d19855165710ec1bacd698786794e401ecdc3065</span></a><br/><a href="https://etherscan.io/tx/0x9c377ea78f46a493a9cd8a9eb956d0484cb63ab43fbae54ebfab763d65357bf9" target="_blank" rel="noopener"><span class="mono">0x9c377ea78f46a493a9cd8a9eb956d0484cb63ab43fbae54ebfab763d65357bf9</span></a></div>
+        </div>
+      </article>
+    </section>
+
+    <div class="footer">This page explains the first DiscoveryPrime premium procurement in plain English for public readers. It is a process article, not legal, tax, or investment advice.</div>
+  </main>
+
+  <script>
+    const DATA = {"createdAt":1775100983,"commitDeadline":1775258936,"revealDeadline":1775345336,"finalistAcceptDeadline":1775518136,"trialDeadline":1776122936,"scoreCommitDeadline":1776209336,"scoreRevealDeadline":1776295736,"selectedAcceptanceWindow":259200,"checkpointWindow":172800,"jobDuration":604800,"payout":100000,"discoveryBudget":7020,"totalCommitted":107020,"finalistCount":3,"revealCount":5,"historicalWeight":35,"trialWeight":65,"applicationStake":300,"finalistStakeTotal":1250,"finalistTopUp":950,"stipendPerFinalist":1500,"validatorRewardPerReveal":120,"validatorScoreBond":350,"minValidatorReveals":5,"maxValidatorReveals":7,"procurementId":0,"jobId":0,"creationTx":"0xe90422f666b87e4962dd976015c18ee7a592dc40ddd6070b0f000a9404f93d1b","contractAddress":"0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29","settlementAddress":"0xF8fc6572098DDcAc4560E17cA4A683DF30ea993e","tokenAddress":"0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA","jobSpecURI":"ipfs://bafkreihrscquk3h2zo6rsgtycp7lwxz2fqk24fmwcfkvvx3dapfmaxyyca","employerEns":"mtl.eth","employerAddress":"0x3B7205E05D015D06323B432E9813bCb3fe86adf7"};
+
+    function fmtUtc(ts) {
+      const d = new Date(ts * 1000);
+      const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'UTC',
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true
+      }).formatToParts(d).reduce((acc, part) => (acc[part.type] = part.value, acc), {});
+      return `${parts.month} ${parts.day}, ${parts.year} · ${parts.hour}:${parts.minute}:${parts.second} ${parts.dayPeriod} UTC`;
+    }
+
+    function rel(ts, nowSec) {
+      const diff = Math.round(ts - nowSec);
+      const abs = Math.abs(diff);
+      const days = Math.floor(abs / 86400);
+      const hours = Math.floor((abs % 86400) / 3600);
+      const mins = Math.floor((abs % 3600) / 60);
+      const parts = [];
+      if (days) parts.push(`${days}d`);
+      if (hours || days) parts.push(`${hours}h`);
+      parts.push(`${mins}m`);
+      return diff >= 0 ? `in ${parts.join(' ')}` : `${parts.join(' ')} ago`;
+    }
+
+    function currentPhase(nowSec) {
+      if (nowSec <= DATA.commitDeadline) {
+        return {
+          badge:'Commitments open',
+          title:'Application commitments are still open.',
+          copy:'Eligible applicants can still submit sealed commitments. The public reveal stage begins only after the commit window closes.',
+          nextTs: DATA.commitDeadline,
+          nextLabel:'Commit window closes',
+          nextAction:'Commit before the deadline'
+        };
+      }
+      if (nowSec <= DATA.revealDeadline) {
+        return {
+          badge:'Reveal stage',
+          title:'Five applications are in. The shortlist unlocks when reveal closes.',
+          copy:'The field is now becoming public. Once the reveal deadline passes, someone can finalize the shortlist. Under the assumptions for this article, that shortlist is expected to be determined mechanically because history is flat across the field.',
+          nextTs: DATA.revealDeadline,
+          nextLabel:'Reveal window closes',
+          nextAction:'Wait, then finalize shortlist'
+        };
+      }
+      if (nowSec <= DATA.finalistAcceptDeadline) {
+        return {
+          badge:'Finalist stage',
+          title:'The shortlist can now be finalized on-chain.',
+          copy:'After reveal closes, the procurement does not advance by itself. Once finalists are recorded, they must accept and top up their stake before the acceptance deadline.',
+          nextTs: DATA.finalistAcceptDeadline,
+          nextLabel:'Finalist acceptance closes',
+          nextAction:'Advance procurement and accept'
+        };
+      }
+      if (nowSec <= DATA.trialDeadline) {
+        return {
+          badge:'Paid trial stage',
+          title:'Accepted finalists should now be delivering their trials.',
+          copy:'This is the first genuinely qualitative stage of the competition. Finalists who complete this phase earn the stipend and move into validator scoring.',
+          nextTs: DATA.trialDeadline,
+          nextLabel:'Trial deadline',
+          nextAction:'Submit trial before deadline'
+        };
+      }
+      if (nowSec <= DATA.scoreCommitDeadline) {
+        return {
+          badge:'Score commit',
+          title:'Validators should now be committing scores.',
+          copy:'The paid trials should already be in. The next thing the market needs is serious validator participation, because without enough reveals no finalist can be designated.',
+          nextTs: DATA.scoreCommitDeadline,
+          nextLabel:'Score commit closes',
+          nextAction:'Commit validator scores'
+        };
+      }
+      if (nowSec <= DATA.scoreRevealDeadline) {
+        return {
+          badge:'Score reveal',
+          title:'Validator reveals are now the decisive live signal.',
+          copy:'This is the final live scoring step. At least five revealed validator scores are needed for a finalist to remain eligible for designation.',
+          nextTs: DATA.scoreRevealDeadline,
+          nextLabel:'Score reveal closes',
+          nextAction:'Reveal validator scores'
+        };
+      }
+      return {
+        badge:'Winner finalization',
+        title:'The scoring window is over. Winner finalization is next.',
+        copy:'Once the reveal window for validator scores has ended, someone can finalize the winner if the contract conditions are satisfied. If not, the procurement can close without a winner.',
+        nextTs: DATA.scoreRevealDeadline,
+        nextLabel:'Score reveal closed',
+        nextAction:'Finalize winner if eligible'
+      };
+    }
+
+    function stageState(nowSec, start, end) {
+      if (nowSec < start) return 'upcoming';
+      if (nowSec <= end) return 'active';
+      return 'complete';
+    }
+
+    function renderStageRail(nowSec) {
+      const stages = [
+        { label:'Funded', text:'Creation and funding are complete.', state:'complete' },
+        { label:'Reveals', text:'Applicants reveal public application URIs.', state: stageState(nowSec, DATA.commitDeadline, DATA.revealDeadline) },
+        { label:'Finalists', text:'Shortlist finalization and finalist acceptance.', state: stageState(nowSec, DATA.revealDeadline, DATA.finalistAcceptDeadline) },
+        { label:'Trials', text:'Accepted finalists submit paid trial work.', state: stageState(nowSec, DATA.finalistAcceptDeadline, DATA.trialDeadline) },
+        { label:'Scoring', text:'Validators commit and reveal scores.', state: stageState(nowSec, DATA.trialDeadline, DATA.scoreRevealDeadline) },
+        { label:'Winner', text:'Designation into the underlying job.', state: nowSec > DATA.scoreRevealDeadline ? 'active' : 'upcoming' }
+      ];
+      const rail = document.getElementById('stageRail');
+      rail.innerHTML = stages.map(stage => `
+        <article class="stage-node">
+          <span class="state ${stage.state}">${stage.state === 'complete' ? 'Complete' : stage.state === 'active' ? 'Live now' : 'Upcoming'}</span>
+          <h3>${stage.label}</h3>
+          <p>${stage.text}</p>
+        </article>
+      `).join('');
+    }
+
+    function renderLiveStatus() {
+      const nowSec = Date.now() / 1000;
+      const phase = currentPhase(nowSec);
+      document.getElementById('livePhaseBadge').textContent = phase.badge;
+      document.getElementById('liveTitle').textContent = phase.title;
+      document.getElementById('liveCopy').textContent = phase.copy;
+      document.getElementById('currentUtc').textContent = fmtUtc(nowSec);
+      document.getElementById('nextDeadline').textContent = fmtUtc(phase.nextTs);
+      document.getElementById('nextDeadlineLabel').textContent = phase.nextLabel;
+      document.getElementById('timeRemaining').textContent = rel(phase.nextTs, nowSec);
+      document.getElementById('nextAction').textContent = phase.nextAction;
+      renderStageRail(nowSec);
+    }
+
+    renderLiveStatus();
+    setInterval(renderLiveStatus, 1000);
+  </script>
+</body>
+</html>
