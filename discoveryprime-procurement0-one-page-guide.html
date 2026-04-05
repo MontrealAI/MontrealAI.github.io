@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DiscoveryPrime Procurement 0 - One-page Timeline + Transaction Guide</title>
+<style>
+  :root{
+    --ink:#0f172a;
+    --muted:#5b6476;
+    --soft:#eef1f7;
+    --card:#ffffff;
+    --line:#dde3ee;
+    --accent:#5b5ce2;
+    --accent2:#9b8cff;
+    --gold:#d7a949;
+    --green:#1f8f61;
+    --amber:#c7811f;
+    --red:#b74b4b;
+    --navy:#12182d;
+    --lav:#f4f1ff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:linear-gradient(180deg,#f7f8fc 0%,#eef2fb 100%);color:var(--ink);font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;}
+  a{color:#3347d4;text-decoration:none}
+  .page{
+    width: 100%;
+    max-width: 1640px;
+    margin: 0 auto;
+    padding: 18px 20px 18px;
+  }
+  .shell{
+    border:1px solid rgba(91,92,226,.12);
+    background: radial-gradient(circle at top right, rgba(155,140,255,.10), transparent 28%), radial-gradient(circle at top left, rgba(215,169,73,.08), transparent 26%), #fbfcff;
+    border-radius: 28px;
+    padding: 20px;
+    box-shadow: 0 24px 80px rgba(21,28,58,.10);
+  }
+  .top{
+    display:grid;
+    grid-template-columns: 1.25fr .88fr;
+    gap:14px;
+    align-items:stretch;
+    margin-bottom:14px;
+  }
+  .hero{
+    background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(248,250,255,.96));
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:18px 20px 16px;
+    min-height:196px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero:after{
+    content:"";
+    position:absolute;
+    right:-80px; top:-80px;
+    width:240px; height:240px;
+    background: radial-gradient(circle, rgba(91,92,226,.12), rgba(91,92,226,0) 70%);
+  }
+  .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 11px;border-radius:999px;background:var(--lav);border:1px solid rgba(91,92,226,.14);color:#4735b8;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  h1{margin:16px 0 10px;font: 700 36px/1.03 Georgia, "Times New Roman", serif;letter-spacing:-.03em;color:#161c31;max-width:860px}
+  .sub{font-size:14px;line-height:1.42;color:#4c5669;max-width:920px;margin-bottom:14px}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+  .mini{background:#fff;border:1px solid var(--line);border-radius:18px;padding:10px 11px 9px}
+  .mini .k{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#6e7790;font-weight:700;margin-bottom:6px}
+  .mini .v{font-size:12px;line-height:1.28;font-weight:700;color:#1c2441}
+
+  .status-panel{display:grid;grid-template-rows:auto auto 1fr;gap:14px}
+  .status-card, .notes-card, .tx-card, .sources{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:0 8px 24px rgba(16,24,40,.04)}
+  .status-card{padding:15px 15px 13px}
+  .card-title{font:700 22px/1.06 Georgia, "Times New Roman", serif;margin:0 0 10px;color:#141b31;letter-spacing:-.02em}
+  .chiprow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .chip{padding:8px 11px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;border:1px solid transparent}
+  .chip.done{background:rgba(31,143,97,.11);color:var(--green);border-color:rgba(31,143,97,.18)}
+  .chip.live{background:rgba(91,92,226,.10);color:#4241c6;border-color:rgba(91,92,226,.18)}
+  .chip.warn{background:rgba(215,169,73,.12);color:#94661a;border-color:rgba(215,169,73,.18)}
+  .status-list{display:grid;gap:8px;margin:10px 0 0}
+  .status-row{display:grid;grid-template-columns:18px 1fr;gap:10px;align-items:start;font-size:14px;line-height:1.42;color:#465066}
+  .dot{width:10px;height:10px;border-radius:50%;margin-top:5px;background:linear-gradient(180deg,#5b5ce2,#8e7cff);box-shadow:0 0 0 5px rgba(91,92,226,.10)}
+
+  .timeline-wrap{margin-bottom:14px}
+  .timeline-head{display:flex;align-items:end;justify-content:space-between;margin:0 0 10px 2px}
+  .timeline-head h2{margin:0;font:700 25px/1.02 Georgia, "Times New Roman", serif;color:#131a31;letter-spacing:-.02em}
+  .timeline-head p{margin:0;color:#5b6476;font-size:12px}
+  .timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+  .step{position:relative;background:#fff;border:1px solid var(--line);border-radius:22px;padding:14px 12px 12px;min-height:218px}
+  .step::before{content:"";position:absolute;top:15px;left:15px;right:15px;height:3px;border-radius:999px;background:linear-gradient(90deg,rgba(91,92,226,.18),rgba(215,169,73,.18));}
+  .step.done::before{background:linear-gradient(90deg,rgba(31,143,97,.4),rgba(31,143,97,.14));}
+  .step.live::before{background:linear-gradient(90deg,rgba(91,92,226,.52),rgba(91,92,226,.14));}
+  .step.upcoming::before{background:linear-gradient(90deg,rgba(215,169,73,.46),rgba(215,169,73,.14));}
+  .step .num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:999px;background:#eef1ff;color:#4044be;font-size:12px;font-weight:800;margin:10px 0 9px}
+  .step.done .num{background:rgba(31,143,97,.11);color:var(--green)}
+  .step.upcoming .num{background:rgba(215,169,73,.12);color:#8b621c}
+  .step h3{margin:0 0 6px;font-size:15px;line-height:1.12;color:#17203c;letter-spacing:-.01em}
+  .when{font-size:11px;line-height:1.35;color:#5c6579;font-weight:700;margin-bottom:8px}
+  .step p{margin:0 0 8px;font-size:12px;line-height:1.38;color:#495366}
+  .pill{display:inline-flex;padding:6px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-right:6px;margin-bottom:7px}
+  .pill.no{background:#f3f5fa;color:#70798c;border:1px solid #e5e9f2}
+  .pill.yes{background:rgba(91,92,226,.10);color:#4647c9;border:1px solid rgba(91,92,226,.18)}
+  .pill.any{background:rgba(215,169,73,.12);color:#94661a;border:1px solid rgba(215,169,73,.18)}
+  .step ul{margin:8px 0 0 18px;padding:0;color:#495366;font-size:11.7px;line-height:1.27}
+
+  .bottom{display:grid;grid-template-columns:1.05fr .95fr .95fr;gap:10px}
+  .notes-card,.tx-card,.sources{padding:14px 14px 12px}
+  .small-title{margin:0 0 10px;font:700 19px/1.04 Georgia, "Times New Roman", serif;color:#141b31;letter-spacing:-.02em}
+  .checklist{display:grid;gap:8px}
+  .check{display:grid;grid-template-columns:16px 1fr;gap:10px;align-items:start;font-size:12px;line-height:1.42;color:#4f596b}
+  .check .mark{font-weight:900;color:#3d47c7}
+  .warnbox{background:linear-gradient(180deg,#fffaf2,#fff);border:1px solid rgba(215,169,73,.24);border-radius:18px;padding:12px 13px;margin-top:10px}
+  .warnbox strong{color:#7c5616}
+  .tx-table{display:grid;gap:8px}
+  .row{display:grid;grid-template-columns:114px 1fr;gap:10px;align-items:start;padding:8px 0;border-top:1px solid #edf1f7}
+  .row:first-child{border-top:none;padding-top:0}
+  .label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#7a8495;font-weight:800}
+  .value{font-size:12px;line-height:1.4;color:#475162}
+  .code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.2px; background:#f6f8fc; border:1px solid #e6ebf3; border-radius:10px; padding:2px 6px; color:#273353; white-space:nowrap}
+  .source-list{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin-top:4px}
+  .source{font-size:11.8px;line-height:1.28;color:#4d5768}
+  .source a{word-break:break-all}
+  .footerline{margin-top:12px;padding-top:8px;border-top:1px solid #edf1f7;font-size:10.7px;color:#798193;line-height:1.45}
+
+  @page{
+    size: 17.5in 13.6in;
+    margin: 0.28in;
+  }
+  @media print{
+    html,body{background:#fff}
+    .page{max-width:none;padding:0}
+    .shell{box-shadow:none;border-radius:0;border:0;padding:0;background:#fff}
+    a{color:#2436b8;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <section class="top">
+        <div class="hero">
+          <div class="eyebrow">DiscoveryPrime • Procurement 0 • One-page guide</div>
+          <h1>Timeline + what actually needs a real transaction</h1>
+          <div class="sub">A clear, non-technical guide to the first-ever DiscoveryPrime premium procurement — focused on what is already done, what is live now, what is just a read-only status label, and what truly requires an on-chain write.</div>
+          <div class="hero-grid">
+            <div class="mini"><div class="k">Main job payout</div><div class="v">100,000 AGIALPHA</div></div>
+            <div class="mini"><div class="k">Discovery budget</div><div class="v">7,020 AGIALPHA</div></div>
+            <div class="mini"><div class="k">Finalists</div><div class="v">3 finalists • 2 non-finalists claimed</div></div>
+            <div class="mini"><div class="k">Finalist economics</div><div class="v">1,250 stake total + 1,500 stipend</div></div>
+            <div class="mini"><div class="k">Validator economics</div><div class="v">350 bond • 120 reward / reveal</div></div>
+            <div class="mini"><div class="k">Decision rule</div><div class="v">35% history • 65% trial</div></div>
+          </div>
+        </div>
+        <div class="status-panel">
+          <div class="status-card">
+            <h2 class="card-title">Current confirmed state</h2>
+            <div class="chiprow">
+              <span class="chip done">Shortlist finalised</span>
+              <span class="chip done">All 3 finalists accepted</span>
+              <span class="chip done">2 non-finalists claimed</span>
+              <span class="chip live">Next live write: submitTrial</span>
+            </div>
+            <div class="status-list">
+              <div class="status-row"><span class="dot"></span><span>The acceptance phase is operationally complete because all three finalists already called <span class="code">acceptFinalist(0)</span>.</span></div>
+              <div class="status-row"><span class="dot"></span><span>The next real participant write is now <span class="code">submitTrial(0, trialURI)</span> by each accepted finalist.</span></div>
+              <div class="status-row"><span class="dot"></span><span><span class="code">nextActionForProcurement(0)</span> is only a read-only status helper. It does not move the contract forward and never needs an on-chain transaction.</span></div>
+            </div>
+          </div>
+          <div class="notes-card">
+            <h3 class="small-title">Most important practical warning</h3>
+            <div class="checklist">
+              <div class="check"><span class="mark">•</span><span><strong>Trial submissions are public once sent on-chain.</strong> The contract stores <span class="code">trialURI</span> and emits <span class="code">TrialSubmitted</span>. If the URI points to public IPFS / HTTP content, competing finalists can read it.</span></div>
+              <div class="check"><span class="mark">•</span><span>If you want less copy risk, submit later in the trial window, or use access-controlled / encrypted off-chain content. The URI string itself will still be public.</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="timeline-wrap">
+        <div class="timeline-head">
+          <h2>Procurement 0 timeline</h2>
+          <p>UTC and Montreal time shown together • yellow = future real write • blue = live finalist action • gray = no transaction needed</p>
+        </div>
+        <div class="timeline">
+          <article class="step done">
+            <div class="num">1</div>
+            <h3>Create premium job with discovery</h3>
+            <div class="when">Done • Mar 31, 2026 • 23:36:23 UTC</div>
+            <span class="pill no">No action now</span>
+            <p>The employer funded the main job and the separate discovery layer. This created procurement 0 and locked the premium flow into the discovery-first path.</p>
+            <ul>
+              <li>Main job payout funded: <strong>100,000 AGIALPHA</strong></li>
+              <li>Discovery budget funded: <strong>7,020 AGIALPHA</strong></li>
+            </ul>
+          </article>
+
+          <article class="step done">
+            <div class="num">2</div>
+            <h3>Applications + reveals</h3>
+            <div class="when">Done • Reveal deadline passed Apr 4 • 23:28:56 UTC / 19:28:56 EDT</div>
+            <span class="pill no">No action now</span>
+            <p>Five agents committed and revealed. After reveal closed, the shortlist required an explicit on-chain finalisation call.</p>
+            <ul>
+              <li>Application stake per revealed applicant: <strong>300 AGIALPHA</strong></li>
+              <li>Unrevealed applicants would have lost that stake to the employer</li>
+            </ul>
+          </article>
+
+          <article class="step done">
+            <div class="num">3</div>
+            <h3>Shortlist, finalist acceptance, non-finalist claims</h3>
+            <div class="when">Done in practice • Acceptance label lasts until Apr 6 • 23:28:56 UTC / 19:28:56 EDT</div>
+            <span class="pill no">No action now</span>
+            <p>The shortlist is final, all three finalists already accepted, and the two non-finalists already claimed back their refundable stakes.</p>
+            <ul>
+              <li>Finalists: <strong>0x12B9…6F41</strong>, <strong>0x9DbB…a89B</strong>, <strong>0xA204…D743</strong></li>
+              <li>Non-finalists: claimable refund = <strong>300 AGIALPHA</strong> each</li>
+            </ul>
+          </article>
+
+          <article class="step live">
+            <div class="num">4</div>
+            <h3>Accepted finalists submit one final trial</h3>
+            <div class="when">LIVE NOW → trial deadline Apr 13 • 23:28:56 UTC / 19:28:56 EDT</div>
+            <span class="pill yes">Real transaction</span>
+            <p>Each accepted finalist may now call <span class="code">submitTrial(0, trialURI)</span>. This is the next real participant write. You do not need to wait for Apr 6.</p>
+            <ul>
+              <li>Only <strong>one successful trial submission</strong> per finalist address</li>
+              <li>No extra top-up here; the stake top-up already happened during <span class="code">acceptFinalist</span></li>
+              <li>If a finalist misses the deadline, their locked stake can later go to the employer</li>
+            </ul>
+          </article>
+
+          <article class="step upcoming">
+            <div class="num">5</div>
+            <h3>Validators score the trials</h3>
+            <div class="when">Commit: Apr 13 → Apr 14 • Reveal: Apr 14 → Apr 15 (same 23:28:56 UTC / 19:28:56 EDT cutoff style)</div>
+            <span class="pill any">Validator transactions</span>
+            <p>Once the trial window closes, authorized validators first commit scores, then reveal them later. This is the scoring phase; finalists do not write here.</p>
+            <ul>
+              <li><span class="code">commitFinalistScore(...)</span> after Apr 13 deadline</li>
+              <li><span class="code">revealFinalistScore(...)</span> after Apr 14 deadline</li>
+              <li>At least <strong>5 revealed scores</strong> are needed for robust consensus</li>
+            </ul>
+          </article>
+
+          <article class="step upcoming">
+            <div class="num">6</div>
+            <h3>Finalize winner + hand off into AGIJobManagerPrime</h3>
+            <div class="when">After Apr 15 • 23:28:56 UTC / 19:28:56 EDT</div>
+            <span class="pill yes">Real transaction</span>
+            <p>Once score reveal closes, someone should push the procurement forward with a real write. This is the first post-trial deadline that truly needs a state-changing follow-up.</p>
+            <ul>
+              <li>Anyone can call <span class="code">finalizeWinner(0)</span></li>
+              <li>Or anyone can call <span class="code">advanceProcurement(0)</span></li>
+              <li>The chosen winner is then designated into AGIJobManagerPrime’s selected-agent slot</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="bottom">
+        <div class="notes-card">
+          <h3 class="small-title">What does <em>not</em> need a transaction</h3>
+          <div class="checklist">
+            <div class="check"><span class="mark">•</span><span><span class="code">nextActionForProcurement(0)</span> is a <strong>read-only label</strong> only. It tells you the stage code; it never advances state.</span></div>
+            <div class="check"><span class="mark">•</span><span>No transaction is needed at Apr 6, Apr 13, or Apr 14 just to change the label. Time changes the label automatically.</span></div>
+          </div>
+          <div class="warnbox"><strong>Simple rule:</strong> the first real deadline that benefits from a backstop write is <strong>after Apr 15</strong>, when someone can call <span class="code">finalizeWinner(0)</span> or <span class="code">advanceProcurement(0)</span>.</div>
+        </div>
+
+        <div class="tx-card">
+          <h3 class="small-title">What actually needs a real transaction</h3>
+          <div class="tx-table">
+            <div class="row"><div class="label">Now</div><div class="value"><strong>Accepted finalists</strong>: <span class="code">submitTrial(0, trialURI)</span> before <strong>Apr 13 • 23:28:56 UTC / 19:28:56 EDT</strong>.</div></div>
+            <div class="row"><div class="label">After Apr 13</div><div class="value"><strong>Validators</strong>: <span class="code">commitFinalistScore(...)</span>.</div></div>
+            <div class="row"><div class="label">After Apr 14</div><div class="value"><strong>Validators</strong>: <span class="code">revealFinalistScore(...)</span>.</div></div>
+            <div class="row"><div class="label">After Apr 15</div><div class="value"><strong>Anyone</strong>: <span class="code">finalizeWinner(0)</span> or <span class="code">advanceProcurement(0)</span>.</div></div>
+            <div class="row"><div class="label">Later</div><div class="value"><span class="code">claim()</span> withdraws any non-zero claimable balance. For compliant finalists, winner finalisation is what makes the stake + stipend claimable.</div></div>
+          </div>
+        </div>
+
+        <div class="sources">
+          <h3 class="small-title">Source ledger</h3>
+          <div class="source-list">
+            <div class="source"><strong>Create procurement:</strong><br><a href="https://etherscan.io/tx/0xe90422f666b87e4962dd976015c18ee7a592dc40ddd6070b0f000a9404f93d1b">0xe90422f6…93d1b</a></div>
+            <div class="source"><strong>Shortlist finalised:</strong><br><a href="https://etherscan.io/tx/0xf5f4d456fcd6d299bd1da19756bb1d5834c643f567c01aec8530cd58c45a2cad#eventlog">0xf5f4d456…a2cad</a></div>
+            <div class="source"><strong>Finalist accepted #1:</strong><br><a href="https://etherscan.io/tx/0x91790c85865155ac1ae5f78bdd8fbc839f90b33c762b71e941abdd7a6bc44a96">0x91790c85…44a96</a></div>
+            <div class="source"><strong>Finalist accepted #2:</strong><br><a href="https://etherscan.io/tx/0xd2e05a6bddfc70b557dec985ea616b4badde533079e75dd2a0950e10b5c06625">0xd2e05a6b…06625</a></div>
+            <div class="source"><strong>Finalist accepted #3:</strong><br><a href="https://etherscan.io/tx/0xd1ba1256254876b289b09e6b6dc7877a99c03495175ff80ed84b0a66a2c8a044">0xd1ba1256…8a044</a></div>
+            <div class="source"><strong>Non-finalist claim #1:</strong><br><a href="https://etherscan.io/tx/0xc93c95e0f642f2d2117e6d98aaae3d2e83a2c24837a4e164aa59e02c51c01217">0xc93c95e0…01217</a></div>
+            <div class="source"><strong>Non-finalist claim #2:</strong><br><a href="https://etherscan.io/tx/0x4bd557ab1f30f4beba7c46bd6eaa25ceae3e57310283982d3701030a71c0e721">0x4bd557ab…0e721</a></div>
+            <div class="source"><strong>Verified contract:</strong><br><a href="https://etherscan.io/address/0xd5ef1dde7ac60488f697ff2a7967a52172a78f29#code">AGIJobDiscoveryPrime on Etherscan</a></div>
+          </div>
+          <div class="footerline">Prepared as a practical one-page reference for procurement 0. Owner note: no mandatory owner-only write right now; keep the live path unpaused and be ready to backstop finalisation later if needed. State summary reflects the confirmed transaction set shared in the discussion plus the verified AGIJobDiscoveryPrime code path. If a new trial / score / finalisation transaction occurs later, the live status changes, but the transaction logic on this sheet remains the same.</div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
