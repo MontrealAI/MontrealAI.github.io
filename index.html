@@ -729,27 +729,37 @@
     return { total: Math.max(0, Math.floor(total)), contributions: normalized };
   }
 
+
+  function parseISODateLocal(iso) {
+    const [y, m, d] = String(iso).split('-').map(Number);
+    return new Date(y, (m || 1) - 1, d || 1);
+  }
+
   function buildContributionMatrix(contributions) {
     const map = new Map((contributions || []).map(day => [day.date, day]));
     const today = new Date();
     const end = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const start = new Date(end);
-    start.setDate(end.getDate() - 370);
-    const startGrid = new Date(start);
-    startGrid.setDate(start.getDate() - start.getDay());
-    const weeks = Array.from({ length: 53 }, (_, w) => Array.from({ length: 7 }, (_, d) => {
+    const startWindow = new Date(end);
+    startWindow.setDate(end.getDate() - 370);
+
+    const startGrid = new Date(startWindow);
+    startGrid.setDate(startWindow.getDate() - startWindow.getDay());
+    const daysCovered = Math.floor((end - startGrid) / 86400000) + 1;
+    const weekCount = Math.ceil(daysCovered / 7);
+
+    const weeks = Array.from({ length: weekCount }, (_, w) => Array.from({ length: 7 }, (_, d) => {
       const date = new Date(startGrid);
       date.setDate(startGrid.getDate() + (w * 7) + d);
-      const iso = date.toISOString().slice(0, 10);
+      const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       const hit = map.get(iso);
-      return { date: iso, count: hit ? hit.count : 0, level: hit ? hit.level : 0, inRange: date >= start && date <= end, month: date.getMonth(), weekday: d };
+      return { date: iso, count: hit ? hit.count : 0, level: hit ? hit.level : 0, inRange: date >= startWindow && date <= end, month: date.getMonth(), weekday: d };
     }));
 
     const monthLabels = weeks.map((week, i) => {
-      const first = week.find(cell => cell.inRange);
+      const first = week.find(cell => cell.inRange) || week[0];
       if (!first) return '';
-      const prev = i > 0 ? weeks[i - 1].find(cell => cell.inRange) : null;
-      if (!prev || prev.month !== first.month) return new Date(first.date + 'T00:00:00Z').toLocaleString('en-US', { month: 'short' });
+      const prev = i > 0 ? (weeks[i - 1].find(cell => cell.inRange) || weeks[i - 1][0]) : null;
+      if (!prev || prev.month !== first.month) return parseISODateLocal(first.date).toLocaleString('en-US', { month: 'short' });
       return '';
     });
     return { weeks, monthLabels };
@@ -761,12 +771,11 @@
     if (!table) return;
     const matrix = buildContributionMatrix(state?.contributions || []);
     const dayLabels = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
-    const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const monthRow = `<tr class="month-row"><th></th>${matrix.monthLabels.map(m => `<th scope="col" aria-hidden="true">${m || ''}</th>`).join('')}</tr>`;
     const bodyRows = dayLabels.map((lbl, day) => {
       const cells = matrix.weeks.map((week, col) => {
         const item = week[day];
-        const humanDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(item.date + 'T00:00:00Z'));
+        const humanDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(parseISODateLocal(item.date));
         const detail = item.count > 0 ? `${nf.format(item.count)} contributions on ${humanDate}` : `No contributions on ${humanDate}`;
         const inert = item.inRange ? '' : ' disabled aria-hidden="true" tabindex="-1"';
         return `<td role="gridcell"><button type="button" data-level="${item.level}" data-detail="${detail}" aria-label="${detail}"${inert}></button></td>`;
