@@ -587,7 +587,15 @@
     const path = location.pathname;
     const segments = path.split('/').filter(Boolean);
     if (!segments.length) return '/';
-    if (location.hostname.endsWith('github.io') && segments.length) return `/${segments[0]}/`;
+    if (location.hostname.endsWith('github.io')) {
+      const first = segments[0] || '';
+      const last = segments[segments.length - 1] || '';
+      const firstIsFile = first.includes('.');
+      const lastIsFile = last.includes('.');
+      if (firstIsFile) return '/';
+      if (segments.length === 1 && !lastIsFile) return `/${first}/`;
+      if (segments.length > 1) return `/${first}/`;
+    }
     return '/';
   }
 
@@ -605,7 +613,10 @@
 
   async function fetchWithCache(key, url, ttlMs, init = {}) {
     const now = Date.now();
-    const cached = localStorage.getItem(key);
+    let cached = null;
+    try {
+      cached = localStorage.getItem(key);
+    } catch {}
     if (cached) {
       try {
         const parsed = JSON.parse(cached);
@@ -620,7 +631,9 @@
       const res = await fetch(url, { ...init, signal: controller.signal, headers: { Accept: 'application/json', ...(init.headers || {}) } });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      localStorage.setItem(key, JSON.stringify({ ts: now, data }));
+      try {
+        localStorage.setItem(key, JSON.stringify({ ts: now, data }));
+      } catch {}
       return { data, source: 'live' };
     } catch (err) {
       if (cached) {
@@ -770,43 +783,53 @@
     const contribTotal = document.getElementById('contribTotal');
     const contribState = document.getElementById('contribState');
     const heroContribution = document.getElementById('heroContribution');
+    const [org, repos, contrib] = await Promise.allSettled([fetchGithubOrg(), fetchGithubRepos(), fetchContributionData()]);
 
-    try {
-      const [org, repos, contrib] = await Promise.all([fetchGithubOrg(), fetchGithubRepos(), fetchContributionData()]);
+    const orgOk = org.status === 'fulfilled';
+    const reposOk = repos.status === 'fulfilled';
+    const contribOk = contrib.status === 'fulfilled';
 
-      const orgData = org.data || {};
-      const reposData = Array.isArray(repos.data) ? repos.data : [];
-      const contribData = contrib.data || {};
-
+    if (contribOk) {
+      const contribData = contrib.value.data || {};
       const total = Number(contribData.total?.lastYear || 0);
       contribTotal.textContent = total ? `${nf.format(total)} contributions in the last year` : 'Contribution data unavailable';
       heroContribution.textContent = total ? nf.format(total) : 'Unavailable';
-      contribState.textContent = `Source: ${contrib.source}.`;
+      contribState.textContent = `Source: ${contrib.value.source}.`;
       renderContributionHeatmap(contribData);
+    } else {
+      contribTotal.textContent = 'Live contribution stream unavailable';
+      contribState.innerHTML = 'Runtime endpoint unavailable. <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">Open GitHub organization</a>.';
+      heroContribution.textContent = 'Unavailable';
+      renderContributionHeatmap({ contributions: [] });
+    }
 
-      const repoCountEl = document.getElementById('repoCount');
-      const followerCountEl = document.getElementById('followerCount');
+    const repoCountEl = document.getElementById('repoCount');
+    const followerCountEl = document.getElementById('followerCount');
+    if (orgOk) {
+      const orgData = org.value.data || {};
       repoCountEl.dataset.animateNum = Number(orgData.public_repos || 0);
       followerCountEl.dataset.animateNum = Number(orgData.followers || 0);
       repoCountEl.textContent = nf.format(Number(orgData.public_repos || 0));
       followerCountEl.textContent = nf.format(Number(orgData.followers || 0));
+    } else {
+      repoCountEl.textContent = 'Unavailable';
+      followerCountEl.textContent = 'Unavailable';
+    }
 
+    if (reposOk) {
+      const reposData = Array.isArray(repos.value.data) ? repos.value.data : [];
       renderPinnedRepos(reposData);
       const leadRepo = reposData.find(r => r.name === PINNED_ORDER[0]);
       const leadName = leadRepo?.name || PINNED_ORDER[0];
       document.getElementById('leadRepo').textContent = leadName;
       document.getElementById('heroLeadRepo').textContent = leadName;
-
-      animateMetrics();
-    } catch {
-      contribTotal.textContent = 'Live contribution stream unavailable';
-      contribState.innerHTML = 'Runtime endpoint unavailable. <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">Open GitHub organization</a>.';
-      heroContribution.textContent = 'Unavailable';
-      document.getElementById('repoCount').textContent = 'Unavailable';
-      document.getElementById('followerCount').textContent = 'Unavailable';
-      renderContributionHeatmap({ contributions: [] });
+    } else {
       renderPinnedRepos([]);
+      document.getElementById('leadRepo').textContent = PINNED_ORDER[0];
+      document.getElementById('heroLeadRepo').textContent = PINNED_ORDER[0];
     }
+
+    animateMetrics();
   }
 
   function wireSearchAndFilters() {
