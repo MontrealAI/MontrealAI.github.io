@@ -1152,7 +1152,11 @@
       }
       try {
         const data = await fetchWithTimeout(url, init, 9000);
-        localStorage.setItem(key, JSON.stringify({ ts: now, data }));
+        try {
+          localStorage.setItem(key, JSON.stringify({ ts: now, data }));
+        } catch (_) {
+          /* best-effort cache write; live data should still succeed */
+        }
         return { data, source: 'live' };
       } catch (err) {
         if (cached) {
@@ -1236,7 +1240,7 @@
       pinnedOrder.forEach((name, idx) => {
         const repo = byName.get(name);
         const card = document.createElement('article');
-        card.className = `repo fade-in${idx === 0 ? ' lead' : ''}`;
+        card.className = `repo${idx === 0 ? ' lead' : ''}`;
 
         const stars = repo?.stargazers_count ?? 0;
         const forks = repo?.forks_count ?? 0;
