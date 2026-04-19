@@ -697,7 +697,8 @@
       const count = (w === 0 || w === 6) ? Math.round(seasonal * 2) : Math.round(seasonal * 8 + (i % 5 === 0 ? 4 : 0));
       total += count;
       const level = count === 0 ? 0 : count < 3 ? 1 : count < 7 ? 2 : count < 12 ? 3 : 4;
-      contributions.push({ date: date.toISOString().slice(0, 10), count, level });
+      const seedIso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      contributions.push({ date: seedIso, count, level });
     }
     return { total: { lastYear: total }, contributions };
   })();
@@ -943,8 +944,10 @@
     if (contrib.status === 'fulfilled' && contrib.value?.data) {
       applyContributionState(contrib.value.data, contrib.value.source === 'live' ? 'live' : 'cached snapshot');
       try {
-        const normalized = normalizeContributionPayload(contrib.value.data);
-        if (normalized) localStorage.setItem('mai_github_contrib', JSON.stringify({ ts: Date.now(), data: normalized }));
+        if (contrib.value.source === 'live') {
+          const normalized = normalizeContributionPayload(contrib.value.data);
+          if (normalized) localStorage.setItem('mai_github_contrib', JSON.stringify({ ts: Date.now(), data: normalized }));
+        }
       } catch {}
     } else {
       applyContributionState(seedNormalized || fallbackShell, 'embedded snapshot');
