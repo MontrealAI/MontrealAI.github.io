@@ -655,15 +655,21 @@
       grid.innerHTML = data.map(item => `<article class="resource"><small>${item.kind} · ${(item.tags||[]).join(' · ')}</small><h3 style="font-size:1rem;margin-bottom:.35rem">${item.title}</h3><a class="btn" href="${item.url}" target="_blank" rel="noopener">Open resource</a></article>`).join('');
     }
 
-    function wireFilters() {
+    function renderFilterChips() {
       const kinds = ['All','Essays','Decks','Repositories','Contracts','ENS','Governance'];
       const wrap = document.getElementById('libraryFilters');
       wrap.innerHTML = kinds.map(k => `<button class="chip-btn ${k===activeState.filter?'active':''}" data-filter="${k}">${k}</button>`).join('');
+    }
+
+    function wireFilters() {
+      const wrap = document.getElementById('libraryFilters');
+      if (wrap.dataset.bound === 'true') return;
+      wrap.dataset.bound = 'true';
       wrap.addEventListener('click', e => {
         const btn = e.target.closest('[data-filter]');
         if (!btn) return;
         activeState.filter = btn.dataset.filter;
-        wireFilters();
+        renderFilterChips();
         renderLibrary();
       });
     }
@@ -732,33 +738,35 @@
     async function bootLiveData() {
       const fmt = new Intl.NumberFormat('en-US');
       const sourceEl = document.getElementById('contribSource');
-      try {
-        const [{ data: org, source: orgSource }, { data: repos }, { data: contrib, source: cSource }] = await Promise.all([
-          fetchGithubOrg(), fetchGithubRepos(), fetchContributionData()
-        ]);
+      const [orgResult, reposResult, contribResult] = await Promise.allSettled([
+        fetchGithubOrg(), fetchGithubRepos(), fetchContributionData()
+      ]);
 
-        const total = contrib?.total?.[0]?.count || contrib?.years?.[0]?.total || 0;
-        const days = contrib?.contributions || contrib?.years?.[0]?.contributions || [];
-        document.getElementById('metricContrib').textContent = total ? fmt.format(total) : 'Unavailable';
-        sourceEl.textContent = total ? `Source: ${cSource === 'live' ? 'Live API' : 'Cached API'} · Last 12 months` : 'Contribution API unavailable. Open GitHub profile for live proof.';
-        renderContributionHeatmap(days);
+      const orgPayload = orgResult.status === 'fulfilled' ? orgResult.value : null;
+      const reposPayload = reposResult.status === 'fulfilled' ? reposResult.value : null;
+      const contribPayload = contribResult.status === 'fulfilled' ? contribResult.value : null;
 
-        document.getElementById('metricRepos').textContent = fmt.format(org?.public_repos || 0);
-        document.getElementById('metricFollowers').textContent = fmt.format(org?.followers || 0);
-        document.getElementById('heroRepos').textContent = fmt.format(org?.public_repos || 0);
-        document.getElementById('heroFollowers').textContent = fmt.format(org?.followers || 0);
-        document.getElementById('heroContrib').textContent = total ? fmt.format(total) : '—';
-        document.getElementById('liveStatus').textContent = orgSource === 'live' ? 'Live' : 'Cached';
-        document.getElementById('liveDate').textContent = new Intl.DateTimeFormat('en-US',{dateStyle:'medium'}).format(new Date());
+      const org = orgPayload?.data || null;
+      const orgSource = orgPayload?.source || 'degraded';
+      const repos = reposPayload?.data;
+      const contrib = contribPayload?.data || null;
+      const cSource = contribPayload?.source || 'degraded';
 
-        renderPinnedRepos(Array.isArray(repos) ? repos : []);
-      } catch (_) {
-        document.getElementById('metricContrib').textContent = 'Unavailable';
-        sourceEl.innerHTML = 'Live data currently unavailable. <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">Open GitHub</a>.';
-        renderContributionHeatmap([]);
-        renderPinnedRepos([]);
-        document.getElementById('liveStatus').textContent = 'Degraded';
-      }
+      const total = contrib?.total?.[0]?.count || contrib?.years?.[0]?.total || 0;
+      const days = contrib?.contributions || contrib?.years?.[0]?.contributions || [];
+      document.getElementById('metricContrib').textContent = total ? fmt.format(total) : 'Unavailable';
+      sourceEl.textContent = total ? `Source: ${cSource === 'live' ? 'Live API' : cSource === 'cache' ? 'Cached API' : 'Unavailable'} · Last 12 months` : 'Contribution API unavailable. Open GitHub profile for live proof.';
+      renderContributionHeatmap(days);
+
+      document.getElementById('metricRepos').textContent = fmt.format(org?.public_repos || 0);
+      document.getElementById('metricFollowers').textContent = fmt.format(org?.followers || 0);
+      document.getElementById('heroRepos').textContent = fmt.format(org?.public_repos || 0);
+      document.getElementById('heroFollowers').textContent = fmt.format(org?.followers || 0);
+      document.getElementById('heroContrib').textContent = total ? fmt.format(total) : '—';
+      document.getElementById('liveDate').textContent = new Intl.DateTimeFormat('en-US',{dateStyle:'medium'}).format(new Date());
+      document.getElementById('liveStatus').textContent = org ? (orgSource === 'live' ? 'Live' : 'Cached') : 'Degraded';
+
+      renderPinnedRepos(Array.isArray(repos) ? repos : []);
     }
 
     function applyInternalRoutes() {
@@ -773,6 +781,7 @@
     function init() {
       applyInternalRoutes();
       renderProtocolFamilies();
+      renderFilterChips();
       wireFilters();
       wireSearch();
       renderLibrary();
