@@ -1254,6 +1254,19 @@
     }
 
     function wireCopyButtons() {
+      const legacyCopy = (text) => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        if (!ok) throw new Error('Legacy copy failed');
+      };
+
       document.addEventListener('click', async (event) => {
         const button = event.target.closest('.copy-btn');
         if (!button) return;
@@ -1261,14 +1274,13 @@
         const old = button.textContent;
         try {
           if (navigator.clipboard?.writeText) {
-            await navigator.clipboard.writeText(text);
+            try {
+              await navigator.clipboard.writeText(text);
+            } catch {
+              legacyCopy(text);
+            }
           } else {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            ta.remove();
+            legacyCopy(text);
           }
           button.textContent = 'Copied';
           setTimeout(() => button.textContent = old, 1100);
