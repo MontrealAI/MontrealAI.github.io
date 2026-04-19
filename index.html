@@ -1016,6 +1016,13 @@
       return Number.isNaN(d.getTime()) ? "n/a" : d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
     }
 
+    function safeExternalUrl(url, fallback) {
+      const value = (url || "").trim();
+      if (!value) return fallback;
+      if (/^https?:\/\//i.test(value)) return value;
+      return fallback;
+    }
+
     function buildPinnedCards(repos = []) {
       const grid = document.getElementById("pinnedGrid");
       const byName = Object.fromEntries(repos.map(r => [r.name, r]));
@@ -1024,22 +1031,53 @@
         const repo = byName[name] || {};
         const card = document.createElement("article");
         card.className = `card repo-card ${idx === 0 ? "lead" : ""}`;
-        card.innerHTML = `
-          <div>
-            <span class="kicker" style="font-size:.68rem;padding:.35rem .62rem;">${idx === 0 ? "Lead pinned" : "Pinned"}</span>
-            <h3 style="margin-top:.55rem;font-size:${idx===0?"1.8rem":"1.25rem"};">${name}</h3>
-          </div>
-          <p>${repo.description || FALLBACK_DESCRIPTIONS[name] || "Repository"}</p>
-          <div class="repo-meta">
-            <span>${repo.language || "n/a"}</span>
-            <span>★ ${(repo.stargazers_count ?? 0).toLocaleString()}</span>
-            <span>⑂ ${(repo.forks_count ?? 0).toLocaleString()}</span>
-            <span>Updated ${fmtDate(repo.updated_at)}</span>
-          </div>
-          <div class="btn-row" style="margin-top:0;">
-            <a class="btn" href="${repo.html_url || `https://github.com/MontrealAI/${name}`}" target="_blank" rel="noopener noreferrer">Open repository</a>
-            ${repo.homepage ? `<a class="btn" href="${repo.homepage}" target="_blank" rel="noopener noreferrer">Homepage</a>` : ""}
-          </div>`;
+        const head = document.createElement("div");
+        const kicker = document.createElement("span");
+        kicker.className = "kicker";
+        kicker.style.fontSize = ".68rem";
+        kicker.style.padding = ".35rem .62rem";
+        kicker.textContent = idx === 0 ? "Lead pinned" : "Pinned";
+
+        const title = document.createElement("h3");
+        title.style.marginTop = ".55rem";
+        title.style.fontSize = idx === 0 ? "1.8rem" : "1.25rem";
+        title.textContent = name;
+        head.append(kicker, title);
+
+        const desc = document.createElement("p");
+        desc.textContent = repo.description || FALLBACK_DESCRIPTIONS[name] || "Repository";
+
+        const meta = document.createElement("div");
+        meta.className = "repo-meta";
+        [repo.language || "n/a", `★ ${(repo.stargazers_count ?? 0).toLocaleString()}`, `⑂ ${(repo.forks_count ?? 0).toLocaleString()}`, `Updated ${fmtDate(repo.updated_at)}`]
+          .forEach((text) => {
+            const span = document.createElement("span");
+            span.textContent = text;
+            meta.appendChild(span);
+          });
+
+        const buttons = document.createElement("div");
+        buttons.className = "btn-row";
+        buttons.style.marginTop = "0";
+        const repoBtn = document.createElement("a");
+        repoBtn.className = "btn";
+        repoBtn.href = safeExternalUrl(repo.html_url, `https://github.com/MontrealAI/${name}`);
+        repoBtn.target = "_blank";
+        repoBtn.rel = "noopener noreferrer";
+        repoBtn.textContent = "Open repository";
+        buttons.appendChild(repoBtn);
+
+        if (repo.homepage) {
+          const homepageBtn = document.createElement("a");
+          homepageBtn.className = "btn";
+          homepageBtn.href = safeExternalUrl(repo.homepage, repoBtn.href);
+          homepageBtn.target = "_blank";
+          homepageBtn.rel = "noopener noreferrer";
+          homepageBtn.textContent = "Homepage";
+          buttons.appendChild(homepageBtn);
+        }
+
+        card.append(head, desc, meta, buttons);
         grid.appendChild(card);
       });
     }
