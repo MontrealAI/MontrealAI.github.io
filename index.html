@@ -1156,6 +1156,29 @@
       `;
     }
 
+    function extractContributionTotal(payload) {
+      const totalField = payload?.total;
+      if (typeof totalField === 'number' && Number.isFinite(totalField)) return totalField;
+      if (typeof totalField === 'string' && Number.isFinite(Number(totalField))) return Number(totalField);
+      if (totalField && typeof totalField === 'object') {
+        const candidateKeys = ['lastYear', 'lastyear', 'year', 'y', 'thisYear', 'thisyear'];
+        for (const key of candidateKeys) {
+          const value = totalField[key];
+          if (typeof value === 'number' && Number.isFinite(value)) return value;
+          if (typeof value === 'string' && Number.isFinite(Number(value))) return Number(value);
+        }
+      }
+      const legacyTotal = payload?.contributions?.total;
+      if (typeof legacyTotal === 'number' && Number.isFinite(legacyTotal)) return legacyTotal;
+      if (typeof legacyTotal === 'string' && Number.isFinite(Number(legacyTotal))) return Number(legacyTotal);
+
+      const daySeries = payload?.contributions || payload?.days || payload?.weeks?.flatMap((w) => w.contributionDays || []);
+      if (Array.isArray(daySeries)) {
+        return daySeries.reduce((sum, day) => sum + Number(day?.count || day?.contributionCount || 0), 0);
+      }
+      return 0;
+    }
+
     function renderPinnedRepos(repos) {
       const map = new Map((repos || []).map((r) => [r.name, r]));
       const lead = map.get('AGI-Agent-v0');
@@ -1316,7 +1339,7 @@
 
       if (contribResult.status === 'fulfilled') {
         const contrib = contribResult.value;
-        const total = Number(contrib.data?.total || contrib.data?.contributions?.total || 0);
+        const total = extractContributionTotal(contrib.data);
         contribValue.textContent = `${NF.format(total)} contributions in the last year`;
         overlayContrib.textContent = `${NF.format(total)} last year`;
 
