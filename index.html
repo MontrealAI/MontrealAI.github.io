@@ -612,6 +612,7 @@
 
     async function fetchWithCache(key, url, ttlMs, init = {}) {
       const now = Date.now();
+      const staleMaxAgeMs = ttlMs * 24;
       try {
         const cached = JSON.parse(localStorage.getItem(key) || 'null');
         if (cached && now - cached.ts < ttlMs) return { data: cached.data, source: 'cache-fresh' };
@@ -628,7 +629,9 @@
       } catch {
         try {
           const stale = JSON.parse(localStorage.getItem(key) || 'null');
-          if (stale && stale.data) return { data: stale.data, source: 'cache-stale' };
+          if (stale && stale.data && typeof stale.ts === 'number' && now - stale.ts < staleMaxAgeMs) {
+            return { data: stale.data, source: 'cache-stale' };
+          }
         } catch {}
         return { data: null, source: 'unavailable' };
       } finally {
@@ -644,6 +647,17 @@
       if (!payload) return null;
       if (typeof payload.total === 'number') return payload.total;
       if (payload.total && typeof payload.total.lastYear === 'number') return payload.total.lastYear;
+      if (payload.total && typeof payload.total === 'object') {
+        const yearEntries = Object.entries(payload.total)
+          .filter(([k, v]) => /^20\d{2}$/.test(k) && Number.isFinite(Number(v)))
+          .sort(([a], [b]) => Number(a) - Number(b));
+        if (yearEntries.length) return Number(yearEntries[yearEntries.length - 1][1]);
+
+        const numericTotals = Object.values(payload.total)
+          .map((v) => Number(v))
+          .filter(Number.isFinite);
+        if (numericTotals.length) return numericTotals[numericTotals.length - 1];
+      }
       return null;
     }
 
