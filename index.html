@@ -1129,18 +1129,33 @@
       const map = new Map(repos.map(r => [r.name, r]));
       const lead = map.get("AGI-Agent-v0") || { name: "AGI-Agent-v0", description: PINNED_FALLBACK["AGI-Agent-v0"], stargazers_count: 0, forks_count: 0, language: "—", html_url: "https://github.com/MontrealAI/AGI-Agent-v0" };
       const leadCard = document.getElementById("leadRepoCard");
-      leadCard.innerHTML = `
-        <p class="eyebrow">Lead pinned repository</p>
-        <h3 style="font-size:1.55rem;margin-bottom:.4rem;">${lead.name}</h3>
-        <p style="color:var(--text-soft);margin-bottom:.8rem;">${lead.description || PINNED_FALLBACK[lead.name]}</p>
-        <div class="repo-meta" style="margin-bottom:.8rem;">
-          <span>${lead.language || "Unknown"}</span>
-          <span>★ ${formatInt(lead.stargazers_count)}</span>
-          <span>⑂ ${formatInt(lead.forks_count)}</span>
-          <span>Updated ${formatDate(lead.updated_at)}</span>
-        </div>
-        <a class="btn primary" href="${lead.html_url}" target="_blank" rel="noopener noreferrer">Open repository</a>
-      `;
+      leadCard.textContent = "";
+      const leadEyebrow = document.createElement("p");
+      leadEyebrow.className = "eyebrow";
+      leadEyebrow.textContent = "Lead pinned repository";
+      const leadTitle = document.createElement("h3");
+      leadTitle.style.fontSize = "1.55rem";
+      leadTitle.style.marginBottom = ".4rem";
+      leadTitle.textContent = lead.name || "AGI-Agent-v0";
+      const leadDesc = document.createElement("p");
+      leadDesc.style.color = "var(--text-soft)";
+      leadDesc.style.marginBottom = ".8rem";
+      leadDesc.textContent = lead.description || PINNED_FALLBACK[lead.name] || PINNED_FALLBACK["AGI-Agent-v0"];
+      const leadMeta = document.createElement("div");
+      leadMeta.className = "repo-meta";
+      leadMeta.style.marginBottom = ".8rem";
+      [lead.language || "Unknown", `★ ${formatInt(lead.stargazers_count)}`, `⑂ ${formatInt(lead.forks_count)}`, `Updated ${formatDate(lead.updated_at)}`].forEach(text => {
+        const span = document.createElement("span");
+        span.textContent = text;
+        leadMeta.appendChild(span);
+      });
+      const leadLink = document.createElement("a");
+      leadLink.className = "btn primary";
+      leadLink.href = lead.html_url || "https://github.com/MontrealAI/AGI-Agent-v0";
+      leadLink.target = "_blank";
+      leadLink.rel = "noopener noreferrer";
+      leadLink.textContent = "Open repository";
+      leadCard.append(leadEyebrow, leadTitle, leadDesc, leadMeta, leadLink);
 
       const grid = document.getElementById("pinnedRepoGrid");
       grid.innerHTML = "";
@@ -1148,11 +1163,33 @@
         const repo = map.get(name) || { name, description: PINNED_FALLBACK[name], stargazers_count: 0, forks_count: 0, language: "—", html_url: `https://github.com/MontrealAI/${name}` };
         const el = document.createElement("article");
         el.className = "repo-card";
-        el.innerHTML = `
-          <div class="repo-head"><div class="repo-title">${repo.name}</div><a class="btn" style="padding:.32rem .6rem;font-size:.75rem;" href="${repo.html_url}" target="_blank" rel="noopener noreferrer">Open</a></div>
-          <div class="repo-desc">${repo.description || PINNED_FALLBACK[repo.name] || "Repository record."}</div>
-          <div class="repo-meta"><span>${repo.language || "Unknown"}</span><span>★ ${formatInt(repo.stargazers_count)}</span><span>⑂ ${formatInt(repo.forks_count)}</span><span>${formatDate(repo.updated_at)}</span></div>
-        `;
+        const head = document.createElement("div");
+        head.className = "repo-head";
+        const title = document.createElement("div");
+        title.className = "repo-title";
+        title.textContent = repo.name || name;
+        const link = document.createElement("a");
+        link.className = "btn";
+        link.style.padding = ".32rem .6rem";
+        link.style.fontSize = ".75rem";
+        link.href = repo.html_url || `https://github.com/MontrealAI/${name}`;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Open";
+        head.append(title, link);
+
+        const desc = document.createElement("div");
+        desc.className = "repo-desc";
+        desc.textContent = repo.description || PINNED_FALLBACK[repo.name] || "Repository record.";
+
+        const meta = document.createElement("div");
+        meta.className = "repo-meta";
+        [repo.language || "Unknown", `★ ${formatInt(repo.stargazers_count)}`, `⑂ ${formatInt(repo.forks_count)}`, formatDate(repo.updated_at)].forEach(text => {
+          const span = document.createElement("span");
+          span.textContent = text;
+          meta.appendChild(span);
+        });
+        el.append(head, desc, meta);
         grid.appendChild(el);
       });
     }
@@ -1291,14 +1328,13 @@
         document.getElementById("metricFollowers").textContent = "Live sync unavailable";
       }
 
-      if (contribRes.data?.data?.user?.contributionsCollection) {
-        const coll = contribRes.data.data.user.contributionsCollection;
-        const total = coll.contributionCalendar?.totalContributions || 0;
+      const contribPayload = contribRes?.data || null;
+      const hasJogruberShape = contribPayload && Array.isArray(contribPayload.contributions) && contribPayload.total && typeof contribPayload.total === "object";
+      if (hasJogruberShape) {
+        const total = Number(contribPayload.total.lastYear ?? Object.values(contribPayload.total)[0] ?? 0);
         document.getElementById("metricContrib").textContent = formatInt(total);
         document.getElementById("heroContrib").textContent = `${formatInt(total)} in the last year`;
-
-        const weeks = coll.contributionCalendar?.weeks || [];
-        const days = weeks.flatMap(w => w.contributionDays.map(d => ({ count: d.contributionCount, date: d.date })));
+        const days = contribPayload.contributions.map(d => ({ count: Number(d.count || 0), date: d.date || "" }));
         renderContributionHeatmap(days);
       } else {
         document.getElementById("metricContrib").textContent = "Live sync unavailable";
