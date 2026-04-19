@@ -986,9 +986,11 @@
       const now = Date.now();
       const cacheKey = `mai:${key}`;
       const raw = localStorage.getItem(cacheKey);
+      let cached = null;
       if (raw) {
         try {
           const parsed = JSON.parse(raw);
+          if (parsed && parsed.data !== undefined) cached = parsed;
           if (parsed.timestamp && (now - parsed.timestamp) < ttlMs) {
             return { data: parsed.data, source: 'cache' };
           }
@@ -1003,6 +1005,11 @@
         const data = await res.json();
         localStorage.setItem(cacheKey, JSON.stringify({ timestamp: now, data }));
         return { data, source: 'live' };
+      } catch (error) {
+        if (cached) {
+          return { data: cached.data, source: 'stale-cache' };
+        }
+        throw error;
       } finally {
         clearTimeout(timeout);
       }
@@ -1265,7 +1272,8 @@
       const btn = document.getElementById('themeToggle');
       if (!btn) return;
       btn.addEventListener('click', () => {
-        const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
         localStorage.setItem(key, next);
       });
@@ -1301,6 +1309,28 @@
       if (el) el.textContent = value;
     }
 
+    function getContributionTotal(payload) {
+      if (!payload || payload.total == null) return null;
+      if (typeof payload.total === 'number') return payload.total;
+      if (typeof payload.total === 'object') {
+        if (typeof payload.total.lastYear === 'number') return payload.total.lastYear;
+        const numericTotals = Object.values(payload.total).map(Number).filter(Number.isFinite);
+        if (numericTotals.length) return numericTotals[numericTotals.length - 1];
+      }
+      return null;
+    }
+
+    function getContributionDays(payload) {
+      if (!payload || payload.contributions == null) return [];
+      if (Array.isArray(payload.contributions)) return payload.contributions;
+      if (typeof payload.contributions === 'object') {
+        if (Array.isArray(payload.contributions.lastYear)) return payload.contributions.lastYear;
+        const arrays = Object.values(payload.contributions).filter(Array.isArray);
+        if (arrays.length) return arrays[arrays.length - 1];
+      }
+      return [];
+    }
+
     async function initData() {
       const [orgResult, reposResult, contribResult] = await Promise.all([
         fetchGithubOrg(),
@@ -1320,13 +1350,13 @@
 
       const contribTotalEl = document.getElementById('contribTotal');
       const contribStatus = document.getElementById('contribStatus');
-      if (contribResult.data && contribResult.data.total) {
-        const total = Number(contribResult.data.total || 0);
-        const sourceLabel = contribResult.source === 'live' ? 'Live' : (contribResult.source === 'cache' || contribResult.source === 'cache-fallback') ? 'Cached' : 'Sync';
+      const total = getContributionTotal(contribResult.data);
+      if (Number.isFinite(total)) {
+        const sourceLabel = contribResult.source === 'live' ? 'Live' : (contribResult.source.includes('cache') ? 'Cached' : 'Sync');
         contribTotalEl.textContent = nf.format(total);
         setMetricText('heroContribValue', nf.format(total));
         contribStatus.textContent = `${sourceLabel} GitHub sync`;
-        renderContributionHeatmap(contribResult.data.contributions || []);
+        renderContributionHeatmap(getContributionDays(contribResult.data));
       } else {
         contribTotalEl.innerHTML = 'Live sync unavailable <a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">View GitHub</a>';
         contribStatus.textContent = 'Contribution service unavailable';
