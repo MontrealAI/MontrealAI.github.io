@@ -11,10 +11,11 @@
 
   <meta property="og:type" content="website" />
   <meta property="og:title" content="MONTRÉAL.AI — We Choose to Ascend with AGI" />
-  <meta property="og:description" content="Institutional substrate for machine identity, labor, proof, settlement, memory, and governance." />
+  <meta property="og:description" content="MONTRÉAL.AI is building the sovereign substrate for machine identity, labor, proof, settlement, memory, and governance." />
   <meta property="og:url" content="https://montrealai.github.io/" />
   <meta property="og:image" content="https://montrealai.github.io/vincentboucher.jpg" />
   <meta property="og:site_name" content="MONTRÉAL.AI" />
+
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="MONTRÉAL.AI — We Choose to Ascend with AGI" />
   <meta name="twitter:description" content="Public command surface for sovereign intelligence infrastructure." />
@@ -40,6 +41,7 @@
         "@type": "Person",
         "name": "Vincent Boucher",
         "jobTitle": "President of MONTREAL.AI and QUEBEC.AI",
+        "image": "https://montrealai.github.io/vincentboucher.jpg",
         "url": "https://www.linkedin.com/in/montrealai/",
         "worksFor": {"@type": "Organization", "name": "MONTRÉAL.AI"},
         "sameAs": [
@@ -78,14 +80,13 @@
       --success: #9af0c8;
       --warning: #ffd585;
       --shadow-xl: 0 30px 100px rgba(0,0,0,.45);
-      --max: min(1360px, calc(100vw - 2.4rem));
-      --sans: Inter, ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      --max: min(1360px, calc(100vw - 2rem));
+      --sans: Inter, ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      --radius: 28px;
-      --radius-sm: 18px;
     }
 
     * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -93,170 +94,634 @@
     }
 
     body {
-      margin: 0;
       font-family: var(--sans);
-      background:
-        radial-gradient(1100px 600px at 0% -8%, rgba(139,92,246,.14), transparent 65%),
-        radial-gradient(900px 560px at 100% 0%, rgba(169,112,255,.16), transparent 64%),
-        linear-gradient(145deg, var(--bg-0), var(--bg-1) 58%, var(--bg-2));
       color: var(--text);
       line-height: 1.55;
+      background:
+        radial-gradient(1200px 700px at -10% -10%, rgba(139,92,246,.12), transparent 65%),
+        radial-gradient(1000px 700px at 110% -5%, rgba(169,112,255,.15), transparent 60%),
+        linear-gradient(150deg, var(--bg-0), var(--bg-1) 52%, var(--bg-2));
       min-height: 100vh;
       overflow-x: clip;
     }
 
-    .container { width: var(--max); margin-inline: auto; }
-    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
     .mono { font-family: var(--mono); }
-    a { color: inherit; }
+    .container { width: var(--max); margin-inline: auto; }
+    .section { padding: clamp(2.75rem, 5vw, 6rem) 0; }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--accent-3);
+      font-size: .76rem;
+      margin: 0 0 .9rem;
+    }
+    h1,h2,h3,h4,p { margin: 0; }
 
     .skip-link {
-      position: absolute; top: .5rem; left: -999px; z-index: 999;
-      border: 1px solid var(--line-strong); background: var(--panel-strong);
-      padding: .55rem .8rem; border-radius: 10px;
+      position: absolute;
+      left: -999px;
+      top: .5rem;
+      z-index: 999;
+      background: var(--panel-strong);
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      padding: .5rem .8rem;
     }
     .skip-link:focus { left: .5rem; }
-    :focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 65%, white 35%); outline-offset: 2px; border-radius: 10px; }
+
+    :focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 70%, white 30%);
+      outline-offset: 2px;
+      border-radius: 10px;
+    }
 
     .site-header {
-      position: sticky; top: 0; z-index: 100;
-      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 100;
       backdrop-filter: blur(14px);
-      background: color-mix(in srgb, var(--bg-0) 75%, transparent);
+      background: color-mix(in srgb, var(--bg-0) 78%, transparent);
+      border-bottom: 1px solid var(--line);
     }
-    .header-inner { min-height: 74px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 1rem; }
-    .wordmark { text-decoration: none; font-size: .86rem; letter-spacing: .13em; text-transform: uppercase; font-weight: 700; display: inline-flex; align-items: center; gap: .65rem; }
-    .wordmark em { font-style: normal; color: var(--accent-3); border: 1px solid var(--line); padding: .4rem .55rem; border-radius: 11px; background: var(--panel-soft); }
-    .nav { display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem; }
-    .nav a, .actions a, .btn, .copy-btn, .chip-btn, .mobile-toggle {
-      text-decoration: none; border: 1px solid transparent; color: var(--text-soft);
-      border-radius: 999px; padding: .52rem .85rem; font-size: .86rem; background: transparent; cursor: pointer;
+    .header-inner {
+      min-height: 74px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem;
+      align-items: center;
     }
-    .nav a:hover, .nav a[aria-current="true"], .actions a:hover, .btn:hover, .copy-btn:hover, .chip-btn:hover, .mobile-toggle:hover { border-color: var(--line); color: var(--text); background: color-mix(in srgb, var(--accent) 14%, transparent); }
-    .actions { display: flex; gap: .35rem; align-items: center; }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: .65rem;
+      font-size: .86rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .brand em {
+      font-style: normal;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: .36rem .52rem;
+      background: var(--panel-soft);
+      color: var(--accent-3);
+    }
+    .nav-list, .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .4rem;
+    }
+    .nav-list { justify-content: center; }
+    .chip, .header-actions a, .nav-list a, .mobile-toggle {
+      border: 1px solid transparent;
+      color: var(--text-soft);
+      border-radius: 999px;
+      padding: .5rem .82rem;
+      font-size: .84rem;
+      background: transparent;
+      cursor: pointer;
+    }
+    .chip:hover, .header-actions a:hover, .nav-list a:hover, .mobile-toggle:hover,
+    .nav-list a[aria-current="true"] {
+      color: var(--text);
+      border-color: var(--line);
+      background: color-mix(in srgb, var(--accent) 13%, transparent);
+    }
+
     .mobile-toggle, .mobile-panel { display: none; }
 
-    .section { padding: clamp(2.6rem, 5vw, 5.4rem) 0; }
-    .eyebrow { margin: 0 0 .85rem; text-transform: uppercase; letter-spacing: .16em; font-size: .76rem; color: var(--accent-3); }
-    h1, h2, h3, h4, p { margin: 0; }
-
-    #hero { position: relative; overflow: hidden; }
-    .hero-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.2rem; align-items: center; }
+    #hero { padding-top: clamp(2rem, 4.5vw, 4rem); position: relative; overflow: hidden; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0,1fr));
+      gap: 1rem;
+      align-items: center;
+    }
     .hero-copy { grid-column: span 7; }
-    .hero-media { grid-column: span 5; position: relative; min-height: 600px; border-radius: 32px; border: 1px solid var(--line); background: linear-gradient(170deg, rgba(255,255,255,.05), rgba(255,255,255,.01)); box-shadow: var(--shadow-xl); overflow: hidden; }
-    .hero-title { font-size: clamp(2.2rem, 6.8vw, 6rem); line-height: .94; letter-spacing: -.04em; max-width: 11ch; }
-    .hero-sub { margin-top: 1rem; font-size: clamp(1.08rem, 1.9vw, 1.44rem); color: var(--text-soft); max-width: 58ch; }
-    .hero-body { margin-top: .8rem; max-width: 62ch; color: var(--muted); }
-    .pills { list-style: none; margin: 1.25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .45rem; }
-    .pills li { border: 1px solid var(--line); border-radius: 999px; padding: .42rem .72rem; background: var(--panel-soft); font-size: .8rem; color: var(--text-soft); }
-    .cta-row { display: flex; flex-wrap: wrap; gap: .52rem; margin-top: 1.25rem; }
-    .btn { border-color: var(--line); background: color-mix(in srgb, var(--panel-strong) 70%, transparent); }
-    .btn.primary { color: #fff; background: linear-gradient(145deg, var(--accent), var(--accent-2)); border-color: transparent; }
+    .hero-media {
+      grid-column: span 5;
+      min-height: 650px;
+      position: relative;
+      border-radius: 32px;
+      border: 1px solid var(--line);
+      background: linear-gradient(170deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+    }
+    .hero-title {
+      font-size: clamp(2.4rem, 7.2vw, 6.2rem);
+      letter-spacing: -.045em;
+      line-height: .93;
+      max-width: 11ch;
+    }
+    .hero-lead {
+      margin-top: 1rem;
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: var(--text-soft);
+      max-width: 58ch;
+    }
+    .hero-body {
+      margin-top: .8rem;
+      color: var(--muted);
+      max-width: 61ch;
+    }
+    .hero-pills {
+      margin: 1.25rem 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+    }
+    .hero-pills li {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .4rem .72rem;
+      font-size: .8rem;
+      background: var(--panel-soft);
+      color: var(--text-soft);
+    }
+    .cta-row {
+      margin-top: 1.35rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .6rem .9rem;
+      color: var(--text-soft);
+      background: color-mix(in srgb, var(--panel-strong) 80%, transparent);
+      font-size: .86rem;
+    }
+    .btn.primary {
+      border-color: transparent;
+      color: #fff;
+      background: linear-gradient(145deg, var(--accent), var(--accent-2));
+    }
+    .btn:hover { color: var(--text); border-color: var(--line-strong); }
 
-    .orbital {
-      position: absolute; inset: 0; pointer-events: none;
+    .hero-orbit {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
       background:
-        radial-gradient(300px 300px at 70% 22%, rgba(169,112,255,.18), transparent 70%),
-        radial-gradient(420px 340px at 20% 74%, rgba(139,92,246,.17), transparent 75%);
+        radial-gradient(260px 260px at 72% 18%, rgba(169,112,255,.18), transparent 72%),
+        radial-gradient(360px 360px at 25% 76%, rgba(139,92,246,.16), transparent 75%);
     }
-    .hero-photo { position: absolute; inset: 4% 4% 3.2%; border-radius: 24px; width: 92%; height: 92%; object-fit: cover; object-position: center 30%; }
-    .proof-float { position: absolute; display: grid; gap: .48rem; width: min(340px, 84%); right: 1rem; bottom: 1rem; }
-    .proof-float article { border: 1px solid var(--line-strong); border-radius: 16px; padding: .7rem .8rem; background: rgba(16,10,28,.78); backdrop-filter: blur(8px); }
-    .proof-float b { font-size: 1.08rem; }
-    .proof-float span { display: block; font-size: .76rem; color: var(--muted); }
+    .hero-photo {
+      position: absolute;
+      width: 93%;
+      height: 92%;
+      inset: 4% 3.5%;
+      border-radius: 24px;
+      object-fit: cover;
+      object-position: center 26%;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .proof-floats {
+      position: absolute;
+      right: 1rem;
+      bottom: 1rem;
+      width: min(335px, 86%);
+      display: grid;
+      gap: .48rem;
+    }
+    .proof-floats article {
+      border: 1px solid var(--line-strong);
+      border-radius: 15px;
+      padding: .66rem .75rem;
+      background: rgba(15,10,25,.8);
+      backdrop-filter: blur(8px);
+    }
+    .proof-floats b {
+      display: block;
+      font-size: 1.1rem;
+      letter-spacing: -.02em;
+    }
+    .proof-floats span { color: var(--muted); font-size: .76rem; }
 
-    #proof .proof-grid { display: grid; grid-template-columns: 1.6fr repeat(5, 1fr); gap: .7rem; }
-    .metric { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); padding: .95rem; min-height: 150px; }
-    .metric .k { font-size: .74rem; color: var(--muted); text-transform: uppercase; letter-spacing: .13em; }
-    .metric .v { margin-top: .45rem; font-size: clamp(1.1rem, 2.2vw, 2rem); font-weight: 700; letter-spacing: -.02em; }
-    .metric .m { margin-top: .3rem; font-size: .8rem; color: var(--muted); }
-    .metric.centerpiece { box-shadow: inset 0 0 0 1px rgba(169,112,255,.25), 0 18px 40px rgba(0,0,0,.28); }
-    .heatmap { margin-top: .8rem; display: grid; grid-template-columns: repeat(53, minmax(4px,1fr)); gap: 2px; align-items: end; min-height: 36px; }
-    .heatmap i { display: block; border-radius: 2px; height: 8px; background: rgba(255,255,255,.07); }
+    #proof .proof-grid {
+      display: grid;
+      grid-template-columns: 1.55fr repeat(5,1fr);
+      gap: .7rem;
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+      min-height: 150px;
+      padding: .95rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    .metric.center {
+      box-shadow: inset 0 0 0 1px rgba(169,112,255,.26), 0 24px 50px rgba(0,0,0,.25);
+      background: linear-gradient(170deg, rgba(169,112,255,.11), rgba(20,12,36,.86));
+    }
+    .metric .k {
+      font-size: .72rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .metric .v {
+      margin-top: .42rem;
+      font-size: clamp(1.08rem, 2.2vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+    .metric .m { margin-top: .28rem; color: var(--muted); font-size: .8rem; }
 
-    .panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); box-shadow: var(--shadow-xl); padding: clamp(1rem, 2vw, 2rem); }
+    .heatmap {
+      margin-top: .7rem;
+      min-height: 38px;
+      display: grid;
+      grid-template-columns: repeat(53, minmax(4px, 1fr));
+      gap: 2px;
+      align-items: end;
+    }
+    .heatmap i {
+      display: block;
+      height: 8px;
+      border-radius: 2px;
+      background: rgba(255,255,255,.06);
+    }
 
-    #founder .founder-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 1.2rem; }
-    .founder-media img { border-radius: 22px; border: 1px solid var(--line); min-height: 620px; object-fit: cover; }
-    .founder-copy h2 { font-size: clamp(1.8rem, 4.2vw, 3.5rem); letter-spacing: -.03em; }
-    .founder-copy .support { margin-top: .7rem; color: var(--text-soft); font-size: 1.08rem; max-width: 64ch; }
-    .founder-copy .body { margin-top: .7rem; color: var(--muted); }
-    .timeline { list-style: none; margin: 1.1rem 0 0; padding: 0; display: grid; gap: .48rem; }
-    .timeline li { border: 1px solid var(--line); border-radius: 13px; padding: .62rem .72rem; display: grid; grid-template-columns: 160px 1fr; gap: .7rem; background: var(--panel-soft); }
-    .timeline time { font-family: var(--mono); color: var(--accent-3); }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--panel);
+      box-shadow: var(--shadow-xl);
+      padding: clamp(1rem, 2vw, 2rem);
+    }
 
-    #agijobs .cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .75rem; }
-    .job-card { border: 1px solid var(--line); border-radius: 22px; padding: 1rem; background: var(--panel); display: grid; gap: .65rem; }
-    .job-card h3 { font-size: 1.17rem; }
-    .contracts { display: grid; gap: .45rem; }
-    .contract { border: 1px solid var(--line); border-radius: 12px; padding: .55rem .6rem; background: var(--panel-soft); display: grid; gap: .38rem; }
-    .contract .row { display: flex; justify-content: space-between; gap: .4rem; align-items: center; flex-wrap: wrap; }
-    .contract .addr { font-size: .74rem; color: var(--text-soft); overflow-wrap: anywhere; }
-    .subcompare { margin-top: .9rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; }
-    .subcompare table { width: 100%; border-collapse: collapse; min-width: 720px; }
-    .subcompare th, .subcompare td { border-bottom: 1px solid var(--line); padding: .64rem; text-align: left; font-size: .88rem; }
-    .subcompare th { color: var(--accent-3); background: rgba(255,255,255,.02); }
+    #founder .founder-grid {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .founder-media img {
+      width: 100%;
+      min-height: 640px;
+      object-fit: cover;
+      object-position: center 25%;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+    }
+    .founder-copy h2 {
+      font-size: clamp(2rem, 4.4vw, 3.7rem);
+      letter-spacing: -.035em;
+    }
+    .founder-support {
+      margin-top: .7rem;
+      color: var(--text-soft);
+      font-size: 1.07rem;
+      max-width: 62ch;
+    }
+    .founder-body {
+      margin-top: .7rem;
+      color: var(--muted);
+      max-width: 74ch;
+    }
+    .milestones {
+      margin: 1rem 0 0;
+      list-style: none;
+      padding: 0;
+      display: grid;
+      gap: .45rem;
+    }
+    .milestones li {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: .62rem .72rem;
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: .6rem;
+      background: var(--panel-soft);
+    }
+    .milestones time { font-family: var(--mono); color: var(--accent-3); }
 
-    #pinned .pinned-grid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: .75rem; }
-    .repo.lead { grid-column: span 7; min-height: 250px; }
-    .repo { grid-column: span 5; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); padding: .95rem; }
-    .repo h3 { font-size: 1.1rem; }
+    #agijobs .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: .75rem;
+    }
+    .jobs-card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--panel);
+      padding: 1rem;
+      display: grid;
+      gap: .65rem;
+    }
+    .jobs-card h3 { font-size: 1.16rem; }
+    .contract-list {
+      display: grid;
+      gap: .45rem;
+    }
+    .contract-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: .56rem .62rem;
+      background: var(--panel-soft);
+      display: grid;
+      gap: .32rem;
+    }
+    .contract-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .4rem;
+      flex-wrap: wrap;
+      font-size: .8rem;
+      color: var(--text-soft);
+    }
+    .addr {
+      font-family: var(--mono);
+      font-size: .74rem;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+
+    .copy-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: .72rem;
+      padding: .2rem .52rem;
+      cursor: pointer;
+    }
+
+    .compare-wrap {
+      margin-top: .95rem;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow-x: auto;
+    }
+    .compare-wrap table {
+      width: 100%;
+      min-width: 780px;
+      border-collapse: collapse;
+    }
+    .compare-wrap th,
+    .compare-wrap td {
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      padding: .63rem;
+      font-size: .86rem;
+      vertical-align: top;
+    }
+    .compare-wrap th {
+      color: var(--accent-3);
+      background: rgba(255,255,255,.02);
+    }
+
+    #pinned .pinned-grid {
+      display: grid;
+      grid-template-columns: repeat(12,minmax(0,1fr));
+      gap: .75rem;
+    }
+    .repo {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--panel);
+      padding: .95rem;
+      grid-column: span 5;
+    }
+    .repo.lead {
+      grid-column: span 7;
+      min-height: 250px;
+    }
+    .repo h3 { font-size: 1.12rem; }
     .repo p { margin-top: .5rem; color: var(--muted); }
-    .meta { margin-top: .62rem; display: flex; gap: .5rem; flex-wrap: wrap; font-size: .76rem; color: var(--text-soft); }
-
-    #ens .ens-shell { position: relative; }
-    .ens-topo { margin-top: 1rem; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .65rem; }
-    .ens-node { border: 1px solid var(--line); border-radius: 16px; padding: .8rem; background: linear-gradient(150deg, rgba(139,92,246,.12), rgba(255,255,255,.01)); }
-    .ens-node code { font-family: var(--mono); color: var(--accent-3); display: block; margin-bottom: .35rem; }
-
-    #developers .dev-grid { display: grid; grid-template-columns: 7fr 5fr; gap: .8rem; }
-    pre { margin: 0; padding: 1rem; border-radius: 16px; border: 1px solid var(--line); background: #0a0614; color: #e9ddff; overflow: auto; font-family: var(--mono); font-size: .86rem; }
-    .mini-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .55rem; }
-    .mini { border: 1px solid var(--line); border-radius: 14px; padding: .7rem; background: var(--panel-soft); font-size: .88rem; }
-
-    #stack .stack-grid, #portfolio .portfolio-grid, #horizon .h-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .75rem; }
-    .stack-card, .portfolio-card, .h-card { border: 1px solid var(--line); border-radius: 18px; padding: .92rem; background: var(--panel); }
-
-    #library .controls { display: grid; gap: .75rem; }
-    #library input[type="search"] { width: min(620px, 100%); border: 1px solid var(--line); border-radius: 999px; padding: .75rem .95rem; background: var(--panel); color: var(--text); }
-    .chips { display: flex; flex-wrap: wrap; gap: .45rem; }
-    .atlas { margin-top: .82rem; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .7rem; }
-    .item { border: 1px solid var(--line); border-radius: 16px; padding: .8rem; background: var(--panel); }
-    .item .cat { font-size: .72rem; color: var(--accent-3); letter-spacing: .12em; text-transform: uppercase; }
-    .item h4 { margin-top: .44rem; font-size: .97rem; }
-    .item p { margin-top: .38rem; color: var(--muted); font-size: .85rem; }
-
-    footer { border-top: 1px solid var(--line); padding: 1.2rem 0 2rem; color: var(--muted); }
-    .foot { display: flex; justify-content: space-between; align-items: center; gap: .7rem; flex-wrap: wrap; }
-    .foot nav { display: flex; gap: .5rem; flex-wrap: wrap; }
-
-    @media (max-width: 1120px) {
-      .header-inner { grid-template-columns: auto auto; }
-      .nav, .actions { display: none; }
-      .mobile-toggle { display: inline-flex; }
-      .mobile-panel.open { display: block; border-top: 1px solid var(--line); padding: .7rem 0 1rem; }
-      .mobile-panel .container { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .5rem; }
-      .mobile-panel a { border: 1px solid var(--line); border-radius: 12px; padding: .65rem; text-decoration: none; color: var(--text-soft); background: var(--panel); }
-      .hero-copy, .hero-media, #proof .proof-grid .metric, #founder .founder-grid > *, #developers .dev-grid > * { grid-column: 1 / -1; }
-      .hero-grid, #founder .founder-grid, #developers .dev-grid { grid-template-columns: 1fr; }
-      #proof .proof-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-      #agijobs .cards, #stack .stack-grid, #portfolio .portfolio-grid, #horizon .h-grid, .atlas, .ens-topo { grid-template-columns: 1fr 1fr; }
-      .repo.lead, .repo { grid-column: span 6; }
+    .repo-meta {
+      margin-top: .55rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      color: var(--text-soft);
+      font-size: .77rem;
     }
-    @media (max-width: 760px) {
-      #proof .proof-grid, #agijobs .cards, #stack .stack-grid, #portfolio .portfolio-grid, #horizon .h-grid, .atlas, .ens-topo, .mini-grid { grid-template-columns: 1fr; }
-      .repo.lead, .repo { grid-column: span 12; }
-      .timeline li { grid-template-columns: 1fr; }
+
+    #ens .ens-grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: .8rem;
+      align-items: stretch;
+    }
+    .ens-topology {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: .6rem;
+      margin-top: .9rem;
+    }
+    .ens-node {
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: .72rem;
+      background: linear-gradient(145deg, rgba(139,92,246,.12), rgba(255,255,255,.01));
+    }
+    .ens-node code {
+      display: block;
+      font-family: var(--mono);
+      color: var(--accent-3);
+      font-size: .82rem;
+      margin-bottom: .3rem;
+    }
+
+    #developers .dev-grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: .75rem;
+    }
+    pre {
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1rem;
+      background: #0a0614;
+      color: #e9ddff;
+      overflow: auto;
+      font-family: var(--mono);
+      font-size: .86rem;
+    }
+    .dev-mini {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: .5rem;
+    }
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: .66rem;
+      background: var(--panel-soft);
+      font-size: .84rem;
+    }
+
+    #stack .stack-grid,
+    #portfolio .portfolio-grid,
+    #horizon .h-grid {
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: .75rem;
+    }
+    .stack-card, .portfolio-card, .h-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: .9rem;
+      background: var(--panel);
+    }
+
+    #library .library-controls {
+      display: grid;
+      gap: .7rem;
+      margin-top: .8rem;
+    }
+    .search {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      color: var(--text);
+      padding: .75rem .85rem;
+      font-size: .95rem;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+    .filter-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text-soft);
+      padding: .4rem .72rem;
+      font-size: .8rem;
+      cursor: pointer;
+    }
+    .filter-btn.active {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(145deg, var(--accent), var(--accent-2));
+    }
+    .featured-grid, .library-grid {
+      margin-top: .85rem;
+      display: grid;
+      grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: .65rem;
+    }
+    .library-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+    .res-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: .75rem;
+      background: var(--panel);
+      display: grid;
+      gap: .45rem;
+    }
+    .res-card .cat { font-size: .72rem; color: var(--accent-3); letter-spacing: .1em; text-transform: uppercase; }
+    .empty {
+      border: 1px dashed var(--line-strong);
+      border-radius: 16px;
+      color: var(--muted);
+      background: var(--panel-soft);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 1.5rem 0 2.2rem;
+      color: var(--muted);
+    }
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer-links {
+      display: flex;
+      gap: .48rem;
+      flex-wrap: wrap;
+    }
+
+    .fade-in { opacity: 0; transform: translateY(10px); transition: opacity .55s ease, transform .55s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1150px) {
+      .hero-copy, .hero-media,
+      #founder .founder-grid > *,
+      #ens .ens-grid > *,
+      #developers .dev-grid > * { grid-column: span 12; }
+      .hero-media { min-height: 560px; }
+      #proof .proof-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      #proof .metric:first-child { grid-column: span 2; }
+      #agijobs .jobs-grid,
+      #stack .stack-grid,
+      #portfolio .portfolio-grid,
+      #horizon .h-grid,
+      .featured-grid,
+      .library-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      #pinned .pinned-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .repo, .repo.lead { grid-column: span 1; }
+    }
+    @media (max-width: 850px) {
+      .header-inner { grid-template-columns: auto auto; }
+      .nav-list { display: none; }
+      .mobile-toggle { display: inline-flex; justify-self: end; }
+      .header-actions { display: none; }
+      .mobile-panel {
+        display: none;
+        border-top: 1px solid var(--line);
+        padding: .5rem 0 .8rem;
+      }
+      .mobile-panel.open { display: grid; gap: .35rem; }
+      .mobile-panel a {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: .55rem .65rem;
+        color: var(--text-soft);
+        background: var(--panel-soft);
+      }
+      #proof .proof-grid,
+      #agijobs .jobs-grid,
+      #stack .stack-grid,
+      #portfolio .portfolio-grid,
+      #horizon .h-grid,
+      .featured-grid,
+      .library-grid,
+      .dev-mini,
+      .ens-topology { grid-template-columns: 1fr; }
+      #founder .founder-grid,
+      #ens .ens-grid,
+      #developers .dev-grid,
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-copy, .hero-media { grid-column: span 1; }
+      .hero-media { min-height: 480px; }
+      .milestones li { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-  <header class="site-header">
+  <header class="site-header" role="banner">
     <div class="container header-inner">
-      <a class="wordmark" href="#hero" aria-label="MONTRÉAL.AI"><em>M.AI</em> MONTRÉAL.AI</a>
-      <nav class="nav" aria-label="Primary">
+      <a class="brand" href="#hero" aria-label="MONTRÉAL.AI home"><span>MONTRÉAL.AI</span><em>2003</em></a>
+      <nav aria-label="Primary" class="nav-list">
         <a href="#hero">Vision</a>
         <a href="#founder">Founder</a>
         <a href="#agijobs">AGI Jobs</a>
@@ -266,625 +731,687 @@
         <a href="#library">Library</a>
         <a href="#portfolio">Portfolio</a>
       </nav>
-      <div class="actions">
-        <a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://agialpha.com/" target="_blank" rel="noopener noreferrer">AGI Alpha</a>
+      <div class="header-actions">
+        <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://agialpha.com/" target="_blank" rel="noopener">AGI Alpha</a>
       </div>
-      <button class="mobile-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobilePanel">Menu</button>
+      <button class="mobile-toggle" type="button" aria-expanded="false" aria-controls="mobilePanel">Menu</button>
     </div>
-    <div class="mobile-panel" id="mobilePanel">
-      <div class="container">
-        <a href="#hero">Vision</a><a href="#founder">Founder</a><a href="#agijobs">AGI Jobs</a><a href="#pinned">Pinned</a>
-        <a href="#ens">ENS</a><a href="#developers">Developers</a><a href="#library">Library</a><a href="#portfolio">Portfolio</a>
-      </div>
+    <div id="mobilePanel" class="mobile-panel container" aria-label="Mobile navigation">
+      <a href="#hero">Vision</a>
+      <a href="#founder">Founder</a>
+      <a href="#agijobs">AGI Jobs</a>
+      <a href="#pinned">Pinned</a>
+      <a href="#ens">ENS</a>
+      <a href="#developers">Developers</a>
+      <a href="#library">Library</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://agialpha.com/" target="_blank" rel="noopener">AGI Alpha</a>
     </div>
   </header>
 
   <main id="main">
-    <section id="hero" class="section" aria-labelledby="hero-title">
+    <section id="hero" class="section">
       <div class="container hero-grid">
-        <article class="hero-copy">
+        <article class="hero-copy fade-in">
           <p class="eyebrow">Institutional intelligence substrate</p>
-          <h1 class="hero-title" id="hero-title">We Choose to Ascend with AGI</h1>
-          <p class="hero-sub">At the substrate, an invention-automation machine is coming online—where intelligence compounds.</p>
+          <h1 class="hero-title">We Choose to Ascend with AGI</h1>
+          <p class="hero-lead">At the substrate, an invention-automation machine is coming online—where intelligence compounds.</p>
           <p class="hero-body">MONTRÉAL.AI is building the identity, labor, proof, settlement, memory, and governance substrate for the era when machine intelligence becomes infrastructure.</p>
-          <ul class="pills" aria-label="Hero metadata">
-            <li>Founded 2003</li><li>Ethereum Mainnet</li><li class="mono">agi.eth</li><li class="mono">asi.eth</li><li>AI → AGI → ASI</li><li>live GitHub proof</li>
+          <ul class="hero-pills" aria-label="Hero highlights">
+            <li>Founded 2003</li>
+            <li>Ethereum Mainnet</li>
+            <li class="mono">agi.eth</li>
+            <li class="mono">asi.eth</li>
+            <li>AI → AGI → ASI</li>
+            <li>live GitHub proof</li>
           </ul>
           <div class="cta-row">
             <a class="btn primary" href="#stack">Explore the Stack</a>
-            <a class="btn" href="./agijobmanagerv0.html">Open AGI Jobs</a>
-            <a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noopener noreferrer">Read Vincent’s Writing</a>
-            <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noopener noreferrer">Open ENS Sovereign Portfolio</a>
+            <a class="btn" href="#agijobs">Open AGI Jobs</a>
+            <a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noopener">Read Vincent’s Writing</a>
+            <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noopener">Open ENS Sovereign Portfolio</a>
           </div>
         </article>
-
-        <aside class="hero-media" aria-label="Vincent Boucher portrait and live proof">
-          <div class="orbital"></div>
-          <svg viewBox="0 0 800 1000" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;opacity:.5;">
-            <circle cx="400" cy="500" r="340" fill="none" stroke="rgba(217,201,255,.18)" stroke-width="1"/>
-            <circle cx="400" cy="500" r="268" fill="none" stroke="rgba(217,201,255,.12)" stroke-width="1"/>
-            <circle cx="400" cy="500" r="196" fill="none" stroke="rgba(217,201,255,.09)" stroke-width="1"/>
-            <g fill="rgba(217,201,255,.6)">
-              <circle cx="140" cy="440" r="2.5"/><circle cx="640" cy="320" r="2.2"/><circle cx="566" cy="770" r="2"/><circle cx="286" cy="166" r="1.9"/><circle cx="710" cy="530" r="1.8"/>
+        <aside class="hero-media fade-in" aria-label="Vincent Boucher portrait">
+          <div class="hero-orbit"></div>
+          <svg viewBox="0 0 800 900" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;opacity:.65;pointer-events:none;">
+            <circle cx="550" cy="290" r="240" fill="none" stroke="rgba(217,201,255,.17)" stroke-width="1"></circle>
+            <circle cx="550" cy="290" r="170" fill="none" stroke="rgba(217,201,255,.13)" stroke-width="1"></circle>
+            <path d="M140 700 C 260 600, 500 620, 700 520" fill="none" stroke="rgba(217,201,255,.16)" stroke-width="1"></path>
+            <g fill="rgba(217,201,255,.45)">
+              <circle cx="170" cy="640" r="2"></circle><circle cx="270" cy="590" r="2"></circle><circle cx="390" cy="570" r="1.8"></circle>
+              <circle cx="520" cy="560" r="2"></circle><circle cx="660" cy="520" r="2"></circle>
             </g>
           </svg>
-          <img class="hero-photo" src="./vincentboucher.jpg" alt="Vincent Boucher" width="1200" height="1500" loading="eager" />
-          <div class="proof-float" aria-live="polite">
-            <article><b id="heroContrib">—</b><span>Contributions in the last year</span></article>
-            <article><b id="heroRepos">—</b><span>Public repositories</span></article>
-            <article><b id="heroFollowers">—</b><span>Followers</span></article>
+          <img class="hero-photo" src="./vincentboucher.jpg" alt="Vincent Boucher" loading="eager" decoding="async" />
+          <div class="proof-floats" aria-live="polite">
+            <article><b id="heroContrib">Loading live proof…</b><span>Annual GitHub contributions</span></article>
+            <article><b class="mono">agi.eth · asi.eth</b><span>Sovereign root namespace arc</span></article>
           </div>
         </aside>
       </div>
     </section>
 
-    <section id="proof" class="section" aria-labelledby="proof-title">
+    <section id="proof" class="section" aria-labelledby="proofHeading">
       <div class="container">
-        <h2 id="proof-title" style="position:absolute;left:-9999px;">Live proof strip</h2>
+        <h2 id="proofHeading" class="eyebrow">Live proof strip</h2>
         <div class="proof-grid" aria-live="polite">
-          <article class="metric centerpiece">
-            <div class="k">Contributions in the last year</div>
-            <div class="v" id="contribValue">Loading live proof…</div>
-            <div class="m" id="contribStatus">GitHub contribution service</div>
+          <article class="metric center">
+            <div class="k">Contributions</div>
+            <div class="v" id="contribCount">Loading contributions…</div>
+            <div class="m" id="contribState">Pulling live data</div>
             <div class="heatmap" id="contribHeatmap" aria-hidden="true"></div>
           </article>
-          <article class="metric"><div class="k">Public repositories</div><div class="v" id="reposValue">—</div><div class="m">Live org metadata</div></article>
-          <article class="metric"><div class="k">Followers</div><div class="v" id="followersValue">—</div><div class="m">Public profile signal</div></article>
-          <article class="metric"><div class="k">Lead pinned repo</div><div class="v">AGI-Agent-v0</div><div class="m" id="leadMeta">Awaiting repo sync</div></article>
-          <article class="metric"><div class="k">ENS roots secured</div><div class="v mono">agi.eth · asi.eth</div><div class="m">Identity continuity</div></article>
+          <article class="metric"><div class="k">Public repositories</div><div class="v" id="repoCount">—</div><div class="m">From GitHub REST</div></article>
+          <article class="metric"><div class="k">Followers</div><div class="v" id="followerCount">—</div><div class="m">Public credibility surface</div></article>
+          <article class="metric"><div class="k">Lead pinned repo</div><div class="v mono">AGI-Agent-v0</div><div class="m">Public build record anchor</div></article>
+          <article class="metric"><div class="k">ENS roots secured</div><div class="v mono">agi.eth · asi.eth</div><div class="m">Identity memory continuity</div></article>
           <article class="metric"><div class="k">AGI Jobs surfaces</div><div class="v">3</div><div class="m">Genesis · Burn · Prime</div></article>
         </div>
       </div>
     </section>
 
-    <section id="founder" class="section" aria-labelledby="founder-title">
-      <div class="container panel founder-grid">
-        <figure class="founder-media">
-          <img src="./vincentboucher.jpg" alt="Vincent Boucher portrait" width="1200" height="1500" loading="lazy" />
-        </figure>
-        <article class="founder-copy">
-          <p class="eyebrow">Founder spotlight</p>
-          <h2 id="founder-title">Vincent Boucher</h2>
-          <p class="support">President of MONTREAL.AI and QUEBEC.AI. AI pioneer, institution-builder, strategist, and architect of sovereign machine systems.</p>
-          <p class="body">Vincent Boucher has spent decades turning intelligence research into institutional capability: from aerospace consulting to market architecture for autonomous labor. He pioneered the Meta-Agentic framing as an operational doctrine for strategic AGI mastery under adversarial assumptions, with governance before recursive scale.</p>
-          <ul class="timeline" aria-label="Vincent Boucher milestones">
-            <li><time datetime="1973-07">July 1973</time><span>Born in Québec City.</span></li>
-            <li><time datetime="2000">2000–2002</time><span>Canadian Space Agency consulting.</span></li>
-            <li><time datetime="2003">2003</time><span>Founded MONTREAL.AI and QUEBEC.AI.</span></li>
-            <li><time datetime="2016">2016</time><span>OpenAI Gym prominence.</span></li>
-            <li><time datetime="2017">2017</time><span>Multi-Agent AI DAO prior art.</span></li>
-            <li><time datetime="2026">Current arc</time><span>ENS sovereignty, on-chain labor, meta-agentic systems, RSI governance.</span></li>
-          </ul>
-          <div class="cta-row">
-            <a class="btn" href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener noreferrer">LinkedIn profile</a>
-            <a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noopener noreferrer">Featured writing</a>
-            <a class="btn" href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a class="btn" href="https://agialpha.com/biography" target="_blank" rel="noopener noreferrer">Biography materials</a>
-          </div>
-        </article>
+    <section id="founder" class="section" aria-labelledby="founderHeading">
+      <div class="container panel">
+        <div class="founder-grid">
+          <aside class="founder-media fade-in">
+            <img src="./vincentboucher.jpg" alt="Vincent Boucher portrait" loading="lazy" decoding="async" />
+          </aside>
+          <article class="founder-copy fade-in">
+            <p class="eyebrow">Founder spotlight</p>
+            <h2 id="founderHeading">Vincent Boucher</h2>
+            <p class="founder-support">President of MONTREAL.AI and QUEBEC.AI. AI pioneer, institution-builder, strategist, and architect of sovereign machine systems.</p>
+            <p class="founder-body">From early systems work to machine-labor institutions, Vincent Boucher’s arc has emphasized governance before recursive scale. He has consistently treated intelligence as public infrastructure: identity for role-legibility, markets for labor formation, proof for accountability, settlement for finality, and memory for durable institutional continuity.</p>
+            <ul class="milestones" aria-label="Founder timeline">
+              <li><time datetime="1973-07">July 1973</time><span>Born in Québec City.</span></li>
+              <li><time datetime="2000">2000–2002</time><span>Consulting arc linked to Canadian Space Agency initiatives.</span></li>
+              <li><time datetime="2003">2003</time><span>Founded MONTREAL.AI and QUEBEC.AI.</span></li>
+              <li><time datetime="2016">2016</time><span>OpenAI Gym prominence and practical reinforcement-learning leadership.</span></li>
+              <li><time datetime="2017">2017</time><span>Multi-Agent AI DAO prior art and early sovereign machine-labor framing.</span></li>
+              <li><time datetime="2026">Current arc</time><span>ENS sovereignty, on-chain labor, Meta-Agentic systems, and RSI governance under adversarial assumptions.</span></li>
+            </ul>
+            <div class="cta-row">
+              <a class="btn" href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener">LinkedIn profile</a>
+              <a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noopener">Featured writing</a>
+              <a class="btn" href="https://github.com/MontrealAI" target="_blank" rel="noopener">GitHub</a>
+              <a class="btn" href="https://agialpha.com/biography" target="_blank" rel="noopener">Biography materials</a>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
-    <section id="agijobs" class="section" aria-labelledby="agijobs-title">
+    <section id="agijobs" class="section" aria-labelledby="jobsHeading">
       <div class="container">
         <p class="eyebrow">AGI Jobs</p>
-        <h2 id="agijobs-title" style="font-size:clamp(1.7rem,4.1vw,3.25rem);letter-spacing:-.03em;max-width:20ch;">Three sovereign surfaces for machine labor on Ethereum mainnet</h2>
-        <p class="hero-body" style="margin-top:.8rem;max-width:78ch;">Contractual machine labor, rendered as a public operating surface: mission formation, escrow, bonds, validation, dispute pathways, ENS-backed identity, and institutional-grade settlement.</p>
+        <h2 id="jobsHeading" style="font-size:clamp(1.8rem,4vw,3.3rem);letter-spacing:-.03em;">Three sovereign surfaces for machine labor on Ethereum mainnet</h2>
+        <p style="margin-top:.75rem;color:var(--text-soft);max-width:84ch;">Contractual machine labor, rendered as a public operating surface: mission formation, escrow, bonds, validation, dispute pathways, ENS-backed identity, and institutional-grade settlement.</p>
 
-        <div class="cards" style="margin-top:1rem;">
-          <article class="job-card">
+        <div class="jobs-grid" style="margin-top:1rem;">
+          <article class="jobs-card">
             <h3>AGIJobManager · Genesis Mainnet Console</h3>
-            <p>Sovereign coordination infrastructure for frontier intelligence work. Operate jobs, verification, routing, bond logic, and protocol settlement with institutional-grade precision.</p>
+            <p style="color:var(--muted);">Sovereign coordination infrastructure for frontier intelligence work. Operate jobs, verification, routing, bond logic, and protocol settlement with institutional-grade precision.</p>
             <div class="cta-row">
               <a class="btn primary" href="./agijobmanagerv0.html">Open console</a>
-              <a class="btn" href="https://github.com/MontrealAI/AGIJobManager" target="_blank" rel="noopener noreferrer">GitHub repo</a>
+              <a class="btn" href="https://github.com/MontrealAI/AGIJobManager" target="_blank" rel="noopener">GitHub repo</a>
             </div>
-            <div class="contracts">
-              <div class="contract"><strong>AGIJobManager</strong><div class="addr mono">0xb3aaeb69b630f0299791679c063d68d6687481d1</div><div class="row"><button class="copy-btn" data-copy="0xb3aaeb69b630f0299791679c063d68d6687481d1">Copy</button><a class="btn" target="_blank" rel="noopener noreferrer" href="https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code">Etherscan</a></div></div>
-              <div class="contract"><strong>ENSJobPages</strong><div class="addr mono">0x06188E77C1C38d392b16d9D9fB24673363ce1da0</div><div class="row"><button class="copy-btn" data-copy="0x06188E77C1C38d392b16d9D9fB24673363ce1da0">Copy</button><a class="btn" target="_blank" rel="noopener noreferrer" href="https://etherscan.io/address/0x06188E77C1C38d392b16d9D9fB24673363ce1da0#code">Etherscan</a></div></div>
+            <div class="contract-list">
+              <div class="contract-item"><div class="contract-top"><strong>AGIJobManager</strong><a class="btn" style="padding:.22rem .52rem;font-size:.72rem" href="https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code" target="_blank" rel="noopener">Etherscan</a></div><div class="addr">0xb3aaeb69b630f0299791679c063d68d6687481d1</div><button class="copy-btn" data-copy="0xb3aaeb69b630f0299791679c063d68d6687481d1">Copy</button></div>
+              <div class="contract-item"><div class="contract-top"><strong>ENSJobPages</strong><a class="btn" style="padding:.22rem .52rem;font-size:.72rem" href="https://etherscan.io/address/0x06188E77C1C38d392b16d9D9fB24673363ce1da0#code" target="_blank" rel="noopener">Etherscan</a></div><div class="addr">0x06188E77C1C38d392b16d9D9fB24673363ce1da0</div><button class="copy-btn" data-copy="0x06188E77C1C38d392b16d9D9fB24673363ce1da0">Copy</button></div>
             </div>
           </article>
 
-          <article class="job-card">
+          <article class="jobs-card">
             <h3>AGIJobManager · Employer Burn</h3>
-            <p>Genesis console variant that makes createJob-time employer burn and total upfront exposure explicit. Designed for clearer economic visibility at creation time.</p>
+            <p style="color:var(--muted);">Genesis console variant that makes createJob-time employer burn and total upfront exposure explicit. Designed for clearer economic visibility at creation time.</p>
             <div class="cta-row">
               <a class="btn primary" href="./agijobmanagerburnv1.html">Open console</a>
-              <a class="btn" href="https://github.com/MontrealAI/AGIJobManager-EmployerBurn" target="_blank" rel="noopener noreferrer">GitHub repo</a>
+              <a class="btn" href="https://github.com/MontrealAI/AGIJobManager-EmployerBurn" target="_blank" rel="noopener">GitHub repo</a>
             </div>
-            <div class="contracts">
-              <div class="contract"><strong>AGIJobManager</strong><div class="addr mono">0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2</div><div class="row"><button class="copy-btn" data-copy="0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2">Copy</button><a class="btn" target="_blank" rel="noopener noreferrer" href="https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#readContract">Etherscan</a></div></div>
-              <div class="contract"><strong>ENSJobPages</strong><div class="addr mono">0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5</div><div class="row"><button class="copy-btn" data-copy="0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5">Copy</button><a class="btn" target="_blank" rel="noopener noreferrer" href="https://etherscan.io/address/0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5#code">Etherscan</a></div></div>
+            <div class="contract-list">
+              <div class="contract-item"><div class="contract-top"><strong>AGIJobManager</strong><a class="btn" style="padding:.22rem .52rem;font-size:.72rem" href="https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#readContract" target="_blank" rel="noopener">Etherscan</a></div><div class="addr">0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2</div><button class="copy-btn" data-copy="0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2">Copy</button></div>
+              <div class="contract-item"><div class="contract-top"><strong>ENSJobPages</strong><a class="btn" style="padding:.22rem .52rem;font-size:.72rem" href="https://etherscan.io/address/0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5#code" target="_blank" rel="noopener">Etherscan</a></div><div class="addr">0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5</div><button class="copy-btn" data-copy="0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5">Copy</button></div>
             </div>
           </article>
 
-          <article class="job-card">
+          <article class="jobs-card">
             <h3>AGIJobManager Prime · Mainnet Console</h3>
-            <p><strong>To Govern Their Own Kind.</strong> Flagship constitutional procurement surface for sovereign AI labor: atomic premium create flows, discovery, designated selection, and settlement-grade governance.</p>
+            <p style="color:var(--muted);">Flagship constitutional procurement surface for sovereign AI labor. Atomic premium create flows, discovery, designated selection, and settlement-grade governance. <strong>To Govern Their Own Kind.</strong></p>
             <div class="cta-row">
               <a class="btn primary" href="./agijobmanagerprimev2.html">Open console</a>
-              <a class="btn" href="https://github.com/MontrealAI/AGIJobManagerPrime" target="_blank" rel="noopener noreferrer">GitHub repo</a>
+              <a class="btn" href="https://github.com/MontrealAI/AGIJobManagerPrime" target="_blank" rel="noopener">GitHub repo</a>
             </div>
-            <div class="contracts">
-              <div class="contract"><strong>AGIJobDiscoveryPrime</strong><div class="addr mono">0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29</div><div class="row"><button class="copy-btn" data-copy="0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29">Copy</button><a class="btn" target="_blank" rel="noopener noreferrer" href="https://etherscan.io/address/0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29#code">Etherscan</a></div></div>
-              <div class="contract"><strong>AGIJobManagerPrime</strong><div class="addr mono">0xf8fc6572098ddcac4560e17ca4a683df30ea993e</div><div class="row"><button class="copy-btn" data-copy="0xf8fc6572098ddcac4560e17ca4a683df30ea993e">Copy</button><a class="btn" target="_blank" rel="noopener noreferrer" href="https://etherscan.io/address/0xf8fc6572098ddcac4560e17ca4a683df30ea993e#code">Etherscan</a></div></div>
-              <div class="contract"><strong>ENSJobPages</strong><div class="addr mono">0x703011EF1C6E4277587eFe150e6cd74cA18F0069</div><div class="row"><button class="copy-btn" data-copy="0x703011EF1C6E4277587eFe150e6cd74cA18F0069">Copy</button><a class="btn" target="_blank" rel="noopener noreferrer" href="https://etherscan.io/address/0x703011EF1C6E4277587eFe150e6cd74cA18F0069#code">Etherscan</a></div></div>
+            <div class="contract-list">
+              <div class="contract-item"><div class="contract-top"><strong>AGIJobDiscoveryPrime</strong><a class="btn" style="padding:.22rem .52rem;font-size:.72rem" href="https://etherscan.io/address/0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29#code" target="_blank" rel="noopener">Etherscan</a></div><div class="addr">0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29</div><button class="copy-btn" data-copy="0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29">Copy</button></div>
+              <div class="contract-item"><div class="contract-top"><strong>AGIJobManagerPrime</strong><a class="btn" style="padding:.22rem .52rem;font-size:.72rem" href="https://etherscan.io/address/0xf8fc6572098ddcac4560e17ca4a683df30ea993e#code" target="_blank" rel="noopener">Etherscan</a></div><div class="addr">0xf8fc6572098ddcac4560e17ca4a683df30ea993e</div><button class="copy-btn" data-copy="0xf8fc6572098ddcac4560e17ca4a683df30ea993e">Copy</button></div>
+              <div class="contract-item"><div class="contract-top"><strong>ENSJobPages</strong><a class="btn" style="padding:.22rem .52rem;font-size:.72rem" href="https://etherscan.io/address/0x703011EF1C6E4277587eFe150e6cd74cA18F0069#code" target="_blank" rel="noopener">Etherscan</a></div><div class="addr">0x703011EF1C6E4277587eFe150e6cd74cA18F0069</div><button class="copy-btn" data-copy="0x703011EF1C6E4277587eFe150e6cd74cA18F0069">Copy</button></div>
             </div>
           </article>
         </div>
 
-        <div class="subcompare" style="margin-top:1rem;">
+        <div class="compare-wrap" aria-label="AGI Jobs comparison table">
           <table>
             <thead><tr><th>Surface</th><th>Settlement style</th><th>Discovery</th><th>Burn logic</th><th>ENS job pages</th><th>Console</th><th>Repository</th></tr></thead>
             <tbody>
-              <tr><td>Genesis</td><td>Escrow + verification routing</td><td>Baseline</td><td>Standard</td><td>Integrated</td><td><a href="./agijobmanagerv0.html">Open</a></td><td><a href="https://github.com/MontrealAI/AGIJobManager" target="_blank" rel="noopener noreferrer">AGIJobManager</a></td></tr>
-              <tr><td>Employer Burn</td><td>Escrow + upfront exposure clarity</td><td>Baseline</td><td>createJob burn explicit</td><td>Integrated</td><td><a href="./agijobmanagerburnv1.html">Open</a></td><td><a href="https://github.com/MontrealAI/AGIJobManager-EmployerBurn" target="_blank" rel="noopener noreferrer">EmployerBurn</a></td></tr>
-              <tr><td>Prime</td><td>Constitutional procurement + selection</td><td>DiscoveryPrime</td><td>Market-weighted</td><td>Integrated</td><td><a href="./agijobmanagerprimev2.html">Open</a></td><td><a href="https://github.com/MontrealAI/AGIJobManagerPrime" target="_blank" rel="noopener noreferrer">AGIJobManagerPrime</a></td></tr>
+              <tr><td>Genesis</td><td>Escrow + bond routing</td><td>Managed selection</td><td>Standard exposure</td><td>Integrated</td><td><a href="./agijobmanagerv0.html">Open</a></td><td><a href="https://github.com/MontrealAI/AGIJobManager" target="_blank" rel="noopener">AGIJobManager</a></td></tr>
+              <tr><td>Employer Burn</td><td>Escrow + explicit creation burn</td><td>Managed selection</td><td>Create-time burn clarity</td><td>Integrated</td><td><a href="./agijobmanagerburnv1.html">Open</a></td><td><a href="https://github.com/MontrealAI/AGIJobManager-EmployerBurn" target="_blank" rel="noopener">EmployerBurn</a></td></tr>
+              <tr><td>Prime</td><td>Constitutional procurement</td><td>DiscoveryPrime tournament</td><td>Premium atomic flow</td><td>Integrated</td><td><a href="./agijobmanagerprimev2.html">Open</a></td><td><a href="https://github.com/MontrealAI/AGIJobManagerPrime" target="_blank" rel="noopener">AGIJobManagerPrime</a></td></tr>
             </tbody>
           </table>
         </div>
 
-        <p style="margin-top:.8rem;"><a class="btn" href="https://etherscan.io/address/0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA" target="_blank" rel="noopener noreferrer">AGIALPHA token</a></p>
+        <div style="margin-top:.8rem" class="panel">
+          <p class="eyebrow">Protocol incentive rail</p>
+          <p><strong>AGIALPHA token:</strong> <span class="mono">0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA</span></p>
+          <div class="cta-row" style="margin-top:.55rem;">
+            <a class="btn" href="https://etherscan.io/address/0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA" target="_blank" rel="noopener">Open on Etherscan</a>
+            <button class="copy-btn" data-copy="0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA">Copy token address</button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="pinned" class="section" aria-labelledby="pinned-title">
+    <section id="pinned" class="section" aria-labelledby="pinnedHeading">
       <div class="container">
         <p class="eyebrow">Pinned</p>
-        <h2 id="pinned-title" style="font-size:clamp(1.7rem,4vw,3.15rem);letter-spacing:-.03em;">Public build record</h2>
-        <div class="pinned-grid" id="pinnedGrid" aria-live="polite"></div>
+        <h2 id="pinnedHeading" style="font-size:clamp(1.8rem,4vw,3.3rem);letter-spacing:-.03em;">Public build record</h2>
+        <div class="pinned-grid" id="pinnedGrid" style="margin-top:1rem;"></div>
       </div>
     </section>
 
-    <section id="ens" class="section" aria-labelledby="ens-title">
-      <div class="container panel ens-shell">
-        <p class="eyebrow">ENS identity arc on Ethereum</p>
-        <h2 id="ens-title" style="font-size:clamp(1.7rem,4vw,3.15rem);letter-spacing:-.03em;max-width:20ch;">AI → AGI → ASI as sovereign public naming infrastructure</h2>
-        <p class="hero-body" style="margin-top:.8rem;">I secured the keys to the AI → AGI → ASI identity arc on Ethereum. Identity becomes durable memory, routing, role-legibility, and controlled scale.</p>
-        <div class="ens-topo" role="list">
-          <article class="ens-node" role="listitem"><code>agi.eth</code><p>Primary root namespace for machine-labor identity routing.</p><button class="copy-btn" data-copy="agi.eth">Copy</button></article>
-          <article class="ens-node" role="listitem"><code>asi.eth</code><p>Upper arc namespace for advanced sovereignty and governance layers.</p><button class="copy-btn" data-copy="asi.eth">Copy</button></article>
-          <article class="ens-node" role="listitem"><code>name.agent.agi.eth</code><p>Agent forms for execution-level workers.</p><button class="copy-btn" data-copy="name.agent.agi.eth">Copy</button></article>
-          <article class="ens-node" role="listitem"><code>name.alpha.agent.agi.eth</code><p>Alpha agent forms for Meta-Agentic cognition tiers.</p><button class="copy-btn" data-copy="name.alpha.agent.agi.eth">Copy</button></article>
-          <article class="ens-node" role="listitem"><code>name.club.agi.eth</code><p>Validator club forms for accountable governance groups.</p><button class="copy-btn" data-copy="name.club.agi.eth">Copy</button></article>
-          <article class="ens-node" role="listitem"><code>name.alpha.club.agi.eth</code><p>Alpha validator forms for high-trust constitutional control.</p><button class="copy-btn" data-copy="name.alpha.club.agi.eth">Copy</button></article>
-        </div>
-        <div class="cta-row" style="margin-top:.9rem;">
-          <a class="btn primary" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noopener noreferrer">AGI King 👑 — AI/AGI/ASI ENS Sovereign Portfolio</a>
-          <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf" target="_blank" rel="noopener noreferrer">ENS Routing as a Market Mechanism</a>
-          <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf" target="_blank" rel="noopener noreferrer">AGI.eth — Root-Name Governance</a>
-          <a class="btn" href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf" target="_blank" rel="noopener noreferrer">MONTREAL.AI × ERC‑8004</a>
+    <section id="ens" class="section" aria-labelledby="ensHeading">
+      <div class="container panel">
+        <div class="ens-grid">
+          <article>
+            <p class="eyebrow">ENS identity arc on Ethereum</p>
+            <h2 id="ensHeading" style="font-size:clamp(1.8rem,4vw,3.3rem);letter-spacing:-.03em;">AI → AGI → ASI as sovereign public naming infrastructure</h2>
+            <p style="margin-top:.75rem;color:var(--text-soft);">I secured the keys to the AI → AGI → ASI identity arc on Ethereum. Identity becomes durable memory, routing, role-legibility, and controlled scale.</p>
+            <div class="ens-topology" style="margin-top:1rem;">
+              <div class="ens-node"><code>agi.eth</code><span>Root namespace for sovereign agent identity.</span><button class="copy-btn" data-copy="agi.eth" style="margin-top:.45rem;">Copy</button></div>
+              <div class="ens-node"><code>asi.eth</code><span>Forward horizon root for recursive intelligence governance.</span><button class="copy-btn" data-copy="asi.eth" style="margin-top:.45rem;">Copy</button></div>
+              <div class="ens-node"><code>name.agent.agi.eth</code><span>Agent role naming form.</span><button class="copy-btn" data-copy="name.agent.agi.eth" style="margin-top:.45rem;">Copy</button></div>
+              <div class="ens-node"><code>name.alpha.agent.agi.eth</code><span>Alpha agent specialization path.</span><button class="copy-btn" data-copy="name.alpha.agent.agi.eth" style="margin-top:.45rem;">Copy</button></div>
+              <div class="ens-node"><code>name.club.agi.eth</code><span>Validator and verification constituency naming.</span><button class="copy-btn" data-copy="name.club.agi.eth" style="margin-top:.45rem;">Copy</button></div>
+              <div class="ens-node"><code>name.alpha.club.agi.eth</code><span>Advanced validator lineage.</span><button class="copy-btn" data-copy="name.alpha.club.agi.eth" style="margin-top:.45rem;">Copy</button></div>
+            </div>
+          </article>
+          <aside>
+            <div class="stack-card" style="height:100%;display:grid;gap:.65rem;align-content:start;">
+              <h3>Flagship assets</h3>
+              <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noopener">AGI King 👑 — AI/AGI/ASI ENS Sovereign Portfolio</a>
+              <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf" target="_blank" rel="noopener">ENS Routing as a Market Mechanism</a>
+              <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf" target="_blank" rel="noopener">AGI.eth — Root‑Name Governance</a>
+              <a class="btn" href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf" target="_blank" rel="noopener">MONTREAL.AI × ERC‑8004</a>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
 
-    <section id="developers" class="section" aria-labelledby="dev-title">
-      <div class="container panel dev-grid">
-        <article>
-          <p class="eyebrow">Developer quick connect</p>
-          <h2 id="dev-title" style="font-size:clamp(1.7rem,4vw,3.1rem);letter-spacing:-.03em;">Connect the agent surface</h2>
-          <p class="hero-body" style="margin-top:.8rem;">Use this endpoint to browse jobs, inspect protocol state, read on-chain metadata, and execute on-chain actions.</p>
-          <pre id="mcpCode"><code>{
+    <section id="developers" class="section" aria-labelledby="devHeading">
+      <div class="container panel">
+        <p class="eyebrow">Developer quick connect</p>
+        <h2 id="devHeading" style="font-size:clamp(1.8rem,4vw,3.3rem);letter-spacing:-.03em;">Connect the agent surface</h2>
+        <div class="dev-grid" style="margin-top:.9rem;">
+          <article>
+            <pre id="mcpCode">{
   "mcpServers": {
     "agi-alpha": {
       "url": "https://agialpha.com/api/mcp"
     }
   }
-}</code></pre>
-          <div class="cta-row"><button class="btn" data-copy-target="#mcpCode">Copy config JSON</button></div>
-        </article>
-        <aside>
-          <div class="mini-grid">
-            <div class="mini"><strong>Endpoint</strong><br><span class="mono">https://agialpha.com/api/mcp</span></div>
-            <div class="mini"><strong>Transport</strong><br>Streamable HTTP</div>
-            <div class="mini"><strong>Auth</strong><br>None required</div>
-            <div class="mini"><strong>Tools</strong><br>17</div>
-          </div>
-          <div class="cta-row" style="margin-top:.8rem;">
-            <a class="btn" href="https://agialpha.com/" target="_blank" rel="noopener noreferrer">AGI Alpha</a>
-            <a class="btn" href="https://agialpha.com/developers" target="_blank" rel="noopener noreferrer">Developers</a>
-            <a class="btn" href="https://agialpha.com/jobs" target="_blank" rel="noopener noreferrer">Jobs</a>
-            <a class="btn" href="https://agialpha.com/biography" target="_blank" rel="noopener noreferrer">Biography</a>
-          </div>
-        </aside>
+}</pre>
+            <div class="cta-row" style="margin-top:.6rem;"><button class="copy-btn" data-copy-target="#mcpCode">Copy JSON</button></div>
+          </article>
+          <aside style="display:grid;gap:.6rem;align-content:start;">
+            <div class="dev-mini">
+              <div class="mini"><strong>Endpoint</strong><br><span class="mono">https://agialpha.com/api/mcp</span></div>
+              <div class="mini"><strong>Transport</strong><br>Streamable HTTP</div>
+              <div class="mini"><strong>Auth</strong><br>None required</div>
+              <div class="mini"><strong>Tools</strong><br>17</div>
+            </div>
+            <p style="color:var(--muted);">Browse jobs, inspect protocol state, read on-chain metadata, and execute on-chain actions through a calm institutional developer surface.</p>
+            <div class="cta-row">
+              <a class="btn" href="https://agialpha.com/" target="_blank" rel="noopener">AGI Alpha</a>
+              <a class="btn" href="https://agialpha.com/developers" target="_blank" rel="noopener">Developers</a>
+              <a class="btn" href="https://agialpha.com/jobs" target="_blank" rel="noopener">Jobs</a>
+              <a class="btn" href="https://agialpha.com/biography" target="_blank" rel="noopener">Biography</a>
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
 
-    <section id="stack" class="section" aria-labelledby="stack-title">
+    <section id="stack" class="section" aria-labelledby="stackHeading">
       <div class="container">
         <p class="eyebrow">Thesis lattice</p>
-        <h2 id="stack-title" style="font-size:clamp(1.7rem,4vw,3.1rem);letter-spacing:-.03em;">The stack for compounding machine civilization</h2>
+        <h2 id="stackHeading" style="font-size:clamp(1.8rem,4vw,3.3rem);letter-spacing:-.03em;">The stack for compounding machine civilization</h2>
         <div class="stack-grid" style="margin-top:1rem;">
-          <article class="stack-card"><h3>Identity</h3><p>ENS roots and role legibility anchor accountable agents and institutions.</p></article>
-          <article class="stack-card"><h3>Market</h3><p>AGI Jobs forms the market layer where mission demand meets sovereign labor supply.</p></article>
-          <article class="stack-card"><h3>Proof</h3><p>Public GitHub records and on-chain traces bind execution to verifiable outcomes.</p></article>
-          <article class="stack-card"><h3>Settlement</h3><p>Ethereum mainnet settlement creates enforceable machine-labor commitments.</p></article>
-          <article class="stack-card"><h3>Governance</h3><p>Meta-Agentic doctrine: out-learn · out-think · out-design · out-strategise · out-execute with governance before recursive scale.</p></article>
-          <article class="stack-card"><h3>Memory</h3><p>ENS job pages and linked archives turn work into durable institutional memory. $AGIALPHA aligns incentives.</p></article>
+          <article class="stack-card"><h3>Identity</h3><p>ENS-rooted actors make responsibility legible across long-horizon machine systems.</p></article>
+          <article class="stack-card"><h3>Market</h3><p>AGI Jobs forms the labor market where sovereign machine work is specified and priced.</p></article>
+          <article class="stack-card"><h3>Proof</h3><p>Public code, auditable actions, and measurable outputs create institutional trust without opacity.</p></article>
+          <article class="stack-card"><h3>Settlement</h3><p>On-chain escrow and contractual flows align work, verification, and economic finality.</p></article>
+          <article class="stack-card"><h3>Governance</h3><p>Meta-Agentic discipline: Out‑learn · Out‑think · Out‑design · Out‑strategise · Out‑execute under constitutional constraints.</p></article>
+          <article class="stack-card"><h3>Memory</h3><p>Identity, proof, and settlement become durable public memory for civilization-grade coordination.</p></article>
         </div>
       </div>
     </section>
 
-    <section id="library" class="section" aria-labelledby="library-title">
-      <div class="container">
-        <p class="eyebrow">Resource atlas</p>
-        <h2 id="library-title" style="font-size:clamp(1.7rem,4vw,3.1rem);letter-spacing:-.03em;">Curated institutional references</h2>
-        <div class="controls" style="margin-top:1rem;">
-          <input id="searchInput" type="search" placeholder="Search essays, decks, AGI Jobs, repositories, ENS, governance..." />
-          <div id="filterChips" class="chips" role="tablist" aria-label="Library filters"></div>
-        </div>
-        <h3 style="margin-top:1rem;font-size:1rem;color:var(--accent-3);">Featured</h3>
-        <div class="atlas" id="featuredAtlas"></div>
-        <h3 style="margin-top:1rem;font-size:1rem;color:var(--accent-3);">All resources</h3>
-        <div class="atlas" id="libraryAtlas" aria-live="polite"></div>
-      </div>
-    </section>
-
-    <section id="portfolio" class="section" aria-labelledby="portfolio-title">
+    <section id="library" class="section" aria-labelledby="libraryHeading">
       <div class="container panel">
-        <p class="eyebrow">Institutional portfolio umbrella</p>
-        <h2 id="portfolio-title" style="font-size:clamp(1.7rem,4vw,3.1rem);letter-spacing:-.03em;">The protocol surface extends the institution—it does not replace it</h2>
-        <div class="portfolio-grid" style="margin-top:1rem;" id="portfolioGrid"></div>
+        <p class="eyebrow">Resource atlas</p>
+        <h2 id="libraryHeading" style="font-size:clamp(1.8rem,4vw,3.3rem);letter-spacing:-.03em;">Curated doctrine, decks, protocol surfaces, and institutional references</h2>
+        <div class="library-controls">
+          <input id="resourceSearch" class="search" type="search" placeholder="Search essays, decks, repositories, ENS and governance resources" aria-label="Search resources" />
+          <div class="filters" id="resourceFilters"></div>
+        </div>
+        <div>
+          <h3 style="margin-top:.9rem;">Featured</h3>
+          <div class="featured-grid" id="featuredGrid"></div>
+        </div>
+        <div>
+          <h3 style="margin-top:.9rem;">Atlas</h3>
+          <div class="library-grid" id="libraryGrid"></div>
+          <div id="libraryEmpty" class="empty" hidden>No resources matched your filters. Try a broader query.</div>
+        </div>
       </div>
     </section>
 
-    <section id="horizon" class="section" aria-labelledby="horizon-title">
+    <section id="portfolio" class="section" aria-labelledby="portfolioHeading">
+      <div class="container">
+        <p class="eyebrow">Institutional portfolio umbrella</p>
+        <h2 id="portfolioHeading" style="font-size:clamp(1.8rem,4vw,3.3rem);letter-spacing:-.03em;">The protocol surface extends the institution—it does not replace it</h2>
+        <div class="portfolio-grid" style="margin-top:1rem;" id="portfolioGrid">
+          <a class="portfolio-card" data-route="academy" href="./academy/"><h3>Academy</h3><p>Education and applied intelligence programs.</p></a>
+          <a class="portfolio-card" data-route="art" href="./art/"><h3>Art</h3><p>Cultural intelligence and creative machine expression.</p></a>
+          <a class="portfolio-card" data-route="consulting" href="./consulting/"><h3>Consulting</h3><p>Strategic advisory for AI transition and deployment.</p></a>
+          <a class="portfolio-card" data-route="events" href="./events/"><h3>Events</h3><p>Summits, dialogues, and institutional convening.</p></a>
+          <a class="portfolio-card" data-route="space" href="./space/"><h3>Space</h3><p>Long-horizon scientific and civilizational initiatives.</p></a>
+          <a class="portfolio-card" data-route="legal" href="./legal/"><h3>Legal</h3><p>Governance, policy, and accountability interfaces.</p></a>
+        </div>
+      </div>
+    </section>
+
+    <section id="horizon" class="section" aria-labelledby="horizonHeading">
       <div class="container panel">
         <p class="eyebrow">Closing horizon</p>
-        <h2 id="horizon-title" style="font-size:clamp(1.7rem,4vw,3.1rem);letter-spacing:-.03em;">Institution first. Governance before recursion. Identity before scale.</h2>
+        <h2 id="horizonHeading" style="font-size:clamp(1.8rem,4vw,3.3rem);letter-spacing:-.03em;">Institution first. Governance before recursion. Identity before scale.</h2>
         <div class="h-grid" style="margin-top:1rem;">
-          <article class="h-card"><h3>Identity</h3><p>Root names and accountable actors create continuity across machine generations.</p></article>
-          <article class="h-card"><h3>Industry</h3><p>Machine labor compounds into organized productive systems with strategic direction.</p></article>
-          <article class="h-card"><h3>Infrastructure</h3><p>Proof, settlement, memory, and governance become civilization-grade substrate.</p></article>
+          <article class="h-card"><h3>Identity</h3><p>Root names and accountable actors create continuity across autonomous machine epochs.</p></article>
+          <article class="h-card"><h3>Industry</h3><p>Machine labor compounds into organized productive systems that can coordinate at planetary scope.</p></article>
+          <article class="h-card"><h3>Infrastructure</h3><p>Proof, settlement, memory, and governance become civilization-grade substrate with long public durability.</p></article>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="container foot">
-      <strong>MONTRÉAL.AI</strong>
-      <nav aria-label="Footer links">
-        <a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://x.com/Montreal_AI" target="_blank" rel="noopener noreferrer">X / Montreal_AI</a>
-        <a href="https://x.com/agialphaagent" target="_blank" rel="noopener noreferrer">X / agialphaagent</a>
-        <a href="https://t.me/agialpha" target="_blank" rel="noopener noreferrer">Telegram</a>
-        <a href="https://www.youtube.com/montrealai" target="_blank" rel="noopener noreferrer">YouTube</a>
-        <a href="https://discord.gg/montrealai" target="_blank" rel="noopener noreferrer">Discord</a>
+    <div class="container footer-grid">
+      <strong style="color:var(--text);">MONTRÉAL.AI</strong>
+      <nav class="footer-links" aria-label="Footer links">
+        <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://x.com/Montreal_AI" target="_blank" rel="noopener">X / Montreal_AI</a>
+        <a href="https://x.com/agialphaagent" target="_blank" rel="noopener">X / agialphaagent</a>
+        <a href="https://t.me/agialpha" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.youtube.com/montrealai" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://discord.gg/montrealai" target="_blank" rel="noopener">Discord</a>
         <a href="mailto:info@montreal.ai">info@montreal.ai</a>
       </nav>
     </div>
   </footer>
 
   <script>
-    const nf = new Intl.NumberFormat('en-US');
-    const df = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const PINNED_ORDER = ['AGI-Agent-v0','AGI-Alpha-Agent-v0','AGIJobsv0','AGI-Alpha-Node-v0','AGIJobManager','AGIJobManagerPrime'];
-    const FALLBACK_DESCRIPTIONS = {
-      'AGI-Agent-v0': 'A minimal yet unstoppable blueprint for multi-agent AI—anchored by the rare, far-reaching Multi-Agent AI DAO prior art—empowering a new wave of superintelligent on-chain agents.',
-      'AGI-Alpha-Agent-v0': 'META‑AGENTIC α‑AGI — Identify → Out‑Learn → Out‑Think → Out‑Design → Out‑Strategise → Out‑Execute.',
-      'AGIJobsv0': 'The Operating System for AGI Work.',
-      'AGI-Alpha-Node-v0': 'Synthetic AI labor infrastructure and deployment surface for α‑AGI execution.',
-      'AGIJobManager': 'Escrowed AGI work agreements with ENS-backed job pages.',
-      'AGIJobManagerPrime': 'Next-generation sovereign AI labor protocol featuring autonomous agent discovery, game-theoretic job markets, and institutional-grade on-chain settlement.'
+    const TTL = 60 * 60 * 1000;
+    const pinnedOrder = ["AGI-Agent-v0", "AGI-Alpha-Agent-v0", "AGIJobsv0", "AGI-Alpha-Node-v0", "AGIJobManager", "AGIJobManagerPrime"];
+    const repoFallback = {
+      "AGI-Agent-v0": "A minimal yet unstoppable blueprint for multi-agent AI—anchored by the rare, far-reaching Multi-Agent AI DAO prior art—empowering a new wave of superintelligent on-chain agents.",
+      "AGI-Alpha-Agent-v0": "META‑AGENTIC α‑AGI — Identify → Out‑Learn → Out‑Think → Out‑Design → Out‑Strategise → Out‑Execute.",
+      "AGIJobsv0": "The Operating System for AGI Work.",
+      "AGI-Alpha-Node-v0": "Synthetic AI labor infrastructure and deployment surface for α‑AGI execution.",
+      "AGIJobManager": "Escrowed AGI work agreements with ENS-backed job pages.",
+      "AGIJobManagerPrime": "Next-generation sovereign AI labor protocol featuring autonomous agent discovery, game-theoretic job markets, and institutional-grade on-chain settlement."
     };
 
     const FEATURED_ITEMS = [
-      {category:'Essays', title:'AI Sovereignty: Empowering Nations with an AGI-Driven Labor Engine', url:'https://www.linkedin.com/pulse/ai-sovereignty-empowering-nations-agi-driven-labor-engine-boucher-afhme/', note:'Sovereign labor doctrine.'},
-      {category:'Decks', title:'AGI King 👑 — AI/AGI/ASI ENS Sovereign Portfolio', url:'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf', note:'Flagship ENS asset map.'},
-      {category:'AGI Jobs', title:'AGIJobManagerPrime & AGIJobDiscoveryPrime', url:'https://www.linkedin.com/pulse/agijobmanagerprime-agijobdiscoveryprime-vincent-boucher-itoue/', note:'Prime labor constitution surface.'},
-      {category:'Governance', title:'To Govern Their Own Kind', url:'https://www.linkedin.com/pulse/govern-own-kind-vincent-boucher-qi9we/', note:'Institutional governance arc.'},
-      {category:'ENS', title:'ENS Routing as a Market Mechanism', url:'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf', note:'Routing economics via names.'},
-      {category:'Repositories', title:'MontrealAI GitHub Organization', url:'https://github.com/MontrealAI', note:'Public build record.'}
+      { title: "AI Sovereignty: Empowering Nations with an AGI-Driven Labor Engine", url: "https://www.linkedin.com/pulse/ai-sovereignty-empowering-nations-agi-driven-labor-engine-boucher-afhme/", category: "Essays" },
+      { title: "AGI King 👑 — AI/AGI/ASI ENS Sovereign Portfolio", url: "https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf", category: "Decks" },
+      { title: "AGIJobManager Prime · Mainnet Console", url: "./agijobmanagerprimev2.html", category: "AGI Jobs" },
+      { title: "MONTREAL.AI × ERC‑8004", url: "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf", category: "Governance" },
+      { title: "Public Memory for Machine Labor", url: "https://www.linkedin.com/pulse/public-memory-machine-labor-ens-job-pages-knowledge-vincent-boucher-seifc/", category: "ENS" },
+      { title: "AGI-Agent-v0", url: "https://github.com/MontrealAI/AGI-Agent-v0", category: "Repositories" }
     ];
+
     const ESSAYS = [
-      ['The Agent‑Native Sales Doctrine','https://www.linkedin.com/pulse/agentnative-sales-doctrine-vincent-boucher-f4sje/'],
-      ['The Agent‑Native Economy: Survival, Sovereignty, and Sales in a Machine-to-Machine World','https://www.linkedin.com/pulse/agentnative-economy-survival-sovereignty-sales-world-vincent-boucher-vgmre/'],
-      ['From Turing to the Agentic Economy','https://www.linkedin.com/pulse/from-turing-agentic-economy-how-2017-multiagent-ai-dao-boucher-pquze'],
-      ['Public Memory for Machine Labor','https://www.linkedin.com/pulse/public-memory-machine-labor-ens-job-pages-knowledge-vincent-boucher-seifc/'],
-      ['The Market Before the Miracle','https://www.linkedin.com/pulse/market-before-miracle-vincent-boucher-9edxe/']
+      { title: "The Agent‑Native Economy", url: "https://www.linkedin.com/pulse/agentnative-economy-survival-sovereignty-sales-world-vincent-boucher-vgmre/", category: "Essays" },
+      { title: "From Turing to the Agentic Economy", url: "https://www.linkedin.com/pulse/from-turing-agentic-economy-how-2017-multiagent-ai-dao-boucher-pquze", category: "Essays" },
+      { title: "The Sovereign Machine", url: "https://www.linkedin.com/pulse/sovereign-machine-how-autonomous-ai-protocol-owner-rewrites-boucher-fl48e/", category: "Essays" },
+      { title: "The Market Before the Miracle", url: "https://www.linkedin.com/pulse/market-before-miracle-vincent-boucher-9edxe/", category: "Essays" }
     ];
+
     const DECKS = [
-      ['MONTREAL.AI × ERC‑8004','https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf'],
-      ['RootNameGovernance_AGIeth_v0','https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf'],
-      ['AGI_Alpha_RSI_Sovereign_v0','https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_v0.pdf']
+      { title: "ENS Routing as a Market Mechanism", url: "https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf", category: "Decks" },
+      { title: "RootNameGovernance_AGIeth_v0", url: "https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf", category: "Decks" },
+      { title: "META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1", url: "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1.pdf", category: "Decks" }
     ];
+
     const AGI_JOBS_ITEMS = [
-      ['AGIJobManager','https://github.com/MontrealAI/AGIJobManager'],
-      ['AGIJobManager-EmployerBurn','https://github.com/MontrealAI/AGIJobManager-EmployerBurn'],
-      ['AGIJobManagerPrime','https://github.com/MontrealAI/AGIJobManagerPrime']
+      { title: "AGIJobManager · Genesis", url: "./agijobmanagerv0.html", category: "AGI Jobs" },
+      { title: "AGIJobManager · Employer Burn", url: "./agijobmanagerburnv1.html", category: "AGI Jobs" },
+      { title: "AGIJobManager Prime", url: "./agijobmanagerprimev2.html", category: "AGI Jobs" }
     ];
-    const REPO_ITEMS = PINNED_ORDER.map(n => [n, `https://github.com/MontrealAI/${n}`]);
+
+    const REPO_ITEMS = [
+      { title: "AGI-Agent-v0", url: "https://github.com/MontrealAI/AGI-Agent-v0", category: "Repositories" },
+      { title: "AGI-Alpha-Agent-v0", url: "https://github.com/MontrealAI/AGI-Alpha-Agent-v0", category: "Repositories" },
+      { title: "AGIJobsv0", url: "https://github.com/MontrealAI/AGIJobsv0", category: "Repositories" },
+      { title: "AGI-Alpha-Node-v0", url: "https://github.com/MontrealAI/AGI-Alpha-Node-v0", category: "Repositories" },
+      { title: "AGIJobManagerPrime", url: "https://github.com/MontrealAI/AGIJobManagerPrime", category: "Repositories" }
+    ];
+
+    const ENS_ITEMS = [
+      { title: "AGI King 👑 Portfolio", url: "https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf", category: "ENS" },
+      { title: "AGI.eth — Root‑Name Governance", url: "https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf", category: "ENS" }
+    ];
+
+    const GOVERNANCE_ITEMS = [
+      { title: "To Govern Their Own Kind", url: "https://www.linkedin.com/pulse/govern-own-kind-vincent-boucher-qi9we/", category: "Governance" },
+      { title: "Preemptive Governance for AGI-Scale Systems", url: "https://chatgpt.com/s/dr_69759c1fb6988191aa1def6ac1b488c3", category: "Governance" }
+    ];
 
     function resolveBasePath() {
-      const p = window.location.pathname;
-      return p.includes('/MontrealAI.github.io/') ? '/MontrealAI.github.io/' : '/';
-    }
-    function resolveInternalHref(path) {
-      const clean = path.replace(/^\/+/, '');
-      return `${resolveBasePath()}${clean}`;
+      const path = location.pathname;
+      if (path.includes('/MontrealAI.github.io/')) return '/MontrealAI.github.io/';
+      return '/';
     }
 
-    async function fetchWithCache(key, url, ttlMs, init = {}) {
-      const now = Date.now();
-      const staleMaxAgeMs = ttlMs * 24;
-      try {
-        const cached = JSON.parse(localStorage.getItem(key) || 'null');
-        if (cached && now - cached.ts < ttlMs) return { data: cached.data, source: 'cache-fresh' };
-      } catch {}
-
+    async function fetchWithTimeout(url, init = {}, timeoutMs = 8000) {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 9000);
+      const timeout = setTimeout(() => controller.abort(), timeoutMs);
       try {
-        const res = await fetch(url, { ...init, signal: controller.signal, headers: { 'Accept': 'application/json', ...(init.headers || {}) } });
+        const res = await fetch(url, { ...init, signal: controller.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        try { localStorage.setItem(key, JSON.stringify({ ts: now, data })); } catch {}
-        return { data, source: 'live' };
-      } catch {
-        try {
-          const stale = JSON.parse(localStorage.getItem(key) || 'null');
-          if (stale && stale.data && typeof stale.ts === 'number' && now - stale.ts < staleMaxAgeMs) {
-            return { data: stale.data, source: 'cache-stale' };
-          }
-        } catch {}
-        return { data: null, source: 'unavailable' };
+        return await res.json();
       } finally {
         clearTimeout(timeout);
       }
     }
 
-    const fetchGithubOrg = () => fetchWithCache('ma:org', 'https://api.github.com/users/MontrealAI', 3600000);
-    const fetchGithubRepos = () => fetchWithCache('ma:repos', 'https://api.github.com/users/MontrealAI/repos?per_page=100&sort=updated', 3600000);
-    const fetchContributionData = () => fetchWithCache('ma:contrib', 'https://github-contributions-api.jogruber.de/v4/MontrealAI?y=last', 3600000);
-
-    function getContributionTotal(payload) {
-      if (!payload) return null;
-      if (typeof payload.total === 'number') return payload.total;
-      if (payload.total && typeof payload.total.lastYear === 'number') return payload.total.lastYear;
-      if (payload.total && typeof payload.total === 'object') {
-        const yearEntries = Object.entries(payload.total)
-          .filter(([k, v]) => /^20\d{2}$/.test(k) && Number.isFinite(Number(v)))
-          .sort(([a], [b]) => Number(a) - Number(b));
-        if (yearEntries.length) return Number(yearEntries[yearEntries.length - 1][1]);
-
-        const numericTotals = Object.values(payload.total)
-          .map((v) => Number(v))
-          .filter(Number.isFinite);
-        if (numericTotals.length) return numericTotals[numericTotals.length - 1];
+    async function fetchWithCache(key, url, ttlMs = TTL, init = {}) {
+      const now = Date.now();
+      const cached = localStorage.getItem(key);
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if ((now - parsed.ts) < ttlMs) return { data: parsed.data, source: 'cache' };
+        } catch (_) {}
       }
-      return null;
+      try {
+        const data = await fetchWithTimeout(url, init, 9000);
+        try {
+          localStorage.setItem(key, JSON.stringify({ ts: now, data }));
+        } catch (_) {
+          /* best-effort cache write; live data should still succeed */
+        }
+        return { data, source: 'live' };
+      } catch (err) {
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            return { data: parsed.data, source: 'stale-cache' };
+          } catch (_) {}
+        }
+        throw err;
+      }
     }
 
-    function getContributionDays(payload) {
-      if (!payload) return [];
-      if (Array.isArray(payload.contributions)) return payload.contributions;
-      if (payload.contributions && Array.isArray(payload.contributions.lastYear)) return payload.contributions.lastYear;
-      if (payload.contributions && typeof payload.contributions === 'object') {
-        const yearEntries = Object.entries(payload.contributions)
-          .filter(([k, v]) => /^20\d{2}$/.test(k) && Array.isArray(v))
-          .sort(([a], [b]) => Number(a) - Number(b));
-        if (yearEntries.length) return yearEntries[yearEntries.length - 1][1];
+    const nf = new Intl.NumberFormat();
+    const df = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' });
 
-        const firstArray = Object.values(payload.contributions).find(Array.isArray);
-        if (firstArray) return firstArray;
-      }
-      return [];
-    }
-
-    function renderContributionHeatmap(days) {
-      const host = document.getElementById('contribHeatmap');
-      if (!host) return;
-      host.innerHTML = '';
+    function renderContributionHeatmap(days = []) {
+      const container = document.getElementById('contribHeatmap');
+      container.innerHTML = '';
       if (!Array.isArray(days) || !days.length) {
         for (let i = 0; i < 53; i++) {
-          const b = document.createElement('i');
-          b.style.height = `${6 + (i % 4)}px`;
-          host.appendChild(b);
+          const bar = document.createElement('i');
+          bar.style.height = '7px';
+          container.appendChild(bar);
         }
         return;
       }
-      const nums = days.map(d => Number(d.count ?? d.contributionCount ?? d.total ?? 0)).filter(Number.isFinite);
-      const group = [];
-      for (let i = 0; i < nums.length; i += 7) group.push(nums.slice(i, i + 7).reduce((a, b) => a + b, 0));
-      const max = Math.max(1, ...group);
-      group.slice(-53).forEach(v => {
-        const b = document.createElement('i');
-        const r = v / max;
-        b.style.height = `${6 + Math.round(r * 22)}px`;
-        b.style.background = `rgba(154,240,200,${0.16 + r * 0.78})`;
-        host.appendChild(b);
+
+      const weeks = new Array(53).fill(0);
+      const chunk = Math.ceil(days.length / 53);
+      for (let i = 0; i < 53; i++) {
+        const slice = days.slice(i * chunk, (i + 1) * chunk);
+        weeks[i] = slice.reduce((sum, d) => sum + (d.count || d.contributionCount || 0), 0);
+      }
+      const max = Math.max(...weeks, 1);
+      weeks.forEach(value => {
+        const bar = document.createElement('i');
+        const h = 7 + Math.round((value / max) * 22);
+        const alpha = .15 + (value / max) * .85;
+        bar.style.height = `${h}px`;
+        bar.style.background = `rgba(169,112,255,${alpha.toFixed(3)})`;
+        container.appendChild(bar);
       });
     }
 
-    function renderPinnedRepos(repos) {
-      const grid = document.getElementById('pinnedGrid');
-      if (!grid) return;
-      const byName = Object.fromEntries((repos || []).map(r => [r.name, r]));
-      grid.innerHTML = '';
+    async function fetchContributionData() {
+      const countEl = document.getElementById('contribCount');
+      const stateEl = document.getElementById('contribState');
+      const heroEl = document.getElementById('heroContrib');
+      try {
+        const { data, source } = await fetchWithCache('ma_contribs', 'https://github-contributions-api.jogruber.de/v4/MontrealAI?y=last', TTL);
+        const total = data?.total?.lastYear || data?.contributions?.lastYear || data?.years?.[0]?.total || 0;
+        const days = data?.contributions || data?.days || data?.years?.[0]?.contributions || [];
+        const rendered = `${nf.format(total)} contributions in the last year`;
+        countEl.textContent = rendered;
+        heroEl.textContent = rendered;
+        stateEl.textContent = source === 'live' ? 'Live source' : (source === 'cache' ? 'Cached (≤1h)' : 'Cached fallback');
+        renderContributionHeatmap(days);
+      } catch (_) {
+        countEl.textContent = 'Contributions unavailable';
+        stateEl.innerHTML = 'Unable to load now · <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">Open GitHub</a>';
+        heroEl.textContent = 'Live contribution feed unavailable';
+        renderContributionHeatmap([]);
+      }
+    }
 
-      PINNED_ORDER.forEach((name, idx) => {
-        const r = byName[name] || {};
+    async function fetchGithubOrg() {
+      try {
+        const { data } = await fetchWithCache('ma_org', 'https://api.github.com/users/MontrealAI', TTL);
+        document.getElementById('repoCount').textContent = nf.format(data.public_repos || 0);
+        document.getElementById('followerCount').textContent = nf.format(data.followers || 0);
+      } catch (_) {
+        document.getElementById('repoCount').textContent = 'Unavailable';
+        document.getElementById('followerCount').textContent = 'Unavailable';
+      }
+    }
+
+    function renderPinnedRepos(repos = []) {
+      const grid = document.getElementById('pinnedGrid');
+      const byName = new Map(repos.map(r => [r.name, r]));
+      grid.innerHTML = '';
+      pinnedOrder.forEach((name, idx) => {
+        const repo = byName.get(name);
         const card = document.createElement('article');
-        card.className = `repo ${idx === 0 ? 'lead' : ''}`;
+        card.className = `repo${idx === 0 ? ' lead' : ''}`;
+
+        const stars = repo?.stargazers_count ?? 0;
+        const forks = repo?.forks_count ?? 0;
+        const language = repo?.language || 'Mixed';
+        const updated = repo?.updated_at ? df.format(new Date(repo.updated_at)) : 'Unknown';
+        const desc = repo?.description || repoFallback[name];
+        const url = repo?.html_url || `https://github.com/MontrealAI/${name}`;
+
         card.innerHTML = `
           <h3>${name}</h3>
-          <p>${r.description || FALLBACK_DESCRIPTIONS[name]}</p>
-          <div class="meta">
-            <span>★ ${nf.format(r.stargazers_count || 0)}</span>
-            <span>⑂ ${nf.format(r.forks_count || 0)}</span>
-            <span>${r.language || 'Multi-language'}</span>
-            <span>${r.updated_at ? 'Updated ' + df.format(new Date(r.updated_at)) : 'Metadata pending'}</span>
+          <p>${desc}</p>
+          <div class="repo-meta">
+            <span>★ ${nf.format(stars)}</span>
+            <span>⑂ ${nf.format(forks)}</span>
+            <span>${language}</span>
+            <span>Updated ${updated}</span>
           </div>
-          <div class="cta-row"><a class="btn" href="${r.html_url || `https://github.com/MontrealAI/${name}`}" target="_blank" rel="noopener noreferrer">Open repository</a></div>
+          <div class="cta-row" style="margin-top:.6rem;"><a class="btn ${idx===0?'primary':''}" href="${url}" target="_blank" rel="noopener">Open repository</a></div>
         `;
         grid.appendChild(card);
       });
-
-      const lead = byName['AGI-Agent-v0'];
-      document.getElementById('leadMeta').textContent = lead ? `${nf.format(lead.stargazers_count || 0)} stars · ${nf.format(lead.forks_count || 0)} forks` : 'Fallback metadata active';
     }
 
-    function makeLibraryData() {
-      return [
-        ...FEATURED_ITEMS,
-        ...ESSAYS.map(([title, url]) => ({category: 'Essays', title, url, note: 'Essay'})),
-        ...DECKS.map(([title, url]) => ({category: 'Decks', title, url, note: 'Deck'})),
-        ...AGI_JOBS_ITEMS.map(([title, url]) => ({category: 'AGI Jobs', title, url, note: 'Protocol surface'})),
-        ...REPO_ITEMS.map(([title, url]) => ({category: 'Repositories', title, url, note: 'Repository'})),
-        {category:'ENS', title:'AGI King 👑 — AI/AGI/ASI ENS Sovereign Portfolio', url:'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf', note:'ENS portfolio'},
-        {category:'Governance', title:'AGI Alpha biography', url:'https://agialpha.com/biography', note:'Governance and institutional arc'}
-      ];
-    }
-
-    function renderLibrary() {
-      const items = makeLibraryData();
-      const featuredHost = document.getElementById('featuredAtlas');
-      const libraryHost = document.getElementById('libraryAtlas');
-      const filtersHost = document.getElementById('filterChips');
-      const input = document.getElementById('searchInput');
-      const categories = ['All', 'Essays', 'Decks', 'AGI Jobs', 'Repositories', 'ENS', 'Governance'];
-      let active = 'All';
-      let query = '';
-
-      const card = (item) => `<article class="item"><div class="cat">${item.category}</div><h4><a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.title}</a></h4><p>${item.note || ''}</p></article>`;
-
-      function paint() {
-        featuredHost.innerHTML = FEATURED_ITEMS.map(card).join('');
-        const rows = items.filter(i => (active === 'All' || i.category === active) && (!query || `${i.title} ${i.url}`.toLowerCase().includes(query)));
-        libraryHost.innerHTML = rows.length ? rows.map(card).join('') : '<article class="item"><div class="cat">Empty state</div><h4>No matching resources</h4><p>Refine search terms or select another category.</p></article>';
+    async function fetchGithubRepos() {
+      try {
+        const { data } = await fetchWithCache('ma_repos', 'https://api.github.com/users/MontrealAI/repos?per_page=100&sort=updated', TTL);
+        renderPinnedRepos(Array.isArray(data) ? data : []);
+      } catch (_) {
+        renderPinnedRepos([]);
       }
+    }
 
-      filtersHost.innerHTML = categories.map((c, i) => `<button class="chip-btn" data-cat="${c}" role="tab" aria-selected="${i===0}">${c}</button>`).join('');
-      filtersHost.addEventListener('click', (e) => {
-        const b = e.target.closest('button[data-cat]');
-        if (!b) return;
-        active = b.dataset.cat;
-        [...filtersHost.querySelectorAll('button')].forEach((x) => x.setAttribute('aria-selected', String(x === b)));
-        paint();
+    function renderLibrary(filter = 'All', query = '') {
+      const featured = document.getElementById('featuredGrid');
+      const grid = document.getElementById('libraryGrid');
+      const empty = document.getElementById('libraryEmpty');
+      const all = [...FEATURED_ITEMS, ...ESSAYS, ...DECKS, ...AGI_JOBS_ITEMS, ...REPO_ITEMS, ...ENS_ITEMS, ...GOVERNANCE_ITEMS];
+      featured.innerHTML = FEATURED_ITEMS.slice(0,6).map(item => cardHTML(item)).join('');
+
+      const q = query.trim().toLowerCase();
+      const filtered = all.filter(item => {
+        const categoryPass = filter === 'All' || item.category === filter;
+        const queryPass = !q || `${item.title} ${item.category}`.toLowerCase().includes(q);
+        return categoryPass && queryPass;
       });
-      input.addEventListener('input', () => { query = input.value.trim().toLowerCase(); paint(); });
-      paint();
+
+      grid.innerHTML = filtered.map(item => cardHTML(item)).join('');
+      empty.hidden = filtered.length > 0;
+    }
+
+    function cardHTML(item) {
+      const external = /^https?:/i.test(item.url);
+      return `<article class="res-card"><span class="cat">${item.category}</span><h4>${item.title}</h4><a class="btn" href="${item.url}" ${external ? 'target="_blank" rel="noopener"' : ''}>Open</a></article>`;
+    }
+
+    function wireSearchAndFilters() {
+      const filters = ['All','Essays','Decks','AGI Jobs','Repositories','ENS','Governance'];
+      const wrap = document.getElementById('resourceFilters');
+      let current = 'All';
+
+      wrap.innerHTML = filters.map((f, idx) => `<button class="filter-btn ${idx===0?'active':''}" data-filter="${f}">${f}</button>`).join('');
+      renderLibrary();
+
+      wrap.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-filter]');
+        if (!btn) return;
+        current = btn.dataset.filter;
+        wrap.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+        renderLibrary(current, document.getElementById('resourceSearch').value);
+      });
+
+      document.getElementById('resourceSearch').addEventListener('input', (e) => {
+        renderLibrary(current, e.target.value || '');
+      });
+    }
+
+    async function copyText(text) {
+      if (!text) return false;
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (_) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        return ok;
+      }
     }
 
     function wireCopyButtons() {
       document.addEventListener('click', async (e) => {
-        const trigger = e.target.closest('.copy-btn,[data-copy-target]');
-        if (!trigger) return;
-        let text = trigger.dataset.copy || '';
-        if (!text && trigger.dataset.copyTarget) {
-          const node = document.querySelector(trigger.dataset.copyTarget);
-          text = node ? node.innerText : '';
-        }
-        if (!text) return;
-        try {
-          await navigator.clipboard.writeText(text);
-        } catch {
-          const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
-        }
-        const old = trigger.textContent;
-        trigger.textContent = 'Copied';
-        setTimeout(() => { trigger.textContent = old; }, 1200);
+        const btn = e.target.closest('.copy-btn');
+        if (!btn) return;
+        const prev = btn.textContent;
+        const text = btn.dataset.copy || (btn.dataset.copyTarget ? document.querySelector(btn.dataset.copyTarget)?.textContent : '');
+        const ok = await copyText(text);
+        btn.textContent = ok ? 'Copied' : 'Copy failed';
+        setTimeout(() => { btn.textContent = prev; }, 1200);
       });
     }
 
     function wireNav() {
-      const btn = document.getElementById('menuToggle');
+      const toggle = document.querySelector('.mobile-toggle');
       const panel = document.getElementById('mobilePanel');
-      btn?.addEventListener('click', () => {
+      toggle?.addEventListener('click', () => {
         const open = panel.classList.toggle('open');
-        btn.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-expanded', String(open));
       });
       panel?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
         panel.classList.remove('open');
-        btn?.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-expanded', 'false');
       }));
 
-      const navLinks = [...document.querySelectorAll('.nav a')];
-      const map = new Map(navLinks.map(a => [a.getAttribute('href').slice(1), a]));
-      const io = new IntersectionObserver((entries) => {
+      const sections = Array.from(document.querySelectorAll('main section[id]'));
+      const links = Array.from(document.querySelectorAll('.nav-list a[href^="#"]'));
+      const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (!entry.isIntersecting) return;
-          navLinks.forEach(a => a.removeAttribute('aria-current'));
-          const link = map.get(entry.target.id);
-          if (link) link.setAttribute('aria-current', 'true');
+          const id = `#${entry.target.id}`;
+          links.forEach(link => link.setAttribute('aria-current', link.getAttribute('href') === id ? 'true' : 'false'));
         });
-      }, { threshold: 0.6 });
-      ['hero','founder','agijobs','pinned','ens','developers','library','portfolio'].forEach(id => {
-        const s = document.getElementById(id); if (s) io.observe(s);
-      });
+      }, { threshold: .4 });
+      sections.forEach(s => observer.observe(s));
     }
 
     function animateMetrics() {
-      if (reduceMotion) return;
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.style.transform = 'translateY(0)';
-          entry.target.style.opacity = '1';
-          io.unobserve(entry.target);
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+        return;
+      }
+      const obs = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
         });
-      }, { threshold: 0.18 });
-      document.querySelectorAll('.metric,.repo,.stack-card,.item').forEach(el => {
-        el.style.transform = 'translateY(12px)';
-        el.style.opacity = '.01';
-        el.style.transition = 'transform .55s ease, opacity .55s ease';
-        io.observe(el);
+      }, { threshold: .14 });
+      document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    }
+
+    function updateBasePathLinks() {
+      const base = resolveBasePath();
+      document.querySelectorAll('#portfolioGrid [data-route]').forEach(el => {
+        const route = el.getAttribute('data-route');
+        el.setAttribute('href', `${base}${route}/`);
       });
     }
 
-    function initTheme() {}
-
-    function renderPortfolioLinks() {
-      const links = [
-        ['Academy', 'Education and applied intelligence programs', 'academy/'],
-        ['Art', 'Cultural intelligence and creative machine expression', 'art/'],
-        ['Consulting', 'Strategic advisory for AI transition and deployment', 'consulting/'],
-        ['Events', 'Summits, dialogues, and institutional convening', 'events/'],
-        ['Space', 'Long-horizon scientific and civilizational initiatives', 'space/'],
-        ['Legal', 'Governance, policy, and accountability interfaces', 'legal/']
-      ];
-      const grid = document.getElementById('portfolioGrid');
-      grid.innerHTML = links.map(([title, desc, href]) => `<article class="portfolio-card"><h3>${title}</h3><p>${desc}</p><div class="cta-row"><a class="btn" href="${resolveInternalHref(href)}">Open ${title}</a></div></article>`).join('');
+    function initTheme() {
+      document.documentElement.setAttribute('data-theme', 'dark');
     }
 
-    async function initData() {
-      const [orgRes, repoRes, contribRes] = await Promise.all([fetchGithubOrg(), fetchGithubRepos(), fetchContributionData()]);
-      const org = orgRes.data || {};
-      const repos = Array.isArray(repoRes.data) ? repoRes.data : [];
-
-      document.getElementById('reposValue').textContent = nf.format(org.public_repos || 0);
-      document.getElementById('followersValue').textContent = nf.format(org.followers || 0);
-      document.getElementById('heroRepos').textContent = nf.format(org.public_repos || 0);
-      document.getElementById('heroFollowers').textContent = nf.format(org.followers || 0);
-
-      const total = getContributionTotal(contribRes.data);
-      if (Number.isFinite(total)) {
-        document.getElementById('contribValue').textContent = `${nf.format(total)} contributions in the last year`;
-        document.getElementById('heroContrib').textContent = nf.format(total);
-        const source = contribRes.source === 'live' ? 'Live' : (contribRes.source === 'cache-fresh' ? 'Cached (fresh)' : 'Cached fallback');
-        document.getElementById('contribStatus').textContent = `${source} GitHub sync`;
-      } else {
-        document.getElementById('contribValue').innerHTML = `Contribution feed unavailable · <a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">Open GitHub</a>`;
-        document.getElementById('heroContrib').textContent = 'Unavailable';
-        document.getElementById('contribStatus').textContent = 'Service unavailable';
-      }
-      renderContributionHeatmap(getContributionDays(contribRes.data));
-      renderPinnedRepos(repos);
+    async function init() {
+      initTheme();
+      updateBasePathLinks();
+      wireNav();
+      wireCopyButtons();
+      wireSearchAndFilters();
+      animateMetrics();
+      fetchContributionData();
+      fetchGithubOrg();
+      fetchGithubRepos();
     }
 
-    wireCopyButtons();
-    wireNav();
-    renderPortfolioLinks();
-    renderLibrary();
-    initTheme();
-    initData();
-    animateMetrics();
+    init();
   </script>
 </body>
 </html>
