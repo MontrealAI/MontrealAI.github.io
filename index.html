@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="deep">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MONTRÉAL.AI — We Choose to Ascend with AGI</title>
   <meta name="description" content="MONTRÉAL.AI is building the sovereign substrate for machine identity, labor, proof, settlement, memory, and governance—featuring Vincent Boucher, the AI → AGI → ASI ENS identity arc, live GitHub build proof, and the on-chain protocol stack." />
   <meta name="theme-color" content="#05030b" />
-  <meta name="color-scheme" content="dark" />
+  <meta name="color-scheme" content="dark light" />
   <link rel="canonical" href="https://montrealai.github.io/" />
+
   <meta property="og:type" content="website" />
   <meta property="og:title" content="MONTRÉAL.AI — We Choose to Ascend with AGI" />
   <meta property="og:description" content="Institutional intelligence substrate: identity, labor, proof, settlement, memory, and governance for the machine era." />
@@ -18,6 +19,7 @@
   <meta name="twitter:title" content="MONTRÉAL.AI — We Choose to Ascend with AGI" />
   <meta name="twitter:description" content="Sovereign machine intelligence infrastructure built in public." />
   <meta name="twitter:image" content="https://montrealai.github.io/vincentboucher.jpg" />
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -38,11 +40,12 @@
       {
         "@type": "Person",
         "name": "Vincent Boucher",
-        "jobTitle": "President of MONTREAL.AI and QUEBEC.AI",
+        "jobTitle": "Founder / President / Architect",
         "worksFor": {"@type": "Organization", "name": "MONTRÉAL.AI"},
         "url": "https://www.linkedin.com/in/montrealai/",
         "sameAs": [
           "https://www.linkedin.com/in/montrealai/",
+          "https://www.linkedin.com/in/montrealai/details/featured/",
           "https://agialpha.com/biography",
           "https://github.com/MontrealAI"
         ]
@@ -55,8 +58,8 @@
     ]
   }
   </script>
+
   <style>
-    /* ===== Design tokens ===== */
     :root {
       --bg-0: #05030b;
       --bg-1: #0b0613;
@@ -66,42 +69,39 @@
       --text: #f7f2ff;
       --text-soft: #c6b8e3;
       --muted: #9f90bf;
-      --line: rgba(214, 198, 255, .12);
+      --line: rgba(214,198,255,.12);
       --accent: #8b5cf6;
       --accent-2: #b794ff;
       --accent-3: #ddd0ff;
-      --glow: rgba(139, 92, 246, .30);
+      --glow: rgba(139,92,246,.30);
       --success: #98f2c5;
       --warning: #ffd27a;
-      --max: min(1360px, calc(100vw - 2.2rem));
-      --r-xs: 12px;
-      --r-sm: 18px;
-      --r-md: 24px;
-      --r-lg: 32px;
-      --shadow-soft: 0 16px 42px rgba(2, 0, 9, .36);
-      --shadow-glow: 0 22px 66px rgba(95, 43, 191, .28);
-      --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --max: min(1360px, calc(100vw - 2rem));
+      --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --r1: 16px;
+      --r2: 24px;
+      --r3: 32px;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --shadow-soft: 0 8px 28px rgba(0,0,0,.25);
     }
 
     html[data-theme="light"] {
-      --bg-0: #f3eefb;
-      --bg-1: #efe7fc;
-      --bg-2: #f8f4ff;
+      --bg-0: #f3edf9;
+      --bg-1: #f6f1ff;
+      --bg-2: #f0e9fb;
       --panel: #ffffff;
-      --panel-2: #f6f1ff;
-      --text: #170e26;
-      --text-soft: #3f2e61;
-      --muted: #665685;
-      --line: rgba(72, 43, 126, .16);
-      --accent: #6f44d4;
-      --accent-2: #8351f5;
-      --accent-3: #402171;
-      --glow: rgba(111, 68, 212, .22);
-      --success: #156d42;
-      --warning: #956006;
-      --shadow-soft: 0 20px 42px rgba(88, 58, 142, .12);
-      --shadow-glow: 0 28px 68px rgba(112, 73, 189, .2);
+      --panel-2: #f8f5ff;
+      --text: #1f1533;
+      --text-soft: #453460;
+      --muted: #6d5b8e;
+      --line: rgba(70,50,112,.18);
+      --accent: #7b4de6;
+      --accent-2: #9368f6;
+      --accent-3: #2e184f;
+      --glow: rgba(123,77,230,.28);
+      --success: #1f7a4f;
+      --warning: #8e5f06;
     }
 
     * { box-sizing: border-box; }
@@ -115,216 +115,236 @@
       font-family: var(--sans);
       color: var(--text);
       background:
-        radial-gradient(1300px 700px at 10% -20%, rgba(145, 97, 255, .18), transparent 72%),
-        radial-gradient(1100px 560px at 95% 0%, rgba(181, 132, 255, .12), transparent 68%),
-        linear-gradient(160deg, var(--bg-0), var(--bg-1) 42%, var(--bg-2));
-      line-height: 1.5;
+        radial-gradient(1200px 600px at 12% -10%, rgba(139,92,246,.18), transparent 65%),
+        radial-gradient(900px 600px at 90% 0%, rgba(183,148,255,.10), transparent 60%),
+        linear-gradient(165deg, var(--bg-0), var(--bg-1), var(--bg-2));
+      line-height: 1.55;
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow-x: clip;
     }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(var(--line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--line) 1px, transparent 1px);
-      background-size: 84px 84px;
-      opacity: .18;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 88%);
-    }
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
     .container { width: var(--max); margin-inline: auto; }
     .mono { font-family: var(--mono); }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
 
     :focus-visible {
-      outline: 3px solid color-mix(in srgb, var(--accent) 72%, white 28%);
-      outline-offset: 3px;
-      border-radius: 10px;
+      outline: 3px solid color-mix(in srgb, var(--accent) 65%, #fff 35%);
+      outline-offset: 2px;
+      border-radius: 12px;
     }
     .skip-link {
       position: absolute;
       left: -999px;
       top: .5rem;
-      padding: .7rem .95rem;
-      border-radius: 10px;
       background: var(--panel);
+      color: var(--text);
       border: 1px solid var(--line);
-      z-index: 200;
+      padding: .6rem .9rem;
+      z-index: 999;
+      border-radius: 10px;
     }
-    .skip-link:focus { left: 1rem; }
+    .skip-link:focus { left: .8rem; }
 
-    /* ===== Header ===== */
     .site-header {
       position: sticky;
       top: 0;
-      z-index: 120;
-      backdrop-filter: blur(18px);
-      background: color-mix(in srgb, var(--bg-0) 82%, transparent);
+      z-index: 100;
       border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg-0) 80%, transparent);
+      backdrop-filter: blur(16px);
     }
-    .nav-shell {
+    .nav-wrap {
+      min-height: 74px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      min-height: 74px;
       gap: 1rem;
     }
     .brand {
       display: inline-flex;
       gap: .8rem;
       align-items: center;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
-      font-size: .9rem;
+      font-size: .86rem;
     }
-    .brand-mark {
+    .mark {
       width: 38px;
-      aspect-ratio: 1;
-      border-radius: 11px;
+      height: 38px;
+      border-radius: 12px;
       border: 1px solid var(--line);
-      background: linear-gradient(155deg, var(--panel-2), var(--panel));
+      background: linear-gradient(145deg, var(--panel-2), var(--panel));
       display: grid;
       place-items: center;
       box-shadow: var(--shadow-soft);
-      font-size: .78rem;
       color: var(--accent-3);
+      font-size: .75rem;
     }
-    .nav-links {
+    .nav-links, .actions {
       display: flex;
       align-items: center;
-      gap: .2rem;
+      gap: .25rem;
       flex-wrap: wrap;
     }
-    .nav-links a,
-    .header-actions a,
-    .theme-toggle,
-    .menu-toggle {
+    .nav-links a, .actions a, .chip-btn, .menu-btn {
       border: 1px solid transparent;
       color: var(--text-soft);
-      padding: .5rem .8rem;
       border-radius: 999px;
+      padding: .48rem .8rem;
       font-size: .88rem;
-      white-space: nowrap;
-    }
-    .nav-links a:hover,
-    .header-actions a:hover,
-    .theme-toggle:hover,
-    .menu-toggle:hover,
-    .nav-links a[aria-current="true"] {
-      background: color-mix(in srgb, var(--accent) 13%, transparent);
-      color: var(--text);
-      border-color: var(--line);
-    }
-    .header-actions { display: flex; align-items: center; gap: .35rem; }
-    .theme-toggle, .menu-toggle {
       cursor: pointer;
       background: transparent;
     }
-    .menu-toggle { display: none; }
-
-    /* ===== Global sections ===== */
-    main section { padding-block: clamp(3.2rem, 7vw, 6.2rem); scroll-margin-top: 100px; }
-    .kicker {
-      display: inline-block;
-      padding: .45rem .8rem;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      font-size: .78rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--accent-2);
-      background: color-mix(in srgb, var(--accent) 10%, transparent);
+    .nav-links a:hover, .actions a:hover, .chip-btn:hover, .menu-btn:hover,
+    .nav-links a[aria-current="true"] {
+      border-color: var(--line);
+      color: var(--text);
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
     }
-    h1, h2, h3 { margin: 0; line-height: 1.04; letter-spacing: -.02em; }
-    h1 { font-size: clamp(2.2rem, 6.8vw, 5.6rem); max-width: 14ch; margin-top: .95rem; }
-    h2 { font-size: clamp(1.5rem, 3.8vw, 3rem); margin-bottom: 1rem; }
-    p { margin: 0; color: var(--text-soft); max-width: 72ch; }
+    .menu-btn { display: none; }
+    .mobile-sheet {
+      display: none;
+      border-top: 1px solid var(--line);
+      padding: .8rem 0 1rem;
+    }
+    .mobile-sheet.open { display: block; }
+    .mobile-sheet .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .5rem;
+    }
+    .mobile-sheet a {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 14px;
+      padding: .7rem .8rem;
+      color: var(--text-soft);
+      font-size: .9rem;
+    }
+
+    main section { padding: 4.5rem 0; }
+    .section-head { margin-bottom: 1.3rem; }
+    .eyebrow {
+      color: var(--accent-2);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .72rem;
+      margin: 0 0 .8rem;
+    }
+    h1, h2, h3, h4, p { margin: 0; }
+    h1 {
+      font-size: clamp(2.2rem, 5.5vw, 5.25rem);
+      line-height: .98;
+      letter-spacing: -.02em;
+      max-width: 16ch;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: clamp(1.5rem, 3.1vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -.01em;
+      margin-bottom: .85rem;
+    }
+    .lede {
+      font-size: clamp(1.02rem, 1.8vw, 1.35rem);
+      color: var(--text-soft);
+      max-width: 68ch;
+    }
 
     .card {
-      border-radius: var(--r-md);
       border: 1px solid var(--line);
-      background: linear-gradient(165deg, color-mix(in srgb, var(--panel) 93%, transparent), color-mix(in srgb, var(--panel-2) 92%, transparent));
-      box-shadow: var(--shadow-soft);
+      border-radius: var(--r2);
+      background: linear-gradient(170deg, color-mix(in srgb, var(--panel) 94%, #000 6%), var(--panel-2));
+      box-shadow: var(--shadow);
     }
 
-    .btn-row { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.4rem; }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: .42rem;
-      padding: .72rem 1rem;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      color: var(--text);
-      font-weight: 560;
-      background: color-mix(in srgb, var(--panel) 70%, transparent);
+    .hero {
+      position: relative;
+      padding-top: 3.5rem;
     }
-    .btn.primary {
-      background: linear-gradient(130deg, var(--accent), var(--accent-2));
-      color: #fff;
-      border-color: transparent;
-      box-shadow: var(--shadow-glow);
-    }
-
-    /* ===== Hero ===== */
-    .hero { padding-top: clamp(2.6rem, 6vw, 5.4rem); }
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: clamp(1rem, 3vw, 2rem);
+      grid-template-columns: 1.1fr .9fr;
+      gap: 1.4rem;
       align-items: stretch;
     }
-    .hero-copy { padding: clamp(1rem, 2vw, 1.2rem) 0; }
-    .hero-subline {
-      margin-top: 1.15rem;
-      font-size: clamp(1.02rem, 1.6vw, 1.34rem);
+    .hero-copy { padding: 1.1rem .1rem; }
+    .hero-support {
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
       color: var(--accent-3);
-      max-width: 45ch;
+      margin-bottom: 1rem;
+      max-width: 50ch;
     }
-    .hero-desc { margin-top: 1.1rem; font-size: 1.03rem; max-width: 60ch; }
+    .hero-body {
+      color: var(--text-soft);
+      font-size: 1.05rem;
+      max-width: 62ch;
+      margin-bottom: 1.3rem;
+    }
     .chip-row {
-      margin-top: 1.2rem;
       display: flex;
       flex-wrap: wrap;
       gap: .55rem;
+      margin-bottom: 1.2rem;
     }
     .chip {
-      padding: .42rem .75rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .38rem .7rem;
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      font-size: .79rem;
+      color: var(--text-soft);
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--panel) 68%, transparent);
-      color: var(--text-soft);
-      font-size: .78rem;
-      letter-spacing: .01em;
+      padding: .63rem .95rem;
+      font-weight: 600;
+      font-size: .9rem;
+      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      color: var(--text);
     }
+    .btn.primary {
+      background: linear-gradient(140deg, color-mix(in srgb, var(--accent) 68%, #fff 7%), var(--accent));
+      border-color: color-mix(in srgb, var(--accent) 65%, #fff 35%);
+      color: #140826;
+    }
+    .btn:hover { transform: translateY(-1px); }
 
     .hero-portrait {
       position: relative;
-      padding: clamp(1rem, 2vw, 1.25rem);
+      padding: .9rem;
       overflow: hidden;
     }
     .hero-portrait::before {
       content: "";
       position: absolute;
-      inset: -20% -10% auto;
-      height: 68%;
-      background: radial-gradient(circle, rgba(177, 130, 255, .28), transparent 62%);
-      pointer-events: none;
+      inset: -20% -20% auto auto;
+      width: 58%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--glow), transparent 68%);
+      filter: blur(12px);
     }
-    .portrait-shell {
+    .portrait-wrap {
       position: relative;
-      border-radius: var(--r-lg);
+      border-radius: 24px;
       overflow: hidden;
       border: 1px solid var(--line);
-      background: #0f0a1b;
-      aspect-ratio: 5 / 6;
-      min-height: 340px;
+      aspect-ratio: 4 / 5;
+      min-height: 360px;
+      background: #0f091b;
     }
-    .portrait-shell img {
+    .portrait-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -332,307 +352,315 @@
     }
     .portrait-overlay {
       position: absolute;
-      right: 1rem;
-      bottom: 1rem;
-      max-width: 280px;
-      padding: .85rem;
-      border-radius: 14px;
+      left: .8rem;
+      right: .8rem;
+      bottom: .8rem;
       border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--panel-2) 85%, transparent);
+      border-radius: 16px;
+      background: color-mix(in srgb, var(--panel) 80%, transparent);
       backdrop-filter: blur(8px);
+      padding: .75rem;
+      display: grid;
+      gap: .35rem;
     }
-    .portrait-overlay h3 { font-size: .95rem; margin-bottom: .35rem; }
-    .portrait-overlay p { font-size: .82rem; color: var(--text-soft); }
+    .portrait-overlay .title { font-size: .95rem; font-weight: 700; }
+    .portrait-overlay .sub { font-size: .8rem; color: var(--text-soft); }
 
-    /* ===== Metrics ===== */
     .metrics-grid {
-      margin-top: 1.2rem;
       display: grid;
-      grid-template-columns: repeat(6, minmax(150px, 1fr));
-      gap: .7rem;
-    }
-    .metric {
-      padding: 1rem;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--panel) 78%, transparent);
-      min-height: 110px;
-    }
-    .metric .label { color: var(--muted); font-size: .77rem; text-transform: uppercase; letter-spacing: .08em; }
-    .metric .value { margin-top: .45rem; font-size: clamp(1.14rem, 2.7vw, 1.9rem); font-weight: 700; }
-    .metric .hint { font-size: .77rem; margin-top: .35rem; color: var(--text-soft); }
-    .heatmap {
-      margin-top: .95rem;
-      display: grid;
-      gap: 2px;
-      grid-template-columns: repeat(53, minmax(5px, 1fr));
-      align-items: end;
-      min-height: 56px;
-    }
-    .heat-cell {
-      border-radius: 3px;
-      min-height: 10px;
-      background: color-mix(in srgb, var(--accent) 8%, #0b0812);
-    }
-
-    /* ===== Founder ===== */
-    .founder-wrap {
-      display: grid;
-      grid-template-columns: .88fr 1.12fr;
-      gap: 1rem;
-      align-items: stretch;
-    }
-    .founder-media { padding: 1rem; }
-    .founder-media .portrait-shell { aspect-ratio: 4 / 5; min-height: 320px; }
-    .founder-content { padding: clamp(1.2rem, 2.5vw, 2rem); }
-    .role-line { margin-top: .8rem; font-size: 1rem; color: var(--accent-3); }
-    .milestones {
-      margin-top: 1.1rem;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(170px, 1fr));
-      gap: .65rem;
-    }
-    .milestone {
-      padding: .78rem;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--panel-2) 58%, transparent);
-      font-size: .89rem;
-      color: var(--text-soft);
-    }
-    .milestone strong { color: var(--text); display: block; font-size: .92rem; }
-
-    /* ===== Stack ===== */
-    .stack-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(220px, 1fr));
-      gap: .75rem;
-    }
-    .stack-card { padding: 1.1rem; }
-    .stack-card h3 { font-size: 1.1rem; margin-bottom: .45rem; }
-
-    /* ===== Pinned repos ===== */
-    .pinned-grid {
-      margin-top: 1.2rem;
-      display: grid;
-      grid-template-columns: 1.3fr 1fr 1fr;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: .8rem;
-    }
-    .repo-card { padding: 1.1rem; display: grid; gap: .75rem; }
-    .repo-card.lead {
-      grid-row: span 2;
-      background: linear-gradient(165deg, color-mix(in srgb, var(--accent) 16%, var(--panel) 84%), color-mix(in srgb, var(--panel-2) 90%, transparent));
-    }
-    .repo-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .4rem;
-      font-size: .78rem;
-      color: var(--text-soft);
-    }
-    .repo-meta span {
-      border: 1px solid var(--line);
-      padding: .3rem .56rem;
-      border-radius: 999px;
-      background: color-mix(in srgb, var(--panel) 70%, transparent);
-    }
-
-    /* ===== ENS section ===== */
-    .ens-grid {
-      display: grid;
-      grid-template-columns: 1.12fr .88fr;
-      gap: .9rem;
-    }
-    .ens-diagram, .ens-flagship { padding: 1.1rem; }
-    .ens-step {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: .8rem;
-      margin-bottom: .55rem;
-      background: color-mix(in srgb, var(--panel) 68%, transparent);
-    }
-    .ens-step .mono { font-size: .9rem; color: var(--accent-3); }
-
-    /* ===== Developer ===== */
-    .dev-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .9rem;
-    }
-    .dev-code, .dev-meta { padding: 1.1rem; }
-    pre {
-      margin: 0;
-      padding: 1rem;
-      border-radius: 16px;
-      overflow: auto;
-      border: 1px solid var(--line);
-      background: #0b0813;
-      color: #e8deff;
-      font-size: .9rem;
-    }
-    .meta-pills {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(180px, 1fr));
-      gap: .6rem;
       margin-top: .6rem;
     }
-    .pill {
+    .metric {
+      padding: .95rem;
+      border-radius: 18px;
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: .74rem;
-      background: color-mix(in srgb, var(--panel-2) 60%, transparent);
-      font-size: .86rem;
+      background: color-mix(in srgb, var(--panel) 86%, transparent);
+      min-height: 102px;
+    }
+    .metric .k { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .metric .v { font-size: 1.5rem; line-height: 1.1; font-weight: 700; margin-top: .3rem; }
+    .metric .hint { font-size: .75rem; color: var(--text-soft); margin-top: .2rem; }
+
+    .heatmap-shell {
+      margin-top: .9rem;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: .8rem;
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+    }
+    .heatmap {
+      display: grid;
+      grid-template-columns: repeat(53, minmax(7px, 1fr));
+      gap: 3px;
+      align-items: center;
+    }
+    .heat {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 3px;
+      background: color-mix(in srgb, var(--accent) 10%, #101014);
+      border: 1px solid rgba(255,255,255,.04);
+      position: relative;
+    }
+    .heat:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: .64rem;
+      background: #1e1435;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: .2rem .35rem;
+      z-index: 8;
     }
 
-    /* ===== Contracts ===== */
-    .contracts-grid {
-      margin-top: 1rem;
+    .founder-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      grid-template-columns: .95fr 1.05fr;
+      gap: 1rem;
+    }
+    .founder-card, .timeline-card { padding: 1.1rem; }
+    .founder-title { font-size: clamp(1.4rem, 2.2vw, 2.2rem); margin-bottom: .6rem; }
+    .founder-bio { color: var(--text-soft); margin-bottom: .9rem; }
+    .milestones {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: .6rem;
+    }
+    .mile {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: .7rem;
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+      font-size: .84rem;
+    }
+    .mile b { display: block; color: var(--accent-3); margin-bottom: .2rem; }
+
+    .stack-grid, .contracts-grid, .horizon-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: .85rem;
+    }
+    .stack-card, .contract-card, .horizon-card { padding: 1rem; }
+    .stack-card h3, .contract-card h3 { margin-bottom: .45rem; font-size: 1.06rem; }
+    .stack-card p, .contract-card p { color: var(--text-soft); font-size: .92rem; }
+
+    .build-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: .9rem;
+    }
+    .repo-lead, .repo-list { padding: 1rem; }
+    .repo-list-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
       gap: .75rem;
     }
-    .contract { padding: 1rem; }
-    .addr {
+    .repo-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: .75rem;
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      display: grid;
+      gap: .55rem;
+    }
+    .repo-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: .5rem;
-      margin-top: .45rem;
-      border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--panel) 70%, transparent);
-      border-radius: 12px;
-      padding: .45rem .55rem;
-      font-family: var(--mono);
+    }
+    .repo-title { font-weight: 700; font-size: .95rem; }
+    .repo-desc { color: var(--text-soft); font-size: .84rem; min-height: 2.4em; }
+    .repo-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      color: var(--muted);
       font-size: .76rem;
+      font-family: var(--mono);
     }
 
-    /* ===== Resource atlas ===== */
-    .atlas-controls {
+    .ens-grid {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: .7rem;
-      align-items: center;
-      margin: 1rem 0;
+      grid-template-columns: 1fr 1fr;
+      gap: .9rem;
     }
-    .atlas-search {
-      width: 100%;
+    .ens-card, .ens-flagship { padding: 1rem; }
+    .ens-topology {
+      display: grid;
+      gap: .5rem;
+      margin-top: .8rem;
+    }
+    .ens-node {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: .6rem .7rem;
+      background: color-mix(in srgb, var(--accent) 7%, transparent);
+      font-family: var(--mono);
+      font-size: .82rem;
+      color: var(--accent-3);
+    }
+
+    .dev-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: .9rem;
+    }
+    .dev-code, .dev-meta { padding: 1rem; }
+    pre {
+      margin: .7rem 0 0;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #0f0a1b;
+      padding: .85rem;
+      color: #e8ddff;
+      font-family: var(--mono);
+      font-size: .83rem;
+      line-height: 1.45;
+    }
+    .meta-list { display: grid; gap: .55rem; margin-top: .6rem; }
+    .meta-pill {
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: .7rem 1rem;
-      background: color-mix(in srgb, var(--panel) 72%, transparent);
-      color: var(--text);
+      padding: .42rem .7rem;
+      font-size: .82rem;
+      color: var(--text-soft);
+      background: color-mix(in srgb, var(--accent) 9%, transparent);
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      width: fit-content;
+      max-width: 100%;
+      overflow-wrap: anywhere;
     }
-    .filter-row { display: flex; flex-wrap: wrap; gap: .45rem; }
+
+    .atlas-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-bottom: .8rem;
+      align-items: center;
+    }
+    .search {
+      flex: 1 1 260px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .62rem .85rem;
+      background: color-mix(in srgb, var(--panel) 84%, transparent);
+      color: var(--text);
+      min-width: 220px;
+    }
     .filter-chip {
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: .46rem .74rem;
-      background: color-mix(in srgb, var(--panel-2) 55%, transparent);
+      padding: .45rem .7rem;
+      font-size: .82rem;
       color: var(--text-soft);
+      background: transparent;
       cursor: pointer;
     }
-    .filter-chip.active { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--text); }
+    .filter-chip.active,
+    .filter-chip:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--text); }
     .atlas-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(240px, 1fr));
-      gap: .7rem;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: .8rem;
     }
-    .atlas-item { padding: .9rem; }
-    .atlas-item small { color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-
-    /* ===== Portfolio and horizon ===== */
-    .portfolio-grid, .horizon-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(210px, 1fr));
-      gap: .7rem;
-      margin-top: 1rem;
-    }
-    .portfolio-grid a, .horizon-card {
-      display: block;
-      padding: 1rem;
-      border-radius: 16px;
+    .atlas-item {
       border: 1px solid var(--line);
-      background: color-mix(in srgb, var(--panel) 75%, transparent);
+      border-radius: 14px;
+      padding: .78rem;
+      background: color-mix(in srgb, var(--panel) 82%, transparent);
+      display: grid;
+      gap: .4rem;
     }
+    .atlas-item h4 { font-size: .94rem; }
+    .atlas-item p { font-size: .82rem; color: var(--text-soft); }
+
+    .portfolio-links {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0,1fr));
+      gap: .65rem;
+    }
+    .portfolio-links a {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: .8rem;
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      text-align: center;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+    .portfolio-links a:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 40%, var(--line)); }
 
     footer {
+      padding: 2rem 0 2.8rem;
       border-top: 1px solid var(--line);
-      padding: 1.7rem 0 2.5rem;
-      color: var(--text-soft);
+      color: var(--muted);
+      font-size: .84rem;
     }
-    .footer-row {
+    .foot-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: .8rem;
+      flex-wrap: wrap;
+    }
+    .foot-links {
       display: flex;
       flex-wrap: wrap;
-      gap: .8rem;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .footer-links { display: flex; flex-wrap: wrap; gap: .5rem; }
-    .footer-links a {
-      padding: .4rem .7rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      font-size: .85rem;
+      gap: .65rem;
     }
 
-    .copy-btn {
-      border: 1px solid var(--line);
-      background: transparent;
-      color: var(--text-soft);
-      border-radius: 8px;
-      padding: .25rem .5rem;
-      cursor: pointer;
-      font-size: .72rem;
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
     }
-    .copy-btn:hover { color: var(--text); }
-
-    .reveal { opacity: 0; transform: translateY(10px); transition: .45s ease; }
-    .reveal.in { opacity: 1; transform: translateY(0); }
 
     @media (max-width: 1120px) {
-      .hero-grid, .founder-wrap, .ens-grid, .dev-grid { grid-template-columns: 1fr; }
-      .pinned-grid { grid-template-columns: 1fr 1fr; }
-      .repo-card.lead { grid-row: auto; grid-column: span 2; }
-      .metrics-grid { grid-template-columns: repeat(3, minmax(140px, 1fr)); }
-      .contracts-grid, .atlas-grid, .portfolio-grid, .horizon-grid, .stack-grid { grid-template-columns: repeat(2, minmax(210px, 1fr)); }
+      .hero-grid, .founder-grid, .build-grid, .ens-grid, .dev-grid { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .stack-grid, .contracts-grid, .horizon-grid, .atlas-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .repo-list-grid { grid-template-columns: 1fr; }
     }
-    @media (max-width: 760px) {
-      .menu-toggle { display: inline-flex; }
-      .nav-links {
-        position: absolute;
-        top: calc(100% + .4rem);
-        left: 1rem;
-        right: 1rem;
-        border-radius: 16px;
-        border: 1px solid var(--line);
-        background: color-mix(in srgb, var(--bg-1) 92%, transparent);
-        padding: .6rem;
-        display: none;
-        flex-direction: column;
-        align-items: stretch;
-        box-shadow: var(--shadow-soft);
-      }
-      .nav-links.open { display: flex; }
-      .header-actions a:nth-child(1) { display: none; }
-      .metrics-grid { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
-      .contracts-grid, .atlas-grid, .portfolio-grid, .horizon-grid, .stack-grid, .milestones { grid-template-columns: 1fr; }
-      .pinned-grid { grid-template-columns: 1fr; }
-      .repo-card.lead { grid-column: auto; }
-      .atlas-controls { grid-template-columns: 1fr; }
+    @media (max-width: 860px) {
+      .nav-links, .actions .desktop-link { display: none; }
+      .menu-btn { display: inline-flex; }
+      .metrics-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .portfolio-links { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .milestones { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      main section { padding: 3.5rem 0; }
+      .stack-grid, .contracts-grid, .horizon-grid, .atlas-grid { grid-template-columns: 1fr; }
+      .portfolio-links { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .metrics-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to main content</a>
+  <a href="#main" class="skip-link">Skip to content</a>
 
   <header class="site-header">
-    <div class="container nav-shell">
+    <div class="container nav-wrap">
       <a href="#top" class="brand" aria-label="MONTRÉAL.AI home">
-        <span class="brand-mark">M•AI</span>
+        <span class="mark">M.AI</span>
         <span>MONTRÉAL.AI</span>
       </a>
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
-      <nav id="primary-nav" class="nav-links" aria-label="Primary">
+
+      <nav class="nav-links" aria-label="Primary">
         <a href="#vision">Vision</a>
         <a href="#founder">Founder</a>
         <a href="#build">Build</a>
@@ -640,31 +668,45 @@
         <a href="#library">Library</a>
         <a href="#portfolio">Portfolio</a>
       </nav>
-      <div class="header-actions">
+
+      <div class="actions">
+        <a class="desktop-link" href="https://agialpha.com/" target="_blank" rel="noopener noreferrer">AGI Alpha</a>
+        <a class="desktop-link" href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <button class="chip-btn" id="themeToggle" type="button" aria-label="Toggle theme">Theme</button>
+        <button class="menu-btn" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileSheet">Menu</button>
+      </div>
+    </div>
+    <div class="container mobile-sheet" id="mobileSheet" hidden>
+      <nav class="menu-grid" aria-label="Mobile">
+        <a href="#vision">Vision</a>
+        <a href="#founder">Founder</a>
+        <a href="#build">Build</a>
+        <a href="#ens">ENS</a>
+        <a href="#library">Library</a>
+        <a href="#portfolio">Portfolio</a>
         <a href="https://agialpha.com/" target="_blank" rel="noopener noreferrer">AGI Alpha</a>
         <a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">Theme</button>
-      </div>
+      </nav>
     </div>
   </header>
 
   <main id="main">
-    <section class="hero" id="top">
+    <section class="hero" id="vision">
       <div class="container hero-grid">
-        <article class="hero-copy reveal" id="vision">
-          <span class="kicker">Institutional intelligence substrate</span>
+        <article class="hero-copy">
+          <p class="eyebrow">Institutional intelligence substrate</p>
           <h1>We choose to ascend with AGI.</h1>
-          <p class="hero-subline">At the substrate, an invention-automation machine is coming online—where intelligence compounds.</p>
-          <p class="hero-desc">MONTRÉAL.AI is building the identity, labor, proof, settlement, memory, and governance substrate for the era when machine intelligence becomes infrastructure.</p>
-          <div class="chip-row" aria-label="Key metadata">
+          <p class="hero-support">At the substrate, an invention-automation machine is coming online—where intelligence compounds.</p>
+          <p class="hero-body">MONTRÉAL.AI is building the identity, labor, proof, settlement, memory, and governance substrate for the era when machine intelligence becomes infrastructure.</p>
+          <div class="chip-row" aria-label="Hero metadata">
             <span class="chip">Founded 2003</span>
             <span class="chip">Ethereum mainnet</span>
             <span class="chip mono">agi.eth</span>
             <span class="chip mono">asi.eth</span>
             <span class="chip">AI → AGI → ASI</span>
-            <span class="chip" id="heroLiveChip">live GitHub contributions</span>
+            <span class="chip">Live GitHub contributions</span>
           </div>
-          <div class="btn-row">
+          <div class="cta-row">
             <a class="btn primary" href="#stack">Explore the stack</a>
             <a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noopener noreferrer">Read Vincent’s writing</a>
             <a class="btn" href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">Open GitHub</a>
@@ -672,192 +714,213 @@
           </div>
         </article>
 
-        <aside class="hero-portrait card reveal" aria-label="Founder profile visual">
-          <div class="portrait-shell">
-            <img src="./vincentboucher.jpg" alt="Vincent Boucher, Founder, President, and Architect of MONTRÉAL.AI" loading="eager" decoding="async" width="1000" height="1200" />
-            <div class="portrait-overlay" aria-live="polite">
-              <h3>Vincent Boucher</h3>
-              <p>Founder / President / Architect — machine identity, labor infrastructure, ENS sovereignty, and institutional protocol design.</p>
-            </div>
+        <aside class="hero-portrait card" aria-label="Founder spotlight">
+          <figure class="portrait-wrap">
+            <img src="./vincentboucher.jpg" alt="Vincent Boucher portrait" width="1536" height="1536" loading="eager" decoding="async" />
+          </figure>
+          <div class="portrait-overlay" aria-live="polite">
+            <div class="title">Vincent Boucher</div>
+            <div class="sub">Founder / President / Architect · MONTRÉAL.AI &amp; QUEBEC.AI</div>
+            <div class="sub">Contribution constellation: <strong id="heroContrib">Syncing live…</strong></div>
           </div>
         </aside>
       </div>
 
-      <div class="container reveal" aria-live="polite">
-        <div class="metrics-grid" id="metricsGrid">
-          <article class="metric"><div class="label">Contributions (last year)</div><div class="value" id="contribTotal">—</div><div class="hint" id="contribStatus">Syncing live graph…</div></article>
-          <article class="metric"><div class="label">Repositories</div><div class="value" id="repoCount" data-count="0">—</div><div class="hint">GitHub organization footprint</div></article>
-          <article class="metric"><div class="label">Followers</div><div class="value" id="followerCount" data-count="0">—</div><div class="hint">Public institutional audience</div></article>
-          <article class="metric"><div class="label">Lead pinned repo</div><div class="value mono">AGI-Agent-v0</div><div class="hint">Primary command surface</div></article>
-          <article class="metric"><div class="label">ENS roots secured</div><div class="value mono">agi.eth · asi.eth</div><div class="hint">Durable identity roots</div></article>
-          <article class="metric"><div class="label">Mainnet contracts</div><div class="value" data-count="7">7</div><div class="hint">Settlement and labor infrastructure</div></article>
+      <div class="container" style="margin-top:1rem;" aria-live="polite">
+        <div class="metrics-grid" id="metricsRibbon">
+          <article class="metric"><div class="k">Contributions / last year</div><div class="v" id="metricContrib">—</div><div class="hint">Contribution constellation</div></article>
+          <article class="metric"><div class="k">Repositories</div><div class="v" id="metricRepos">—</div><div class="hint">GitHub organization</div></article>
+          <article class="metric"><div class="k">Followers</div><div class="v" id="metricFollowers">—</div><div class="hint">Institutional signal</div></article>
+          <article class="metric"><div class="k">Lead pinned repo</div><div class="v" id="metricLeadRepo">AGI-Agent-v0</div><div class="hint">Active construction</div></article>
+          <article class="metric"><div class="k">ENS roots secured</div><div class="v mono">agi.eth · asi.eth</div><div class="hint">Identity sovereignty</div></article>
+          <article class="metric"><div class="k">Mainnet contracts</div><div class="v" id="metricContracts">7+</div><div class="hint">Protocol surface</div></article>
         </div>
-        <div class="card" style="padding:1rem; margin-top:.75rem;">
-          <div style="display:flex;justify-content:space-between;gap:.7rem;align-items:center;flex-wrap:wrap;">
-            <strong>Contribution Constellation</strong>
-            <small id="heatmapHint" class="mono" style="color:var(--muted);">Daily cadence • last 12 months</small>
-          </div>
-          <div class="heatmap" id="contribHeatmap" role="img" aria-label="GitHub contribution heatmap"></div>
+        <div class="heatmap-shell">
+          <p class="eyebrow" style="margin-bottom:.45rem;">Contribution heat signal</p>
+          <div class="heatmap" id="contributionHeatmap" role="img" aria-label="Daily GitHub contributions heatmap"></div>
         </div>
       </div>
     </section>
 
     <section id="founder">
-      <div class="container founder-wrap">
-        <aside class="card founder-media reveal">
-          <div class="portrait-shell">
-            <img src="./vincentboucher.jpg" alt="Vincent Boucher portrait" loading="lazy" decoding="async" width="1000" height="1200" />
-          </div>
-        </aside>
-        <article class="card founder-content reveal">
-          <span class="kicker">Founder spotlight</span>
-          <h2>Vincent Boucher — institutional architect for sovereign machine systems.</h2>
-          <p class="role-line">President of MONTREAL.AI and QUEBEC.AI. AI pioneer, institution-builder, policy strategist, and public-facing system designer.</p>
-          <p style="margin-top:.9rem;">From research leadership to protocol execution, his trajectory has focused on one through-line: convert intelligence into durable civic, economic, and technical capacity.</p>
-          <div class="milestones">
-            <div class="milestone"><strong>July 1973</strong>Born in Québec City.</div>
-            <div class="milestone"><strong>2000–2002</strong>Canadian Space Agency.</div>
-            <div class="milestone"><strong>2003</strong>Founded MONTREAL.AI and QUEBEC.AI.</div>
-            <div class="milestone"><strong>2016</strong>OpenAI Gym ranking prominence worldwide.</div>
-            <div class="milestone"><strong>2017</strong>Multi-Agent AI DAO prior art.</div>
-            <div class="milestone"><strong>Current arc</strong>ENS sovereignty, on-chain labor, RSI governance, meta-agentic systems.</div>
-          </div>
-          <div class="btn-row">
+      <div class="container founder-grid">
+        <article class="founder-card card">
+          <p class="eyebrow">Founder spotlight</p>
+          <h2 class="founder-title">Vincent Boucher — AI pioneer, institution-builder, policy strategist.</h2>
+          <p class="founder-bio">Born in Québec City in July 1973, Vincent Boucher leads MONTRÉAL.AI with a long-horizon institutional thesis: identity before scale, governance before recursion, and machine labor as coordinated public infrastructure. He is the central human architect behind the AI → AGI → ASI identity and protocol arc on Ethereum.</p>
+          <div class="cta-row">
             <a class="btn" href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener noreferrer">LinkedIn profile</a>
             <a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noopener noreferrer">Featured writing</a>
             <a class="btn" href="https://agialpha.com/biography" target="_blank" rel="noopener noreferrer">Biography</a>
+          </div>
+        </article>
+        <article class="timeline-card card" aria-label="Founder milestones">
+          <p class="eyebrow">Milestone arc</p>
+          <div class="milestones">
+            <div class="mile"><b>July 1973</b>Born in Québec City.</div>
+            <div class="mile"><b>2000–2002</b>Canadian Space Agency.</div>
+            <div class="mile"><b>2003</b>Founded MONTREAL.AI and QUEBEC.AI.</div>
+            <div class="mile"><b>2016</b>OpenAI Gym #1 worldwide prominence.</div>
+            <div class="mile"><b>2017</b>Multi-Agent AI DAO prior art.</div>
+            <div class="mile"><b>Current arc</b>ENS sovereignty, on-chain labor, RSI governance, meta-agentic systems.</div>
           </div>
         </article>
       </div>
     </section>
 
     <section id="stack">
-      <div class="container reveal">
-        <span class="kicker">Thesis lattice</span>
-        <h2>Six layers for compounding machine civilization.</h2>
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Thesis lattice</p>
+          <h2>Six-layer sovereign architecture</h2>
+          <p class="lede">Compounding intelligence requires interoperable layers that align identity, incentives, public proof, and institutional continuity.</p>
+        </div>
         <div class="stack-grid">
-          <article class="card stack-card"><h3>Identity</h3><p>Persistent ENS-rooted identity lets agents, institutions, and validators operate under durable names that survive product cycles and market volatility.</p></article>
-          <article class="card stack-card"><h3>Market</h3><p>Agent-native labor markets coordinate demand and capability discovery with transparent matching, programmable constraints, and globally accessible participation.</p></article>
-          <article class="card stack-card"><h3>Proof</h3><p>Public traces of work, intent, and output create verifiable memory for machine labor and reduce coordination fog across long-horizon projects.</p></article>
-          <article class="card stack-card"><h3>Settlement</h3><p>Ethereum mainnet turns completed machine work into finality: auditable transfer, enforceable logic, and accountable incentives.</p></article>
-          <article class="card stack-card"><h3>Governance</h3><p>Governance-first recursion constrains power and aligns agent autonomy with institutional mission before scaling throughput.</p></article>
-          <article class="card stack-card"><h3>Memory</h3><p>Protocol memory preserves context across generations of agents so intelligence compounds rather than resets.</p></article>
+          <article class="stack-card card"><h3>Identity</h3><p>Durable names on Ethereum anchor agents, institutions, and routing rights across autonomous systems.</p></article>
+          <article class="stack-card card"><h3>Market</h3><p>Machine labor markets coordinate discovery, pricing, and execution across composable agent roles.</p></article>
+          <article class="stack-card card"><h3>Proof</h3><p>On-chain commitments and public repositories create verifiable memory of build activity and intent.</p></article>
+          <article class="stack-card card"><h3>Settlement</h3><p>Protocol-native settlement links completed machine work to enforceable value transfer and treasury logic.</p></article>
+          <article class="stack-card card"><h3>Governance</h3><p>Institution-first control planes define permissions, policy, and recursion boundaries before scale accelerates.</p></article>
+          <article class="stack-card card"><h3>Memory</h3><p>ENS-linked records and curated documentation preserve long-horizon context for agents, teams, and states.</p></article>
         </div>
       </div>
     </section>
 
     <section id="build">
-      <div class="container reveal">
-        <span class="kicker">Pinned build record</span>
-        <h2>Active construction, rendered as public proof.</h2>
-        <div class="pinned-grid" id="pinnedGrid" aria-live="polite"></div>
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Pinned build record</p>
+          <h2>Construction in public, updated from GitHub at runtime</h2>
+        </div>
+        <div class="build-grid">
+          <article class="repo-lead card" id="leadRepoCard" aria-live="polite"></article>
+          <article class="repo-list card">
+            <div class="repo-list-grid" id="pinnedRepoGrid" aria-live="polite"></div>
+          </article>
+        </div>
       </div>
     </section>
 
     <section id="ens">
-      <div class="container ens-grid reveal">
-        <article class="card ens-diagram">
-          <span class="kicker">ENS identity arc on Ethereum</span>
-          <h2>AI → AGI → ASI as sovereign public naming infrastructure.</h2>
-          <p style="margin-bottom:.9rem;">I secured the keys to the AI → AGI → ASI identity arc on Ethereum. Roots and subdomains establish durable memory, controlled scale, and accountable routing for agentic labor.</p>
-          <div class="ens-step"><strong>Roots</strong><div class="mono">agi.eth · asi.eth <button class="copy-btn" data-copy="agi.eth · asi.eth">Copy</button></div></div>
-          <div class="ens-step"><strong>Agent subdomains</strong><div class="mono">name.agent.agi.eth<br/>name.alpha.agent.agi.eth</div></div>
-          <div class="ens-step"><strong>Validator subdomains</strong><div class="mono">name.club.agi.eth<br/>name.alpha.club.agi.eth</div></div>
-          <div class="btn-row">
-            <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf" target="_blank" rel="noopener noreferrer">ENS routing brief</a>
-            <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf" target="_blank" rel="noopener noreferrer">Root governance</a>
+      <div class="container ens-grid">
+        <article class="ens-card card">
+          <p class="eyebrow">ENS identity arc on Ethereum</p>
+          <h2>AI → AGI → ASI identity, secured as sovereign roots.</h2>
+          <p class="lede" style="font-size:1rem;max-width:58ch;">"I secured the keys to the AI → AGI → ASI identity arc on Ethereum." Durable naming supports machine identity, public memory, and controlled scale across protocols and institutions.</p>
+          <div class="ens-topology">
+            <div class="ens-node">Roots: agi.eth · asi.eth <button class="chip-btn copy-btn" data-copy="agi.eth · asi.eth" type="button">Copy</button></div>
+            <div class="ens-node">Agent: name.agent.agi.eth · name.alpha.agent.agi.eth</div>
+            <div class="ens-node">Validator: name.club.agi.eth · name.alpha.club.agi.eth</div>
+            <div class="ens-node"><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf" target="_blank" rel="noopener noreferrer">ENS Routing as a Market Mechanism</a></div>
+            <div class="ens-node"><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf" target="_blank" rel="noopener noreferrer">AGI.eth — Root-Name Governance</a></div>
           </div>
         </article>
-        <aside class="card ens-flagship">
-          <span class="kicker">Flagship artifact</span>
-          <h3 style="font-size:1.5rem;margin-top:.75rem;">AGI King — AI/AGI/ASI ENS Sovereign Portfolio</h3>
-          <p style="margin-top:.75rem;">A single strategic surface connecting identity roots, routing logic, protocol memory, and deployment direction.</p>
-          <div class="btn-row">
-            <a class="btn primary" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noopener noreferrer">Open portfolio PDF</a>
-          </div>
-        </aside>
+        <article class="ens-flagship card">
+          <p class="eyebrow">Flagship identity portfolio</p>
+          <h3 style="font-size:1.5rem; margin-bottom:.5rem;">AGI King — AI/AGI/ASI ENS Sovereign Portfolio</h3>
+          <p style="color:var(--text-soft); margin-bottom:.8rem;">A living institutional map of identity, proof, governance, and sovereign machine labor rails.</p>
+          <a class="btn primary" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noopener noreferrer">Open portfolio PDF</a>
+        </article>
       </div>
     </section>
 
-    <section>
-      <div class="container dev-grid reveal">
-        <article class="card dev-code">
-          <span class="kicker">Developer quick connect</span>
-          <h2 style="margin-top:.7rem;">MCP endpoint for immediate integration.</h2>
-          <pre id="mcpBlock" aria-label="MCP quick connect JSON">{
+    <section id="developers">
+      <div class="container dev-grid">
+        <article class="dev-code card">
+          <p class="eyebrow">Developer quick connect</p>
+          <h2>MCP endpoint for protocol-aware builders</h2>
+          <p class="lede" style="font-size:1rem; margin-top:.4rem;">Use this configuration to browse jobs, inspect protocol state, and execute on-chain actions.</p>
+          <pre id="mcpConfig">{
   "mcpServers": {
     "agi-alpha": {
       "url": "https://agialpha.com/api/mcp"
     }
   }
 }</pre>
-          <div class="btn-row"><button class="btn" type="button" data-copy-target="#mcpBlock">Copy JSON</button><a class="btn" href="https://agialpha.com/developers" target="_blank" rel="noopener noreferrer">Developer docs</a></div>
-        </article>
-        <aside class="card dev-meta">
-          <h3 style="font-size:1.2rem;">Protocol metadata</h3>
-          <div class="meta-pills">
-            <div class="pill"><strong>Endpoint</strong><br/><span class="mono">https://agialpha.com/api/mcp</span></div>
-            <div class="pill"><strong>Transport</strong><br/>Streamable HTTP</div>
-            <div class="pill"><strong>Auth</strong><br/>None required</div>
-            <div class="pill"><strong>Tools</strong><br/>17</div>
+          <div class="cta-row" style="margin-top:.75rem;">
+            <button class="btn copy-btn" type="button" data-copy-target="#mcpConfig">Copy JSON</button>
+            <a class="btn" href="https://agialpha.com/developers" target="_blank" rel="noopener noreferrer">Developer docs</a>
+            <a class="btn" href="https://agialpha.com/jobs" target="_blank" rel="noopener noreferrer">Browse jobs</a>
           </div>
-          <p style="margin-top:1rem;">Use one connection to browse jobs, inspect protocol state, and execute on-chain actions through a clean machine interface.</p>
+        </article>
+        <aside class="dev-meta card">
+          <p class="eyebrow">Endpoint metadata</p>
+          <div class="meta-list">
+            <span class="meta-pill"><strong>Endpoint</strong>: https://agialpha.com/api/mcp</span>
+            <span class="meta-pill"><strong>Transport</strong>: Streamable HTTP</span>
+            <span class="meta-pill"><strong>Auth</strong>: None required</span>
+            <span class="meta-pill"><strong>Tools</strong>: 17</span>
+          </div>
         </aside>
       </div>
     </section>
 
-    <section>
-      <div class="container reveal">
-        <span class="kicker">On-chain surface</span>
-        <h2>Ethereum mainnet contracts and settlement interfaces.</h2>
+    <section id="contracts">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">On-chain surface</p>
+          <h2>Ethereum mainnet protocol footprint</h2>
+        </div>
         <div class="contracts-grid" id="contractsGrid"></div>
       </div>
     </section>
 
     <section id="library">
-      <div class="container reveal">
-        <span class="kicker">Resource atlas</span>
-        <h2>Curated doctrine, briefs, protocols, and public references.</h2>
-        <div class="atlas-controls">
-          <input id="atlasSearch" class="atlas-search" type="search" placeholder="Search by title, theme, or artifact…" aria-label="Search resource atlas" />
-          <div class="filter-row" id="atlasFilters"></div>
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Resource atlas</p>
+          <h2>Curated knowledge surface, searchable by theme</h2>
         </div>
-        <div class="atlas-grid" id="atlasGrid"></div>
+        <div class="atlas-controls">
+          <input id="atlasSearch" class="search" type="search" placeholder="Search essays, decks, repos, contracts, identity, governance..." aria-label="Search resource atlas" />
+          <button class="filter-chip active" data-filter="All" type="button">All</button>
+          <button class="filter-chip" data-filter="Essays" type="button">Essays</button>
+          <button class="filter-chip" data-filter="Decks" type="button">Decks</button>
+          <button class="filter-chip" data-filter="Repos" type="button">Repos</button>
+          <button class="filter-chip" data-filter="Contracts" type="button">Contracts</button>
+          <button class="filter-chip" data-filter="Identity" type="button">Identity</button>
+          <button class="filter-chip" data-filter="Governance" type="button">Governance</button>
+        </div>
+        <div class="atlas-grid" id="atlasGrid" aria-live="polite"></div>
       </div>
     </section>
 
     <section id="portfolio">
-      <div class="container reveal">
-        <span class="kicker">Institutional portfolio umbrella</span>
-        <h2>The protocol surface extends the institution—it does not replace it.</h2>
-        <div class="portfolio-grid">
-          <a href="/academy/"><strong>Academy</strong><p>Education and applied intelligence programs.</p></a>
-          <a href="/art/"><strong>Art</strong><p>Cultural intelligence and creative machine expression.</p></a>
-          <a href="/consulting/"><strong>Consulting</strong><p>Strategic advisory for AI transition and deployment.</p></a>
-          <a href="/events/"><strong>Events</strong><p>Summits, dialogues, and institutional convening.</p></a>
-          <a href="/space/"><strong>Space</strong><p>Long-horizon scientific and civilizational initiatives.</p></a>
-          <a href="/legal/"><strong>Legal</strong><p>Governance, policy, and accountability interfaces.</p></a>
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Portfolio umbrella</p>
+          <h2>The protocol surface extends the institution</h2>
+        </div>
+        <div class="portfolio-links">
+          <a href="/academy/">Academy</a>
+          <a href="/art/">Art</a>
+          <a href="/consulting/">Consulting</a>
+          <a href="/events/">Events</a>
+          <a href="/space/">Space</a>
+          <a href="/legal/">Legal</a>
         </div>
       </div>
     </section>
 
-    <section>
-      <div class="container reveal">
-        <span class="kicker">Closing horizon</span>
-        <h2>Institution first. Governance before recursion. Identity before scale.</h2>
+    <section id="horizon">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow">Closing horizon</p>
+          <h2>Institution first. Governance before recursion. Identity before scale.</h2>
+        </div>
         <div class="horizon-grid">
-          <article class="horizon-card"><h3>Identity</h3><p>Root names and accountable actors create continuity.</p></article>
-          <article class="horizon-card"><h3>Industry</h3><p>Machine labor compounds into productive economic systems.</p></article>
-          <article class="horizon-card"><h3>Infrastructure</h3><p>Settlement, memory, and governance become civilization-grade substrate.</p></article>
+          <article class="horizon-card card"><h3>Institutional</h3><p>Build durable legitimacy, aligned incentives, and long-memory systems before acceleration.</p></article>
+          <article class="horizon-card card"><h3>Planetary</h3><p>Coordinate machine labor markets across jurisdictions with transparent proof and programmable settlement.</p></article>
+          <article class="horizon-card card"><h3>Stellar</h3><p>Intelligence financing drives larger layers of energy, industry, and civilization-scale coordination.</p></article>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="container footer-row">
-      <div>© <span id="year"></span> MONTRÉAL.AI • Sovereign institutional intelligence infrastructure.</div>
-      <div class="footer-links">
+    <div class="container foot-grid">
+      <div>© <span id="year"></span> MONTRÉAL.AI · Sovereign substrate for compounding machine intelligence.</div>
+      <div class="foot-links">
         <a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         <a href="https://x.com/Montreal_AI" target="_blank" rel="noopener noreferrer">X / Montreal_AI</a>
@@ -869,55 +932,73 @@
   </footer>
 
   <script>
-    const CACHE_TTL = 3600_000;
-    const PINNED_ORDER = ["AGI-Agent-v0", "AGI-Alpha-Agent-v0", "AGIJobsv0", "AGI-Alpha-Node-v0", "AGIJobManager", "AGIJobManagerPrime"];
-    const FALLBACK_DESCRIPTIONS = {
-      "AGI-Agent-v0": "A minimal yet unstoppable blueprint for multi-agent AI—anchored by the rare, far-reaching Multi-Agent AI DAO (2017 prior art)—for superintelligent on-chain agents.",
-      "AGI-Alpha-Agent-v0": "META‑AGENTIC α‑AGI mission: Identify → Out‑Learn → Out‑Think → Out‑Design → Out‑Strategise → Out‑Execute.",
-      "AGIJobsv0": "The Operating System for AGI Work.",
-      "AGI-Alpha-Node-v0": "AGI Alpha Node (.alpha.node.agi.eth) deployment and integration with META‑AGENTIC α‑AGI and AGI Jobs.",
-      "AGIJobManager": "AGIJobManager ALPHA v0.",
-      "AGIJobManagerPrime": "Next-generation sovereign AI labor protocol with autonomous discovery and institutional-grade settlement."
-    };
-
-    const ATLAS_DATA = [
-      {type:"Essays", title:"AI Sovereignty: Empowering Nations with an AGI-Driven Labor Engine", href:"https://www.linkedin.com/pulse/ai-sovereignty-empowering-nations-agi-driven-labor-engine-boucher-afhme/", tags:["sovereignty","labor"]},
-      {type:"Essays", title:"The Agent‑Native Economy: Survival, Sovereignty, and Sales in a Machine-to-Machine World", href:"https://www.linkedin.com/pulse/agentnative-economy-survival-sovereignty-sales-world-vincent-boucher-vgmre/", tags:["market","agent"]},
-      {type:"Essays", title:"From Turing to the Agentic Economy", href:"https://www.linkedin.com/pulse/from-turing-agentic-economy-how-2017-multiagent-ai-dao-boucher-pquze", tags:["history","dao"]},
-      {type:"Essays", title:"Empowering AI Sovereignty with a Decentralized AGI Labor Platform", href:"https://www.linkedin.com/pulse/empowering-ai-sovereignty-decentralized-agi-labor-platform-boucher-y1fte/", tags:["labor","platform"]},
-      {type:"Essays", title:"Public Memory for Machine Labor", href:"https://www.linkedin.com/pulse/public-memory-machine-labor-ens-job-pages-knowledge-vincent-boucher-seifc/", tags:["memory","ens"]},
-      {type:"Essays", title:"The Sovereign Machine", href:"https://www.linkedin.com/pulse/sovereign-machine-how-autonomous-ai-protocol-owner-rewrites-boucher-fl48e/", tags:["governance","economics"]},
-      {type:"Essays", title:"The $15 Quadrillion Agentic AI Frontier of Work", href:"https://www.linkedin.com/pulse/15-quadrillion-agentic-ai-frontier-work-vincent-boucher-ry03e/", tags:["frontier","work"]},
-      {type:"Essays", title:"AGI Alpha: Forging the Autonomous AI Economy", href:"https://www.linkedin.com/pulse/agi-alpha-forging-autonomous-ai-economy-vincent-boucher-ujb7e/", tags:["economy"]},
-      {type:"Essays", title:"Rise of the Alpha Agents", href:"https://www.linkedin.com/pulse/rise-alpha-agents-planetary-agi-labor-revolution-vincent-boucher-hcafe/", tags:["planetary"]},
-      {type:"Essays", title:"The Sovereign Agent Economy", href:"https://www.linkedin.com/pulse/sovereign-agent-economy-recursive-self-improvement-meets-boucher-hwjte/", tags:["rsi","settlement"]},
-      {type:"Essays", title:"Foundational Protocol for Autonomous AI Agents Work Launches on Ethereum Mainnet", href:"https://www.linkedin.com/pulse/foundational-protocol-autonomous-ai-agents-work-launches-boucher-sg7zf/", tags:["ethereum","launch"]},
-      {type:"Essays", title:"THE MACHINE THAT BOUGHT THE SUN", href:"https://www.linkedin.com/pulse/machine-bought-sun-vincent-boucher-kajje/", tags:["long-horizon"]},
-      {type:"Decks", title:"AI_AGI_ASI_Sovereign_Portfolio_v4.pdf", href:"https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf", tags:["portfolio","identity"]},
-      {type:"Decks", title:"AGI_Alpha_RSI_Sovereign_v0.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_v0.pdf", tags:["rsi"]},
-      {type:"Decks", title:"AGI_Alpha_RSI_Sovereign_Strategy_Brief_v0.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_Strategy_Brief_v0.pdf", tags:["strategy"]},
-      {type:"Decks", title:"AGI_Alpha_RSI_Sovereign_Current_Status_Snapshot_Presentation_v1.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_Current_Status_Snapshot_Presentation_v1.pdf", tags:["status"]},
-      {type:"Decks", title:"AGI_Alpha_RSI_Executive_Summary_v0.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Executive_Summary_v0.pdf", tags:["executive"]},
-      {type:"Decks", title:"AGI_Alpha_RSI_Executive_Overview_v0.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Executive_Overview_v0.pdf", tags:["executive"]},
-      {type:"Decks", title:"MONTREALAI_x_ERC8004_v0.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf", tags:["identity","erc8004"]},
-      {type:"Decks", title:"AGI_Eth_Unified_v0.pdf", href:"https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGI_Eth_Unified_v0.pdf", tags:["ethereum"]},
-      {type:"Decks", title:"ENS_Routing_as_a_Market_Mechanism_v0.pdf", href:"https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf", tags:["ens"]},
-      {type:"Decks", title:"RootNameGovernance_AGIeth_v0.pdf", href:"https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf", tags:["governance"]},
-      {type:"Decks", title:"AGI_Eth_ANCS_Season-One_v0.pdf", href:"https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGI_Eth_ANCS_Season-One_v0.pdf", tags:["season"]},
-      {type:"Decks", title:"META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1.pdf", tags:["meta-agentic"]},
-      {type:"Decks", title:"alpha_asi_world_model_v0.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_asi_world_model/presentation/alpha_asi_world_model_v0.pdf", tags:["world-model"]},
-      {type:"Decks", title:"Solving_Alpha-AGI_Governance_v0.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/solving_agi_governance/presentation/Solving_Alpha-AGI_Governance_v0.pdf", tags:["governance"]},
-      {type:"Decks", title:"OMEGA_GRADE_Business_3_v0.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_agi_business_3_v1/presentation/OMEGA_GRADE_Business_3_v0.pdf", tags:["business"]},
-      {type:"Decks", title:"Verified_Autonomy_Control_Plane_v0.pdf", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/Verified_Autonomy_Control_Plane_v0.pdf", tags:["control-plane"]},
-      {type:"Decks", title:"AGIJobsv0.pdf", href:"https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGIJobsv0.pdf", tags:["jobs"]},
-      {type:"Repos", title:"AGI-Agent-v0", href:"https://github.com/MontrealAI/AGI-Agent-v0", tags:["repository"]},
-      {type:"Repos", title:"AGI-Alpha-Agent-v0", href:"https://github.com/MontrealAI/AGI-Alpha-Agent-v0", tags:["repository"]},
-      {type:"Contracts", title:"AGIJobManager", href:"https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code", tags:["ethereum","settlement"]},
-      {type:"Identity", title:"agi.eth root", href:"https://app.ens.domains/agi.eth", tags:["ens"]},
-      {type:"Governance", title:"AGI.eth — Root‑Name Governance", href:"https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf", tags:["governance"]}
+    const CACHE_TTL = 1000 * 60 * 60;
+    const PINNED_ORDER = [
+      "AGI-Agent-v0",
+      "AGI-Alpha-Agent-v0",
+      "AGIJobsv0",
+      "AGI-Alpha-Node-v0",
+      "AGIJobManager",
+      "AGIJobManagerPrime"
     ];
 
-    function readCache(key) {
+    const PINNED_FALLBACK = {
+      "AGI-Agent-v0": "A minimal yet unstoppable blueprint for multi-agent AI—anchored by the rare, far-reaching Multi-Agent AI DAO (2017 Prior Art)—empowering a new wave of superintelligent on-chain Agents.",
+      "AGI-Alpha-Agent-v0": "META‑AGENTIC α‑AGI — Mission End‑to‑end: Identify → Out‑Learn → Out‑Think → Out‑Design → Out‑Strategise → Out‑Execute.",
+      "AGIJobsv0": "The Operating System for AGI Work.",
+      "AGI-Alpha-Node-v0": "AGI Alpha Node (.alpha.node.agi.eth) – deployment & integration with META‑AGENTIC α‑AGI and AGI Jobs.",
+      "AGIJobManager": "AGIJobManager ALPHA v0.",
+      "AGIJobManagerPrime": "Next-generation sovereign AI labor protocol featuring autonomous agent discovery, game-theoretic job markets, and institutional-grade on-chain settlement."
+    };
+
+    const CONTRACTS = [
+      ["AGIJobManager", "Main execution contract", "0xb3aaeb69b630f0299791679c063d68d6687481d1", "https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code"],
+      ["ENSJobPages", "ENS-linked job memory", "0x06188E77C1C38d392b16d9D9fB24673363ce1da0", "https://etherscan.io/address/0x06188E77C1C38d392b16d9D9fB24673363ce1da0#code"],
+      ["AGIJobDiscoveryPrime", "Agent/job discovery", "0xd5ef1dde7ac60488f697ff2a7967a52172a78f29", "https://etherscan.io/address/0xd5ef1dde7ac60488f697ff2a7967a52172a78f29#code"],
+      ["AGIJobManagerPrime", "Prime settlement engine", "0xf8fc6572098ddcac4560e17ca4a683df30ea993e", "https://etherscan.io/address/0xf8fc6572098ddcac4560e17ca4a683df30ea993e#code"],
+      ["AGIJobManager (Burn)", "Burn lifecycle", "0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2", "https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#code"],
+      ["ENSJobPages (Burn)", "Burn memory registry", "0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5", "https://etherscan.io/address/0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5#code"],
+      ["AGIALPHA token", "Native token surface", "0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA", "https://etherscan.io/address/0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA"]
+    ];
+
+    const RESOURCES = [
+      ["Essays","AI Sovereignty: Empowering Nations with an AGI-Driven Labor Engine","https://www.linkedin.com/pulse/ai-sovereignty-empowering-nations-agi-driven-labor-engine-boucher-afhme/","Sovereignty"],
+      ["Essays","The Agent‑Native Economy: Survival, Sovereignty, and Sales in a Machine-to-Machine World","https://www.linkedin.com/pulse/agentnative-economy-survival-sovereignty-sales-world-vincent-boucher-vgmre/","Market"],
+      ["Essays","From Turing to the Agentic Economy: How the 2017 Multi‑Agent AI DAO Became the Next Colossal Breakthrough","https://www.linkedin.com/pulse/from-turing-agentic-economy-how-2017-multiagent-ai-dao-boucher-pquze","History"],
+      ["Essays","Empowering AI Sovereignty with a Decentralized AGI Labor Platform","https://www.linkedin.com/pulse/empowering-ai-sovereignty-decentralized-agi-labor-platform-boucher-y1fte/","Labor"],
+      ["Essays","Public Memory for Machine Labor: ENS Job Pages as Civilization-Scale Knowledge Substrates","https://www.linkedin.com/pulse/public-memory-machine-labor-ens-job-pages-knowledge-vincent-boucher-seifc/","Memory"],
+      ["Essays","The Sovereign Machine: How an Autonomous AI Protocol Owner in AGIJobManager Rewrites the Economics of Work, Value, and Power","https://www.linkedin.com/pulse/sovereign-machine-how-autonomous-ai-protocol-owner-rewrites-boucher-fl48e/","Governance"],
+      ["Essays","The $15 Quadrillion Agentic AI Frontier of Work","https://www.linkedin.com/pulse/15-quadrillion-agentic-ai-frontier-work-vincent-boucher-ry03e/","Economics"],
+      ["Essays","AGI Alpha: Forging the Autonomous AI Economy","https://www.linkedin.com/pulse/agi-alpha-forging-autonomous-ai-economy-vincent-boucher-ujb7e/","Economy"],
+      ["Essays","Rise of the Alpha Agents: The Planetary AGI Labor Revolution","https://www.linkedin.com/pulse/rise-alpha-agents-planetary-agi-labor-revolution-vincent-boucher-hcafe/","Labor"],
+      ["Essays","The Sovereign Agent Economy: Recursive Self-Improvement Meets On-Chain Settlement","https://www.linkedin.com/pulse/sovereign-agent-economy-recursive-self-improvement-meets-boucher-hwjte/","Settlement"],
+      ["Essays","Foundational Protocol for Autonomous AI Agents Work Launches on Ethereum Mainnet","https://www.linkedin.com/pulse/foundational-protocol-autonomous-ai-agents-work-launches-boucher-sg7zf/","Mainnet"],
+      ["Essays","THE MACHINE THAT BOUGHT THE SUN","https://www.linkedin.com/pulse/machine-bought-sun-vincent-boucher-kajje/","Futures"],
+      ["Decks","AI_AGI_ASI_Sovereign_Portfolio_v4.pdf","https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf","Identity"],
+      ["Decks","AGI_Alpha_RSI_Sovereign_v0.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_v0.pdf","Governance"],
+      ["Decks","AGI_Alpha_RSI_Sovereign_Strategy_Brief_v0.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_Strategy_Brief_v0.pdf","Strategy"],
+      ["Decks","AGI_Alpha_RSI_Sovereign_Current_Status_Snapshot_Presentation_v1.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_Current_Status_Snapshot_Presentation_v1.pdf","Status"],
+      ["Decks","AGI_Alpha_RSI_Executive_Summary_v0.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Executive_Summary_v0.pdf","Executive"],
+      ["Decks","AGI_Alpha_RSI_Executive_Overview_v0.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Executive_Overview_v0.pdf","Executive"],
+      ["Decks","MONTREALAI_x_ERC8004_v0.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf","Identity"],
+      ["Decks","AGI_Eth_Unified_v0.pdf","https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGI_Eth_Unified_v0.pdf","Identity"],
+      ["Decks","ENS_Routing_as_a_Market_Mechanism_v0.pdf","https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf","Identity"],
+      ["Decks","RootNameGovernance_AGIeth_v0.pdf","https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf","Governance"],
+      ["Decks","AGI_Eth_ANCS_Season-One_v0.pdf","https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGI_Eth_ANCS_Season-One_v0.pdf","Identity"],
+      ["Decks","META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1.pdf","Agents"],
+      ["Decks","alpha_asi_world_model_v0.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_asi_world_model/presentation/alpha_asi_world_model_v0.pdf","World model"],
+      ["Decks","Solving_Alpha-AGI_Governance_v0.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/solving_agi_governance/presentation/Solving_Alpha-AGI_Governance_v0.pdf","Governance"],
+      ["Decks","OMEGA_GRADE_Business_3_v0.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_agi_business_3_v1/presentation/OMEGA_GRADE_Business_3_v0.pdf","Business"],
+      ["Decks","Verified_Autonomy_Control_Plane_v0.pdf","https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/Verified_Autonomy_Control_Plane_v0.pdf","Governance"],
+      ["Decks","AGIJobsv0.pdf","https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGIJobsv0.pdf","Labor"],
+      ["Repos","AGI-Agent-v0","https://github.com/MontrealAI/AGI-Agent-v0","Pinned"],
+      ["Repos","AGI-Alpha-Agent-v0","https://github.com/MontrealAI/AGI-Alpha-Agent-v0","Pinned"],
+      ["Contracts","AGIJobManager","https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code","Mainnet"],
+      ["Identity","agi.eth / asi.eth Sovereign roots","https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf","ENS"],
+      ["Governance","Root-Name Governance (AGI.eth)","https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf","Governance"]
+    ];
+
+    function cacheGet(key) {
       try {
         const raw = localStorage.getItem(key);
         if (!raw) return null;
@@ -929,8 +1010,10 @@
       }
     }
 
-    function writeCache(key, data) {
-      try { localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data })); } catch {}
+    function cacheSet(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }));
+      } catch {}
     }
 
     async function fetchWithTimeout(url, ms = 8000) {
@@ -938,7 +1021,7 @@
       const timer = setTimeout(() => controller.abort(), ms);
       try {
         const res = await fetch(url, { signal: controller.signal, headers: { Accept: "application/json" } });
-        if (!res.ok) throw new Error("Bad response");
+        if (!res.ok) throw new Error("HTTP " + res.status);
         return await res.json();
       } finally {
         clearTimeout(timer);
@@ -946,323 +1029,329 @@
     }
 
     async function fetchContributions() {
-      const cacheKey = "mai_contrib_v1";
-      const cached = readCache(cacheKey);
-      if (cached) return { ...cached, fromCache: true };
-      const data = await fetchWithTimeout("https://github-contributions-api.jogruber.de/v4/MontrealAI?y=last", 9000);
-      const payload = {
-        total: data?.total?.[0]?.count ?? 0,
-        days: (data?.contributions || []).flatMap(c => c?.days || [])
-      };
-      writeCache(cacheKey, payload);
-      return payload;
+      const cacheKey = "mai_contrib_last";
+      const cached = cacheGet(cacheKey);
+      if (cached) return { data: cached, source: "cache" };
+      try {
+        const data = await fetchWithTimeout("https://github-contributions-api.jogruber.de/v4/MontrealAI?y=last", 9000);
+        cacheSet(cacheKey, data);
+        return { data, source: "live" };
+      } catch {
+        const stale = localStorage.getItem(cacheKey);
+        if (stale) {
+          try { return { data: JSON.parse(stale).data, source: "stale" }; } catch {}
+        }
+        return { data: null, source: "none" };
+      }
     }
 
     async function fetchGithubOrg() {
-      const cacheKey = "mai_org_v1";
-      const cached = readCache(cacheKey);
+      const cacheKey = "mai_org";
+      const cached = cacheGet(cacheKey);
       if (cached) return cached;
-      const data = await fetchWithTimeout("https://api.github.com/users/MontrealAI", 9000);
-      writeCache(cacheKey, data);
-      return data;
+      try {
+        const data = await fetchWithTimeout("https://api.github.com/users/MontrealAI");
+        cacheSet(cacheKey, data);
+        return data;
+      } catch {
+        const stale = localStorage.getItem(cacheKey);
+        return stale ? JSON.parse(stale).data : null;
+      }
     }
 
     async function fetchGithubRepos() {
-      const cacheKey = "mai_repos_v1";
-      const cached = readCache(cacheKey);
+      const cacheKey = "mai_repos";
+      const cached = cacheGet(cacheKey);
       if (cached) return cached;
-      const data = await fetchWithTimeout("https://api.github.com/users/MontrealAI/repos?per_page=100&sort=updated", 9000);
-      writeCache(cacheKey, data);
-      return data;
+      try {
+        const data = await fetchWithTimeout("https://api.github.com/users/MontrealAI/repos?per_page=100&sort=updated");
+        cacheSet(cacheKey, data);
+        return data;
+      } catch {
+        const stale = localStorage.getItem(cacheKey);
+        return stale ? JSON.parse(stale).data : [];
+      }
+    }
+
+    function formatInt(n) { return Number(n || 0).toLocaleString("en-US"); }
+    function formatDate(iso) {
+      if (!iso) return "n/a";
+      const d = new Date(iso);
+      return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
     }
 
     function renderContributionHeatmap(days = []) {
-      const heatmap = document.getElementById("contribHeatmap");
-      heatmap.innerHTML = "";
-      const sliced = days.slice(-371);
-      if (!sliced.length) {
-        heatmap.innerHTML = "<div class='mono' style='grid-column:1/-1;color:var(--muted);'>Live sync unavailable — open GitHub profile for current graph.</div>";
+      const root = document.getElementById("contributionHeatmap");
+      if (!root) return;
+      root.innerHTML = "";
+      const slice = days.slice(-371);
+      if (!slice.length) {
+        root.innerHTML = '<span style="color:var(--warning);font-size:.85rem;">Live sync unavailable. <a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">Open GitHub</a>.</span>';
         return;
       }
-      const max = Math.max(...sliced.map(d => d.count || 0), 1);
-      sliced.forEach((d) => {
-        const ratio = (d.count || 0) / max;
-        const cell = document.createElement("div");
-        cell.className = "heat-cell";
-        cell.style.background = `color-mix(in srgb, var(--accent) ${Math.round(12 + ratio * 80)}%, var(--bg-0))`;
-        cell.title = `${d.date || "unknown"}: ${d.count || 0} contributions`;
-        heatmap.appendChild(cell);
+      const max = Math.max(1, ...slice.map(d => d.count || 0));
+      slice.forEach(d => {
+        const c = d.count || 0;
+        const level = c === 0 ? 0 : Math.ceil((c / max) * 4);
+        const cell = document.createElement("span");
+        cell.className = "heat";
+        const colors = [
+          "color-mix(in srgb, var(--accent) 8%, #0f0f14)",
+          "color-mix(in srgb, var(--accent) 28%, #0f0f14)",
+          "color-mix(in srgb, var(--accent) 44%, #0f0f14)",
+          "color-mix(in srgb, var(--accent) 62%, #0f0f14)",
+          "color-mix(in srgb, var(--accent) 80%, #0f0f14)"
+        ];
+        cell.style.background = colors[level];
+        const date = d.date || "";
+        cell.dataset.tip = `${c} on ${date}`;
+        root.appendChild(cell);
       });
     }
 
-    function animateCount(el, target) {
-      if (!el || Number.isNaN(Number(target))) return;
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduce) { el.textContent = Number(target).toLocaleString(); return; }
+    function countUp(el, target) {
+      if (!el) return;
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReduced) { el.textContent = formatInt(target); return; }
       const start = performance.now();
-      const from = 0;
-      const duration = 850;
-      function frame(now) {
-        const t = Math.min((now - start) / duration, 1);
-        const v = Math.round(from + (target - from) * (1 - Math.pow(1 - t, 3)));
-        el.textContent = v.toLocaleString();
-        if (t < 1) requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
-    }
-
-    function fmtDate(iso) {
-      const d = new Date(iso);
-      return Number.isNaN(d.getTime()) ? "n/a" : d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
-    }
-
-    function safeExternalUrl(url, fallback) {
-      const value = (url || "").trim();
-      if (!value) return fallback;
-      if (/^https?:\/\//i.test(value)) return value;
-      return fallback;
+      const dur = 700;
+      const init = 0;
+      const step = (t) => {
+        const p = Math.min(1, (t - start) / dur);
+        const val = Math.floor(init + (target - init) * (1 - Math.pow(1 - p, 3)));
+        el.textContent = formatInt(val);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
     }
 
     function buildPinnedCards(repos = []) {
-      const grid = document.getElementById("pinnedGrid");
-      const byName = Object.fromEntries(repos.map(r => [r.name, r]));
+      const map = new Map(repos.map(r => [r.name, r]));
+      const lead = map.get("AGI-Agent-v0") || { name: "AGI-Agent-v0", description: PINNED_FALLBACK["AGI-Agent-v0"], stargazers_count: 0, forks_count: 0, language: "—", html_url: "https://github.com/MontrealAI/AGI-Agent-v0" };
+      const leadCard = document.getElementById("leadRepoCard");
+      leadCard.textContent = "";
+      const leadEyebrow = document.createElement("p");
+      leadEyebrow.className = "eyebrow";
+      leadEyebrow.textContent = "Lead pinned repository";
+      const leadTitle = document.createElement("h3");
+      leadTitle.style.fontSize = "1.55rem";
+      leadTitle.style.marginBottom = ".4rem";
+      leadTitle.textContent = lead.name || "AGI-Agent-v0";
+      const leadDesc = document.createElement("p");
+      leadDesc.style.color = "var(--text-soft)";
+      leadDesc.style.marginBottom = ".8rem";
+      leadDesc.textContent = lead.description || PINNED_FALLBACK[lead.name] || PINNED_FALLBACK["AGI-Agent-v0"];
+      const leadMeta = document.createElement("div");
+      leadMeta.className = "repo-meta";
+      leadMeta.style.marginBottom = ".8rem";
+      [lead.language || "Unknown", `★ ${formatInt(lead.stargazers_count)}`, `⑂ ${formatInt(lead.forks_count)}`, `Updated ${formatDate(lead.updated_at)}`].forEach(text => {
+        const span = document.createElement("span");
+        span.textContent = text;
+        leadMeta.appendChild(span);
+      });
+      const leadLink = document.createElement("a");
+      leadLink.className = "btn primary";
+      leadLink.href = lead.html_url || "https://github.com/MontrealAI/AGI-Agent-v0";
+      leadLink.target = "_blank";
+      leadLink.rel = "noopener noreferrer";
+      leadLink.textContent = "Open repository";
+      leadCard.append(leadEyebrow, leadTitle, leadDesc, leadMeta, leadLink);
+
+      const grid = document.getElementById("pinnedRepoGrid");
       grid.innerHTML = "";
-      PINNED_ORDER.forEach((name, idx) => {
-        const repo = byName[name] || {};
-        const card = document.createElement("article");
-        card.className = `card repo-card ${idx === 0 ? "lead" : ""}`;
+      PINNED_ORDER.slice(1).forEach(name => {
+        const repo = map.get(name) || { name, description: PINNED_FALLBACK[name], stargazers_count: 0, forks_count: 0, language: "—", html_url: `https://github.com/MontrealAI/${name}` };
+        const el = document.createElement("article");
+        el.className = "repo-card";
         const head = document.createElement("div");
-        const kicker = document.createElement("span");
-        kicker.className = "kicker";
-        kicker.style.fontSize = ".68rem";
-        kicker.style.padding = ".35rem .62rem";
-        kicker.textContent = idx === 0 ? "Lead pinned" : "Pinned";
+        head.className = "repo-head";
+        const title = document.createElement("div");
+        title.className = "repo-title";
+        title.textContent = repo.name || name;
+        const link = document.createElement("a");
+        link.className = "btn";
+        link.style.padding = ".32rem .6rem";
+        link.style.fontSize = ".75rem";
+        link.href = repo.html_url || `https://github.com/MontrealAI/${name}`;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "Open";
+        head.append(title, link);
 
-        const title = document.createElement("h3");
-        title.style.marginTop = ".55rem";
-        title.style.fontSize = idx === 0 ? "1.8rem" : "1.25rem";
-        title.textContent = name;
-        head.append(kicker, title);
-
-        const desc = document.createElement("p");
-        desc.textContent = repo.description || FALLBACK_DESCRIPTIONS[name] || "Repository";
+        const desc = document.createElement("div");
+        desc.className = "repo-desc";
+        desc.textContent = repo.description || PINNED_FALLBACK[repo.name] || "Repository record.";
 
         const meta = document.createElement("div");
         meta.className = "repo-meta";
-        [repo.language || "n/a", `★ ${(repo.stargazers_count ?? 0).toLocaleString()}`, `⑂ ${(repo.forks_count ?? 0).toLocaleString()}`, `Updated ${fmtDate(repo.updated_at)}`]
-          .forEach((text) => {
-            const span = document.createElement("span");
-            span.textContent = text;
-            meta.appendChild(span);
-          });
-
-        const buttons = document.createElement("div");
-        buttons.className = "btn-row";
-        buttons.style.marginTop = "0";
-        const repoBtn = document.createElement("a");
-        repoBtn.className = "btn";
-        repoBtn.href = safeExternalUrl(repo.html_url, `https://github.com/MontrealAI/${name}`);
-        repoBtn.target = "_blank";
-        repoBtn.rel = "noopener noreferrer";
-        repoBtn.textContent = "Open repository";
-        buttons.appendChild(repoBtn);
-
-        if (repo.homepage) {
-          const homepageBtn = document.createElement("a");
-          homepageBtn.className = "btn";
-          homepageBtn.href = safeExternalUrl(repo.homepage, repoBtn.href);
-          homepageBtn.target = "_blank";
-          homepageBtn.rel = "noopener noreferrer";
-          homepageBtn.textContent = "Homepage";
-          buttons.appendChild(homepageBtn);
-        }
-
-        card.append(head, desc, meta, buttons);
-        grid.appendChild(card);
+        [repo.language || "Unknown", `★ ${formatInt(repo.stargazers_count)}`, `⑂ ${formatInt(repo.forks_count)}`, formatDate(repo.updated_at)].forEach(text => {
+          const span = document.createElement("span");
+          span.textContent = text;
+          meta.appendChild(span);
+        });
+        el.append(head, desc, meta);
+        grid.appendChild(el);
       });
-    }
-
-    function buildContracts() {
-      const contracts = [
-        ["AGIJobManager", "Primary labor protocol manager", "0xb3aaeb69b630f0299791679c063d68d6687481d1", "https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code"],
-        ["ENSJobPages", "Public memory and job page interface", "0x06188E77C1C38d392b16d9D9fB24673363ce1da0", "https://etherscan.io/address/0x06188E77C1C38d392b16d9D9fB24673363ce1da0#code"],
-        ["AGIJobDiscoveryPrime", "Autonomous discovery and market routing", "0xd5ef1dde7ac60488f697ff2a7967a52172a78f29", "https://etherscan.io/address/0xd5ef1dde7ac60488f697ff2a7967a52172a78f29#code"],
-        ["AGIJobManagerPrime", "Prime settlement and game-theoretic execution", "0xf8fc6572098ddcac4560e17ca4a683df30ea993e", "https://etherscan.io/address/0xf8fc6572098ddcac4560e17ca4a683df30ea993e#code"],
-        ["AGIJobManager (Burn)", "Economic sink and lifecycle controls", "0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2", "https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#code"],
-        ["ENSJobPages (Burn)", "Burn-page sink and archival integrity", "0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5", "https://etherscan.io/address/0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5#code"],
-        ["AGIALPHA token", "Network economic unit", "0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA", "https://etherscan.io/address/0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA"]
-      ];
-      const host = document.getElementById("contractsGrid");
-      host.innerHTML = contracts.map(([name, role, addr, link]) => `
-        <article class="card contract">
-          <h3 style="font-size:1.1rem;">${name}</h3>
-          <p style="font-size:.9rem;margin-top:.35rem;">${role}</p>
-          <div class="addr"><span>${addr.slice(0, 10)}…${addr.slice(-8)}</span><button class="copy-btn" data-copy="${addr}">Copy</button></div>
-          <div class="btn-row" style="margin-top:.6rem;"><a class="btn" href="${link}" target="_blank" rel="noopener noreferrer">Open Etherscan</a></div>
-        </article>`).join("");
     }
 
     function buildResourceAtlas() {
       const grid = document.getElementById("atlasGrid");
       const search = document.getElementById("atlasSearch");
-      const filters = document.getElementById("atlasFilters");
-      const categories = ["All", "Essays", "Decks", "Repos", "Contracts", "Identity", "Governance"];
+      const chips = [...document.querySelectorAll(".filter-chip")];
       let active = "All";
 
-      filters.innerHTML = categories.map(cat => `<button type="button" class="filter-chip ${cat === "All" ? "active" : ""}" data-cat="${cat}">${cat}</button>`).join("");
-
-      function render() {
-        const q = search.value.trim().toLowerCase();
-        const items = ATLAS_DATA.filter(item => {
-          const catOk = active === "All" || item.type === active;
-          const text = `${item.title} ${item.type} ${(item.tags || []).join(" ")}`.toLowerCase();
-          return catOk && (!q || text.includes(q));
+      const render = () => {
+        const q = (search.value || "").toLowerCase().trim();
+        const items = RESOURCES.filter(([type, title, , theme]) => {
+          const inType = active === "All" || type === active;
+          const blob = `${type} ${title} ${theme}`.toLowerCase();
+          return inType && (!q || blob.includes(q));
         });
+        grid.innerHTML = "";
+        items.slice(0, 30).forEach(([type, title, url, theme]) => {
+          const el = document.createElement("article");
+          el.className = "atlas-item";
+          el.innerHTML = `
+            <p class="eyebrow" style="margin:0;font-size:.66rem;">${type}</p>
+            <h4>${title}</h4>
+            <p>Theme: ${theme}</p>
+            <a class="btn" style="padding:.35rem .58rem;font-size:.77rem;width:fit-content;" href="${url}" target="_blank" rel="noopener noreferrer">Open</a>
+          `;
+          grid.appendChild(el);
+        });
+        if (!items.length) {
+          grid.innerHTML = '<p style="color:var(--warning);">No resources match this filter.</p>';
+        }
+      };
 
-        grid.innerHTML = items.slice(0, 24).map(item => `
-          <article class="card atlas-item">
-            <small>${item.type}</small>
-            <h3 style="font-size:1rem;margin-top:.35rem;">${item.title}</h3>
-            <div class="btn-row" style="margin-top:.7rem;"><a class="btn" href="${item.href}" target="_blank" rel="noopener noreferrer">Open</a></div>
-          </article>`).join("");
-      }
-
-      filters.addEventListener("click", (e) => {
-        const btn = e.target.closest("button[data-cat]");
-        if (!btn) return;
-        active = btn.dataset.cat;
-        [...filters.querySelectorAll("button")].forEach(b => b.classList.toggle("active", b === btn));
-        render();
+      chips.forEach(chip => {
+        chip.addEventListener("click", () => {
+          chips.forEach(c => c.classList.remove("active"));
+          chip.classList.add("active");
+          active = chip.dataset.filter;
+          render();
+        });
       });
       search.addEventListener("input", render);
       render();
     }
 
     function wireCopyButtons() {
-      document.body.addEventListener("click", async (e) => {
-        const btn = e.target.closest("[data-copy], [data-copy-target]");
-        if (!btn) return;
-        try {
-          let text = btn.dataset.copy;
-          if (!text && btn.dataset.copyTarget) {
-            const target = document.querySelector(btn.dataset.copyTarget);
-            text = target ? target.textContent : "";
+      document.querySelectorAll(".copy-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const fromTarget = btn.dataset.copyTarget;
+          const text = fromTarget ? document.querySelector(fromTarget)?.textContent : btn.dataset.copy;
+          if (!text) return;
+          try {
+            await navigator.clipboard.writeText(text.trim());
+            const old = btn.textContent;
+            btn.textContent = "Copied";
+            setTimeout(() => (btn.textContent = old), 1200);
+          } catch {
+            btn.textContent = "Copy failed";
           }
-          await navigator.clipboard.writeText(text || "");
-          const prev = btn.textContent;
-          btn.textContent = "Copied";
-          setTimeout(() => { btn.textContent = prev; }, 1200);
-        } catch {
-          btn.textContent = "Unavailable";
-        }
+        });
       });
     }
 
     function initTheme() {
-      const toggle = document.getElementById("themeToggle");
-      const stored = localStorage.getItem("mai_theme");
-      if (stored) document.documentElement.setAttribute("data-theme", stored);
-      toggle.addEventListener("click", () => {
-        const curr = document.documentElement.getAttribute("data-theme") === "light" ? "deep" : "light";
-        document.documentElement.setAttribute("data-theme", curr);
-        localStorage.setItem("mai_theme", curr);
+      const root = document.documentElement;
+      const saved = localStorage.getItem("mai_theme");
+      if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+      const t = document.getElementById("themeToggle");
+      t.addEventListener("click", () => {
+        const next = root.dataset.theme === "light" ? "dark" : "light";
+        root.dataset.theme = next;
+        localStorage.setItem("mai_theme", next);
       });
     }
 
-    function initReveal() {
-      const items = document.querySelectorAll(".reveal");
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        items.forEach(i => i.classList.add("in"));
-        return;
-      }
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in");
-            io.unobserve(entry.target);
-          }
-        });
-      }, { threshold: .16 });
-      items.forEach(i => io.observe(i));
+    function initContracts() {
+      const root = document.getElementById("contractsGrid");
+      root.innerHTML = "";
+      CONTRACTS.forEach(([name, role, address, link]) => {
+        const short = `${address.slice(0, 8)}…${address.slice(-6)}`;
+        const el = document.createElement("article");
+        el.className = "contract-card card";
+        el.innerHTML = `
+          <h3>${name}</h3>
+          <p>${role}</p>
+          <p class="mono" style="margin:.6rem 0 .7rem; color:var(--accent-3); font-size:.85rem;">${short} <button class="chip-btn copy-btn" type="button" data-copy="${address}">Copy</button></p>
+          <a class="btn" href="${link}" target="_blank" rel="noopener noreferrer">View on Etherscan</a>
+        `;
+        root.appendChild(el);
+      });
     }
 
-    function initNav() {
-      const nav = document.getElementById("primary-nav");
-      const btn = document.querySelector(".menu-toggle");
-      btn.addEventListener("click", () => {
-        const open = nav.classList.toggle("open");
-        btn.setAttribute("aria-expanded", open ? "true" : "false");
-      });
-      nav.addEventListener("click", (e) => {
-        if (e.target.matches("a")) { nav.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); }
-      });
-
-      const ids = ["vision", "founder", "build", "ens", "library", "portfolio"];
-      const links = [...nav.querySelectorAll("a")];
+    function initActiveNav() {
+      const links = [...document.querySelectorAll(".nav-links a")];
+      const sections = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (!entry.isIntersecting) return;
-          const id = entry.target.id;
-          links.forEach(a => a.setAttribute("aria-current", a.getAttribute("href") === `#${id}` ? "true" : "false"));
+          links.forEach(l => l.removeAttribute("aria-current"));
+          const link = links.find(l => l.getAttribute("href") === `#${entry.target.id}`);
+          if (link) link.setAttribute("aria-current", "true");
         });
-      }, { rootMargin: "-40% 0px -40% 0px", threshold: 0 });
-      ids.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) io.observe(el);
+      }, { rootMargin: "-45% 0px -45% 0px", threshold: 0.01 });
+      sections.forEach(s => io.observe(s));
+    }
+
+    function initMenu() {
+      const btn = document.getElementById("menuToggle");
+      const sheet = document.getElementById("mobileSheet");
+      btn.addEventListener("click", () => {
+        const open = sheet.hidden;
+        sheet.hidden = !open;
+        sheet.classList.toggle("open", open);
+        btn.setAttribute("aria-expanded", String(open));
       });
+      sheet.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+        sheet.hidden = true;
+        sheet.classList.remove("open");
+        btn.setAttribute("aria-expanded", "false");
+      }));
     }
 
     async function initLiveData() {
-      const contribTotal = document.getElementById("contribTotal");
-      const contribStatus = document.getElementById("contribStatus");
-      const heroLiveChip = document.getElementById("heroLiveChip");
+      const [contribRes, org, repos] = await Promise.all([
+        fetchContributions(),
+        fetchGithubOrg(),
+        fetchGithubRepos()
+      ]);
 
-      try {
-        const c = await fetchContributions();
-        const total = Number(c.total || 0);
-        contribTotal.dataset.count = total;
-        animateCount(contribTotal, total);
-        renderContributionHeatmap(c.days || []);
-        contribStatus.textContent = c.fromCache ? "Using cached value (≤1h old)" : "Live sync successful";
-        heroLiveChip.textContent = `${total.toLocaleString()} live GitHub contributions`;
-      } catch {
-        const fallback = readCache("mai_contrib_v1");
-        if (fallback?.total) {
-          const total = Number(fallback.total || 0);
-          contribTotal.textContent = total.toLocaleString();
-          renderContributionHeatmap(fallback.days || []);
-          contribStatus.textContent = "Live sync unavailable • showing cached value";
-          heroLiveChip.textContent = `${total.toLocaleString()} cached contributions`;
-        } else {
-          contribTotal.textContent = "—";
-          renderContributionHeatmap([]);
-          contribStatus.innerHTML = `Live sync unavailable • <a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer" class="mono">open GitHub</a>`;
-        }
+      if (org) {
+        countUp(document.getElementById("metricRepos"), org.public_repos || 0);
+        countUp(document.getElementById("metricFollowers"), org.followers || 0);
+      } else {
+        document.getElementById("metricRepos").textContent = "Live sync unavailable";
+        document.getElementById("metricFollowers").textContent = "Live sync unavailable";
       }
 
-      try {
-        const [org, repos] = await Promise.all([fetchGithubOrg(), fetchGithubRepos()]);
-        document.getElementById("repoCount").dataset.count = Number(org.public_repos || repos.length || 0);
-        document.getElementById("followerCount").dataset.count = Number(org.followers || 0);
-        animateCount(document.getElementById("repoCount"), Number(org.public_repos || repos.length || 0));
-        animateCount(document.getElementById("followerCount"), Number(org.followers || 0));
-        buildPinnedCards(repos || []);
-      } catch {
-        const org = readCache("mai_org_v1") || { public_repos: 0, followers: 0 };
-        const repos = readCache("mai_repos_v1") || [];
-        document.getElementById("repoCount").textContent = Number(org.public_repos || repos.length || 0).toLocaleString();
-        document.getElementById("followerCount").textContent = Number(org.followers || 0).toLocaleString();
-        buildPinnedCards(repos);
+      const contribPayload = contribRes?.data || null;
+      const hasJogruberShape = contribPayload && Array.isArray(contribPayload.contributions) && contribPayload.total && typeof contribPayload.total === "object";
+      if (hasJogruberShape) {
+        const total = Number(contribPayload.total.lastYear ?? Object.values(contribPayload.total)[0] ?? 0);
+        document.getElementById("metricContrib").textContent = formatInt(total);
+        document.getElementById("heroContrib").textContent = `${formatInt(total)} in the last year`;
+        const days = contribPayload.contributions.map(d => ({ count: Number(d.count || 0), date: d.date || "" }));
+        renderContributionHeatmap(days);
+      } else {
+        document.getElementById("metricContrib").textContent = "Live sync unavailable";
+        document.getElementById("heroContrib").innerHTML = '<a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">Live sync unavailable</a>';
+        renderContributionHeatmap([]);
       }
+
+      buildPinnedCards(Array.isArray(repos) ? repos : []);
     }
 
     document.getElementById("year").textContent = new Date().getFullYear();
     initTheme();
-    initReveal();
-    initNav();
-    wireCopyButtons();
-    buildContracts();
+    initMenu();
+    initContracts();
     buildResourceAtlas();
+    wireCopyButtons();
+    initActiveNav();
     initLiveData();
   </script>
 </body>
