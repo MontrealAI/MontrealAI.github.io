@@ -665,6 +665,15 @@
       if (!payload) return [];
       if (Array.isArray(payload.contributions)) return payload.contributions;
       if (payload.contributions && Array.isArray(payload.contributions.lastYear)) return payload.contributions.lastYear;
+      if (payload.contributions && typeof payload.contributions === 'object') {
+        const yearEntries = Object.entries(payload.contributions)
+          .filter(([k, v]) => /^20\d{2}$/.test(k) && Array.isArray(v))
+          .sort(([a], [b]) => Number(a) - Number(b));
+        if (yearEntries.length) return yearEntries[yearEntries.length - 1][1];
+
+        const firstArray = Object.values(payload.contributions).find(Array.isArray);
+        if (firstArray) return firstArray;
+      }
       return [];
     }
 
