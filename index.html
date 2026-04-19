@@ -1078,8 +1078,10 @@
     function resolveBasePath() {
       const segments = location.pathname.split('/').filter(Boolean);
       if (!segments.length) return '/';
-      if (segments[0].toLowerCase().includes('github.io') || location.hostname.includes('github.io')) {
-        return '/' + segments[0] + '/';
+      if (location.hostname.includes('github.io')) {
+        const first = segments[0] || '';
+        const looksLikeFile = /\.[a-z0-9]+$/i.test(first);
+        return looksLikeFile ? '/' : `/${first}/`;
       }
       return '/';
     }
@@ -1101,7 +1103,11 @@
         const res = await fetch(url, { ...init, signal: controller.signal, headers: { 'Accept': 'application/json', ...(init.headers || {}) } });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
-        localStorage.setItem(key, JSON.stringify({ ts: now, data }));
+        try {
+          localStorage.setItem(key, JSON.stringify({ ts: now, data }));
+        } catch {
+          // Storage may be unavailable (private mode / quota); keep live response.
+        }
         return { data, source: 'live' };
       } catch (error) {
         if (cached) return { data: cached.data, source: 'cache-stale', error };
@@ -1287,11 +1293,29 @@
       const contribValue = document.getElementById('contribValue');
       const contribStatus = document.getElementById('contribStatus');
       const overlayContrib = document.getElementById('overlayContrib');
-      try {
-        const [{ data: orgData }, { data: reposData }, contrib] = await Promise.all([fetchGithubOrg(), fetchGithubRepos(), fetchContributionData()]);
+      const [orgResult, reposResult, contribResult] = await Promise.allSettled([
+        fetchGithubOrg(),
+        fetchGithubRepos(),
+        fetchContributionData()
+      ]);
+
+      if (orgResult.status === 'fulfilled') {
+        const orgData = orgResult.value.data || {};
         document.getElementById('repoCount').textContent = NF.format(orgData.public_repos || 0);
         document.getElementById('followerCount').textContent = NF.format(orgData.followers || 0);
+      } else {
+        document.getElementById('repoCount').textContent = '—';
+        document.getElementById('followerCount').textContent = '—';
+      }
 
+      if (reposResult.status === 'fulfilled') {
+        renderPinnedRepos(Array.isArray(reposResult.value.data) ? reposResult.value.data : []);
+      } else {
+        renderPinnedRepos([]);
+      }
+
+      if (contribResult.status === 'fulfilled') {
+        const contrib = contribResult.value;
         const total = Number(contrib.data?.total || contrib.data?.contributions?.total || 0);
         contribValue.textContent = `${NF.format(total)} contributions in the last year`;
         overlayContrib.textContent = `${NF.format(total)} last year`;
@@ -1299,14 +1323,11 @@
         const days = contrib.data?.contributions || contrib.data?.days || contrib.data?.weeks?.flatMap(w => w.contributionDays || []) || [];
         renderContributionHeatmap(days);
         contribStatus.textContent = contrib.source === 'live' ? 'Live feed from contributions API.' : 'Showing cached contribution data.';
-
-        renderPinnedRepos(Array.isArray(reposData) ? reposData : []);
-      } catch {
+      } else {
         contribValue.innerHTML = 'Contributions unavailable. <a href="https://github.com/MontrealAI" target="_blank" rel="noopener noreferrer">Open GitHub</a>';
         contribStatus.textContent = 'Live signal unavailable. Fallback mode active.';
         overlayContrib.textContent = 'GitHub signal unavailable';
         renderContributionHeatmap([]);
-        renderPinnedRepos([]);
       }
     }
 
