@@ -779,16 +779,34 @@
         const humanDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(parseISODateLocal(item.date));
         const detail = item.count > 0 ? `${nf.format(item.count)} contributions on ${humanDate}` : `No contributions on ${humanDate}`;
         const inert = item.inRange ? '' : ' disabled aria-hidden="true" tabindex="-1"';
-        return `<td role="gridcell"><button type="button" data-level="${item.level}" data-detail="${detail}" aria-label="${detail}"${inert}></button></td>`;
+        return `<td role="gridcell"><button type="button" data-row="${day}" data-col="${col}" data-level="${item.level}" data-detail="${detail}" aria-label="${detail}"${inert}></button></td>`;
       }).join('');
       return `<tr><th scope="row" class="day-label">${lbl}</th>${cells}</tr>`;
     }).join('');
 
     table.innerHTML = `<caption>User activity over one year of time. Each column is one week, with older weeks to the left.</caption><thead>${monthRow}</thead><tbody>${bodyRows}</tbody>`;
-    table.querySelectorAll('button[data-detail]').forEach(btn => {
+    const buttons = Array.from(table.querySelectorAll('button[data-detail]'));
+    const byPos = new Map(buttons.map(btn => [`${btn.dataset.row}:${btn.dataset.col}`, btn]));
+
+    buttons.forEach(btn => {
       const update = () => { if (tooltip) tooltip.textContent = btn.dataset.detail; };
       btn.addEventListener('mouseenter', update);
       btn.addEventListener('focus', update);
+      btn.addEventListener('keydown', (event) => {
+        const keyMap = {
+          ArrowLeft: [0, -1],
+          ArrowRight: [0, 1],
+          ArrowUp: [-1, 0],
+          ArrowDown: [1, 0]
+        };
+        const delta = keyMap[event.key];
+        if (!delta) return;
+        event.preventDefault();
+        const r = Number(btn.dataset.row || 0) + delta[0];
+        const c = Number(btn.dataset.col || 0) + delta[1];
+        const next = byPos.get(`${r}:${c}`);
+        if (next && !next.disabled) next.focus();
+      });
     });
     if (tooltip && state?.statusText) tooltip.textContent = state.statusText;
   }
