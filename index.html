@@ -191,6 +191,13 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
       return p.endsWith('/index.html') ? p.slice(0, -'index.html'.length) : p;
     };
 
+    function formatDateLocal(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
     async function fetchWithCache(key, url, ttlMs = 3600000, init = {}) {
       const now = Date.now();
       try {
@@ -203,7 +210,7 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
         const res = await fetch(url, {...init, signal: controller.signal});
         if (!res.ok) throw new Error('http ' + res.status);
         const data = await res.json();
-        localStorage.setItem(key, JSON.stringify({ts: now, data}));
+        try { localStorage.setItem(key, JSON.stringify({ts: now, data})); } catch {}
         return { data, source: 'live' };
       } finally { clearTimeout(timer); }
     }
@@ -224,16 +231,19 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
     function buildContributionMatrix(days) {
       const byDate = new Map(days.map(d => [d.date, d]));
       const end = new Date();
-      const start = new Date(end); start.setDate(end.getDate() - 370);
-      const startSunday = new Date(start); startSunday.setDate(start.getDate() - start.getDay());
+      const endRange = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+      const startRange = new Date(endRange); startRange.setDate(endRange.getDate() - 365);
+      const endSaturday = new Date(endRange); endSaturday.setDate(endRange.getDate() + (6 - endRange.getDay()));
+      const startSunday = new Date(endSaturday); startSunday.setDate(endSaturday.getDate() - (53 * 7 - 1));
       const matrix = Array.from({length:53}, ()=>Array(7).fill(null));
       const months = Array(53).fill('');
       for (let c=0;c<53;c++) {
         for (let r=0;r<7;r++) {
           const d = new Date(startSunday); d.setDate(startSunday.getDate() + c*7 + r);
-          const iso = d.toISOString().slice(0,10);
-          const found = byDate.get(iso) || {date: iso, count: 0, level: 0};
-          matrix[c][r] = {...found, dateObj: d};
+          const iso = formatDateLocal(d);
+          const found = byDate.get(iso);
+          const inRange = d >= startRange && d <= endRange;
+          matrix[c][r] = {date: iso, count: inRange ? (found?.count ?? 0) : 0, level: inRange ? (found?.level ?? 0) : 0, dateObj: d, inRange};
         }
         const top = matrix[c][0].dateObj;
         if (c === 0 || top.getMonth() !== matrix[c-1][0].dateObj.getMonth()) months[c] = top.toLocaleString('en-US',{month:'short'});
