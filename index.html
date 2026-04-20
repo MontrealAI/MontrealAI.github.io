@@ -702,13 +702,14 @@
       return { date: d.date, count: c, level };
     });
 
+    const totalFromDays = normalized.reduce((sum, d) => sum + d.count, 0);
     let total = 0;
-    if (typeof payload.total === 'number') total = payload.total;
+    if (typeof payload.total === 'number') total = Number(payload.total);
     else if (payload.total && typeof payload.total === 'object') {
       if (Number.isFinite(Number(payload.total.lastYear))) total = Number(payload.total.lastYear);
       else total = Object.values(payload.total).reduce((sum, v) => sum + (Number(v) || 0), 0);
     }
-    if (!total) total = normalized.reduce((sum, d) => sum + d.count, 0);
+    if (!Number.isFinite(total) || total < 0 || Math.abs(total - totalFromDays) > 0) total = totalFromDays;
     return { total: Math.max(0, Math.floor(total)), contributions: normalized };
   }
 
