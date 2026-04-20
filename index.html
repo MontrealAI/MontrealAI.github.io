@@ -356,11 +356,13 @@
 
     async function fetchWithCache(key, url, ttlMs) {
       const now = Date.now();
+      let staleData = null;
       try {
         const raw = localStorage.getItem(key);
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && parsed.ts && now - parsed.ts < ttlMs) return { data: parsed.data, source: 'cached snapshot' };
+          if (parsed && parsed.data) staleData = parsed.data;
         }
       } catch {}
       const ctrl = new AbortController();
@@ -371,6 +373,9 @@
         const data = await res.json();
         try { localStorage.setItem(key, JSON.stringify({ ts: now, data })); } catch {}
         return { data, source: 'live' };
+      } catch (err) {
+        if (staleData) return { data: staleData, source: 'cached snapshot' };
+        throw err;
       } finally { clearTimeout(t); }
     }
 
