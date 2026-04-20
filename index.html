@@ -718,6 +718,28 @@
     return new Date(y, (m || 1) - 1, d || 1);
   }
 
+  function rollContributionSeedToCurrent(seed) {
+    const normalized = normalizeContributionPayload(seed);
+    if (!normalized?.contributions?.length) return normalized;
+    const ordered = [...normalized.contributions].sort((a, b) => a.date.localeCompare(b.date));
+    const latest = ordered[ordered.length - 1];
+    const latestDate = parseISODateLocal(latest.date);
+    const today = new Date();
+    const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const latestLocal = new Date(latestDate.getFullYear(), latestDate.getMonth(), latestDate.getDate());
+    const shiftDays = Math.round((currentDate - latestLocal) / 86400000);
+    if (!shiftDays) return normalized;
+
+    const shifted = ordered.map(entry => {
+      const base = parseISODateLocal(entry.date);
+      base.setDate(base.getDate() + shiftDays);
+      const rolledDate = `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
+      return { date: rolledDate, count: entry.count, level: entry.level };
+    });
+    const rolledTotal = shifted.reduce((sum, day) => sum + (Number(day.count) || 0), 0);
+    return { total: rolledTotal, contributions: shifted };
+  }
+
   function buildContributionMatrix(contributions) {
     const map = new Map((contributions || []).map(day => [day.date, day]));
     const today = new Date();
@@ -913,7 +935,7 @@
     const contribState = document.getElementById('contribState');
     const heroContribution = document.getElementById('heroContribution');
 
-    const seedNormalized = normalizeContributionPayload(CONTRIB_SEED_LAST_YEAR);
+    const seedNormalized = rollContributionSeedToCurrent(CONTRIB_SEED_LAST_YEAR);
     const fallbackShell = { total: 0, contributions: [] };
 
     const applyContributionState = (payload, sourceLabel) => {
