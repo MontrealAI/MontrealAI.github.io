@@ -354,12 +354,15 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
     }
 
     function wireDebateThumbs() {
+      const applyFallback = (img) => {
+        const fallback = img.dataset.fallback;
+        if (fallback && img.src !== fallback) img.src = fallback;
+        else img.style.visibility = 'hidden';
+      };
       document.querySelectorAll('.debate-card img').forEach(img => {
-        img.addEventListener('error', () => {
-          const fallback = img.dataset.fallback;
-          if (fallback && img.src !== fallback) img.src = fallback;
-          else img.style.visibility = 'hidden';
-        }, {once: false});
+        img.addEventListener('error', () => applyFallback(img), {once: false});
+        // Handle cases where load/error completed before listeners were attached.
+        if (img.complete && img.naturalWidth === 0) applyFallback(img);
       });
     }
 
