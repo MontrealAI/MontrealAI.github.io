@@ -559,6 +559,16 @@
 
     function animateMetrics() {
       const nodes = [...document.querySelectorAll('.metric .big')];
+      if (!nodes.length) return;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        nodes.forEach((n) => {
+          n.dataset.animated = 'true';
+          n.style.opacity = '1';
+          n.style.transform = 'none';
+        });
+        return;
+      }
       const io = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
