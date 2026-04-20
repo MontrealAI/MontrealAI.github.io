@@ -557,6 +557,33 @@
       document.querySelectorAll('main section[id]').forEach((s) => obs.observe(s));
     }
 
+    function animateMetrics() {
+      const nodes = [...document.querySelectorAll('.metric .big')];
+      if (!nodes.length) return;
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        nodes.forEach((n) => {
+          n.dataset.animated = 'true';
+          n.style.opacity = '1';
+          n.style.transform = 'none';
+        });
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+          if (el.dataset.animated === 'true') return;
+          el.dataset.animated = 'true';
+          el.animate([
+            { opacity: 0, transform: 'translateY(8px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ], { duration: 420, easing: 'cubic-bezier(.2,.7,.2,1)' });
+        });
+      }, { threshold: 0.2 });
+      nodes.forEach((n) => io.observe(n));
+    }
+
     async function loadContributions() {
       let state = normalizeContributionPayload(CONTRIB_SEED_LAST_YEAR);
       let source = 'embedded snapshot';
@@ -615,7 +642,7 @@
       renderPinnedRepos(repos);
     }
 
-    setInternalLinks(); wireCopyButtons(); wireSearchAndFilters(); wireNav(); loadContributions(); initGithubMeta();
+    setInternalLinks(); wireCopyButtons(); wireSearchAndFilters(); wireNav(); animateMetrics(); loadContributions(); initGithubMeta();
   </script>
 </body>
 </html>
