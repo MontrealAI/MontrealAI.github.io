@@ -386,18 +386,50 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
     function wireNav() {
       const links = Array.from(document.querySelectorAll('nav a[href^="#"]'));
       const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+      const visible = new Map();
+
+      const setActive = (id) => {
+        links.forEach(l => l.classList.remove('active'));
+        if (!id) return;
+        map.get(id)?.classList.add('active');
+      };
+
+      const computeActive = () => {
+        const ranked = Array.from(visible.values())
+          .filter(v => v.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio - a.intersectionRatio) || (a.top - b.top));
+        setActive(ranked[0]?.id || null);
+      };
+
       const obs = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const id = entry.target.id;
-          const link = map.get(id);
-          if (!link) return;
-          if (entry.isIntersecting) {
-            links.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-          }
+          if (!map.has(id)) return;
+          visible.set(id, {
+            id,
+            isIntersecting: entry.isIntersecting,
+            intersectionRatio: entry.intersectionRatio || 0,
+            top: entry.boundingClientRect.top
+          });
         });
-      }, {rootMargin: '-40% 0px -55% 0px', threshold: 0.01});
-      map.forEach((_, id) => { const sec = document.getElementById(id); if (sec) obs.observe(sec); });
+        computeActive();
+      }, {rootMargin: '-40% 0px -55% 0px', threshold: [0, 0.01, 0.2, 0.5, 0.8, 1]});
+
+      map.forEach((_, id) => {
+        const sec = document.getElementById(id);
+        if (!sec) return;
+        visible.set(id, {id, isIntersecting: false, intersectionRatio: 0, top: Number.POSITIVE_INFINITY});
+        obs.observe(sec);
+      });
+
+      // Set a deterministic initial active section if observer callbacks are delayed.
+      const firstInView = Array.from(map.keys()).find(id => {
+        const sec = document.getElementById(id);
+        if (!sec) return false;
+        const r = sec.getBoundingClientRect();
+        return r.top <= innerHeight * 0.45 && r.bottom >= innerHeight * 0.45;
+      }) || Array.from(map.keys())[0];
+      setActive(firstInView);
     }
 
     document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
