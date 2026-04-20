@@ -394,13 +394,16 @@
 
     function normalizeContributionPayload(payload) {
       const list = Array.isArray(payload?.contributions) ? payload.contributions : [];
-      let total = 0;
-      if (typeof payload?.total?.lastYear === 'number') total = payload.total.lastYear;
-      else if (payload?.total && typeof payload.total === 'object') total = Object.values(payload.total).reduce((a, v) => a + (Number(v) || 0), 0);
-      else total = list.reduce((a, d) => a + (Number(d.count) || 0), 0);
+      let payloadTotal = 0;
+      if (typeof payload?.total?.lastYear === 'number') payloadTotal = payload.total.lastYear;
+      else if (payload?.total && typeof payload.total === 'object') payloadTotal = Object.values(payload.total).reduce((a, v) => a + (Number(v) || 0), 0);
+      else payloadTotal = list.reduce((a, d) => a + (Number(d.count) || 0), 0);
+      const normalized = list.map((d) => ({ date: d.date, count: Number(d.count) || 0, level: Math.max(0, Math.min(4, Number(d.level) || 0)) }));
+      const daySum = normalized.reduce((a, d) => a + d.count, 0);
+      const total = (Number.isFinite(payloadTotal) && payloadTotal > 0 && Math.abs(payloadTotal - daySum) <= 1) ? payloadTotal : daySum;
       return {
         total,
-        contributions: list.map((d) => ({ date: d.date, count: Number(d.count) || 0, level: Math.max(0, Math.min(4, Number(d.level) || 0)) }))
+        contributions: normalized
       };
     }
 
