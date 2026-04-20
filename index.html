@@ -386,6 +386,18 @@
       };
     }
 
+    function formatDateLocal(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseISODateLocal(iso) {
+      const [y, m, d] = String(iso).split('-').map(Number);
+      return new Date(y, (m || 1) - 1, d || 1);
+    }
+
     function buildContributionMatrix(contributions) {
       const map = new Map(contributions.map((d) => [d.date, d]));
       const today = new Date();
@@ -397,7 +409,7 @@
         const days = [];
         for (let d = 0; d < 7; d++) {
           const date = new Date(startSunday); date.setDate(startSunday.getDate() + w * 7 + d);
-          const iso = date.toISOString().slice(0, 10);
+          const iso = formatDateLocal(date);
           const found = map.get(iso);
           const inRange = date >= start && date <= end;
           days.push({ date: iso, count: inRange ? (found?.count ?? 0) : 0, level: inRange ? (found?.level ?? 0) : 0, inRange });
@@ -405,8 +417,8 @@
         weeks.push(days);
       }
       const monthLabels = weeks.map((week, i) => {
-        const first = new Date(week[0].date + 'T00:00:00');
-        const prev = i ? new Date(weeks[i - 1][0].date + 'T00:00:00') : null;
+        const first = parseISODateLocal(week[0].date);
+        const prev = i ? parseISODateLocal(weeks[i - 1][0].date) : null;
         return (!prev || first.getMonth() !== prev.getMonth()) ? first.toLocaleString('en-US', { month: 'short' }) : '';
       });
       return { weeks, monthLabels };
@@ -425,7 +437,7 @@
         html += `<tr><th class="day-label" scope="row">${lbl}</th>`;
         for (let w = 0; w < weeks.length; w++) {
           const day = weeks[w][d];
-          const dayDate = new Date(day.date + 'T00:00:00');
+          const dayDate = parseISODateLocal(day.date);
           const countText = day.count === 0 ? 'No contributions' : `${day.count} contribution${day.count > 1 ? 's' : ''}`;
           const label = `${countText} on ${fmtDate.format(dayDate)}`;
           html += `<td><button type="button" tabindex="0" data-level="${day.level}" data-tooltip="${label}" aria-label="${label}"></button></td>`;
@@ -526,19 +538,23 @@
     }
 
     async function initGithubMeta() {
-      try {
-        const [org, repos] = await Promise.all([
-          fetchWithCache('github:org', ORG_API, TTL),
-          fetchWithCache('github:repos', REPO_API, TTL)
-        ]);
-        document.getElementById('repoCount').textContent = fmtNum.format(org.data.public_repos || (repos.data?.length || 0));
-        document.getElementById('followerCount').textContent = fmtNum.format(org.data.followers || 0);
-        renderPinnedRepos(Array.isArray(repos.data) ? repos.data : []);
-      } catch {
+      const [orgRes, repoRes] = await Promise.allSettled([
+        fetchWithCache('github:org', ORG_API, TTL),
+        fetchWithCache('github:repos', REPO_API, TTL)
+      ]);
+      const org = orgRes.status === 'fulfilled' ? orgRes.value.data : null;
+      const repos = repoRes.status === 'fulfilled' && Array.isArray(repoRes.value.data) ? repoRes.value.data : [];
+      if (org) {
+        document.getElementById('repoCount').textContent = fmtNum.format(org.public_repos || repos.length || 0);
+        document.getElementById('followerCount').textContent = fmtNum.format(org.followers || 0);
+      } else if (repos.length) {
+        document.getElementById('repoCount').textContent = fmtNum.format(repos.length);
+        document.getElementById('followerCount').textContent = '—';
+      } else {
         document.getElementById('repoCount').textContent = '—';
         document.getElementById('followerCount').textContent = '—';
-        renderPinnedRepos([]);
       }
+      renderPinnedRepos(repos);
     }
 
     setInternalLinks(); wireCopyButtons(); wireSearchAndFilters(); wireNav(); loadContributions(); initGithubMeta();
