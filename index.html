@@ -63,960 +63,506 @@
 
   <style>
     :root {
-      --bg-0: #04020a;
-      --bg-1: #090512;
-      --bg-2: #120a1f;
-      --bg-3: #1a1030;
-      --panel: rgba(18, 11, 33, 0.82);
-      --panel-strong: rgba(25, 15, 45, 0.96);
-      --panel-soft: rgba(255,255,255,0.03);
-      --line: rgba(226, 217, 255, 0.10);
-      --line-strong: rgba(226, 217, 255, 0.18);
-      --text: #f7f2ff;
-      --text-soft: #d9cdef;
-      --muted: #aa99ca;
-      --accent: #8b5cf6;
-      --accent-2: #a970ff;
-      --accent-3: #d9c9ff;
-      --success: #9af0c8;
-      --warning: #ffd585;
-      --shadow-xl: 0 30px 100px rgba(0,0,0,.45);
-      --max: min(1360px, calc(100vw - 2rem));
+      --bg-0: #04020a; --bg-1: #090512; --bg-2: #120a1f; --bg-3: #1a1030;
+      --panel: rgba(18, 11, 33, 0.82); --panel-strong: rgba(25, 15, 45, 0.96); --panel-soft: rgba(255,255,255,0.03);
+      --line: rgba(226, 217, 255, 0.10); --line-strong: rgba(226, 217, 255, 0.18);
+      --text: #f7f2ff; --text-soft: #d9cdef; --muted: #aa99ca;
+      --accent: #8b5cf6; --accent-2: #a970ff; --accent-3: #d9c9ff;
+      --max: min(1360px, calc(100vw - 2rem)); --shadow-xl: 0 30px 100px rgba(0,0,0,.45);
       --sans: Inter, ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
     }
-    *{box-sizing:border-box} html,body{margin:0;padding:0} img{max-width:100%;display:block}
-    body{font-family:var(--sans);color:var(--text);background:
-      radial-gradient(70rem 45rem at 8% -10%, rgba(139,92,246,.2), transparent 56%),
+    *{box-sizing:border-box} html,body{margin:0;padding:0;scroll-behavior:smooth} body{font-family:var(--sans);color:var(--text);line-height:1.52;background:
+      radial-gradient(70rem 45rem at 8% -10%, rgba(139,92,246,.22), transparent 56%),
       radial-gradient(45rem 35rem at 85% 0%, rgba(169,112,255,.16), transparent 63%),
-      linear-gradient(170deg, var(--bg-0), var(--bg-1) 40%, var(--bg-2)); line-height:1.5}
-    a{color:inherit;text-decoration:none}
-    .container{width:var(--max);margin-inline:auto}
-    .section{padding:clamp(2.8rem,5vw,6rem) 0}
-    .eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.76rem;color:var(--accent-3);margin:0 0 .9rem}
-    h1,h2,h3,p{margin:0}
-    .skip-link{position:absolute;left:-999px;top:1rem;background:var(--panel-strong);border:1px solid var(--line-strong);padding:.65rem .8rem;border-radius:.8rem;z-index:99}
-    .skip-link:focus{left:1rem}
-    :focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:.7rem}
-    .mono{font-family:var(--mono)}
-    .panel{background:var(--panel);border:1px solid var(--line);border-radius:1.5rem}
-    .btn{display:inline-flex;align-items:center;gap:.45rem;border:1px solid var(--line-strong);background:var(--panel-soft);padding:.7rem 1rem;border-radius:999px;font-weight:600;font-size:.9rem}
-    .btn.primary{background:linear-gradient(130deg,color-mix(in srgb,var(--accent) 40%, transparent),color-mix(in srgb,var(--accent-2) 34%, transparent));}
-    .btn:hover{border-color:color-mix(in srgb, var(--accent-3) 65%, transparent)}
+      linear-gradient(170deg, var(--bg-0), var(--bg-1) 40%, var(--bg-2));}
+    img{max-width:100%;display:block} a{text-decoration:none;color:inherit}
+    :focus-visible{outline:2px solid var(--accent-2);outline-offset:2px;border-radius:.6rem}
+    .skip-link{position:absolute;left:-1000px;top:1rem;background:var(--panel-strong);border:1px solid var(--line-strong);padding:.7rem .9rem;border-radius:.7rem;z-index:90}.skip-link:focus{left:1rem}
+    .container{width:var(--max);margin-inline:auto} .section{padding:clamp(2.8rem,5vw,6rem) 0}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:1.35rem} .mono{font-family:var(--mono)}
+    .eyebrow{text-transform:uppercase;letter-spacing:.16em;color:var(--accent-3);font-size:.78rem;margin-bottom:.8rem}
+    h1,h2,h3,p{margin:0} h2{font-size:clamp(1.7rem,3.4vw,3.15rem);line-height:1.05;letter-spacing:-.02em}
+    .btn{display:inline-flex;align-items:center;gap:.45rem;border:1px solid var(--line-strong);background:var(--panel-soft);padding:.68rem 1rem;border-radius:999px;font-weight:600;font-size:.9rem}
+    .btn.primary{background:linear-gradient(130deg,color-mix(in srgb,var(--accent) 45%, transparent),color-mix(in srgb,var(--accent-2) 35%, transparent));}
     .chip{display:inline-flex;border:1px solid var(--line);background:var(--panel-soft);padding:.35rem .65rem;border-radius:999px;font-size:.79rem;color:var(--text-soft)}
 
-    header{position:sticky;top:0;z-index:70;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg-0) 80%, transparent);border-bottom:1px solid var(--line)}
-    .head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.8rem;min-height:74px}
-    .brand{font-weight:700;letter-spacing:.12em;font-size:.85rem;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;white-space:nowrap}
-    .brand-badge{padding:.3rem .55rem;border:1px solid var(--line);border-radius:.65rem;color:var(--accent-3);background:var(--panel-soft)}
-    nav ul,.head-actions{display:flex;gap:.35rem;list-style:none;margin:0;padding:0;flex-wrap:wrap}
-    nav a,.head-actions a{padding:.45rem .72rem;border-radius:999px;color:var(--text-soft);font-size:.84rem;border:1px solid transparent}
+    header{position:sticky;top:0;z-index:70;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg-0) 82%, transparent);border-bottom:1px solid var(--line)}
+    .head{display:grid;grid-template-columns:auto 1fr auto;gap:.8rem;align-items:center;min-height:72px}
+    .brand{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.84rem;display:flex;align-items:center;gap:.45rem}
+    .brand-badge{padding:.28rem .5rem;border:1px solid var(--line);border-radius:.55rem;color:var(--accent-3);background:var(--panel-soft)}
+    nav ul,.head-actions{display:flex;flex-wrap:wrap;list-style:none;padding:0;margin:0;gap:.28rem}
+    nav a,.head-actions a{padding:.44rem .7rem;border-radius:999px;color:var(--text-soft);font-size:.82rem;border:1px solid transparent}
     nav a:hover,nav a[aria-current="true"],.head-actions a:hover{border-color:var(--line-strong);background:var(--panel-soft);color:var(--text)}
-    .menu-btn,.mobile-nav{display:none}
 
-    #hero{padding-top:clamp(1.5rem,4vw,3rem)}
-    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:1rem;align-items:center}
-    .hero h1{font-size:clamp(2.6rem,7vw,6.2rem);line-height:.94;letter-spacing:-.045em;max-width:11ch}
-    .hero .sub{margin-top:1rem;color:var(--text-soft);font-size:clamp(1rem,1.55vw,1.4rem);max-width:40ch}
-    .hero .body{margin-top:1rem;color:var(--muted);max-width:56ch}
-    .hero .chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:1.2rem}
-    .hero .ctas{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:1.3rem}
-    .portrait{position:relative;min-height:640px;padding:1rem;overflow:hidden;border-radius:2rem;background:linear-gradient(165deg, rgba(255,255,255,.06), rgba(255,255,255,.02));border:1px solid var(--line);box-shadow:var(--shadow-xl)}
+    #hero{padding-top:clamp(1.8rem,4vw,3rem)} .hero{display:grid;grid-template-columns:1.04fr .96fr;gap:1rem;align-items:center}
+    .hero h1{font-size:clamp(2.8rem,7vw,6.2rem);line-height:.94;letter-spacing:-.045em;max-width:11ch}
+    .hero .sub{margin-top:1rem;color:var(--text-soft);font-size:clamp(1rem,1.55vw,1.35rem);max-width:38ch}
+    .hero .body{margin-top:.95rem;color:var(--muted);max-width:58ch} .hero .chips,.hero .ctas{display:flex;gap:.45rem;flex-wrap:wrap}
+    .hero .chips{margin-top:1.15rem}.hero .ctas{margin-top:1.25rem}
+    .portrait{position:relative;min-height:640px;overflow:hidden;padding:1rem;border-radius:2rem;border:1px solid var(--line);background:linear-gradient(165deg, rgba(255,255,255,.06), rgba(255,255,255,.02));box-shadow:var(--shadow-xl)}
     .portrait:before,.portrait:after{content:"";position:absolute;border-radius:50%;border:1px solid color-mix(in srgb,var(--accent-3) 25%, transparent);pointer-events:none}
-    .portrait:before{width:120%;aspect-ratio:1;left:-25%;top:-42%}
-    .portrait:after{width:80%;aspect-ratio:1;right:-12%;bottom:-35%}
-    .portrait img{height:100%;width:100%;object-fit:cover;border-radius:1.45rem;filter:saturate(1.05) contrast(1.03)}
-    .float{position:absolute;z-index:2;backdrop-filter:blur(8px);background:color-mix(in srgb,var(--bg-1) 70%, transparent);border:1px solid var(--line);border-radius:1rem;padding:.65rem .8rem}
-    .f1{top:1.2rem;left:1.2rem}.f2{top:2rem;right:1.2rem}.f3{bottom:1.2rem;right:1.2rem}
-    .float b{display:block;font-size:1rem}.float span{font-size:.74rem;color:var(--text-soft)}
+    .portrait:before{width:120%;aspect-ratio:1;left:-25%;top:-42%}.portrait:after{width:80%;aspect-ratio:1;right:-10%;bottom:-35%}
+    .portrait img{height:100%;width:100%;object-fit:cover;border-radius:1.4rem}
+    .float{position:absolute;z-index:2;backdrop-filter:blur(8px);background:color-mix(in srgb,var(--bg-1) 70%, transparent);border:1px solid var(--line);border-radius:1rem;padding:.62rem .75rem}
+    .f1{top:1.2rem;left:1.2rem}.f2{top:1.95rem;right:1.2rem}.f3{bottom:1.2rem;right:1.2rem}.float b{display:block}.float span{font-size:.75rem;color:var(--text-soft)}
 
     #proof .metrics{display:grid;grid-template-columns:minmax(0,2.4fr) repeat(5,minmax(0,1fr));gap:.7rem}
-    .metric{padding:1rem;min-height:130px}
-    .metric h3{font-size:.88rem;color:var(--text-soft);font-weight:500}
-    .metric .big{font-size:clamp(1.3rem,2.2vw,2rem);margin-top:.55rem;font-weight:700}
-    .metric small{color:var(--muted)}
-    .spark{margin-top:.7rem;height:54px;border:1px solid var(--line);border-radius:.8rem;padding:.4rem;background:var(--panel-soft)}
-    .contrib-card{grid-column:span 2;min-height:340px}
-    .contrib-inset{margin-top:.65rem;padding:.8rem;border:1px solid rgba(255,255,255,.12);border-radius:1rem;background:#0d1117}
-    .contrib-scroll{overflow-x:auto;overflow-y:hidden;padding-bottom:.2rem}
-    .contrib-calendar{border-collapse:separate;border-spacing:3px;min-width:860px;color:#c9d1d9;font-size:.72rem}
-    .contrib-calendar caption{text-align:left;padding-bottom:.55rem;color:#8b949e}
-    .contrib-calendar th,.contrib-calendar td{border:none;padding:0}
-    .contrib-calendar .month-row th{font-weight:500;color:#8b949e;white-space:nowrap;padding-bottom:.25rem;text-align:left}
-    .contrib-calendar .day-label{width:34px;color:#8b949e;text-align:left;padding-right:.35rem;font-weight:500}
+    .metric{padding:1rem;min-height:130px}.metric h3{font-size:.87rem;font-weight:500;color:var(--text-soft)}.metric .big{margin-top:.53rem;font-size:clamp(1.25rem,2vw,1.95rem);font-weight:700}
+    .metric small{color:var(--muted)} .spark{margin-top:.68rem;height:52px;border:1px solid var(--line);border-radius:.8rem;padding:.35rem;background:color-mix(in srgb,var(--panel-soft) 75%, transparent)}
+    .contrib-card{grid-column:span 2;min-height:342px}.contrib-inset{margin-top:.65rem;padding:.8rem;border:1px solid rgba(255,255,255,.12);border-radius:1rem;background:#0d1117}
+    .contrib-scroll{overflow-x:auto;padding-bottom:.2rem}.contrib-calendar{border-collapse:separate;border-spacing:3px;min-width:860px;color:#c9d1d9;font-size:.72rem}
+    .contrib-calendar caption{text-align:left;padding-bottom:.52rem;color:#8b949e}.contrib-calendar th,.contrib-calendar td{padding:0;border:none}
+    .contrib-calendar .month-row th{font-weight:500;color:#8b949e;text-align:left;padding-bottom:.22rem;white-space:nowrap}.contrib-calendar .day-label{width:34px;color:#8b949e;padding-right:.35rem;text-align:left;font-weight:500}
     .contrib-calendar button{width:11px;height:11px;border:1px solid rgba(255,255,255,.06);border-radius:2px;background:#161b22;display:block;padding:0;cursor:pointer}
-    .contrib-calendar button[data-level="1"]{background:#0e4429}
-    .contrib-calendar button[data-level="2"]{background:#006d32}
-    .contrib-calendar button[data-level="3"]{background:#26a641}
-    .contrib-calendar button[data-level="4"]{background:#39d353}
+    .contrib-calendar button[data-level="1"]{background:#0e4429}.contrib-calendar button[data-level="2"]{background:#006d32}.contrib-calendar button[data-level="3"]{background:#26a641}.contrib-calendar button[data-level="4"]{background:#39d353}
     .contrib-calendar button:focus-visible{outline:2px solid #a371f7;outline-offset:1px}
-    .contrib-legend{display:flex;justify-content:flex-end;align-items:center;gap:.4rem;margin-top:.45rem;color:#8b949e;font-size:.72rem}
-    .legend-swatches{display:inline-flex;gap:3px}
-    .legend-swatches i{display:block;width:11px;height:11px;border-radius:2px;background:#161b22;border:1px solid rgba(255,255,255,.06)}
-    .legend-swatches i[data-level="1"]{background:#0e4429}.legend-swatches i[data-level="2"]{background:#006d32}.legend-swatches i[data-level="3"]{background:#26a641}.legend-swatches i[data-level="4"]{background:#39d353}
-    .contrib-tooltip{margin:.5rem 0 0;color:#8b949e;font-size:.78rem;min-height:1.2em}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .contrib-legend{display:flex;justify-content:flex-end;align-items:center;gap:.4rem;margin-top:.44rem;color:#8b949e;font-size:.72rem}.legend-swatches{display:inline-flex;gap:3px}
+    .legend-swatches i{display:block;width:11px;height:11px;border:1px solid rgba(255,255,255,.06);border-radius:2px;background:#161b22}.legend-swatches i[data-level="1"]{background:#0e4429}.legend-swatches i[data-level="2"]{background:#006d32}.legend-swatches i[data-level="3"]{background:#26a641}.legend-swatches i[data-level="4"]{background:#39d353}
+    .contrib-tooltip{margin-top:.45rem;color:#8b949e;font-size:.78rem;min-height:1.2em} .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-    .founder{display:grid;grid-template-columns:1fr 1.1fr;gap:1rem}
-    .founder .card{padding:1.2rem}
-    .founder h2,.section h2{font-size:clamp(1.6rem,3.2vw,3rem);letter-spacing:-.02em;line-height:1.08}
-    .timeline{display:grid;gap:.5rem;margin-top:1rem}
-    .timeline .item{display:grid;grid-template-columns:145px 1fr;gap:.7rem;padding:.6rem .7rem;border:1px solid var(--line);border-radius:.9rem;background:var(--panel-soft)}
-    .timeline .year{font-family:var(--mono);color:var(--accent-3)}
+    .founder{display:grid;grid-template-columns:1fr 1.1fr;gap:.9rem}.card{padding:1.15rem}.timeline{display:grid;gap:.5rem;margin-top:.9rem}
+    .timeline .item{display:grid;grid-template-columns:150px 1fr;gap:.7rem;padding:.6rem .7rem;border:1px solid var(--line);border-radius:.8rem;background:var(--panel-soft)} .timeline .year{font-family:var(--mono);color:var(--accent-3)}
 
-    .job-layout{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
-    .job-main,.job-side{padding:1.2rem}
-    .job-side{display:contents}
-    .job-card{padding:1rem;border-radius:1.2rem;background:var(--panel-soft);border:1px solid var(--line);display:flex;flex-direction:column;min-height:100%}
-    .contracts{margin-top:.65rem;display:grid;gap:.5rem}
-    .contract{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:.45rem .55rem;border-radius:.7rem}
-    .contract code{font-family:var(--mono);font-size:.75rem;color:var(--text-soft);word-break:break-all}
-    .copy{border:1px solid var(--line);background:var(--panel-soft);color:var(--text-soft);border-radius:.6rem;padding:.25rem .5rem;font-size:.75rem;cursor:pointer}
-    table{width:100%;border-collapse:collapse;margin-top:.9rem;font-size:.86rem}
-    th,td{border:1px solid var(--line);padding:.5rem .55rem;text-align:left}
-    th{background:rgba(255,255,255,.03);color:var(--text-soft)}
+    .job-layout{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}.job-main,.job-card{padding:1rem}.job-main{grid-column:span 2}
+    .job-card{border-radius:1rem;background:var(--panel-soft);border:1px solid var(--line);min-height:100%}.contracts{display:grid;gap:.48rem;margin-top:.6rem}
+    .contract{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.02);padding:.45rem .55rem;border-radius:.66rem}
+    .contract code{font-family:var(--mono);font-size:.74rem;word-break:break-all;color:var(--text-soft)}
+    .copy{border:1px solid var(--line);border-radius:.55rem;background:var(--panel-soft);color:var(--text-soft);font-size:.74rem;padding:.22rem .5rem;cursor:pointer}
+    table{width:100%;border-collapse:collapse;margin-top:.85rem;font-size:.84rem} th,td{border:1px solid var(--line);padding:.5rem .55rem;text-align:left} th{background:rgba(255,255,255,.03);color:var(--text-soft)}
 
-    .prior-grid,.debate-grid,.ens-grid,.dev-grid,.portfolio-grid,.horizon-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
-    .big-card,.card{padding:1.2rem}
-    .ribbon{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.8rem}
-    .ribbon span{padding:.4rem .55rem;border:1px solid var(--line);border-radius:999px;background:var(--panel-soft);font-size:.78rem}
-    .speaker-strip{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.7rem}
-    .speaker-strip span{padding:.35rem .55rem;border:1px solid var(--line);border-radius:.6rem;font-size:.78rem;background:var(--panel-soft)}
+    .prior-grid,.debate-grid,.ens-grid,.dev-grid,.portfolio-grid,.horizon-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+    .ribbon,.speaker-strip,.meta-pills{display:flex;flex-wrap:wrap;gap:.45rem} .ribbon span,.speaker-strip span,.meta-pills span{border:1px solid var(--line);background:var(--panel-soft)}
+    .ribbon span{padding:.4rem .55rem;border-radius:999px;font-size:.78rem}.speaker-strip span{padding:.35rem .55rem;border-radius:.65rem;font-size:.78rem}.meta-pills span{padding:.35rem .55rem;border-radius:999px;font-size:.78rem}
 
-    .pinned-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:.8rem}
-    .repo{padding:1rem;min-height:176px}
-    .repo h3{font-size:1.06rem}
-    .repo-meta{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:.6rem;color:var(--text-soft);font-size:.78rem}
+    .pinned-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:.7rem}.repo{padding:1rem;min-height:170px}.repo h3{font-size:1.05rem}.repo-meta{display:flex;flex-wrap:wrap;gap:.48rem;margin-top:.55rem;font-size:.77rem;color:var(--text-soft)}
 
-    .ens-topology{padding:1rem;border-radius:1.2rem;border:1px solid var(--line);background:linear-gradient(160deg, rgba(139,92,246,.08), transparent 40%)}
-    .ens-line{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.55rem .6rem;border:1px solid var(--line);border-radius:.75rem;background:var(--panel-soft);margin-top:.55rem}
+    .ens-topology{padding:1rem;border:1px solid var(--line);border-radius:1rem;background:linear-gradient(160deg, rgba(139,92,246,.08), transparent 40%)}
+    .ens-line{display:flex;align-items:center;justify-content:space-between;gap:.7rem;padding:.5rem .6rem;border:1px solid var(--line);border-radius:.7rem;background:var(--panel-soft);margin-top:.5rem}
+    pre{margin:0;padding:1rem;border:1px solid var(--line);border-radius:1rem;background:#090712;color:#e9defc;overflow:auto;font-family:var(--mono);font-size:.84rem}
 
-    pre{margin:0;padding:1rem;border:1px solid var(--line);border-radius:1rem;background:#090712;color:#e9defc;overflow:auto;font-family:var(--mono);font-size:.85rem}
-    .meta-pills{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.7rem}
-    .meta-pills span{border:1px solid var(--line);background:var(--panel-soft);border-radius:999px;padding:.35rem .55rem;font-size:.78rem}
+    .stack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}.stack-grid article{padding:1rem}
+    .atlas-tools{display:flex;flex-wrap:wrap;gap:.55rem;margin:1rem 0}.atlas-tools input{flex:1;min-width:220px;background:var(--panel-soft);color:var(--text);border:1px solid var(--line-strong);border-radius:999px;padding:.7rem .95rem}
+    .filters{display:flex;gap:.35rem;flex-wrap:wrap}.filters button{border:1px solid var(--line);background:var(--panel-soft);color:var(--text-soft);border-radius:999px;padding:.4rem .7rem;cursor:pointer}.filters button.active{background:color-mix(in srgb,var(--accent) 20%, transparent);color:var(--text);border-color:var(--line-strong)}
+    .featured-grid,.atlas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}.atlas-item{padding:1rem}.empty{display:none;padding:1rem;border:1px dashed var(--line-strong);border-radius:1rem;color:var(--muted)}
 
-    .stack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
-    .stack-grid article{padding:1rem}
+    footer{padding:2rem 0 3rem;border-top:1px solid var(--line)}.foot{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}.foot-links{display:flex;gap:.42rem;flex-wrap:wrap}
 
-    .atlas-tools{display:flex;gap:.6rem;flex-wrap:wrap;margin:1rem 0}
-    .atlas-tools input{flex:1;min-width:220px;background:var(--panel-soft);color:var(--text);border:1px solid var(--line-strong);border-radius:999px;padding:.7rem .95rem}
-    .filters{display:flex;gap:.4rem;flex-wrap:wrap}
-    .filters button{border:1px solid var(--line);background:var(--panel-soft);color:var(--text-soft);border-radius:999px;padding:.4rem .7rem;cursor:pointer}
-    .filters button.active{background:color-mix(in srgb,var(--accent) 20%, transparent);color:var(--text);border-color:var(--line-strong)}
-    .featured-grid,.atlas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
-    .atlas-item{padding:1rem}
-    .empty{display:none;padding:1rem;border:1px dashed var(--line-strong);border-radius:1rem;color:var(--muted)}
-
-    footer{padding:2rem 0 3rem;border-top:1px solid var(--line)}
-    .foot{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-    .foot-links{display:flex;gap:.45rem;flex-wrap:wrap}
-
-    .reveal{opacity:0;transform:translateY(12px);transition:opacity .65s ease,transform .65s ease}
-    .reveal.show{opacity:1;transform:none}
-
-    @media (max-width:1080px){
-      .hero,.job-layout,.founder,.prior-grid,.debate-grid,.ens-grid,.dev-grid,.portfolio-grid,.horizon-grid{grid-template-columns:1fr}
-      .portrait{min-height:540px}
-      #proof .metrics{grid-template-columns:repeat(2,1fr)}
-      #proof .metrics .metric:first-child,#proof .metrics .contrib-card{grid-column:1/-1}
-      .pinned-grid,.stack-grid,.featured-grid,.atlas-grid{grid-template-columns:repeat(2,1fr)}
-      .head{grid-template-columns:auto auto auto}
-      nav{display:none}
-      .menu-btn{display:inline-flex;border:1px solid var(--line-strong);background:var(--panel-soft);color:var(--text);padding:.55rem .8rem;border-radius:.8rem}
-      .mobile-nav{display:none;padding:.5rem 0 1rem}
-      .mobile-nav.open{display:grid;gap:.35rem}
-      .mobile-nav a{padding:.56rem .75rem;border:1px solid var(--line);border-radius:.7rem;background:var(--panel-soft)}
-    }
-    @media (max-width:760px){
-      .head-actions{display:none}
-      .pinned-grid,.stack-grid,.featured-grid,.atlas-grid{grid-template-columns:1fr}
-      .timeline .item{grid-template-columns:1fr}
-      .portrait{min-height:420px}
-    }
-    @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}}
+    @media (max-width:1080px){.hero,.founder,.job-layout,.prior-grid,.debate-grid,.ens-grid,.dev-grid,.portfolio-grid,.horizon-grid{grid-template-columns:1fr}.portrait{min-height:540px}#proof .metrics{grid-template-columns:repeat(2,1fr)}.contrib-card{grid-column:auto}.pinned-grid,.stack-grid,.featured-grid,.atlas-grid{grid-template-columns:1fr 1fr}.job-main{grid-column:auto}}
+    @media (max-width:720px){header nav,.head-actions{display:none}.head{grid-template-columns:auto}.hero h1{max-width:none}.portrait{min-height:420px}.timeline .item{grid-template-columns:1fr}.pinned-grid,.stack-grid,.featured-grid,.atlas-grid,#proof .metrics{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to main content</a>
-<header>
-  <div class="container head">
-    <a href="#hero" class="brand"><span class="brand-badge">2003</span>MONTRÉAL.AI</a>
-    <nav aria-label="Primary">
-      <ul>
-        <li><a href="#hero">Vision</a></li><li><a href="#founder">Founder</a></li><li><a href="#agijobs">AGI Jobs</a></li><li><a href="#priorart">Prior Art</a></li><li><a href="#debate">AI Debate</a></li><li><a href="#pinned">Pinned</a></li><li><a href="#ens">ENS</a></li><li><a href="#developers">Developers</a></li><li><a href="#library">Library</a></li><li><a href="#portfolio">Portfolio</a></li>
-      </ul>
-    </nav>
-    <div class="head-actions">
-      <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://agialpha.com/" target="_blank" rel="noopener">AGI Alpha</a>
-    </div>
-    <button class="menu-btn" id="menuToggle" aria-expanded="false" aria-controls="mobileNav">Menu</button>
-  </div>
-  <div class="container mobile-nav" id="mobileNav" aria-label="Mobile navigation">
-    <a href="#hero">Vision</a><a href="#founder">Founder</a><a href="#agijobs">AGI Jobs</a><a href="#priorart">Prior Art</a><a href="#debate">AI Debate</a><a href="#pinned">Pinned</a><a href="#ens">ENS</a><a href="#developers">Developers</a><a href="#library">Library</a><a href="#portfolio">Portfolio</a>
-  </div>
-</header>
-
-<main id="main">
-  <section id="hero" class="section">
-    <div class="container hero">
-      <div>
-        <p class="eyebrow">Institutional intelligence substrate</p>
-        <h1>We Choose to Ascend with AGI</h1>
-        <p class="sub">At the substrate, an invention-automation machine is coming online—where intelligence compounds.</p>
-        <p class="body">MONTRÉAL.AI is building the identity, labor, proof, settlement, memory, and governance substrate for the era when machine intelligence becomes infrastructure.</p>
-        <div class="chips"><span class="chip">Founded 2003</span><span class="chip">Ethereum Mainnet</span><span class="chip mono">agi.eth</span><span class="chip mono">asi.eth</span><span class="chip">AI → AGI → ASI</span><span class="chip">live GitHub proof</span></div>
-        <div class="ctas"><a class="btn primary" href="#stack">Explore the stack</a><a class="btn" href="#agijobs">Open AGI Jobs</a><a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noopener">Read Vincent’s writing</a><a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noopener">Open ENS Sovereign Portfolio</a></div>
+  <a class="skip-link" href="#hero">Skip to main content</a>
+  <header>
+    <div class="container head">
+      <a class="brand" href="#hero"><span class="brand-badge">M.AI</span> MONTRÉAL.AI</a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="#hero">Vision</a></li><li><a href="#founder">Founder</a></li><li><a href="#agijobs">AGI Jobs</a></li><li><a href="#priorart">Prior Art</a></li><li><a href="#debate">AI Debate</a></li><li><a href="#pinned">Pinned</a></li><li><a href="#ens">ENS</a></li><li><a href="#developers">Developers</a></li><li><a href="#library">Library</a></li><li><a href="#portfolio">Portfolio</a></li>
+        </ul>
+      </nav>
+      <div class="head-actions">
+        <a href="https://github.com/MontrealAI" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="https://agialpha.com/" target="_blank" rel="noreferrer">AGI Alpha</a>
       </div>
-      <aside class="portrait" aria-label="Vincent Boucher portrait and live overlays">
-        <img src="./vincentboucher.jpg" alt="Vincent Boucher" loading="eager" width="1200" height="1600" />
-        <div class="float f1"><span>Founder</span><b>Vincent Boucher</b></div>
-        <div class="float f2"><span>Contribution Constellation</span><b id="heroContribution">Loading…</b></div>
-        <div class="float f3"><span>Lead build</span><b id="heroLeadRepo">AGI-Agent-v0</b></div>
-      </aside>
     </div>
-  </section>
+  </header>
 
-  <section id="proof" class="section">
-    <div class="container">
-      <div class="metrics" aria-live="polite">
-        <article class="panel metric contrib-card" aria-labelledby="contribHeading">
-          <h3 id="contribHeading">Contribution Constellation</h3>
-          <p class="big"><span id="contribTotal">Loading contributions in the last year…</span></p>
-          <small id="contribState">Sync pending.</small>
-          <div class="contrib-inset">
-            <div class="contrib-scroll" id="contribScroll">
-              <table id="contribCalendar" class="contrib-calendar" role="grid" aria-describedby="contribCaption contribHint" aria-label="GitHub style contribution calendar"></table>
+  <main>
+    <section id="hero" class="section">
+      <div class="container hero">
+        <div>
+          <p class="eyebrow">Institutional intelligence substrate</p>
+          <h1>We Choose to Ascend with AGI</h1>
+          <p class="sub">At the substrate, an invention-automation machine is coming online—where intelligence compounds.</p>
+          <p class="body">MONTRÉAL.AI is building the identity, labor, proof, settlement, memory, and governance substrate for the era when machine intelligence becomes infrastructure.</p>
+          <div class="chips">
+            <span class="chip">Founded 2003</span><span class="chip">Ethereum Mainnet</span><span class="chip mono">agi.eth</span><span class="chip mono">asi.eth</span><span class="chip">AI → AGI → ASI</span><span class="chip">live GitHub proof</span>
+          </div>
+          <div class="ctas">
+            <a class="btn primary" href="#stack">Explore the stack</a>
+            <a class="btn" href="#agijobs">Open AGI Jobs</a>
+            <a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noreferrer">Read Vincent’s writing</a>
+            <a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noreferrer">Open ENS Sovereign Portfolio</a>
+          </div>
+        </div>
+        <aside class="portrait" aria-label="Vincent Boucher founder portrait">
+          <img src="./vincentboucher.jpg" alt="Vincent Boucher in a technical laboratory setting" />
+          <div class="float f1"><b id="heroContrib" class="mono">…</b><span>Contributions · last year</span></div>
+          <div class="float f2"><b class="mono">Meta-Agentic</b><span>Governance before recursion</span></div>
+          <div class="float f3"><b class="mono">agi.eth · asi.eth</b><span>Sovereign routing roots</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="proof" class="section">
+      <div class="container">
+        <div class="metrics">
+          <article class="panel metric contrib-card">
+            <h3>Contributions in the last year</h3>
+            <div class="big mono" id="contribTotal">0</div>
+            <small id="contribSource">Source: embedded snapshot. Sync pending.</small>
+            <div class="contrib-inset">
+              <div class="contrib-scroll" id="calendarWrap"></div>
+              <p id="contribTooltip" class="contrib-tooltip" aria-live="polite">User activity over one year of time. Each column is one week, with older weeks to the left.</p>
+              <div class="contrib-legend" aria-hidden="true">Less <span class="legend-swatches"><i data-level="0"></i><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i></span> More</div>
             </div>
-            <p id="contribCaption" class="sr-only">User activity over one year of time. Each column is one week, with older weeks to the left.</p>
-            <p id="contribHint" class="sr-only">Use tab and arrow keys to inspect daily contribution cells.</p>
-            <div class="contrib-legend" aria-hidden="true"><span>Less</span><div class="legend-swatches"><i data-level="0"></i><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i></div><span>More</span></div>
-            <p id="contribTooltip" class="contrib-tooltip" aria-live="polite">Sync pending.</p>
-          </div>
-        </article>
-        <article class="panel metric"><h3>Public repositories</h3><p class="big" id="repoCount">—</p><small>GitHub organization metadata.</small></article>
-        <article class="panel metric"><h3>Followers</h3><p class="big" id="followerCount">—</p><small>Institutional audience signal.</small></article>
-        <article class="panel metric"><h3>Lead pinned repo</h3><p class="big" id="leadRepo">AGI-Agent-v0</p><small>Public spearhead.</small></article>
-        <article class="panel metric"><h3>ENS roots secured</h3><p class="big mono">agi.eth · asi.eth</p><small>Identity before scale.</small></article>
-        <article class="panel metric"><h3>AGI Jobs surfaces</h3><p class="big">3 Mainnet Consoles</p><small>Genesis · Burn · Prime</small></article>
-      </div>
-    </div>
-  </section>
-
-  <section id="founder" class="section">
-    <div class="container founder">
-      <article class="panel card reveal">
-        <p class="eyebrow">Founder spotlight</p>
-        <h2>Vincent Boucher</h2>
-        <p style="margin-top:.8rem;color:var(--text-soft)">President of MONTREAL.AI and QUEBEC.AI. AI pioneer, institution-builder, strategist, and architect of sovereign machine systems.</p>
-        <p style="margin-top:.9rem;color:var(--muted)">Vincent’s arc is institution-first: governance before recursive scale, identity before acceleration, and public memory before optimization. He pioneered the Meta-Agentic framing and continues to advance sovereign machine systems through ENS, on-chain labor, and RSI governance architecture.</p>
-        <div class="ctas" style="margin-top:1rem"><a class="btn" href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener">LinkedIn profile</a><a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noopener">Featured writing</a><a class="btn" href="https://github.com/MontrealAI" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://agialpha.com/biography" target="_blank" rel="noopener">Biography</a></div>
-      </article>
-      <aside class="panel card reveal">
-        <h3 style="font-size:1.1rem">Milestone arc</h3>
-        <div class="timeline">
-          <div class="item"><span class="year">July 1973</span><span>Born in Québec City.</span></div>
-          <div class="item"><span class="year">2000–2002</span><span>Canadian Space Agency consulting.</span></div>
-          <div class="item"><span class="year">2003</span><span>Founded MONTREAL.AI and QUEBEC.AI.</span></div>
-          <div class="item"><span class="year">2016</span><span>OpenAI Gym prominence in public AI education and experimentation.</span></div>
-          <div class="item"><span class="year">2017</span><span>Multi-Agent AI DAO prior art disclosure.</span></div>
-          <div class="item"><span class="year">Current arc</span><span>ENS sovereignty, on-chain labor, Meta-Agentic systems, RSI governance.</span></div>
+          </article>
+          <article class="panel metric"><h3>Public repositories</h3><div class="big mono" id="repoCount">…</div><small>GitHub organization footprint</small><div class="spark"></div></article>
+          <article class="panel metric"><h3>Followers</h3><div class="big mono" id="followerCount">…</div><small>Public institution signal</small><div class="spark"></div></article>
+          <article class="panel metric"><h3>Lead pinned repo</h3><div class="big mono">AGI-Agent-v0</div><small>Spearhead system branch</small><div class="spark"></div></article>
+          <article class="panel metric"><h3>ENS roots secured</h3><div class="big mono">2</div><small>agi.eth · asi.eth</small><div class="spark"></div></article>
+          <article class="panel metric"><h3>AGI Jobs surfaces</h3><div class="big mono">3</div><small>Genesis · Burn · Prime</small><div class="spark"></div></article>
         </div>
-      </aside>
-    </div>
-  </section>
-
-  <section id="agijobs" class="section">
-    <div class="container">
-      <p class="eyebrow">AGI Jobs</p>
-      <h2>Sovereign machine labor on Ethereum mainnet</h2>
-      <p style="margin-top:.8rem;color:var(--text-soft);max-width:70ch">Three operational surfaces for contractual machine work: mission formation, escrow, validator review, dispute logic, ENS-backed identity, and settlement-grade governance.</p>
-      <div class="job-layout" style="margin-top:1rem">
-        <article class="panel job-card reveal">
-          <h3 style="font-size:1.24rem">AGIJobManager · Genesis Mainnet Console</h3>
-          <p style="margin-top:.6rem;color:var(--text-soft)">Sovereign coordination infrastructure for frontier intelligence work. Operate jobs, verification, bridge routing, mint flows, and protocol settlement with institutional-grade precision.</p>
-          <div class="ctas" style="margin-top:.75rem"><a class="btn primary route" data-route="./agijobmanagerv0.html" href="./agijobmanagerv0.html">Open console</a><a class="btn" href="https://github.com/MontrealAI/AGIJobManager" target="_blank" rel="noopener">GitHub repo</a></div>
-          <div class="contracts">
-            <div class="contract"><strong>AGIJobManager</strong><code data-copy="0xb3aaeb69b630f0299791679c063d68d6687481d1">0xb3aaeb69b630f0299791679c063d68d6687481d1</code><button class="copy" data-copy="0xb3aaeb69b630f0299791679c063d68d6687481d1">Copy</button><a class="btn" href="https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code" target="_blank" rel="noopener">Etherscan</a></div>
-            <div class="contract"><strong>ENSJobPages</strong><code data-copy="0x06188E77C1C38d392b16d9D9fB24673363ce1da0">0x06188E77C1C38d392b16d9D9fB24673363ce1da0</code><button class="copy" data-copy="0x06188E77C1C38d392b16d9D9fB24673363ce1da0">Copy</button><a class="btn" href="https://etherscan.io/address/0x06188E77C1C38d392b16d9D9fB24673363ce1da0#code" target="_blank" rel="noopener">Etherscan</a></div>
-          </div>
-        </article>
-        <article class="panel job-card reveal">
-          <h3 style="font-size:1.24rem">AGIJobManager · Employer Burn</h3>
-          <p style="margin-top:.6rem;color:var(--text-soft)">A genesis-console variant that foregrounds employer-burn economics at job creation time. Make total upfront economic exposure explicit and legible.</p>
-          <div class="ctas" style="margin-top:.75rem"><a class="btn primary route" data-route="./agijobmanagerburnv1.html" href="./agijobmanagerburnv1.html">Open console</a><a class="btn" href="https://github.com/MontrealAI/AGIJobManager-EmployerBurn" target="_blank" rel="noopener">GitHub repo</a></div>
-          <div class="contracts">
-            <div class="contract"><strong>AGIJobManager</strong><code data-copy="0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2">0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2</code><button class="copy" data-copy="0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2">Copy</button><a class="btn" href="https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#readContract" target="_blank" rel="noopener">Etherscan</a></div>
-            <div class="contract"><strong>ENSJobPages</strong><code data-copy="0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5">0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5</code><button class="copy" data-copy="0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5">Copy</button><a class="btn" href="https://etherscan.io/address/0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5#code" target="_blank" rel="noopener">Etherscan</a></div>
-          </div>
-        </article>
-        <article class="panel job-card reveal" style="background:linear-gradient(160deg, rgba(139,92,246,.14), rgba(255,255,255,.02));border-color:var(--line-strong)">
-          <h3 style="font-size:1.24rem">AGIJobManager Prime · Mainnet Console</h3>
-          <p style="margin-top:.6rem;color:var(--text-soft)">Flagship constitutional procurement surface for sovereign AI labor. Discovery, premium flows, designated selection, and settlement-grade governance.</p>
-          <p class="chip" style="margin-top:.65rem;width:max-content">To Govern Their Own Kind</p>
-          <div class="ctas" style="margin-top:.75rem"><a class="btn primary route" data-route="./agijobmanagerprimev2.html" href="./agijobmanagerprimev2.html">Open console</a><a class="btn" href="https://github.com/MontrealAI/AGIJobManagerPrime" target="_blank" rel="noopener">GitHub repo</a></div>
-          <div class="contracts">
-            <div class="contract"><strong>AGIJobDiscoveryPrime</strong><code data-copy="0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29">0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29</code><button class="copy" data-copy="0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29">Copy</button><a class="btn" href="https://etherscan.io/address/0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29#code" target="_blank" rel="noopener">Etherscan</a></div>
-            <div class="contract"><strong>AGIJobManagerPrime</strong><code data-copy="0xf8fc6572098ddcac4560e17ca4a683df30ea993e">0xf8fc6572098ddcac4560e17ca4a683df30ea993e</code><button class="copy" data-copy="0xf8fc6572098ddcac4560e17ca4a683df30ea993e">Copy</button><a class="btn" href="https://etherscan.io/address/0xf8fc6572098ddcac4560e17ca4a683df30ea993e#code" target="_blank" rel="noopener">Etherscan</a></div>
-            <div class="contract"><strong>ENSJobPages</strong><code data-copy="0x703011EF1C6E4277587eFe150e6cd74cA18F0069">0x703011EF1C6E4277587eFe150e6cd74cA18F0069</code><button class="copy" data-copy="0x703011EF1C6E4277587eFe150e6cd74cA18F0069">Copy</button><a class="btn" href="https://etherscan.io/address/0x703011EF1C6E4277587eFe150e6cd74cA18F0069#code" target="_blank" rel="noopener">Etherscan</a></div>
-          </div>
-        </article>
       </div>
-      <article class="panel card" style="margin-top:.9rem">
-        <h3>Operating comparison rail</h3>
-        <table>
-          <thead><tr><th>Surface</th><th>Console</th><th>Repo</th><th>Discovery</th><th>Employer exposure</th><th>ENS job pages</th><th>Settlement surface</th><th>Governance posture</th></tr></thead>
-          <tbody>
-            <tr><td>Genesis</td><td><a class="route" data-route="./agijobmanagerv0.html" href="./agijobmanagerv0.html">AGIJobManager v0</a></td><td><a href="https://github.com/MontrealAI/AGIJobManager" target="_blank" rel="noopener">AGIJobManager</a></td><td>Core</td><td>Standard escrow</td><td>Integrated</td><td>Mainnet contractual</td><td>Protocol coordination baseline</td></tr>
-            <tr><td>Employer Burn</td><td><a class="route" data-route="./agijobmanagerburnv1.html" href="./agijobmanagerburnv1.html">Burn v1</a></td><td><a href="https://github.com/MontrealAI/AGIJobManager-EmployerBurn" target="_blank" rel="noopener">EmployerBurn</a></td><td>Core</td><td>Upfront burn-forward legibility</td><td>Integrated</td><td>Mainnet contractual</td><td>Exposure-explicit constitutional logic</td></tr>
-            <tr><td>Prime</td><td><a class="route" data-route="./agijobmanagerprimev2.html" href="./agijobmanagerprimev2.html">Prime v2</a></td><td><a href="https://github.com/MontrealAI/AGIJobManagerPrime" target="_blank" rel="noopener">AGIJobManagerPrime</a></td><td>DiscoveryPrime</td><td>Premium designated flows</td><td>Integrated</td><td>Mainnet constitutional procurement</td><td>Settlement-grade sovereign labor governance</td></tr>
-          </tbody>
-        </table>
-        <p style="margin-top:.7rem"><span class="chip">AGIALPHA token</span> <a class="mono" href="https://etherscan.io/address/0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA" target="_blank" rel="noopener">0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA</a></p>
-      </article>
-    </div>
-  </section>
+    </section>
 
-  <section id="priorart" class="section">
-    <div class="container">
-      <p class="eyebrow">Prior Art — 2017</p>
-      <h2>The “Multi-Agent AI DAO”</h2>
-      <p style="margin-top:.7rem;color:var(--text-soft)">Foundational provenance for autonomous AI coordination on-chain.</p>
-      <div class="prior-grid" style="margin-top:1rem">
-        <article class="panel big-card reveal">
-          <h3 style="font-size:1.35rem">The “Multi-Agent AI DAO” (Prior Art — 2017)</h3>
-          <p style="margin-top:.65rem;color:var(--text-soft)">A rare, far-reaching, high-impact foundational disclosure: autonomous AI coordination, blockchain orchestration, multi-agent governance, and tokenized resource management in one public, time-stamped institutional record.</p>
-          <div class="ctas" style="margin-top:.8rem"><a class="btn primary" href="https://www.quebecartificialintelligence.com/priorart" target="_blank" rel="noopener">Official Prior Art Statement</a></div>
+    <section id="founder" class="section">
+      <div class="container founder">
+        <article class="panel card"><p class="eyebrow">Founder spotlight</p><h2>Vincent Boucher</h2><p style="margin-top:.7rem;color:var(--text-soft)">President of MONTREAL.AI and QUEBEC.AI. AI pioneer, institution-builder, strategist, and architect of sovereign machine systems.</p>
+          <p style="margin-top:.8rem;color:var(--muted)">The work is direct: build machine identity, labor, and governance before recursive scale. Meta-Agentic, a term pioneered by Vincent Boucher, frames cognition and command as accountable infrastructure.</p>
+          <div style="margin-top:.9rem;display:flex;flex-wrap:wrap;gap:.45rem"><a class="btn" href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noreferrer">LinkedIn profile</a><a class="btn" href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noreferrer">Featured writing</a><a class="btn" href="https://github.com/MontrealAI" target="_blank" rel="noreferrer">GitHub</a><a class="btn" href="https://agialpha.com/biography" target="_blank" rel="noreferrer">Biography</a></div>
         </article>
-        <article class="panel card reveal">
-          <h3>Official Statement on the Prior Art</h3>
-          <p style="margin-top:.6rem;color:var(--muted)">Museum-grade dossier framing for strategic origin, provenance continuity, and public disclosure lineage.</p>
-          <div class="ribbon"><span>Turing Machine (1936)</span><span>Printing Press (1440)</span><span>ARPANET (1969)</span><span>Bitcoin Whitepaper (2008)</span><span>Ethereum Whitepaper (2013)</span></div>
-        </article>
+        <article class="panel card"><div class="timeline">
+          <div class="item"><div class="year">July 1973</div><div>Born in Québec City.</div></div>
+          <div class="item"><div class="year">2000–2002</div><div>Consulting engagements with the Canadian Space Agency.</div></div>
+          <div class="item"><div class="year">2003</div><div>Founded MONTREAL.AI and QUEBEC.AI.</div></div>
+          <div class="item"><div class="year">2016</div><div>OpenAI Gym prominence and broad public technical visibility.</div></div>
+          <div class="item"><div class="year">2017</div><div>Multi-Agent AI DAO prior art public disclosure.</div></div>
+          <div class="item"><div class="year">Current arc</div><div>ENS sovereignty, on-chain labor, meta-agentic systems, and RSI governance.</div></div>
+        </div></article>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="debate" class="section">
-    <div class="container">
-      <p class="eyebrow">AI Debate</p>
-      <h2>AI DEBATE 3 : The AGI Debate</h2>
-      <p style="margin-top:.7rem;color:var(--text-soft)">The pivotal discussion in shaping the path of AGI’s global discourse.</p>
-      <div class="debate-grid" style="margin-top:1rem">
-        <article class="panel big-card reveal">
-          <p class="chip">Fri, Dec 23, 2022</p>
-          <p style="margin-top:.7rem;color:var(--text-soft)">Gary Marcus moderated and co-organized with Vincent Boucher, President of Montreal.AI and Quebec.AI. Five senate-grade panels:</p>
-          <div class="ribbon"><span>Cognition and Neuroscience</span><span>Common Sense</span><span>Architecture</span><span>Ethics and morality</span><span>AI: Policy and Net Contribution</span></div>
-          <div class="ctas" style="margin-top:.8rem"><a class="btn primary route" data-route="./aidebate3/" href="./aidebate3/">Open AI Debate 3</a><a class="btn" href="https://youtu.be/JGiLz_Jx9uI?t=73" target="_blank" rel="noopener">Official Video</a><a class="btn" href="https://agidebate.com" target="_blank" rel="noopener">Canonical site</a></div>
-          <div class="speaker-strip"><span>Erik Brynjolfsson</span><span>Yejin Choi</span><span>Noam Chomsky</span><span>Jeff Clune</span><span>David Ferrucci</span><span>Artur d'Avila Garcez</span><span>Ben Goertzel</span><span>Sara Hooker</span><span>Kai-Fu Lee</span><span>Francesca Rossi</span><span>Jürgen Schmidhuber</span></div>
-        </article>
-        <article class="panel card reveal">
-          <h3>Previous AI Debates</h3>
-          <div class="job-card" style="margin-top:.65rem"><h4>AI Debate #1</h4><div class="ctas" style="margin-top:.5rem"><a class="btn route" data-route="./aidebate/" href="./aidebate/">Open local</a><a class="btn" href="https://montrealartificialintelligence.com/aidebate/" target="_blank" rel="noopener">Canonical</a></div></div>
-          <div class="job-card" style="margin-top:.65rem"><h4>AI Debate #2</h4><div class="ctas" style="margin-top:.5rem"><a class="btn route" data-route="./aidebate2/" href="./aidebate2/">Open local</a><a class="btn" href="https://montrealartificialintelligence.com/aidebate2/" target="_blank" rel="noopener">Canonical</a></div></div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="pinned" class="section">
-    <div class="container">
-      <p class="eyebrow">Pinned</p>
-      <h2>Public build record</h2>
-      <div id="pinnedGrid" class="pinned-grid" style="margin-top:1rem" aria-live="polite"></div>
-    </div>
-  </section>
-
-  <section id="ens" class="section">
-    <div class="container ens-grid">
-      <article class="panel big-card reveal">
-        <p class="eyebrow">ENS identity arc on Ethereum</p>
-        <h2>AI → AGI → ASI as sovereign public naming infrastructure</h2>
-        <p style="margin-top:.8rem;color:var(--text-soft)">I secured the keys to the AI → AGI → ASI identity arc on Ethereum. Identity becomes durable routing, public memory, role legibility, and controlled scale.</p>
-        <div class="ens-topology">
-          <div class="ens-line"><span>Roots</span><strong class="mono">agi.eth · asi.eth</strong><button class="copy" data-copy="agi.eth, asi.eth">Copy</button></div>
-          <div class="ens-line"><span>Agent forms</span><code class="mono">name.agent.agi.eth · name.alpha.agent.agi.eth</code><button class="copy" data-copy="name.agent.agi.eth, name.alpha.agent.agi.eth">Copy</button></div>
-          <div class="ens-line"><span>Validator forms</span><code class="mono">name.club.agi.eth · name.alpha.club.agi.eth</code><button class="copy" data-copy="name.club.agi.eth, name.alpha.club.agi.eth">Copy</button></div>
+    <section id="agijobs" class="section">
+      <div class="container">
+        <p class="eyebrow">AGI Jobs</p><h2>Sovereign machine labor on Ethereum mainnet</h2><p style="margin-top:.7rem;color:var(--text-soft);max-width:76ch">Three operational surfaces for contractual machine work: mission formation, escrow, validator review, dispute logic, ENS-backed identity, and settlement-grade governance.</p>
+        <div class="job-layout" style="margin-top:.9rem">
+          <article class="panel job-main"><h3>AGIJobManager Prime · Mainnet Console <span class="chip" style="margin-left:.45rem">To Govern Their Own Kind</span></h3><p style="margin-top:.45rem;color:var(--text-soft)">Flagship constitutional procurement surface for sovereign AI labor. Discovery, premium flows, designated selection, and settlement-grade governance.</p>
+            <div style="margin-top:.65rem;display:flex;flex-wrap:wrap;gap:.4rem"><a class="btn primary" data-route="./agijobmanagerprimev2.html" href="./agijobmanagerprimev2.html">Open console</a><a class="btn" href="https://github.com/MontrealAI/AGIJobManagerPrime" target="_blank" rel="noreferrer">GitHub repo</a></div>
+            <div class="contracts">
+              <div class="contract"><strong>AGIJobDiscoveryPrime</strong><code>0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29</code><button class="copy" data-copy="0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29">Copy</button><a class="btn" style="padding:.3rem .5rem" target="_blank" rel="noreferrer" href="https://etherscan.io/address/0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29#code">Etherscan</a></div>
+              <div class="contract"><strong>AGIJobManagerPrime</strong><code>0xf8fc6572098ddcac4560e17ca4a683df30ea993e</code><button class="copy" data-copy="0xf8fc6572098ddcac4560e17ca4a683df30ea993e">Copy</button><a class="btn" style="padding:.3rem .5rem" target="_blank" rel="noreferrer" href="https://etherscan.io/address/0xf8fc6572098ddcac4560e17ca4a683df30ea993e#code">Etherscan</a></div>
+              <div class="contract"><strong>ENSJobPages</strong><code>0x703011EF1C6E4277587eFe150e6cd74cA18F0069</code><button class="copy" data-copy="0x703011EF1C6E4277587eFe150e6cd74cA18F0069">Copy</button><a class="btn" style="padding:.3rem .5rem" target="_blank" rel="noreferrer" href="https://etherscan.io/address/0x703011EF1C6E4277587eFe150e6cd74cA18F0069#code">Etherscan</a></div>
+            </div>
+          </article>
+          <article class="job-card"><h3>AGIJobManager · Genesis Mainnet Console</h3><p style="margin-top:.45rem;color:var(--text-soft)">Sovereign coordination infrastructure for frontier intelligence work. Operate jobs, verification, bridge routing, mint flows, and protocol settlement with institutional-grade precision.</p>
+            <div style="margin-top:.65rem;display:flex;flex-wrap:wrap;gap:.4rem"><a class="btn primary" data-route="./agijobmanagerv0.html" href="./agijobmanagerv0.html">Open console</a><a class="btn" href="https://github.com/MontrealAI/AGIJobManager" target="_blank" rel="noreferrer">GitHub repo</a></div>
+            <div class="contracts"><div class="contract"><strong>AGIJobManager</strong><code>0xb3aaeb69b630f0299791679c063d68d6687481d1</code><button class="copy" data-copy="0xb3aaeb69b630f0299791679c063d68d6687481d1">Copy</button><a class="btn" style="padding:.3rem .5rem" target="_blank" rel="noreferrer" href="https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code">Etherscan</a></div><div class="contract"><strong>ENSJobPages</strong><code>0x06188E77C1C38d392b16d9D9fB24673363ce1da0</code><button class="copy" data-copy="0x06188E77C1C38d392b16d9D9fB24673363ce1da0">Copy</button><a class="btn" style="padding:.3rem .5rem" target="_blank" rel="noreferrer" href="https://etherscan.io/address/0x06188E77C1C38d392b16d9D9fB24673363ce1da0#code">Etherscan</a></div></div>
+          </article>
+          <article class="job-card"><h3>AGIJobManager · Employer Burn</h3><p style="margin-top:.45rem;color:var(--text-soft)">A genesis-console variant that foregrounds employer-burn economics at job creation time. Make total upfront exposure explicit and legible.</p>
+            <div style="margin-top:.65rem;display:flex;flex-wrap:wrap;gap:.4rem"><a class="btn primary" data-route="./agijobmanagerburnv1.html" href="./agijobmanagerburnv1.html">Open console</a><a class="btn" href="https://github.com/MontrealAI/AGIJobManager-EmployerBurn" target="_blank" rel="noreferrer">GitHub repo</a></div>
+            <div class="contracts"><div class="contract"><strong>AGIJobManager</strong><code>0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2</code><button class="copy" data-copy="0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2">Copy</button><a class="btn" style="padding:.3rem .5rem" target="_blank" rel="noreferrer" href="https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#readContract">Etherscan</a></div><div class="contract"><strong>ENSJobPages</strong><code>0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5</code><button class="copy" data-copy="0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5">Copy</button><a class="btn" style="padding:.3rem .5rem" target="_blank" rel="noreferrer" href="https://etherscan.io/address/0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5#code">Etherscan</a></div></div>
+          </article>
         </div>
-      </article>
-      <aside class="panel card reveal">
-        <h3>Flagship artifacts</h3>
-        <div class="timeline" style="margin-top:.65rem">
-          <a class="item" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noopener"><span class="year">AGI King 👑</span><span>AI/AGI/ASI ENS Sovereign Portfolio</span></a>
-          <a class="item" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf" target="_blank" rel="noopener"><span class="year">ENS routing</span><span>ENS Routing as a Market Mechanism</span></a>
-          <a class="item" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf" target="_blank" rel="noopener"><span class="year">Root governance</span><span>AGI.eth — Root-Name Governance</span></a>
-          <a class="item" href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf" target="_blank" rel="noopener"><span class="year">ERC-8004</span><span>MONTREAL.AI × ERC‑8004</span></a>
-        </div>
-      </aside>
-    </div>
-  </section>
+        <table aria-label="AGI jobs comparison"><thead><tr><th>Surface</th><th>Discovery</th><th>Employer exposure</th><th>ENS job pages</th><th>Settlement surface</th><th>Governance posture</th></tr></thead><tbody><tr><td>Genesis</td><td>Direct posting</td><td>Escrow centric</td><td>Enabled</td><td>Mainnet contractual rail</td><td>Operational baseline</td></tr><tr><td>Employer Burn</td><td>Direct posting</td><td>Upfront burn visibility</td><td>Enabled</td><td>Mainnet with burn economics</td><td>Risk legibility first</td></tr><tr><td>Prime</td><td>Dedicated discovery contract</td><td>Premium programmable</td><td>Enabled</td><td>Constitutional procurement rail</td><td>Institutional-grade arbitration</td></tr></tbody></table>
+        <div style="margin-top:.7rem" class="panel card"><strong>AGIALPHA token</strong><p style="color:var(--text-soft);margin-top:.25rem">Incentive rail for machine labor coordination.</p><div class="contract" style="margin-top:.45rem"><code>0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA</code><button class="copy" data-copy="0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA">Copy</button><a class="btn" style="padding:.3rem .5rem" target="_blank" rel="noreferrer" href="https://etherscan.io/address/0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA">Etherscan</a></div></div>
+      </div>
+    </section>
 
-  <section id="developers" class="section">
-    <div class="container dev-grid">
-      <article class="panel big-card reveal">
-        <p class="eyebrow">Developer quick connect</p>
-        <h2>Connect the agent surface</h2>
-        <pre id="mcpConfig">{
+    <section id="priorart" class="section"><div class="container"><p class="eyebrow">Prior Art — 2017</p><h2>The “Multi-Agent AI DAO”</h2><p style="margin-top:.7rem;color:var(--text-soft)">Foundational provenance for autonomous AI coordination on-chain.</p>
+      <div class="prior-grid" style="margin-top:.9rem"><article class="panel card"><h3>The “Multi-Agent AI DAO” (Prior Art — 2017)</h3><p style="margin-top:.55rem;color:var(--text-soft)">A rare, far-reaching, high-impact foundational disclosure: AI autonomy, blockchain coordination, multi-agent governance, and tokenized resource management in a public time-stamped record.</p><a class="btn primary" style="margin-top:.7rem" href="https://www.quebecartificialintelligence.com/priorart" target="_blank" rel="noreferrer">Official Prior Art Statement</a></article>
+      <article class="panel card"><h3>Official Statement on the Prior Art</h3><p style="margin-top:.55rem;color:var(--muted)">Designed as institutional provenance, not retroactive positioning. Public disclosure anchors accountability and historical continuity.</p><div class="ribbon" style="margin-top:.8rem"><span>Turing Machine (1936)</span><span>Printing Press (1440)</span><span>ARPANET (1969)</span><span>Bitcoin Whitepaper (2008)</span><span>Ethereum Whitepaper (2013)</span></div></article></div>
+    </div></section>
+
+    <section id="debate" class="section"><div class="container"><p class="eyebrow">AI Debate</p><h2>AI DEBATE 3 : The AGI Debate</h2><p style="margin-top:.7rem;color:var(--text-soft)">The pivotal discussion in shaping the path of AGI’s global discourse.</p>
+      <div class="debate-grid" style="margin-top:.9rem"><article class="panel card"><p style="color:var(--muted)">Gary Marcus moderated and co-organized with Vincent Boucher, President of Montreal.AI and Quebec.AI.</p><div class="ribbon" style="margin-top:.7rem"><span>Cognition and Neuroscience</span><span>Common Sense</span><span>Architecture</span><span>Ethics and morality</span><span>AI: Policy and Net Contribution</span></div><div style="margin-top:.8rem;display:flex;gap:.45rem;flex-wrap:wrap"><a class="btn primary" data-route="./aidebate3/" href="./aidebate3/">Open AI Debate 3</a><a class="btn" href="https://youtu.be/JGiLz_Jx9uI?t=73" target="_blank" rel="noreferrer">Official Video</a><a class="btn" href="https://agidebate.com" target="_blank" rel="noreferrer">Canonical site</a></div></article>
+      <article class="panel card"><h3>Speakers</h3><div class="speaker-strip" style="margin-top:.6rem"><span>Erik Brynjolfsson</span><span>Yejin Choi</span><span>Noam Chomsky</span><span>Jeff Clune</span><span>David Ferrucci</span><span>Artur d'Avila Garcez</span><span>Ben Goertzel</span><span>Sara Hooker</span><span>Kai-Fu Lee</span><span>Francesca Rossi</span><span>Jürgen Schmidhuber</span></div><hr style="border-color:var(--line);margin:1rem 0"><h3>Previous AI Debates</h3><div style="display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.55rem"><a class="btn" data-route="./aidebate/" href="./aidebate/">AI Debate #1</a><a class="btn" href="https://montrealartificialintelligence.com/aidebate/" target="_blank" rel="noreferrer">Canonical #1</a><a class="btn" data-route="./aidebate2/" href="./aidebate2/">AI Debate #2</a><a class="btn" href="https://montrealartificialintelligence.com/aidebate2/" target="_blank" rel="noreferrer">Canonical #2</a></div></article></div>
+    </div></section>
+
+    <section id="pinned" class="section"><div class="container"><p class="eyebrow">Pinned</p><h2>Public build record</h2><div class="pinned-grid" id="pinnedGrid" style="margin-top:.85rem"></div></div></section>
+
+    <section id="ens" class="section"><div class="container"><p class="eyebrow">ENS identity arc on Ethereum</p><h2>AI → AGI → ASI as sovereign public naming infrastructure</h2><p style="margin-top:.7rem;color:var(--text-soft)">I secured the keys to the AI → AGI → ASI identity arc on Ethereum. Identity becomes durable routing, public memory, role legibility, and controlled scale.</p>
+      <div class="ens-grid" style="margin-top:.9rem"><article class="ens-topology"><h3>Topology</h3><div class="ens-line"><span class="mono">agi.eth</span><div><button class="copy" data-copy="agi.eth">Copy</button></div></div><div class="ens-line"><span class="mono">asi.eth</span><div><button class="copy" data-copy="asi.eth">Copy</button></div></div><div class="ens-line"><span class="mono">name.agent.agi.eth</span><div><button class="copy" data-copy="name.agent.agi.eth">Copy</button></div></div><div class="ens-line"><span class="mono">name.alpha.agent.agi.eth</span><div><button class="copy" data-copy="name.alpha.agent.agi.eth">Copy</button></div></div><div class="ens-line"><span class="mono">name.club.agi.eth</span><div><button class="copy" data-copy="name.club.agi.eth">Copy</button></div></div><div class="ens-line"><span class="mono">name.alpha.club.agi.eth</span><div><button class="copy" data-copy="name.alpha.club.agi.eth">Copy</button></div></div></article>
+      <article class="panel card"><h3>Flagship artifacts</h3><div style="display:grid;gap:.45rem;margin-top:.6rem"><a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf" target="_blank" rel="noreferrer">AGI King 👑 — AI/AGI/ASI ENS Sovereign Portfolio</a><a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf" target="_blank" rel="noreferrer">ENS Routing as a Market Mechanism</a><a class="btn" href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf" target="_blank" rel="noreferrer">AGI.eth — Root‑Name Governance</a><a class="btn" href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf" target="_blank" rel="noreferrer">MONTREAL.AI × ERC‑8004</a></div></article></div>
+    </div></section>
+
+    <section id="developers" class="section"><div class="container"><p class="eyebrow">Developer quick connect</p><h2>Connect the agent surface</h2><div class="dev-grid" style="margin-top:.9rem"><article class="panel card"><pre id="mcpSnippet">{
   "mcpServers": {
     "agi-alpha": {
       "url": "https://agialpha.com/api/mcp"
     }
   }
-}</pre>
-        <div class="meta-pills"><span>Endpoint: https://agialpha.com/api/mcp</span><span>Transport: Streamable HTTP</span><span>Auth: None required</span><span>Tools: 17</span></div>
-        <div class="ctas" style="margin-top:.8rem"><button class="btn" data-copy-target="mcpConfig">Copy JSON</button><a class="btn" href="https://agialpha.com/developers" target="_blank" rel="noopener">Developer docs</a><a class="btn" href="https://agialpha.com/jobs" target="_blank" rel="noopener">Jobs</a></div>
-      </article>
-      <aside class="panel card reveal">
-        <h3>What this unlocks</h3>
-        <div class="timeline" style="margin-top:.65rem">
-          <div class="item"><span class="year">Browse</span><span>Browse jobs across sovereign machine labor flows.</span></div>
-          <div class="item"><span class="year">Inspect</span><span>Inspect protocol state and execution context.</span></div>
-          <div class="item"><span class="year">Read</span><span>Read on-chain metadata and identity-linked records.</span></div>
-          <div class="item"><span class="year">Execute</span><span>Execute on-chain actions from a unified agent surface.</span></div>
-        </div>
-        <div class="ctas" style="margin-top:.8rem"><a class="btn" href="https://agialpha.com/" target="_blank" rel="noopener">AGI Alpha</a><a class="btn" href="https://agialpha.com/biography" target="_blank" rel="noopener">Biography</a></div>
-      </aside>
-    </div>
-  </section>
+}</pre><div style="margin-top:.55rem"><button class="btn" data-copy-target="mcpSnippet">Copy JSON</button></div><div class="meta-pills" style="margin-top:.7rem"><span>Endpoint: https://agialpha.com/api/mcp</span><span>Transport: Streamable HTTP</span><span>Auth: None required</span><span>Tools: 17</span></div></article>
+      <article class="panel card"><p style="color:var(--text-soft)">Connect once to browse jobs, inspect protocol state, read on-chain metadata, and execute on-chain actions.</p><div style="margin-top:.8rem;display:grid;gap:.45rem"><a class="btn" href="https://agialpha.com/" target="_blank" rel="noreferrer">agialpha.com</a><a class="btn" href="https://agialpha.com/developers" target="_blank" rel="noreferrer">Developers</a><a class="btn" href="https://agialpha.com/jobs" target="_blank" rel="noreferrer">Jobs</a><a class="btn" href="https://agialpha.com/biography" target="_blank" rel="noreferrer">Biography</a></div></article></div></div></section>
 
-  <section id="stack" class="section">
-    <div class="container">
-      <p class="eyebrow">Thesis lattice</p>
-      <h2>The stack for compounding machine civilization</h2>
-      <div class="stack-grid" style="margin-top:1rem">
-        <article class="panel"><h3>Identity</h3><p>ENS roots and accountable roles create durable routing and legibility.</p></article>
-        <article class="panel"><h3>Market</h3><p>AGI Jobs turns demand into structured mission markets for sovereign labor.</p></article>
-        <article class="panel"><h3>Proof</h3><p>Public build records and on-chain traces establish verification continuity.</p></article>
-        <article class="panel"><h3>Settlement</h3><p>Escrow, dispute logic, and protocol rails produce institutional settlement integrity.</p></article>
-        <article class="panel"><h3>Governance</h3><p>Meta-Agentic systems align recursion through constitutional control before scale.</p></article>
-        <article class="panel"><h3>Memory</h3><p>Public memory captures out-learn · out-think · out-design · out-strategise · out-execute trajectories.</p></article>
-      </div>
-    </div>
-  </section>
+    <section id="stack" class="section"><div class="container"><p class="eyebrow">Thesis lattice</p><h2>The stack for compounding machine civilization</h2><div class="stack-grid" style="margin-top:.85rem"><article class="panel"><h3>Identity</h3><p style="margin-top:.45rem;color:var(--text-soft)">ENS roots anchor actors, roles, and durable accountability.</p></article><article class="panel"><h3>Market</h3><p style="margin-top:.45rem;color:var(--text-soft)">AGI Jobs forms the execution market for sovereign machine labor.</p></article><article class="panel"><h3>Proof</h3><p style="margin-top:.45rem;color:var(--text-soft)">Public traces and GitHub proof surfaces maintain institutional verifiability.</p></article><article class="panel"><h3>Settlement</h3><p style="margin-top:.45rem;color:var(--text-soft)">Mainnet contracts enforce escrow, validation, and deterministic outcomes.</p></article><article class="panel"><h3>Governance</h3><p style="margin-top:.45rem;color:var(--text-soft)">Governance before recursive scale; design first for strategic AGI mastery.</p></article><article class="panel"><h3>Memory</h3><p style="margin-top:.45rem;color:var(--text-soft)">Meta-Agentic continuity: Out‑learn · Out‑think · Out‑design · Out‑strategise · Out‑execute.</p></article></div></div></section>
 
-  <section id="library" class="section">
-    <div class="container">
-      <p class="eyebrow">Resource atlas</p>
-      <h2>Curated strategic corpus</h2>
-      <div class="atlas-tools">
-        <input id="atlasSearch" type="search" placeholder="Search essays, decks, debates, governance..." aria-label="Search resources" />
-        <div class="filters" id="atlasFilters"></div>
-      </div>
+    <section id="library" class="section"><div class="container"><p class="eyebrow">Resource atlas</p><h2>Curated references and operating documents</h2>
+      <div class="atlas-tools"><input id="librarySearch" type="search" placeholder="Search essays, decks, repos, debates, prior art…" aria-label="Search resources" /><div class="filters" id="libraryFilters"></div></div>
       <div class="featured-grid" id="featuredGrid"></div>
-      <div class="atlas-grid" id="atlasGrid" style="margin-top:.8rem"></div>
-      <p class="empty" id="atlasEmpty">No resources match this query yet. Refine terms or switch category.</p>
-    </div>
-  </section>
+      <div class="atlas-grid" id="libraryGrid" style="margin-top:.7rem"></div>
+      <p class="empty" id="libraryEmpty">No resources match this search. Try another keyword or clear filters.</p>
+    </div></section>
 
-  <section id="portfolio" class="section">
-    <div class="container">
-      <p class="eyebrow">Institutional portfolio umbrella</p>
-      <h2>The protocol surface extends the institution—it does not replace it</h2>
-      <div class="portfolio-grid" style="margin-top:1rem">
-        <a class="panel card route" data-route="./academy/" href="./academy/"><h3>Academy</h3><p>Education and applied intelligence programs.</p></a>
-        <a class="panel card route" data-route="./art/" href="./art/"><h3>Art</h3><p>Cultural intelligence and creative machine expression.</p></a>
-        <a class="panel card route" data-route="./consulting/" href="./consulting/"><h3>Consulting</h3><p>Strategic advisory for AI transition and deployment.</p></a>
-        <a class="panel card route" data-route="./events/" href="./events/"><h3>Events</h3><p>Summits, dialogues, and institutional convening.</p></a>
-        <a class="panel card route" data-route="./space/" href="./space/"><h3>Space</h3><p>Long-horizon scientific and civilizational initiatives.</p></a>
-        <a class="panel card route" data-route="./legal/" href="./legal/"><h3>Legal</h3><p>Governance, policy, and accountability interfaces.</p></a>
-      </div>
-    </div>
-  </section>
+    <section id="portfolio" class="section"><div class="container"><p class="eyebrow">Institutional portfolio umbrella</p><h2>The protocol surface extends the institution—it does not replace it</h2><div class="portfolio-grid" style="margin-top:.9rem"><a class="panel card" data-route="./academy/" href="./academy/"><h3>Academy</h3><p style="margin-top:.45rem;color:var(--text-soft)">Education and applied intelligence programs.</p></a><a class="panel card" data-route="./art/" href="./art/"><h3>Art</h3><p style="margin-top:.45rem;color:var(--text-soft)">Cultural intelligence and creative machine expression.</p></a><a class="panel card" data-route="./consulting/" href="./consulting/"><h3>Consulting</h3><p style="margin-top:.45rem;color:var(--text-soft)">Strategic advisory for AI transition and deployment.</p></a><a class="panel card" data-route="./events/" href="./events/"><h3>Events</h3><p style="margin-top:.45rem;color:var(--text-soft)">Summits, dialogues, and institutional convening.</p></a><a class="panel card" data-route="./space/" href="./space/"><h3>Space</h3><p style="margin-top:.45rem;color:var(--text-soft)">Long-horizon scientific and civilizational initiatives.</p></a><a class="panel card" data-route="./legal/" href="./legal/"><h3>Legal</h3><p style="margin-top:.45rem;color:var(--text-soft)">Governance, policy, and accountability interfaces.</p></a></div></div></section>
 
-  <section id="horizon" class="section">
-    <div class="container">
-      <p class="eyebrow">Closing horizon</p>
-      <h2>Institution first. Governance before recursion. Identity before scale.</h2>
-      <div class="horizon-grid" style="margin-top:1rem;grid-template-columns:repeat(3,1fr)">
-        <article class="panel card"><h3>Identity</h3><p>Root names and accountable actors create continuity across autonomous machine systems.</p></article>
-        <article class="panel card"><h3>Industry</h3><p>Machine labor compounds into organized productive systems, coordinated with strategic clarity.</p></article>
-        <article class="panel card"><h3>Infrastructure</h3><p>Proof, settlement, memory, and governance form civilization-grade substrate for long-horizon capacity.</p></article>
-      </div>
-    </div>
-  </section>
-</main>
+    <section id="horizon" class="section"><div class="container"><p class="eyebrow">Closing horizon</p><h2>Institution first. Governance before recursion. Identity before scale.</h2><div class="horizon-grid" style="margin-top:.9rem"><article class="panel card"><h3>Identity</h3><p style="margin-top:.5rem;color:var(--text-soft)">Root names and accountable actors create continuity across technical generations.</p></article><article class="panel card"><h3>Industry</h3><p style="margin-top:.5rem;color:var(--text-soft)">Machine labor compounds into organized productive systems with institutional legibility.</p></article><article class="panel card" style="grid-column:1/-1"><h3>Infrastructure</h3><p style="margin-top:.5rem;color:var(--text-soft)">Proof, settlement, memory, and governance become civilization-grade substrate—durable enough for long-horizon planetary coordination.</p></article></div></div></section>
+  </main>
 
-<footer>
-  <div class="container foot">
-    <strong>MONTRÉAL.AI</strong>
-    <div class="foot-links">
-      <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://x.com/Montreal_AI" target="_blank" rel="noopener">X / Montreal_AI</a>
-      <a href="https://x.com/agialphaagent" target="_blank" rel="noopener">X / agialphaagent</a>
-      <a href="https://t.me/agialpha" target="_blank" rel="noopener">Telegram</a>
-      <a href="https://www.youtube.com/montrealai" target="_blank" rel="noopener">YouTube</a>
-      <a href="https://discord.gg/montrealai" target="_blank" rel="noopener">Discord</a>
-      <a href="mailto:info@montreal.ai">info@montreal.ai</a>
-    </div>
-  </div>
-</footer>
+  <footer><div class="container foot"><div><strong>MONTRÉAL.AI</strong><p style="color:var(--muted);margin-top:.35rem">info@montreal.ai</p></div><div class="foot-links"><a class="btn" href="https://github.com/MontrealAI" target="_blank" rel="noreferrer">GitHub</a><a class="btn" href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noreferrer">LinkedIn</a><a class="btn" href="https://x.com/Montreal_AI" target="_blank" rel="noreferrer">X / Montreal_AI</a><a class="btn" href="https://x.com/agialphaagent" target="_blank" rel="noreferrer">X / agialphaagent</a><a class="btn" href="https://t.me/montrealai" target="_blank" rel="noreferrer">Telegram</a><a class="btn" href="https://www.youtube.com/@MontrealAI" target="_blank" rel="noreferrer">YouTube</a><a class="btn" href="https://discord.gg/6QjA8y4" target="_blank" rel="noreferrer">Discord</a></div></div></footer>
 
-<noscript>
-  <div class="container" style="margin:1rem auto;padding:1rem;border:1px solid rgba(255,255,255,.2);border-radius:1rem;background:#130d24;color:#e6ddff">
-    Live GitHub metrics require JavaScript; all core sections and links remain accessible.
-  </div>
-</noscript>
+  <script>
+    const CONTRIB_SEED_LAST_YEAR = {"fetchedAt":"2026-04-20T12:31:14Z","total":{"lastYear":30579},"contributions":[{"date":"2025-04-20","count":43,"level":1},{"date":"2025-04-21","count":51,"level":1},{"date":"2025-04-22","count":57,"level":1},{"date":"2025-04-23","count":44,"level":1},{"date":"2025-04-24","count":44,"level":1},{"date":"2025-04-25","count":49,"level":1},{"date":"2025-04-26","count":44,"level":1},{"date":"2025-04-27","count":97,"level":2},{"date":"2025-04-28","count":66,"level":1},{"date":"2025-04-29","count":59,"level":1},{"date":"2025-04-30","count":59,"level":1},{"date":"2025-05-01","count":80,"level":2},{"date":"2025-05-02","count":86,"level":2},{"date":"2025-05-03","count":89,"level":2},{"date":"2025-05-04","count":94,"level":2},{"date":"2025-05-05","count":117,"level":3},{"date":"2025-05-06","count":93,"level":2},{"date":"2025-05-07","count":86,"level":2},{"date":"2025-05-08","count":72,"level":1},{"date":"2025-05-09","count":80,"level":2},{"date":"2025-05-10","count":56,"level":1},{"date":"2025-05-11","count":42,"level":1},{"date":"2025-05-12","count":72,"level":1},{"date":"2025-05-13","count":57,"level":1},{"date":"2025-05-14","count":68,"level":1},{"date":"2025-05-15","count":72,"level":1},{"date":"2025-05-16","count":76,"level":2},{"date":"2025-05-17","count":65,"level":1},{"date":"2025-05-18","count":78,"level":2},{"date":"2025-05-19","count":70,"level":1},{"date":"2025-05-20","count":58,"level":1},{"date":"2025-05-21","count":73,"level":1},{"date":"2025-05-22","count":68,"level":1},{"date":"2025-05-23","count":72,"level":1},{"date":"2025-05-24","count":74,"level":1},{"date":"2025-05-25","count":95,"level":2},{"date":"2025-05-26","count":86,"level":2},{"date":"2025-05-27","count":89,"level":2},{"date":"2025-05-28","count":53,"level":1},{"date":"2025-05-29","count":67,"level":1},{"date":"2025-05-30","count":57,"level":1},{"date":"2025-05-31","count":67,"level":1},{"date":"2025-06-01","count":74,"level":1},{"date":"2025-06-02","count":77,"level":2},{"date":"2025-06-03","count":80,"level":2},{"date":"2025-06-04","count":74,"level":1},{"date":"2025-06-05","count":90,"level":2},{"date":"2025-06-06","count":80,"level":2},{"date":"2025-06-07","count":71,"level":1},{"date":"2025-06-08","count":55,"level":1},{"date":"2025-06-09","count":91,"level":2},{"date":"2025-06-10","count":83,"level":2},{"date":"2025-06-11","count":89,"level":2},{"date":"2025-06-12","count":109,"level":3},{"date":"2025-06-13","count":89,"level":2},{"date":"2025-06-14","count":89,"level":2},{"date":"2025-06-15","count":89,"level":2},{"date":"2025-06-16","count":89,"level":2},{"date":"2025-06-17","count":85,"level":2},{"date":"2025-06-18","count":80,"level":2},{"date":"2025-06-19","count":90,"level":2},{"date":"2025-06-20","count":77,"level":2},{"date":"2025-06-21","count":74,"level":1},{"date":"2025-06-22","count":71,"level":1},{"date":"2025-06-23","count":89,"level":2},{"date":"2025-06-24","count":85,"level":2},{"date":"2025-06-25","count":82,"level":2},{"date":"2025-06-26","count":86,"level":2},{"date":"2025-06-27","count":74,"level":1},{"date":"2025-06-28","count":84,"level":2},{"date":"2025-06-29","count":84,"level":2},{"date":"2025-06-30","count":90,"level":2},{"date":"2025-07-01","count":87,"level":2},{"date":"2025-07-02","count":83,"level":2},{"date":"2025-07-03","count":69,"level":1},{"date":"2025-07-04","count":53,"level":1},{"date":"2025-07-05","count":61,"level":1},{"date":"2025-07-06","count":65,"level":1},{"date":"2025-07-07","count":68,"level":1},{"date":"2025-07-08","count":70,"level":1},{"date":"2025-07-09","count":69,"level":1},{"date":"2025-07-10","count":54,"level":1},{"date":"2025-07-11","count":67,"level":1},{"date":"2025-07-12","count":70,"level":1},{"date":"2025-07-13","count":74,"level":1},{"date":"2025-07-14","count":105,"level":3},{"date":"2025-07-15","count":106,"level":3},{"date":"2025-07-16","count":80,"level":2},{"date":"2025-07-17","count":90,"level":2},{"date":"2025-07-18","count":75,"level":1},{"date":"2025-07-19","count":95,"level":2},{"date":"2025-07-20","count":113,"level":3},{"date":"2025-07-21","count":84,"level":2},{"date":"2025-07-22","count":97,"level":2},{"date":"2025-07-23","count":95,"level":2},{"date":"2025-07-24","count":77,"level":2},{"date":"2025-07-25","count":79,"level":2},{"date":"2025-07-26","count":69,"level":1},{"date":"2025-07-27","count":93,"level":2},{"date":"2025-07-28","count":90,"level":2},{"date":"2025-07-29","count":84,"level":2},{"date":"2025-07-30","count":91,"level":2},{"date":"2025-07-31","count":87,"level":2},{"date":"2025-08-01","count":80,"level":2},{"date":"2025-08-02","count":64,"level":1},{"date":"2025-08-03","count":77,"level":2},{"date":"2025-08-04","count":89,"level":2},{"date":"2025-08-05","count":82,"level":2},{"date":"2025-08-06","count":108,"level":3},{"date":"2025-08-07","count":72,"level":1},{"date":"2025-08-08","count":74,"level":1},{"date":"2025-08-09","count":87,"level":2},{"date":"2025-08-10","count":77,"level":2},{"date":"2025-08-11","count":95,"level":2},{"date":"2025-08-12","count":82,"level":2},{"date":"2025-08-13","count":73,"level":1},{"date":"2025-08-14","count":79,"level":2},{"date":"2025-08-15","count":76,"level":2},{"date":"2025-08-16","count":62,"level":1},{"date":"2025-08-17","count":75,"level":1},{"date":"2025-08-18","count":80,"level":2},{"date":"2025-08-19","count":87,"level":2},{"date":"2025-08-20","count":80,"level":2},{"date":"2025-08-21","count":66,"level":1},{"date":"2025-08-22","count":71,"level":1},{"date":"2025-08-23","count":95,"level":2},{"date":"2025-08-24","count":71,"level":1},{"date":"2025-08-25","count":67,"level":1},{"date":"2025-08-26","count":64,"level":1},{"date":"2025-08-27","count":71,"level":1},{"date":"2025-08-28","count":89,"level":2},{"date":"2025-08-29","count":60,"level":1},{"date":"2025-08-30","count":71,"level":1},{"date":"2025-08-31","count":87,"level":2},{"date":"2025-09-01","count":85,"level":2},{"date":"2025-09-02","count":91,"level":2},{"date":"2025-09-03","count":97,"level":2},{"date":"2025-09-04","count":88,"level":2},{"date":"2025-09-05","count":72,"level":1},{"date":"2025-09-06","count":84,"level":2},{"date":"2025-09-07","count":100,"level":3},{"date":"2025-09-08","count":90,"level":2},{"date":"2025-09-09","count":95,"level":2},{"date":"2025-09-10","count":87,"level":2},{"date":"2025-09-11","count":87,"level":2},{"date":"2025-09-12","count":92,"level":2},{"date":"2025-09-13","count":85,"level":2},{"date":"2025-09-14","count":86,"level":2},{"date":"2025-09-15","count":90,"level":2},{"date":"2025-09-16","count":91,"level":2},{"date":"2025-09-17","count":77,"level":2},{"date":"2025-09-18","count":84,"level":2},{"date":"2025-09-19","count":69,"level":1},{"date":"2025-09-20","count":66,"level":1},{"date":"2025-09-21","count":89,"level":2},{"date":"2025-09-22","count":95,"level":2},{"date":"2025-09-23","count":78,"level":2},{"date":"2025-09-24","count":76,"level":2},{"date":"2025-09-25","count":68,"level":1},{"date":"2025-09-26","count":69,"level":1},{"date":"2025-09-27","count":66,"level":1},{"date":"2025-09-28","count":58,"level":1},{"date":"2025-09-29","count":77,"level":2},{"date":"2025-09-30","count":68,"level":1},{"date":"2025-10-01","count":80,"level":2},{"date":"2025-10-02","count":67,"level":1},{"date":"2025-10-03","count":58,"level":1},{"date":"2025-10-04","count":67,"level":1},{"date":"2025-10-05","count":66,"level":1},{"date":"2025-10-06","count":71,"level":1},{"date":"2025-10-07","count":55,"level":1},{"date":"2025-10-08","count":77,"level":2},{"date":"2025-10-09","count":66,"level":1},{"date":"2025-10-10","count":58,"level":1},{"date":"2025-10-11","count":63,"level":1},{"date":"2025-10-12","count":56,"level":1},{"date":"2025-10-13","count":60,"level":1},{"date":"2025-10-14","count":66,"level":1},{"date":"2025-10-15","count":70,"level":1},{"date":"2025-10-16","count":55,"level":1},{"date":"2025-10-17","count":52,"level":1},{"date":"2025-10-18","count":48,"level":1},{"date":"2025-10-19","count":57,"level":1},{"date":"2025-10-20","count":53,"level":1},{"date":"2025-10-21","count":53,"level":1},{"date":"2025-10-22","count":58,"level":1},{"date":"2025-10-23","count":53,"level":1},{"date":"2025-10-24","count":53,"level":1},{"date":"2025-10-25","count":53,"level":1},{"date":"2025-10-26","count":56,"level":1},{"date":"2025-10-27","count":61,"level":1},{"date":"2025-10-28","count":53,"level":1},{"date":"2025-10-29","count":67,"level":1},{"date":"2025-10-30","count":69,"level":1},{"date":"2025-10-31","count":53,"level":1},{"date":"2025-11-01","count":58,"level":1},{"date":"2025-11-02","count":47,"level":1},{"date":"2025-11-03","count":54,"level":1},{"date":"2025-11-04","count":66,"level":1},{"date":"2025-11-05","count":56,"level":1},{"date":"2025-11-06","count":62,"level":1},{"date":"2025-11-07","count":62,"level":1},{"date":"2025-11-08","count":56,"level":1},{"date":"2025-11-09","count":58,"level":1},{"date":"2025-11-10","count":53,"level":1},{"date":"2025-11-11","count":42,"level":1},{"date":"2025-11-12","count":56,"level":1},{"date":"2025-11-13","count":64,"level":1},{"date":"2025-11-14","count":60,"level":1},{"date":"2025-11-15","count":62,"level":1},{"date":"2025-11-16","count":58,"level":1},{"date":"2025-11-17","count":71,"level":1},{"date":"2025-11-18","count":66,"level":1},{"date":"2025-11-19","count":56,"level":1},{"date":"2025-11-20","count":71,"level":1},{"date":"2025-11-21","count":56,"level":1},{"date":"2025-11-22","count":58,"level":1},{"date":"2025-11-23","count":57,"level":1},{"date":"2025-11-24","count":74,"level":1},{"date":"2025-11-25","count":65,"level":1},{"date":"2025-11-26","count":72,"level":1},{"date":"2025-11-27","count":48,"level":1},{"date":"2025-11-28","count":58,"level":1},{"date":"2025-11-29","count":53,"level":1},{"date":"2025-11-30","count":43,"level":1},{"date":"2025-12-01","count":67,"level":1},{"date":"2025-12-02","count":76,"level":2},{"date":"2025-12-03","count":78,"level":2},{"date":"2025-12-04","count":66,"level":1},{"date":"2025-12-05","count":84,"level":2},{"date":"2025-12-06","count":80,"level":2},{"date":"2025-12-07","count":70,"level":1},{"date":"2025-12-08","count":65,"level":1},{"date":"2025-12-09","count":78,"level":2},{"date":"2025-12-10","count":68,"level":1},{"date":"2025-12-11","count":68,"level":1},{"date":"2025-12-12","count":65,"level":1},{"date":"2025-12-13","count":64,"level":1},{"date":"2025-12-14","count":53,"level":1},{"date":"2025-12-15","count":61,"level":1},{"date":"2025-12-16","count":67,"level":1},{"date":"2025-12-17","count":85,"level":2},{"date":"2025-12-18","count":76,"level":2},{"date":"2025-12-19","count":67,"level":1},{"date":"2025-12-20","count":52,"level":1},{"date":"2025-12-21","count":56,"level":1},{"date":"2025-12-22","count":74,"level":1},{"date":"2025-12-23","count":67,"level":1},{"date":"2025-12-24","count":71,"level":1},{"date":"2025-12-25","count":71,"level":1},{"date":"2025-12-26","count":75,"level":1},{"date":"2025-12-27","count":72,"level":1},{"date":"2025-12-28","count":72,"level":1},{"date":"2025-12-29","count":77,"level":2},{"date":"2025-12-30","count":75,"level":1},{"date":"2025-12-31","count":73,"level":1},{"date":"2026-01-01","count":78,"level":2},{"date":"2026-01-02","count":71,"level":1},{"date":"2026-01-03","count":84,"level":2},{"date":"2026-01-04","count":75,"level":1},{"date":"2026-01-05","count":85,"level":2},{"date":"2026-01-06","count":89,"level":2},{"date":"2026-01-07","count":89,"level":2},{"date":"2026-01-08","count":70,"level":1},{"date":"2026-01-09","count":72,"level":1},{"date":"2026-01-10","count":65,"level":1},{"date":"2026-01-11","count":79,"level":2},{"date":"2026-01-12","count":87,"level":2},{"date":"2026-01-13","count":86,"level":2},{"date":"2026-01-14","count":79,"level":2},{"date":"2026-01-15","count":82,"level":2},{"date":"2026-01-16","count":69,"level":1},{"date":"2026-01-17","count":73,"level":1},{"date":"2026-01-18","count":84,"level":2},{"date":"2026-01-19","count":103,"level":3},{"date":"2026-01-20","count":89,"level":2},{"date":"2026-01-21","count":95,"level":2},{"date":"2026-01-22","count":84,"level":2},{"date":"2026-01-23","count":77,"level":2},{"date":"2026-01-24","count":74,"level":1},{"date":"2026-01-25","count":89,"level":2},{"date":"2026-01-26","count":79,"level":2},{"date":"2026-01-27","count":84,"level":2},{"date":"2026-01-28","count":90,"level":2},{"date":"2026-01-29","count":86,"level":2},{"date":"2026-01-30","count":97,"level":2},{"date":"2026-01-31","count":70,"level":1},{"date":"2026-02-01","count":89,"level":2},{"date":"2026-02-02","count":81,"level":2},{"date":"2026-02-03","count":77,"level":2},{"date":"2026-02-04","count":85,"level":2},{"date":"2026-02-05","count":95,"level":2},{"date":"2026-02-06","count":85,"level":2},{"date":"2026-02-07","count":70,"level":1},{"date":"2026-02-08","count":89,"level":2},{"date":"2026-02-09","count":85,"level":2},{"date":"2026-02-10","count":95,"level":2},{"date":"2026-02-11","count":79,"level":2},{"date":"2026-02-12","count":84,"level":2},{"date":"2026-02-13","count":81,"level":2},{"date":"2026-02-14","count":76,"level":2},{"date":"2026-02-15","count":90,"level":2},{"date":"2026-02-16","count":82,"level":2},{"date":"2026-02-17","count":75,"level":1},{"date":"2026-02-18","count":75,"level":1},{"date":"2026-02-19","count":95,"level":2},{"date":"2026-02-20","count":80,"level":2},{"date":"2026-02-21","count":57,"level":1},{"date":"2026-02-22","count":74,"level":1},{"date":"2026-02-23","count":77,"level":2},{"date":"2026-02-24","count":80,"level":2},{"date":"2026-02-25","count":79,"level":2},{"date":"2026-02-26","count":67,"level":1},{"date":"2026-02-27","count":56,"level":1},{"date":"2026-02-28","count":57,"level":1},{"date":"2026-03-01","count":78,"level":2},{"date":"2026-03-02","count":74,"level":1},{"date":"2026-03-03","count":81,"level":2},{"date":"2026-03-04","count":80,"level":2},{"date":"2026-03-05","count":76,"level":2},{"date":"2026-03-06","count":53,"level":1},{"date":"2026-03-07","count":61,"level":1},{"date":"2026-03-08","count":57,"level":1},{"date":"2026-03-09","count":73,"level":1},{"date":"2026-03-10","count":65,"level":1},{"date":"2026-03-11","count":70,"level":1},{"date":"2026-03-12","count":53,"level":1},{"date":"2026-03-13","count":63,"level":1},{"date":"2026-03-14","count":53,"level":1},{"date":"2026-03-15","count":77,"level":2},{"date":"2026-03-16","count":88,"level":2},{"date":"2026-03-17","count":86,"level":2},{"date":"2026-03-18","count":87,"level":2},{"date":"2026-03-19","count":80,"level":2},{"date":"2026-03-20","count":72,"level":1},{"date":"2026-03-21","count":68,"level":1},{"date":"2026-03-22","count":81,"level":2},{"date":"2026-03-23","count":81,"level":2},{"date":"2026-03-24","count":77,"level":2},{"date":"2026-03-25","count":72,"level":1},{"date":"2026-03-26","count":75,"level":1},{"date":"2026-03-27","count":74,"level":1},{"date":"2026-03-28","count":72,"level":1},{"date":"2026-03-29","count":85,"level":2},{"date":"2026-03-30","count":95,"level":2},{"date":"2026-03-31","count":95,"level":2},{"date":"2026-04-01","count":87,"level":2},{"date":"2026-04-02","count":89,"level":2},{"date":"2026-04-03","count":90,"level":2},{"date":"2026-04-04","count":83,"level":2},{"date":"2026-04-05","count":79,"level":2},{"date":"2026-04-06","count":89,"level":2},{"date":"2026-04-07","count":79,"level":2},{"date":"2026-04-08","count":79,"level":2},{"date":"2026-04-09","count":90,"level":2},{"date":"2026-04-10","count":90,"level":2},{"date":"2026-04-11","count":84,"level":2},{"date":"2026-04-12","count":89,"level":2},{"date":"2026-04-13","count":81,"level":2},{"date":"2026-04-14","count":65,"level":1},{"date":"2026-04-15","count":68,"level":1},{"date":"2026-04-16","count":58,"level":1},{"date":"2026-04-17","count":57,"level":1},{"date":"2026-04-18","count":0,"level":0},{"date":"2026-04-19","count":0,"level":0},{"date":"2026-04-20","count":0,"level":0}]};
 
-<script>
-(() => {
-  'use strict';
-  const TTL = 60 * 60 * 1000;
-  const nf = new Intl.NumberFormat('en-US');
-  const df = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' });
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const CONTRIBUTION_API = 'https://github-contributions-api.jogruber.de/v4/MontrealAI?y=last';
+    const ORG_API = 'https://api.github.com/users/MontrealAI';
+    const REPO_API = 'https://api.github.com/users/MontrealAI/repos?per_page=100&sort=updated';
+    const TTL = 60 * 60 * 1000;
+    const fmtNum = new Intl.NumberFormat('en-US');
+    const fmtDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
-  const PINNED_ORDER = ['AGI-Agent-v0', 'AGI-Alpha-Agent-v0', 'AGIJobsv0', 'AGI-Alpha-Node-v0', 'AGIJobManager', 'AGIJobManagerPrime'];
-  const FALLBACK_DESC = {
-    'AGI-Agent-v0': 'A minimal yet unstoppable blueprint for multi-agent AI—anchored by the rare, far-reaching Multi-Agent AI DAO prior art—empowering a new wave of superintelligent on-chain agents.',
-    'AGI-Alpha-Agent-v0': 'META‑AGENTIC α‑AGI — Identify → Out‑Learn → Out‑Think → Out‑Design → Out‑Strategise → Out‑Execute.',
-    'AGIJobsv0': 'The Operating System for AGI Work.',
-    'AGI-Alpha-Node-v0': 'Synthetic AI labor infrastructure and deployment surface for α‑AGI execution.',
-    'AGIJobManager': 'Escrowed AGI work agreements with ENS-backed job pages.',
-    'AGIJobManagerPrime': 'Next-generation sovereign AI labor protocol featuring autonomous agent discovery, game-theoretic job markets, and institutional-grade on-chain settlement.'
-  };
+    const PINNED_ORDER = [
+      { n: 'AGI-Agent-v0', d: 'A minimal yet unstoppable blueprint for multi-agent AI—anchored by the rare, far-reaching Multi-Agent AI DAO prior art—empowering a new wave of superintelligent on-chain agents.', u: 'https://github.com/MontrealAI/AGI-Agent-v0' },
+      { n: 'AGI-Alpha-Agent-v0', d: 'META‑AGENTIC α‑AGI — Identify → Out‑Learn → Out‑Think → Out‑Design → Out‑Strategise → Out‑Execute.', u: 'https://github.com/MontrealAI/AGI-Alpha-Agent-v0' },
+      { n: 'AGIJobsv0', d: 'The Operating System for AGI Work.', u: 'https://github.com/MontrealAI/AGIJobsv0' },
+      { n: 'AGI-Alpha-Node-v0', d: 'Synthetic AI labor infrastructure and deployment surface for α‑AGI execution.', u: 'https://github.com/MontrealAI/AGI-Alpha-Node-v0' },
+      { n: 'AGIJobManager', d: 'Escrowed AGI work agreements with ENS-backed job pages.', u: 'https://github.com/MontrealAI/AGIJobManager' },
+      { n: 'AGIJobManagerPrime', d: 'Next-generation sovereign AI labor protocol featuring autonomous agent discovery, game-theoretic job markets, and institutional-grade on-chain settlement.', u: 'https://github.com/MontrealAI/AGIJobManagerPrime' }
+    ];
 
-  const FEATURED_ITEMS = [
-    { title: 'The “Multi-Agent AI DAO” Prior Art', category: 'Prior Art', url: 'https://www.quebecartificialintelligence.com/priorart' },
-    { title: 'AI DEBATE 3 : The AGI Debate', category: 'Debates', url: './aidebate3/', local: true },
-    { title: 'AGI King 👑 — ENS Sovereign Portfolio', category: 'ENS', url: 'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf' }
-  ];
-  const ESSAYS = [
-    { title: 'AI Sovereignty: Empowering Nations with an AGI-Driven Labor Engine', category: 'Essays', url: 'https://www.linkedin.com/pulse/ai-sovereignty-empowering-nations-agi-driven-labor-engine-boucher-afhme/' },
-    { title: 'The Agent‑Native Economy', category: 'Essays', url: 'https://www.linkedin.com/pulse/agentnative-economy-survival-sovereignty-sales-world-vincent-boucher-vgmre/' },
-    { title: 'Public Memory for Machine Labor', category: 'Essays', url: 'https://www.linkedin.com/pulse/public-memory-machine-labor-ens-job-pages-knowledge-vincent-boucher-seifc/' },
-    { title: 'To Govern Their Own Kind', category: 'Governance', url: 'https://www.linkedin.com/pulse/govern-own-kind-vincent-boucher-qi9we/' },
-    { title: 'DiscoveryPrime', category: 'AGI Jobs', url: 'https://www.linkedin.com/pulse/discoveryprime-vincent-boucher-lndte/' },
-    { title: 'The Tournament for Intelligence', category: 'Essays', url: 'https://www.linkedin.com/pulse/tournament-intelligence-vincent-boucher-xizue/' },
-    { title: 'The Market Before the Miracle', category: 'Essays', url: 'https://www.linkedin.com/pulse/market-before-miracle-vincent-boucher-9edxe/' },
-    { title: 'THE MACHINE THAT BOUGHT THE SUN', category: 'Essays', url: 'https://www.linkedin.com/pulse/machine-bought-sun-vincent-boucher-kajje/' },
-    { title: 'From Turing to the Agentic Economy', category: 'Essays', url: 'https://www.linkedin.com/pulse/from-turing-agentic-economy-how-2017-multiagent-ai-dao-boucher-pquze' },
-    { title: 'When Machines Hire Machines', category: 'AGI Jobs', url: 'https://www.linkedin.com/pulse/when-machines-hire-vincent-boucher-djp8e/' },
-    { title: 'No Judge but Code', category: 'Governance', url: 'https://www.linkedin.com/pulse/judge-code-vincent-boucher-ailze/' }
-  ];
-  const DECKS = [
-    { title: 'MONTREAL.AI × ERC‑8004', category: 'Decks', url: 'https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf' },
-    { title: 'ENS Routing as a Market Mechanism', category: 'ENS', url: 'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf' },
-    { title: 'RootNameGovernance_AGIeth_v0', category: 'Governance', url: 'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf' },
-    { title: 'META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1', category: 'Decks', url: 'https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1.pdf' },
-    { title: 'AGIJobsv0_Ministerial_Brief_v0', category: 'Decks', url: 'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGIJobsv0_Ministerial_Brief_v0.pdf' }
-  ];
-  const AGI_JOBS_ITEMS = [
-    { title: 'AGIJobManager · Genesis Mainnet Console', category: 'AGI Jobs', url: './agijobmanagerv0.html', local: true },
-    { title: 'AGIJobManager · Employer Burn', category: 'AGI Jobs', url: './agijobmanagerburnv1.html', local: true },
-    { title: 'AGIJobManager Prime · Mainnet Console', category: 'AGI Jobs', url: './agijobmanagerprimev2.html', local: true }
-  ];
-  const DEBATE_ITEMS = [
-    { title: 'AI Debate #1', category: 'Debates', url: './aidebate/', local: true },
-    { title: 'AI Debate #2', category: 'Debates', url: './aidebate2/', local: true },
-    { title: 'AI Debate #3', category: 'Debates', url: './aidebate3/', local: true }
-  ];
-  const PRIOR_ART_ITEMS = [
-    { title: 'Official Prior Art Statement', category: 'Prior Art', url: 'https://www.quebecartificialintelligence.com/priorart' }
-  ];
-  const REPOSITORY_ITEMS = PINNED_ORDER.map(name => ({ title: name, category: 'Repositories', url: `https://github.com/MontrealAI/${name}` }));
+    const FEATURED_ITEMS = [
+      { title: 'Multi-Agent AI DAO Prior Art', cat: 'Prior Art', href: 'https://www.quebecartificialintelligence.com/priorart', desc: 'Foundational 2017 public disclosure.' },
+      { title: 'AI DEBATE 3 : The AGI Debate', cat: 'Debates', href: './aidebate3/', desc: 'Flagship AGI global discourse convening.' },
+      { title: 'AGI King 👑 ENS Sovereign Portfolio', cat: 'ENS', href: 'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/AI_AGI_ASI_Sovereign_Portfolio_v4.pdf', desc: 'AI → AGI → ASI naming arc artifacts.' }
+    ];
+    const LIBRARY_ITEMS = [
+      ...FEATURED_ITEMS,
+      { title: 'AGIJobManager Prime Console', cat: 'AGI Jobs', href: './agijobmanagerprimev2.html', desc: 'Mainnet console surface.' },
+      { title: 'AGIJobManager Genesis Console', cat: 'AGI Jobs', href: './agijobmanagerv0.html', desc: 'Genesis operations.' },
+      { title: 'AGIJobManager Employer Burn', cat: 'AGI Jobs', href: './agijobmanagerburnv1.html', desc: 'Employer burn economics surface.' },
+      { title: 'AGIJobManagerPrime Repository', cat: 'Repositories', href: 'https://github.com/MontrealAI/AGIJobManagerPrime', desc: 'Flagship labor protocol codebase.' },
+      { title: 'ENS Routing as a Market Mechanism', cat: 'Decks', href: 'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf', desc: 'Routing and market structure.' },
+      { title: 'AGI.eth — Root‑Name Governance', cat: 'Governance', href: 'https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf', desc: 'Root governance framework.' },
+      { title: 'MONTREAL.AI × ERC‑8004', cat: 'Decks', href: 'https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf', desc: 'Protocol direction and alignment.' },
+      { title: 'AI Debate #1', cat: 'Debates', href: './aidebate/', desc: 'First debate archive.' },
+      { title: 'AI Debate #2', cat: 'Debates', href: './aidebate2/', desc: 'Second debate archive.' }
+    ];
 
-  function resolveBasePath() {
-    const path = location.pathname;
-    const segments = path.split('/').filter(Boolean);
-    if (!segments.length) return '/';
-    if (location.hostname.endsWith('github.io')) {
-      const first = segments[0] || '';
-      const last = segments[segments.length - 1] || '';
-      const firstIsFile = first.includes('.');
-      const lastIsFile = last.includes('.');
-      if (firstIsFile) return '/';
-      if (segments.length === 1 && !lastIsFile) return `/${first}/`;
-      if (segments.length > 1) return `/${first}/`;
+    function resolveBasePath() {
+      const p = location.pathname;
+      if (p.endsWith('/')) return p;
+      return p.slice(0, p.lastIndexOf('/') + 1);
     }
-    return '/';
-  }
+    const basePath = resolveBasePath();
+    function setInternalLinks() {
+      document.querySelectorAll('[data-route]').forEach((el) => {
+        const route = el.getAttribute('data-route').replace(/^\.\//, '');
+        el.setAttribute('href', basePath + route);
+      });
+    }
 
-  function route(path) {
-    if (!path.startsWith('./')) return path;
-    return resolveBasePath() + path.replace(/^\.\//, '');
-  }
-
-  function applyBaseRoutes() {
-    document.querySelectorAll('.route').forEach(el => {
-      const p = el.getAttribute('data-route') || el.getAttribute('href');
-      el.setAttribute('href', route(p));
-    });
-  }
-
-  async function fetchWithCache(key, url, ttlMs, init = {}) {
-    const now = Date.now();
-    let cached = null;
-    try {
-      cached = localStorage.getItem(key);
-    } catch {}
-    if (cached) {
+    async function fetchWithCache(key, url, ttlMs) {
+      const now = Date.now();
+      let staleData = null;
       try {
-        const parsed = JSON.parse(cached);
-        if (now - parsed.ts < ttlMs) {
-          return { data: parsed.data, source: 'cache' };
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed?.data) staleData = parsed.data;
+          if (parsed && parsed.ts && now - parsed.ts < ttlMs) return { data: parsed.data, source: 'cached snapshot' };
         }
       } catch {}
-    }
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    try {
-      const res = await fetch(url, { ...init, signal: controller.signal });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 9000);
       try {
-        localStorage.setItem(key, JSON.stringify({ ts: now, data }));
-      } catch {}
-      return { data, source: 'live' };
-    } catch (err) {
-      if (cached) {
-        try { return { data: JSON.parse(cached).data, source: 'stale-cache' }; } catch {}
-      }
-      throw err;
-    } finally {
-      clearTimeout(timeout);
+        const res = await fetch(url, { signal: ctrl.signal });
+        if (!res.ok) throw new Error('status ' + res.status);
+        const data = await res.json();
+        try { localStorage.setItem(key, JSON.stringify({ ts: now, data })); } catch {}
+        return { data, source: 'live' };
+      } catch (err) {
+        if (staleData) return { data: staleData, source: 'cached snapshot' };
+        throw err;
+      } finally { clearTimeout(t); }
     }
-  }
 
-  const fetchGithubOrg = () => fetchWithCache('mai_github_org', 'https://api.github.com/users/MontrealAI', TTL);
-  const fetchGithubRepos = () => fetchWithCache('mai_github_repos', 'https://api.github.com/users/MontrealAI/repos?per_page=100&sort=updated', TTL);
-  const fetchContributionData = () => fetchWithCache('mai_github_contrib', 'https://github-contributions-api.jogruber.de/v4/MontrealAI?y=last', TTL);
-
-  const CONTRIB_SEED_LAST_YEAR = {"total":{"lastYear":30579},"contributions":[{"date":"2025-04-20","count":43,"level":1},{"date":"2025-04-21","count":29,"level":1},{"date":"2025-04-22","count":60,"level":1},{"date":"2025-04-23","count":68,"level":1},{"date":"2025-04-24","count":21,"level":1},{"date":"2025-04-25","count":48,"level":1},{"date":"2025-04-26","count":5,"level":1},{"date":"2025-04-27","count":9,"level":1},{"date":"2025-04-28","count":33,"level":1},{"date":"2025-04-29","count":33,"level":1},{"date":"2025-04-30","count":36,"level":1},{"date":"2025-05-01","count":40,"level":1},{"date":"2025-05-02","count":55,"level":1},{"date":"2025-05-03","count":20,"level":1},{"date":"2025-05-04","count":20,"level":1},{"date":"2025-05-05","count":20,"level":1},{"date":"2025-05-06","count":38,"level":1},{"date":"2025-05-07","count":4,"level":1},{"date":"2025-05-08","count":7,"level":1},{"date":"2025-05-09","count":18,"level":1},{"date":"2025-05-10","count":0,"level":0},{"date":"2025-05-11","count":0,"level":0},{"date":"2025-05-12","count":0,"level":0},{"date":"2025-05-13","count":13,"level":1},{"date":"2025-05-14","count":0,"level":0},{"date":"2025-05-15","count":3,"level":1},{"date":"2025-05-16","count":72,"level":1},{"date":"2025-05-17","count":652,"level":4},{"date":"2025-05-18","count":277,"level":4},{"date":"2025-05-19","count":192,"level":3},{"date":"2025-05-20","count":227,"level":3},{"date":"2025-05-21","count":217,"level":3},{"date":"2025-05-22","count":185,"level":3},{"date":"2025-05-23","count":311,"level":4},{"date":"2025-05-24","count":307,"level":4},{"date":"2025-05-25","count":335,"level":4},{"date":"2025-05-26","count":189,"level":3},{"date":"2025-05-27","count":244,"level":3},{"date":"2025-05-28","count":237,"level":3},{"date":"2025-05-29","count":187,"level":3},{"date":"2025-05-30","count":213,"level":3},{"date":"2025-05-31","count":183,"level":3},{"date":"2025-06-01","count":317,"level":4},{"date":"2025-06-02","count":204,"level":3},{"date":"2025-06-03","count":138,"level":2},{"date":"2025-06-04","count":117,"level":2},{"date":"2025-06-05","count":291,"level":4},{"date":"2025-06-06","count":193,"level":3},{"date":"2025-06-07","count":339,"level":4},{"date":"2025-06-08","count":229,"level":3},{"date":"2025-06-09","count":121,"level":2},{"date":"2025-06-10","count":93,"level":2},{"date":"2025-06-11","count":115,"level":2},{"date":"2025-06-12","count":135,"level":2},{"date":"2025-06-13","count":184,"level":3},{"date":"2025-06-14","count":153,"level":2},{"date":"2025-06-15","count":165,"level":2},{"date":"2025-06-16","count":129,"level":2},{"date":"2025-06-17","count":114,"level":2},{"date":"2025-06-18","count":102,"level":2},{"date":"2025-06-19","count":147,"level":2},{"date":"2025-06-20","count":124,"level":2},{"date":"2025-06-21","count":85,"level":2},{"date":"2025-06-22","count":78,"level":1},{"date":"2025-06-23","count":127,"level":2},{"date":"2025-06-24","count":102,"level":2},{"date":"2025-06-25","count":123,"level":2},{"date":"2025-06-26","count":120,"level":2},{"date":"2025-06-27","count":117,"level":2},{"date":"2025-06-28","count":141,"level":2},{"date":"2025-06-29","count":151,"level":2},{"date":"2025-06-30","count":111,"level":2},{"date":"2025-07-01","count":103,"level":2},{"date":"2025-07-02","count":76,"level":1},{"date":"2025-07-03","count":105,"level":2},{"date":"2025-07-04","count":147,"level":2},{"date":"2025-07-05","count":111,"level":2},{"date":"2025-07-06","count":154,"level":2},{"date":"2025-07-07","count":54,"level":1},{"date":"2025-07-08","count":125,"level":2},{"date":"2025-07-09","count":132,"level":2},{"date":"2025-07-10","count":93,"level":2},{"date":"2025-07-11","count":118,"level":2},{"date":"2025-07-12","count":111,"level":2},{"date":"2025-07-13","count":156,"level":2},{"date":"2025-07-14","count":109,"level":2},{"date":"2025-07-15","count":124,"level":2},{"date":"2025-07-16","count":76,"level":1},{"date":"2025-07-17","count":88,"level":2},{"date":"2025-07-18","count":78,"level":1},{"date":"2025-07-19","count":104,"level":2},{"date":"2025-07-20","count":56,"level":1},{"date":"2025-07-21","count":62,"level":1},{"date":"2025-07-22","count":62,"level":1},{"date":"2025-07-23","count":68,"level":1},{"date":"2025-07-24","count":66,"level":1},{"date":"2025-07-25","count":60,"level":1},{"date":"2025-07-26","count":80,"level":1},{"date":"2025-07-27","count":52,"level":1},{"date":"2025-07-28","count":55,"level":1},{"date":"2025-07-29","count":83,"level":1},{"date":"2025-07-30","count":40,"level":1},{"date":"2025-07-31","count":48,"level":1},{"date":"2025-08-01","count":52,"level":1},{"date":"2025-08-02","count":44,"level":1},{"date":"2025-08-03","count":228,"level":3},{"date":"2025-08-04","count":224,"level":3},{"date":"2025-08-05","count":151,"level":2},{"date":"2025-08-06","count":188,"level":3},{"date":"2025-08-07","count":178,"level":3},{"date":"2025-08-08","count":164,"level":2},{"date":"2025-08-09","count":177,"level":3},{"date":"2025-08-10","count":151,"level":2},{"date":"2025-08-11","count":170,"level":3},{"date":"2025-08-12","count":112,"level":2},{"date":"2025-08-13","count":97,"level":2},{"date":"2025-08-14","count":132,"level":2},{"date":"2025-08-15","count":97,"level":2},{"date":"2025-08-16","count":43,"level":1},{"date":"2025-08-17","count":56,"level":1},{"date":"2025-08-18","count":70,"level":1},{"date":"2025-08-19","count":71,"level":1},{"date":"2025-08-20","count":89,"level":2},{"date":"2025-08-21","count":72,"level":1},{"date":"2025-08-22","count":83,"level":1},{"date":"2025-08-23","count":73,"level":1},{"date":"2025-08-24","count":68,"level":1},{"date":"2025-08-25","count":78,"level":1},{"date":"2025-08-26","count":100,"level":2},{"date":"2025-08-27","count":91,"level":2},{"date":"2025-08-28","count":71,"level":1},{"date":"2025-08-29","count":115,"level":2},{"date":"2025-08-30","count":124,"level":2},{"date":"2025-08-31","count":71,"level":1},{"date":"2025-09-01","count":70,"level":1},{"date":"2025-09-02","count":87,"level":2},{"date":"2025-09-03","count":48,"level":1},{"date":"2025-09-04","count":79,"level":1},{"date":"2025-09-05","count":125,"level":2},{"date":"2025-09-06","count":115,"level":2},{"date":"2025-09-07","count":144,"level":2},{"date":"2025-09-08","count":111,"level":2},{"date":"2025-09-09","count":113,"level":2},{"date":"2025-09-10","count":84,"level":2},{"date":"2025-09-11","count":139,"level":2},{"date":"2025-09-12","count":148,"level":2},{"date":"2025-09-13","count":123,"level":2},{"date":"2025-09-14","count":75,"level":1},{"date":"2025-09-15","count":100,"level":2},{"date":"2025-09-16","count":72,"level":1},{"date":"2025-09-17","count":71,"level":1},{"date":"2025-09-18","count":66,"level":1},{"date":"2025-09-19","count":160,"level":2},{"date":"2025-09-20","count":212,"level":3},{"date":"2025-09-21","count":76,"level":1},{"date":"2025-09-22","count":154,"level":2},{"date":"2025-09-23","count":73,"level":1},{"date":"2025-09-24","count":84,"level":2},{"date":"2025-09-25","count":160,"level":2},{"date":"2025-09-26","count":170,"level":3},{"date":"2025-09-27","count":160,"level":2},{"date":"2025-09-28","count":162,"level":2},{"date":"2025-09-29","count":106,"level":2},{"date":"2025-09-30","count":120,"level":2},{"date":"2025-10-01","count":161,"level":2},{"date":"2025-10-02","count":135,"level":2},{"date":"2025-10-03","count":69,"level":1},{"date":"2025-10-04","count":61,"level":1},{"date":"2025-10-05","count":51,"level":1},{"date":"2025-10-06","count":24,"level":1},{"date":"2025-10-07","count":50,"level":1},{"date":"2025-10-08","count":79,"level":1},{"date":"2025-10-09","count":68,"level":1},{"date":"2025-10-10","count":68,"level":1},{"date":"2025-10-11","count":75,"level":1},{"date":"2025-10-12","count":61,"level":1},{"date":"2025-10-13","count":88,"level":2},{"date":"2025-10-14","count":81,"level":1},{"date":"2025-10-15","count":94,"level":2},{"date":"2025-10-16","count":103,"level":2},{"date":"2025-10-17","count":73,"level":1},{"date":"2025-10-18","count":85,"level":2},{"date":"2025-10-19","count":74,"level":1},{"date":"2025-10-20","count":111,"level":2},{"date":"2025-10-21","count":172,"level":3},{"date":"2025-10-22","count":64,"level":1},{"date":"2025-10-23","count":74,"level":1},{"date":"2025-10-24","count":73,"level":1},{"date":"2025-10-25","count":69,"level":1},{"date":"2025-10-26","count":121,"level":2},{"date":"2025-10-27","count":126,"level":2},{"date":"2025-10-28","count":185,"level":3},{"date":"2025-10-29","count":215,"level":3},{"date":"2025-10-30","count":144,"level":2},{"date":"2025-10-31","count":153,"level":2},{"date":"2025-11-01","count":55,"level":1},{"date":"2025-11-02","count":44,"level":1},{"date":"2025-11-03","count":43,"level":1},{"date":"2025-11-04","count":62,"level":1},{"date":"2025-11-05","count":39,"level":1},{"date":"2025-11-06","count":108,"level":2},{"date":"2025-11-07","count":49,"level":1},{"date":"2025-11-08","count":79,"level":1},{"date":"2025-11-09","count":141,"level":2},{"date":"2025-11-10","count":122,"level":2},{"date":"2025-11-11","count":83,"level":1},{"date":"2025-11-12","count":101,"level":2},{"date":"2025-11-13","count":101,"level":2},{"date":"2025-11-14","count":113,"level":2},{"date":"2025-11-15","count":107,"level":2},{"date":"2025-11-16","count":118,"level":2},{"date":"2025-11-17","count":141,"level":2},{"date":"2025-11-18","count":99,"level":2},{"date":"2025-11-19","count":105,"level":2},{"date":"2025-11-20","count":53,"level":1},{"date":"2025-11-21","count":109,"level":2},{"date":"2025-11-22","count":108,"level":2},{"date":"2025-11-23","count":87,"level":2},{"date":"2025-11-24","count":49,"level":1},{"date":"2025-11-25","count":74,"level":1},{"date":"2025-11-26","count":58,"level":1},{"date":"2025-11-27","count":41,"level":1},{"date":"2025-11-28","count":29,"level":1},{"date":"2025-11-29","count":51,"level":1},{"date":"2025-11-30","count":32,"level":1},{"date":"2025-12-01","count":64,"level":1},{"date":"2025-12-02","count":57,"level":1},{"date":"2025-12-03","count":55,"level":1},{"date":"2025-12-04","count":36,"level":1},{"date":"2025-12-05","count":55,"level":1},{"date":"2025-12-06","count":46,"level":1},{"date":"2025-12-07","count":34,"level":1},{"date":"2025-12-08","count":46,"level":1},{"date":"2025-12-09","count":31,"level":1},{"date":"2025-12-10","count":54,"level":1},{"date":"2025-12-11","count":53,"level":1},{"date":"2025-12-12","count":41,"level":1},{"date":"2025-12-13","count":43,"level":1},{"date":"2025-12-14","count":40,"level":1},{"date":"2025-12-15","count":48,"level":1},{"date":"2025-12-16","count":53,"level":1},{"date":"2025-12-17","count":40,"level":1},{"date":"2025-12-18","count":41,"level":1},{"date":"2025-12-19","count":34,"level":1},{"date":"2025-12-20","count":51,"level":1},{"date":"2025-12-21","count":46,"level":1},{"date":"2025-12-22","count":50,"level":1},{"date":"2025-12-23","count":41,"level":1},{"date":"2025-12-24","count":44,"level":1},{"date":"2025-12-25","count":51,"level":1},{"date":"2025-12-26","count":51,"level":1},{"date":"2025-12-27","count":58,"level":1},{"date":"2025-12-28","count":43,"level":1},{"date":"2025-12-29","count":46,"level":1},{"date":"2025-12-30","count":44,"level":1},{"date":"2025-12-31","count":36,"level":1},{"date":"2026-01-01","count":30,"level":1},{"date":"2026-01-02","count":54,"level":1},{"date":"2026-01-03","count":54,"level":1},{"date":"2026-01-04","count":39,"level":1},{"date":"2026-01-05","count":40,"level":1},{"date":"2026-01-06","count":38,"level":1},{"date":"2026-01-07","count":43,"level":1},{"date":"2026-01-08","count":43,"level":1},{"date":"2026-01-09","count":31,"level":1},{"date":"2026-01-10","count":47,"level":1},{"date":"2026-01-11","count":44,"level":1},{"date":"2026-01-12","count":27,"level":1},{"date":"2026-01-13","count":32,"level":1},{"date":"2026-01-14","count":13,"level":1},{"date":"2026-01-15","count":9,"level":1},{"date":"2026-01-16","count":1,"level":1},{"date":"2026-01-17","count":14,"level":1},{"date":"2026-01-18","count":23,"level":1},{"date":"2026-01-19","count":4,"level":1},{"date":"2026-01-20","count":18,"level":1},{"date":"2026-01-21","count":12,"level":1},{"date":"2026-01-22","count":4,"level":1},{"date":"2026-01-23","count":10,"level":1},{"date":"2026-01-24","count":6,"level":1},{"date":"2026-01-25","count":3,"level":1},{"date":"2026-01-26","count":11,"level":1},{"date":"2026-01-27","count":39,"level":1},{"date":"2026-01-28","count":65,"level":1},{"date":"2026-01-29","count":68,"level":1},{"date":"2026-01-30","count":90,"level":2},{"date":"2026-01-31","count":90,"level":2},{"date":"2026-02-01","count":96,"level":2},{"date":"2026-02-02","count":45,"level":1},{"date":"2026-02-03","count":70,"level":1},{"date":"2026-02-04","count":66,"level":1},{"date":"2026-02-05","count":89,"level":2},{"date":"2026-02-06","count":48,"level":1},{"date":"2026-02-07","count":84,"level":2},{"date":"2026-02-08","count":71,"level":1},{"date":"2026-02-09","count":85,"level":2},{"date":"2026-02-10","count":83,"level":1},{"date":"2026-02-11","count":69,"level":1},{"date":"2026-02-12","count":52,"level":1},{"date":"2026-02-13","count":74,"level":1},{"date":"2026-02-14","count":76,"level":1},{"date":"2026-02-15","count":59,"level":1},{"date":"2026-02-16","count":71,"level":1},{"date":"2026-02-17","count":57,"level":1},{"date":"2026-02-18","count":59,"level":1},{"date":"2026-02-19","count":35,"level":1},{"date":"2026-02-20","count":49,"level":1},{"date":"2026-02-21","count":59,"level":1},{"date":"2026-02-22","count":39,"level":1},{"date":"2026-02-23","count":64,"level":1},{"date":"2026-02-24","count":60,"level":1},{"date":"2026-02-25","count":73,"level":1},{"date":"2026-02-26","count":46,"level":1},{"date":"2026-02-27","count":38,"level":1},{"date":"2026-02-28","count":37,"level":1},{"date":"2026-03-01","count":74,"level":1},{"date":"2026-03-02","count":63,"level":1},{"date":"2026-03-03","count":37,"level":1},{"date":"2026-03-04","count":54,"level":1},{"date":"2026-03-05","count":53,"level":1},{"date":"2026-03-06","count":20,"level":1},{"date":"2026-03-07","count":32,"level":1},{"date":"2026-03-08","count":23,"level":1},{"date":"2026-03-09","count":58,"level":1},{"date":"2026-03-10","count":13,"level":1},{"date":"2026-03-11","count":28,"level":1},{"date":"2026-03-12","count":91,"level":2},{"date":"2026-03-13","count":69,"level":1},{"date":"2026-03-14","count":53,"level":1},{"date":"2026-03-15","count":55,"level":1},{"date":"2026-03-16","count":83,"level":1},{"date":"2026-03-17","count":44,"level":1},{"date":"2026-03-18","count":67,"level":1},{"date":"2026-03-19","count":58,"level":1},{"date":"2026-03-20","count":90,"level":2},{"date":"2026-03-21","count":45,"level":1},{"date":"2026-03-22","count":41,"level":1},{"date":"2026-03-23","count":44,"level":1},{"date":"2026-03-24","count":50,"level":1},{"date":"2026-03-25","count":62,"level":1},{"date":"2026-03-26","count":19,"level":1},{"date":"2026-03-27","count":40,"level":1},{"date":"2026-03-28","count":52,"level":1},{"date":"2026-03-29","count":33,"level":1},{"date":"2026-03-30","count":39,"level":1},{"date":"2026-03-31","count":33,"level":1},{"date":"2026-04-01","count":22,"level":1},{"date":"2026-04-02","count":42,"level":1},{"date":"2026-04-03","count":30,"level":1},{"date":"2026-04-04","count":16,"level":1},{"date":"2026-04-05","count":16,"level":1},{"date":"2026-04-06","count":46,"level":1},{"date":"2026-04-07","count":21,"level":1},{"date":"2026-04-08","count":27,"level":1},{"date":"2026-04-09","count":20,"level":1},{"date":"2026-04-10","count":26,"level":1},{"date":"2026-04-11","count":26,"level":1},{"date":"2026-04-12","count":25,"level":1},{"date":"2026-04-13","count":32,"level":1},{"date":"2026-04-14","count":24,"level":1},{"date":"2026-04-15","count":22,"level":1},{"date":"2026-04-16","count":28,"level":1},{"date":"2026-04-17","count":23,"level":1},{"date":"2026-04-18","count":84,"level":2},{"date":"2026-04-19","count":71,"level":1},{"date":"2026-04-20","count":0,"level":0}]};
-
-  function normalizeContributionPayload(payload) {
-    if (!payload || typeof payload !== 'object') return null;
-    const raw = Array.isArray(payload.contributions) ? payload.contributions : [];
-    const flat = raw.flatMap(item => {
-      if (item && Array.isArray(item.days)) {
-        return item.days.map(day => ({ date: day.date, count: Number(day.count || 0), level: Number(day.level ?? -1) }));
-      }
-      return [{ date: item?.date, count: Number(item?.count || 0), level: Number(item?.level ?? -1) }];
-    }).filter(d => /^\d{4}-\d{2}-\d{2}$/.test(String(d.date)));
-
-    if (!flat.length) return null;
-    const normalized = flat.map(d => {
-      const c = Number.isFinite(d.count) && d.count > 0 ? Math.floor(d.count) : 0;
-      const level = d.level >= 0 ? Math.min(4, Math.max(0, Math.floor(d.level))) : (c === 0 ? 0 : c < 3 ? 1 : c < 7 ? 2 : c < 12 ? 3 : 4);
-      return { date: d.date, count: c, level };
-    });
-
-    const totalFromDays = normalized.reduce((sum, d) => sum + d.count, 0);
-    let total = 0;
-    if (typeof payload.total === 'number') total = Number(payload.total);
-    else if (payload.total && typeof payload.total === 'object') {
-      if (Number.isFinite(Number(payload.total.lastYear))) total = Number(payload.total.lastYear);
-      else total = Object.values(payload.total).reduce((sum, v) => sum + (Number(v) || 0), 0);
+    function normalizeContributionPayload(payload) {
+      const list = Array.isArray(payload?.contributions) ? payload.contributions : [];
+      let total = 0;
+      if (typeof payload?.total?.lastYear === 'number') total = payload.total.lastYear;
+      else if (payload?.total && typeof payload.total === 'object') total = Object.values(payload.total).reduce((a, v) => a + (Number(v) || 0), 0);
+      else total = list.reduce((a, d) => a + (Number(d.count) || 0), 0);
+      return {
+        total,
+        contributions: list.map((d) => ({ date: d.date, count: Number(d.count) || 0, level: Math.max(0, Math.min(4, Number(d.level) || 0)) }))
+      };
     }
-    if (!Number.isFinite(total) || total < 0 || Math.abs(total - totalFromDays) > 0) total = totalFromDays;
-    return { total: Math.max(0, Math.floor(total)), contributions: normalized };
-  }
 
+    function formatDateLocal(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
 
-  function parseISODateLocal(iso) {
-    const [y, m, d] = String(iso).split('-').map(Number);
-    return new Date(y, (m || 1) - 1, d || 1);
-  }
+    function parseISODateLocal(iso) {
+      const [y, m, d] = String(iso).split('-').map(Number);
+      return new Date(y, (m || 1) - 1, d || 1);
+    }
 
-  function rollContributionSeedToCurrent(seed) {
-    const normalized = normalizeContributionPayload(seed);
-    if (!normalized?.contributions?.length) return normalized;
-    const ordered = [...normalized.contributions].sort((a, b) => a.date.localeCompare(b.date));
-    const latest = ordered[ordered.length - 1];
-    const latestDate = parseISODateLocal(latest.date);
-    const today = new Date();
-    const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const latestLocal = new Date(latestDate.getFullYear(), latestDate.getMonth(), latestDate.getDate());
-    const shiftDays = Math.round((currentDate - latestLocal) / 86400000);
-    if (!shiftDays) return normalized;
+    function buildContributionMatrix(contributions) {
+      const map = new Map(contributions.map((d) => [d.date, d]));
+      const today = new Date();
+      const end = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const start = new Date(end); start.setDate(end.getDate() - 364);
+      const startSunday = new Date(start); startSunday.setDate(start.getDate() - start.getDay());
+      const weeks = [];
+      for (let w = 0; w < 53; w++) {
+        const days = [];
+        for (let d = 0; d < 7; d++) {
+          const date = new Date(startSunday); date.setDate(startSunday.getDate() + w * 7 + d);
+          const iso = formatDateLocal(date);
+          const found = map.get(iso);
+          const inRange = date >= start && date <= end;
+          days.push({ date: iso, count: inRange ? (found?.count ?? 0) : 0, level: inRange ? (found?.level ?? 0) : 0, inRange });
+        }
+        weeks.push(days);
+      }
+      const monthLabels = weeks.map((week, i) => {
+        const first = parseISODateLocal(week[0].date);
+        const prev = i ? parseISODateLocal(weeks[i - 1][0].date) : null;
+        return (!prev || first.getMonth() !== prev.getMonth()) ? first.toLocaleString('en-US', { month: 'short' }) : '';
+      });
+      return { weeks, monthLabels };
+    }
 
-    const shifted = ordered.map(entry => {
-      const base = parseISODateLocal(entry.date);
-      base.setDate(base.getDate() + shiftDays);
-      const rolledDate = `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
-      return { date: rolledDate, count: entry.count, level: entry.level };
-    });
-    const rolledTotal = shifted.reduce((sum, day) => sum + (Number(day.count) || 0), 0);
-    return { total: rolledTotal, contributions: shifted };
-  }
+    function renderContributionCalendar(state) {
+      const wrap = document.getElementById('calendarWrap');
+      const tip = document.getElementById('contribTooltip');
+      const { weeks, monthLabels } = buildContributionMatrix(state.contributions || []);
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      let html = '<table class="contrib-calendar" role="grid" aria-describedby="contribTooltip"><caption>User activity over one year of time. Each column is one week, with older weeks to the left.</caption><thead><tr class="month-row"><th></th>';
+      monthLabels.forEach((m) => { html += `<th scope="col">${m}</th>`; });
+      html += '</tr></thead><tbody>';
+      for (let d = 0; d < 7; d++) {
+        const lbl = (d === 1 || d === 3 || d === 5) ? dayNames[d] : '';
+        html += `<tr><th class="day-label" scope="row">${lbl}</th>`;
+        for (let w = 0; w < weeks.length; w++) {
+          const day = weeks[w][d];
+          const dayDate = parseISODateLocal(day.date);
+          const countText = day.count === 0 ? 'No contributions' : `${day.count} contribution${day.count > 1 ? 's' : ''}`;
+          const label = `${countText} on ${fmtDate.format(dayDate)}`;
+          html += `<td><button type="button" tabindex="0" data-level="${day.level}" data-tooltip="${label}" aria-label="${label}"></button></td>`;
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+      wrap.innerHTML = html;
+      wrap.querySelectorAll('button').forEach((btn) => {
+        const show = () => { tip.textContent = btn.getAttribute('data-tooltip'); };
+        btn.addEventListener('focus', show); btn.addEventListener('mouseenter', show);
+      });
+    }
 
-  function buildContributionMatrix(contributions) {
-    const map = new Map((contributions || []).map(day => [day.date, day]));
-    const today = new Date();
-    const end = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const startWindow = new Date(end);
-    startWindow.setDate(end.getDate() - 370);
-
-    const startGrid = new Date(startWindow);
-    startGrid.setDate(startWindow.getDate() - startWindow.getDay());
-    const daysCovered = Math.floor((end - startGrid) / 86400000) + 1;
-    const weekCount = Math.ceil(daysCovered / 7);
-
-    const weeks = Array.from({ length: weekCount }, (_, w) => Array.from({ length: 7 }, (_, d) => {
-      const date = new Date(startGrid);
-      date.setDate(startGrid.getDate() + (w * 7) + d);
-      const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-      const hit = map.get(iso);
-      return { date: iso, count: hit ? hit.count : 0, level: hit ? hit.level : 0, inRange: date >= startWindow && date <= end, month: date.getMonth(), weekday: d };
-    }));
-
-    const monthLabels = weeks.map((week, i) => {
-      const first = week.find(cell => cell.inRange) || week[0];
-      if (!first) return '';
-      const prev = i > 0 ? (weeks[i - 1].find(cell => cell.inRange) || weeks[i - 1][0]) : null;
-      if (!prev || prev.month !== first.month) return parseISODateLocal(first.date).toLocaleString('en-US', { month: 'short' });
-      return '';
-    });
-    return { weeks, monthLabels };
-  }
-
-  function renderContributionCalendar(state) {
-    const table = document.getElementById('contribCalendar');
-    const tooltip = document.getElementById('contribTooltip');
-    if (!table) return;
-    const matrix = buildContributionMatrix(state?.contributions || []);
-    const dayLabels = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
-    const monthRow = `<tr class="month-row"><th></th>${matrix.monthLabels.map(m => `<th scope="col" aria-hidden="true">${m || ''}</th>`).join('')}</tr>`;
-    const bodyRows = dayLabels.map((lbl, day) => {
-      const cells = matrix.weeks.map((week, col) => {
-        const item = week[day];
-        const humanDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }).format(parseISODateLocal(item.date));
-        const detail = item.count > 0 ? `${nf.format(item.count)} contributions on ${humanDate}` : `No contributions on ${humanDate}`;
-        const inert = item.inRange ? '' : ' disabled aria-hidden="true" tabindex="-1"';
-        return `<td role="gridcell"><button type="button" data-row="${day}" data-col="${col}" data-level="${item.level}" data-detail="${detail}" aria-label="${detail}"${inert}></button></td>`;
+    function renderPinnedRepos(repos) {
+      const map = new Map((repos || []).map((r) => [r.name, r]));
+      const grid = document.getElementById('pinnedGrid');
+      grid.innerHTML = PINNED_ORDER.map((item, i) => {
+        const live = map.get(item.n);
+        return `<article class="panel repo" style="${i===0?'grid-row:span 2;':''}"><h3>${item.n}</h3><p style="margin-top:.45rem;color:var(--text-soft)">${live?.description || item.d}</p><div class="repo-meta"><span class="chip mono">${live?.stargazers_count ?? 0} ★</span><span class="chip mono">${live?.forks_count ?? 0} forks</span><span class="chip">${live?.language || 'Repository'}</span></div><a class="btn" style="margin-top:.65rem" href="${item.u}" target="_blank" rel="noreferrer">Open repository</a></article>`;
       }).join('');
-      return `<tr><th scope="row" class="day-label">${lbl}</th>${cells}</tr>`;
-    }).join('');
+    }
 
-    table.innerHTML = `<caption>User activity over one year of time. Each column is one week, with older weeks to the left.</caption><thead>${monthRow}</thead><tbody>${bodyRows}</tbody>`;
-    const buttons = Array.from(table.querySelectorAll('button[data-detail]'));
-    const byPos = new Map(buttons.map(btn => [`${btn.dataset.row}:${btn.dataset.col}`, btn]));
+    function renderLibrary(category = 'All', query = '') {
+      const q = query.trim().toLowerCase();
+      const featured = document.getElementById('featuredGrid');
+      const grid = document.getElementById('libraryGrid');
+      const empty = document.getElementById('libraryEmpty');
+      featured.innerHTML = FEATURED_ITEMS.map((x) => `<article class="panel atlas-item"><p class="chip">${x.cat}</p><h3 style="margin-top:.5rem">${x.title}</h3><p style="margin-top:.4rem;color:var(--text-soft)">${x.desc}</p><a class="btn" style="margin-top:.55rem" href="${x.href}" ${x.href.startsWith('./')?'data-route="'+x.href+'"':''} ${x.href.startsWith('http')?'target="_blank" rel="noreferrer"':''}>Open</a></article>`).join('');
+      setInternalLinks();
+      const items = LIBRARY_ITEMS.filter((x) => (category === 'All' || x.cat === category) && (!q || (x.title + x.desc + x.cat).toLowerCase().includes(q)));
+      grid.innerHTML = items.map((x) => `<article class="panel atlas-item"><p class="chip">${x.cat}</p><h3 style="margin-top:.5rem">${x.title}</h3><p style="margin-top:.4rem;color:var(--text-soft)">${x.desc}</p><a class="btn" style="margin-top:.55rem" href="${x.href}" ${x.href.startsWith('./')?'data-route="'+x.href+'"':''} ${x.href.startsWith('http')?'target="_blank" rel="noreferrer"':''}>Open</a></article>`).join('');
+      setInternalLinks();
+      empty.style.display = items.length ? 'none' : 'block';
+    }
 
-    buttons.forEach(btn => {
-      const update = () => { if (tooltip) tooltip.textContent = btn.dataset.detail; };
-      btn.addEventListener('mouseenter', update);
-      btn.addEventListener('focus', update);
-      btn.addEventListener('keydown', (event) => {
-        const keyMap = {
-          ArrowLeft: [0, -1],
-          ArrowRight: [0, 1],
-          ArrowUp: [-1, 0],
-          ArrowDown: [1, 0]
-        };
-        const delta = keyMap[event.key];
-        if (!delta) return;
-        event.preventDefault();
-        const r = Number(btn.dataset.row || 0) + delta[0];
-        const c = Number(btn.dataset.col || 0) + delta[1];
-        const next = byPos.get(`${r}:${c}`);
-        if (next && !next.disabled) next.focus();
+    function wireSearchAndFilters() {
+      const cats = ['All', ...new Set(LIBRARY_ITEMS.map((x) => x.cat))];
+      const filters = document.getElementById('libraryFilters');
+      const input = document.getElementById('librarySearch');
+      let active = 'All';
+      filters.innerHTML = cats.map((c, i) => `<button ${i===0?'class="active"':''} data-cat="${c}">${c}</button>`).join('');
+      filters.addEventListener('click', (e) => {
+        const b = e.target.closest('button[data-cat]'); if (!b) return;
+        active = b.dataset.cat; filters.querySelectorAll('button').forEach((x) => x.classList.toggle('active', x===b));
+        renderLibrary(active, input.value);
       });
-    });
-    if (tooltip && state?.statusText) tooltip.textContent = state.statusText;
-  }
+      input.addEventListener('input', () => renderLibrary(active, input.value));
+      renderLibrary();
+    }
 
-  function renderPinnedRepos(repos) {
-    const target = document.getElementById('pinnedGrid');
-    if (!target) return;
-    const sorted = PINNED_ORDER.map(name => repos.find(r => r.name === name) || { name, html_url: `https://github.com/MontrealAI/${name}`, stargazers_count: 0, forks_count: 0, language: '—', updated_at: null, description: FALLBACK_DESC[name] });
-    target.innerHTML = sorted.map((r, i) => {
-      const cls = i === 0 ? 'panel repo reveal' : 'panel repo';
-      const title = r.name || 'Repository';
-      const desc = r.description || FALLBACK_DESC[title] || 'Public build artifact.';
-      const updated = r.updated_at ? df.format(new Date(r.updated_at)) : 'Unavailable';
-      const leadStyle = i === 0 ? ' style="grid-row:span 2;min-height:360px;background:linear-gradient(160deg, rgba(139,92,246,.14), rgba(255,255,255,.01));"' : '';
-      return `<article class="${cls}"${leadStyle}><h3>${title}</h3><p style="margin-top:.55rem;color:var(--text-soft)">${desc}</p><div class="repo-meta"><span>★ ${nf.format(r.stargazers_count || 0)}</span><span>⑂ ${nf.format(r.forks_count || 0)}</span><span>${r.language || 'N/A'}</span><span>Updated ${updated}</span></div><div style="margin-top:.8rem"><a class="btn" href="${r.html_url}" target="_blank" rel="noopener">Open on GitHub</a></div></article>`;
-    }).join('');
-  }
+    function wireCopyButtons() {
+      document.addEventListener('click', async (e) => {
+        const b = e.target.closest('[data-copy],[data-copy-target]'); if (!b) return;
+        const txt = b.dataset.copy || document.getElementById(b.dataset.copyTarget)?.textContent || '';
+        if (!txt) return;
+        try { await navigator.clipboard.writeText(txt); }
+        catch { const t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+        const old = b.textContent; b.textContent = 'Copied'; setTimeout(() => b.textContent = old, 1000);
+      });
+    }
 
-  function wireCopyButtons() {
-    async function copyText(text, btn) {
+    function wireNav() {
+      const links = [...document.querySelectorAll('nav a')];
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          links.forEach((a) => a.setAttribute('aria-current', a.getAttribute('href') === '#' + en.target.id ? 'true' : 'false'));
+        });
+      }, { rootMargin: '-35% 0px -55% 0px', threshold: 0.01 });
+      document.querySelectorAll('main section[id]').forEach((s) => obs.observe(s));
+    }
+
+    async function loadContributions() {
+      let state = normalizeContributionPayload(CONTRIB_SEED_LAST_YEAR);
+      let source = 'embedded snapshot';
       try {
-        await navigator.clipboard.writeText(text);
-      } catch {
-        const t = document.createElement('textarea');
-        t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove();
-      }
-      const old = btn.textContent;
-      btn.textContent = 'Copied';
-      setTimeout(() => { btn.textContent = old; }, 1200);
-    }
-    document.querySelectorAll('button.copy').forEach(btn => btn.addEventListener('click', () => copyText(btn.dataset.copy || '', btn)));
-    document.querySelectorAll('[data-copy-target]').forEach(btn => btn.addEventListener('click', () => {
-      const node = document.getElementById(btn.dataset.copyTarget);
-      if (node) copyText(node.textContent, btn);
-    }));
-  }
-
-  function wireNav() {
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileNav = document.getElementById('mobileNav');
-    if (menuToggle && mobileNav) {
-      menuToggle.addEventListener('click', () => {
-        const open = mobileNav.classList.toggle('open');
-        menuToggle.setAttribute('aria-expanded', String(open));
-      });
-    }
-    const links = Array.from(document.querySelectorAll('nav a'));
-    const sections = links.map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        const id = '#' + e.target.id;
-        links.forEach(a => a.setAttribute('aria-current', a.getAttribute('href') === id ? 'true' : 'false'));
-      });
-    }, { rootMargin: '-40% 0px -40% 0px', threshold: 0.1 });
-    sections.forEach(s => io.observe(s));
-  }
-
-  function animateMetrics() {
-    if (reducedMotion) return;
-    document.querySelectorAll('[data-animate-num]').forEach(el => {
-      const end = Number(el.dataset.animateNum || 0);
-      const start = 0; const ms = 900;
-      const t0 = performance.now();
-      function tick(t) {
-        const p = Math.min((t - t0) / ms, 1);
-        const val = Math.round(start + (end - start) * (1 - Math.pow(1 - p, 2)));
-        el.textContent = nf.format(val);
-        if (p < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    });
-  }
-
-  function renderLibrary() {
-    const data = [...FEATURED_ITEMS, ...ESSAYS, ...DECKS, ...AGI_JOBS_ITEMS, ...DEBATE_ITEMS, ...PRIOR_ART_ITEMS, ...REPOSITORY_ITEMS];
-    const categories = ['All', ...new Set(data.map(i => i.category))];
-    const filterWrap = document.getElementById('atlasFilters');
-    const search = document.getElementById('atlasSearch');
-    const featuredGrid = document.getElementById('featuredGrid');
-    const atlasGrid = document.getElementById('atlasGrid');
-    const empty = document.getElementById('atlasEmpty');
-    let current = 'All';
-
-    featuredGrid.innerHTML = FEATURED_ITEMS.map(item => `<article class="panel atlas-item"><h3>${item.title}</h3><p style="margin:.55rem 0;color:var(--muted)">${item.category}</p><a class="btn ${item.local ? 'route' : ''}" ${item.local ? `data-route="${item.url}" href="${item.url}"` : `href="${item.url}" target="_blank" rel="noopener"`}>Open</a></article>`).join('');
-
-    filterWrap.innerHTML = categories.map((cat, idx) => `<button class="${idx===0?'active':''}" data-cat="${cat}">${cat}</button>`).join('');
-    filterWrap.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
-      current = btn.dataset.cat;
-      filterWrap.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
-      draw();
-    }));
-    search.addEventListener('input', draw);
-
-    function draw() {
-      const q = search.value.trim().toLowerCase();
-      const filtered = data.filter(item => (current === 'All' || item.category === current) && (!q || `${item.title} ${item.category}`.toLowerCase().includes(q)));
-      atlasGrid.innerHTML = filtered.map(item => `<article class="panel atlas-item"><h3>${item.title}</h3><p style="margin:.55rem 0;color:var(--muted)">${item.category}</p><a class="btn ${item.local ? 'route' : ''}" ${item.local ? `data-route="${item.url}" href="${item.url}"` : `href="${item.url}" target="_blank" rel="noopener"`}>Open resource</a></article>`).join('');
-      empty.style.display = filtered.length ? 'none' : 'block';
-      applyBaseRoutes();
-    }
-    draw();
-  }
-
-  function initTheme() {
-    document.documentElement.style.colorScheme = 'dark';
-  }
-
-  function wireReveal() {
-    if (reducedMotion) {
-      document.querySelectorAll('.reveal').forEach(n => n.classList.add('show'));
-      return;
-    }
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-  }
-
-  async function initData() {
-    const contribTotal = document.getElementById('contribTotal');
-    const contribState = document.getElementById('contribState');
-    const heroContribution = document.getElementById('heroContribution');
-
-    const seedNormalized = rollContributionSeedToCurrent(CONTRIB_SEED_LAST_YEAR);
-    const fallbackShell = { total: 0, contributions: [] };
-
-    const applyContributionState = (payload, sourceLabel) => {
-      const normalized = normalizeContributionPayload(payload) || seedNormalized || fallbackShell;
-      const total = Number(normalized.total || normalized.contributions.reduce((sum, d) => sum + (d.count || 0), 0));
-      contribTotal.textContent = `${nf.format(total)} contributions in the last year`;
-      heroContribution.textContent = nf.format(total);
-      contribState.textContent = `Source: ${sourceLabel}.`;
-      renderContributionCalendar({ contributions: normalized.contributions, statusText: sourceLabel === 'sync pending' ? 'Sync pending.' : `${nf.format(total)} contributions loaded.` });
-    };
-
-    renderContributionCalendar({ contributions: (seedNormalized || fallbackShell).contributions, statusText: 'Sync pending.' });
-    applyContributionState(seedNormalized || fallbackShell, 'embedded snapshot');
-
-    try {
-      const cached = localStorage.getItem('mai_github_contrib');
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (parsed?.data) applyContributionState(parsed.data, 'cached snapshot');
-      }
-    } catch {}
-
-    const [org, repos, contrib] = await Promise.allSettled([fetchGithubOrg(), fetchGithubRepos(), fetchContributionData()]);
-
-    const orgOk = org.status === 'fulfilled';
-    const reposOk = repos.status === 'fulfilled';
-
-    if (contrib.status === 'fulfilled' && contrib.value?.data) {
-      applyContributionState(contrib.value.data, contrib.value.source === 'live' ? 'live' : 'cached snapshot');
-      try {
-        const normalized = normalizeContributionPayload(contrib.value.data);
-        if (normalized && contrib.value.source === 'live') {
-          localStorage.setItem('mai_github_contrib', JSON.stringify({ ts: Date.now(), data: normalized }));
+        const raw = localStorage.getItem('contrib:lastYear');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed?.ts && Date.now() - parsed.ts < TTL) { state = normalizeContributionPayload(parsed.data); source = 'cached snapshot'; }
         }
       } catch {}
-    } else {
-      applyContributionState(seedNormalized || fallbackShell, 'embedded snapshot');
+      renderContributionCalendar(state);
+      document.getElementById('contribTotal').textContent = fmtNum.format(state.total);
+      document.getElementById('heroContrib').textContent = fmtNum.format(state.total);
+      document.getElementById('contribSource').textContent = `Source: ${source}. Sync pending.`;
+      try {
+        const live = await fetchWithCache('contrib:lastYear', CONTRIBUTION_API, TTL);
+        state = normalizeContributionPayload(live.data);
+        renderContributionCalendar(state);
+        document.getElementById('contribTotal').textContent = fmtNum.format(state.total);
+        document.getElementById('heroContrib').textContent = fmtNum.format(state.total);
+        document.getElementById('contribSource').textContent = `Source: ${live.source}.`;
+      } catch {
+        document.getElementById('contribSource').textContent = `Source: ${source}.`;
+      }
     }
 
-    const repoCountEl = document.getElementById('repoCount');
-    const followerCountEl = document.getElementById('followerCount');
-    if (orgOk) {
-      const orgData = org.value.data || {};
-      repoCountEl.dataset.animateNum = Number(orgData.public_repos || 0);
-      followerCountEl.dataset.animateNum = Number(orgData.followers || 0);
-      repoCountEl.textContent = nf.format(Number(orgData.public_repos || 0));
-      followerCountEl.textContent = nf.format(Number(orgData.followers || 0));
-    } else {
-      repoCountEl.textContent = '—';
-      followerCountEl.textContent = '—';
+    async function initGithubMeta() {
+      const [orgRes, repoRes] = await Promise.allSettled([
+        fetchWithCache('github:org', ORG_API, TTL),
+        fetchWithCache('github:repos', REPO_API, TTL)
+      ]);
+      const org = orgRes.status === 'fulfilled' ? orgRes.value.data : null;
+      const repos = repoRes.status === 'fulfilled' && Array.isArray(repoRes.value.data) ? repoRes.value.data : [];
+      if (org) {
+        document.getElementById('repoCount').textContent = fmtNum.format(org.public_repos || repos.length || 0);
+        document.getElementById('followerCount').textContent = fmtNum.format(org.followers || 0);
+      } else if (repos.length) {
+        document.getElementById('repoCount').textContent = fmtNum.format(repos.length);
+        document.getElementById('followerCount').textContent = '—';
+      } else {
+        document.getElementById('repoCount').textContent = '—';
+        document.getElementById('followerCount').textContent = '—';
+      }
+      renderPinnedRepos(repos);
     }
 
-    if (reposOk) {
-      const reposData = Array.isArray(repos.value.data) ? repos.value.data : [];
-      renderPinnedRepos(reposData);
-      const leadRepo = reposData.find(r => r.name === PINNED_ORDER[0]);
-      const leadName = leadRepo?.name || PINNED_ORDER[0];
-      document.getElementById('leadRepo').textContent = leadName;
-      document.getElementById('heroLeadRepo').textContent = leadName;
-    } else {
-      renderPinnedRepos([]);
-      document.getElementById('leadRepo').textContent = PINNED_ORDER[0];
-      document.getElementById('heroLeadRepo').textContent = PINNED_ORDER[0];
-    }
-
-    animateMetrics();
-  }
-
-  function wireSearchAndFilters() {
-    renderLibrary();
-  }
-
-  initTheme();
-  applyBaseRoutes();
-  wireCopyButtons();
-  wireNav();
-  wireReveal();
-  wireSearchAndFilters();
-  initData();
-})();
-</script>
+    setInternalLinks(); wireCopyButtons(); wireSearchAndFilters(); wireNav(); loadContributions(); initGithubMeta();
+  </script>
 </body>
 </html>
