@@ -188,7 +188,11 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
 
     const resolveBasePath = () => {
       const p = window.location.pathname;
-      return p.endsWith('/index.html') ? p.slice(0, -'index.html'.length) : p;
+      if (p.endsWith('/index.html')) return p.slice(0, -'index.html'.length);
+      if (p.endsWith('/')) return p;
+      const last = p.split('/').pop() || '';
+      if (!last.includes('.')) return `${p}/`;
+      return p.slice(0, p.lastIndexOf('/') + 1);
     };
 
     function formatDateLocal(date) {
@@ -304,11 +308,11 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
 
       try {
         const live = await fetchWithCache(key, 'https://github-contributions-api.jogruber.de/v4/MontrealAI?y=last', 3600000);
-        const normalized = normalizeContributionPayload(live.data); normalized.source = 'live';
+        const normalized = normalizeContributionPayload(live.data); normalized.source = live.source;
         renderContributionCalendar(normalized);
         document.getElementById('contribTotal').textContent = fmtNum.format(normalized.total || 0);
         document.getElementById('heroContrib').textContent = fmtNum.format(normalized.total || 0);
-        document.getElementById('contribSource').textContent = 'Source: live.';
+        document.getElementById('contribSource').textContent = `Source: ${normalized.source}.`;
       } catch {
         document.getElementById('contribSource').textContent = `Source: ${state.source}.`;
       }
