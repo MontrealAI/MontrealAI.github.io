@@ -173,6 +173,8 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
     ];
     const LIBRARY_ITEMS = [
       ...FEATURED_ITEMS,
+      {title:'Vincent Boucher Featured Writing',category:'Essays',url:'https://www.linkedin.com/in/montrealai/details/featured/',desc:'Editorial and strategic writing archive.'},
+      {title:'AGI Alpha Biography',category:'Essays',url:'https://agialpha.com/biography',desc:'Founder and protocol context.'},
       {title:'AGIJobManager Prime Repo',category:'Repositories',url:'https://github.com/MontrealAI/AGIJobManagerPrime',desc:'Prime mainnet procurement console source.'},
       {title:'AGIJobManager Repo',category:'AGI Jobs',url:'https://github.com/MontrealAI/AGIJobManager',desc:'Genesis escrow console source.'},
       {title:'AGIJobManager Employer Burn Repo',category:'AGI Jobs',url:'https://github.com/MontrealAI/AGIJobManager-EmployerBurn',desc:'Employer burn economics variant.'},
@@ -181,7 +183,8 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
       {title:'MONTREAL.AI × ERC-8004',category:'Decks',url:'https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf',desc:'Protocol framing for sovereign agents.'},
       {title:'AGI Club',category:'Membership',url:'https://www.quebecartificialintelligence.com/agiclub',desc:'Lifetime membership architecture.'},
       {title:'AI Debate #1',category:'Debates',url:'./aidebate/',desc:'Original AI debate edition.'},
-      {title:'AI Debate #2',category:'Debates',url:'./aidebate2/',desc:'Second debate edition.'}
+      {title:'AI Debate #2',category:'Debates',url:'./aidebate2/',desc:'Second debate edition.'},
+      {title:'AI Debate #3 Official Video',category:'Debates',url:'https://youtu.be/JGiLz_Jx9uI?t=73',desc:'Canonical recording for debate #3.'}
     ];
 
     const fmtNum = new Intl.NumberFormat('en-US');
@@ -335,6 +338,29 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
       } catch { renderPinnedRepos([]); }
     }
 
+    async function copyText(text) {
+      if (!text) return false;
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'absolute';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand('copy');
+          ta.remove();
+          return ok;
+        } catch {
+          return false;
+        }
+      }
+    }
+
     function renderPinnedRepos(repos) {
       const host = document.getElementById('pinnedGrid');
       const ordered = PINNED_ORDER.map(name => repos.find(r => r.name === name) || {name,html_url:`https://github.com/MontrealAI/${name}`,description:PINNED_FALLBACK[name],stargazers_count:0,forks_count:0,language:'—',updated_at:null});
@@ -344,12 +370,19 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
 
     function wireCopyButtons() {
       document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', async () => {
-        const t = btn.dataset.copy || ''; try { await navigator.clipboard.writeText(t); btn.textContent = 'Copied'; setTimeout(()=>btn.textContent='Copy',900); } catch {}
+        const t = btn.dataset.copy || '';
+        if (await copyText(t)) {
+          btn.textContent = 'Copied';
+          setTimeout(()=>btn.textContent='Copy',900);
+        }
       }));
       const mcpBtn = document.getElementById('copyMcp');
       mcpBtn?.addEventListener('click', async () => {
         const txt = document.querySelector(mcpBtn.dataset.copyTarget)?.textContent || '';
-        try { await navigator.clipboard.writeText(txt); mcpBtn.textContent = 'Copied JSON'; setTimeout(()=>mcpBtn.textContent='Copy JSON',1000);} catch {}
+        if (await copyText(txt)) {
+          mcpBtn.textContent = 'Copied JSON';
+          setTimeout(()=>mcpBtn.textContent='Copy JSON',1000);
+        }
       });
     }
 
