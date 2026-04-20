@@ -200,8 +200,10 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
 
     async function fetchWithCache(key, url, ttlMs = 3600000, init = {}) {
       const now = Date.now();
+      let stale = null;
       try {
         const cached = JSON.parse(localStorage.getItem(key) || 'null');
+        stale = cached?.data ?? null;
         if (cached && now - cached.ts < ttlMs) return { data: cached.data, source: 'cached snapshot' };
       } catch {}
       const controller = new AbortController();
@@ -212,6 +214,9 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
         const data = await res.json();
         try { localStorage.setItem(key, JSON.stringify({ts: now, data})); } catch {}
         return { data, source: 'live' };
+      } catch (err) {
+        if (stale) return { data: stale, source: 'cached snapshot' };
+        throw err;
       } finally { clearTimeout(timer); }
     }
 
