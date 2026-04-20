@@ -344,6 +344,8 @@
     function resolveBasePath() {
       const p = location.pathname;
       if (p.endsWith('/')) return p;
+      const last = p.slice(p.lastIndexOf('/') + 1);
+      if (!last || !last.includes('.')) return p + '/';
       return p.slice(0, p.lastIndexOf('/') + 1);
     }
     const basePath = resolveBasePath();
@@ -445,7 +447,11 @@
           const dayDate = parseISODateLocal(day.date);
           const countText = day.count === 0 ? 'No contributions' : `${day.count} contribution${day.count > 1 ? 's' : ''}`;
           const label = `${countText} on ${fmtDate.format(dayDate)}`;
-          html += `<td><button type="button" tabindex="0" data-level="${day.level}" data-tooltip="${label}" aria-label="${label}"></button></td>`;
+          if (!day.inRange) {
+            html += '<td><span aria-hidden=\"true\" style=\"display:block;width:11px;height:11px;border:1px solid rgba(255,255,255,.03);border-radius:2px;background:#0b0f14;opacity:.45\"></span></td>';
+          } else {
+            html += `<td><button type="button" tabindex="0" data-level="${day.level}" data-tooltip="${label}" aria-label="${label}"></button></td>`;
+          }
         }
         html += '</tr>';
       }
