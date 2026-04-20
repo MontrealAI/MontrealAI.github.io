@@ -387,10 +387,12 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
       const links = Array.from(document.querySelectorAll('nav a[href^="#"]'));
       const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
       const visible = new Map();
+      let lastActiveId = null;
 
       const setActive = (id) => {
+        if (!id || !map.has(id)) return;
+        lastActiveId = id;
         links.forEach(l => l.classList.remove('active'));
-        if (!id) return;
         map.get(id)?.classList.add('active');
       };
 
@@ -398,7 +400,7 @@ env ∈ ENV_SET (optional; e.g., alpha, x, …)</pre><div class="pills" style="m
         const ranked = Array.from(visible.values())
           .filter(v => v.isIntersecting)
           .sort((a, b) => (b.intersectionRatio - a.intersectionRatio) || (a.top - b.top));
-        setActive(ranked[0]?.id || null);
+        setActive(ranked[0]?.id || lastActiveId || Array.from(map.keys())[0]);
       };
 
       const obs = new IntersectionObserver((entries) => {
