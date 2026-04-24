@@ -28,25 +28,35 @@
       --silver: #eef1f8;
       --chrome: #cfd6e8;
       --white: #ffffff;
-      --radius: 20px;
-      --shadow: 0 20px 45px rgba(42, 16, 106, 0.12);
+      --radius: 22px;
+      --shadow: 0 26px 45px rgba(33, 16, 90, 0.11);
     }
 
     * { box-sizing: border-box; }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       padding: 0;
       max-width: 100%;
       overflow-x: clip;
       scroll-behavior: smooth;
-      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: var(--ink);
-      background: linear-gradient(180deg, #fff 0%, #fdfcff 36%, #faf8ff 100%);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #ffffff 0%, #fdfcff 45%, #f8f6ff 100%);
     }
 
-    a { color: inherit; text-decoration: none; overflow-wrap: anywhere; }
-    p, li, h1, h2, h3, h4, code, span { overflow-wrap: anywhere; word-break: break-word; }
+    a,
+    p,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    span,
+    code { overflow-wrap: anywhere; word-break: break-word; }
+
+    a { color: inherit; text-decoration: none; }
 
     .wrap {
       width: min(1240px, calc(100vw - 2rem));
@@ -57,67 +67,65 @@
       position: absolute;
       left: -9999px;
       top: 0;
+      z-index: 999;
       background: var(--ink);
       color: #fff;
-      padding: .6rem .9rem;
-      z-index: 999;
+      padding: .6rem .95rem;
+      border-radius: 10px;
     }
+
     .skip-link:focus { left: .8rem; top: .8rem; }
 
     header {
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 30;
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line);
     }
 
     .nav {
+      min-height: 74px;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
+      gap: .9rem 1.4rem;
       align-items: center;
-      gap: .9rem 1.5rem;
-      min-height: 74px;
-      padding: .7rem 0;
+      justify-content: space-between;
+      padding: .65rem 0;
     }
 
     .brand {
       min-width: 0;
       display: inline-flex;
       align-items: center;
-      gap: .7rem;
-      font-weight: 650;
+      gap: .72rem;
+      font-size: 1.18rem;
+      font-weight: 700;
       letter-spacing: -.02em;
-      font-size: 1.22rem;
     }
 
-    .logo {
-      width: 34px;
-      height: 34px;
-      flex: 0 0 34px;
-    }
+    .logo { width: 34px; height: 34px; flex: 0 0 34px; }
 
     .nav-links {
       min-width: 0;
       display: flex;
       flex-wrap: wrap;
-      gap: .38rem;
+      gap: .36rem;
       list-style: none;
-      padding: 0;
       margin: 0;
+      padding: 0;
     }
 
     .nav-links a {
       display: inline-flex;
       align-items: center;
-      padding: .48rem .76rem;
-      border: 1px solid transparent;
+      padding: .48rem .74rem;
       border-radius: 999px;
-      color: #2d3554;
-      font-weight: 500;
-      font-size: .94rem;
+      font-size: .93rem;
+      font-weight: 600;
+      color: #2b3358;
+      border: 1px solid transparent;
     }
 
     .nav-links a:hover,
@@ -127,74 +135,95 @@
       outline: none;
     }
 
-    section { padding: clamp(2.5rem, 5vw, 5.4rem) 0; }
-    .section-head { margin-bottom: 1.45rem; }
+    section { padding: clamp(2.4rem, 5vw, 5.25rem) 0; }
+    .section-head { margin-bottom: 1.3rem; }
+
     .eyebrow {
       display: inline-block;
       margin-bottom: .7rem;
-      color: #4f48a8;
-      font-size: .8rem;
-      font-weight: 650;
-      letter-spacing: .12em;
+      color: #4f49a8;
+      letter-spacing: .13em;
       text-transform: uppercase;
+      font-weight: 700;
+      font-size: .79rem;
     }
 
     h1 {
       margin: 0;
-      letter-spacing: -.04em;
       line-height: .95;
-      font-size: clamp(2.25rem, 7vw, 5.3rem);
+      letter-spacing: -.04em;
+      font-size: clamp(2.2rem, 7vw, 5.25rem);
     }
 
     h2 {
       margin: 0;
-      letter-spacing: -.03em;
       line-height: 1.03;
-      font-size: clamp(1.7rem, 3.8vw, 3.2rem);
+      letter-spacing: -.03em;
+      font-size: clamp(1.7rem, 3.8vw, 3.15rem);
     }
 
-    h3 { margin: 0; font-size: clamp(1.06rem, 2.1vw, 1.28rem); letter-spacing: -.01em; }
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: -.01em;
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+    }
 
     .lead {
-      margin-top: 1.1rem;
-      font-size: clamp(1.04rem, 2.2vw, 1.4rem);
-      color: #353f64;
-      max-width: 67ch;
+      margin-top: 1.05rem;
+      max-width: 68ch;
+      color: #343f64;
+      font-size: clamp(1.02rem, 2.1vw, 1.35rem);
     }
 
     .muted { color: var(--muted); }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr);
       gap: 1rem;
       align-items: stretch;
     }
 
-    .hero-card,
-    .card {
+    .card,
+    .hero-card {
       min-width: 0;
+      border-radius: var(--radius);
       border: 1px solid var(--line);
       background: #fff;
-      border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
 
     .hero-content { padding: clamp(1.2rem, 2.5vw, 2.3rem); }
 
     .chain {
-      margin-top: 1rem;
-      padding: .85rem 1rem;
-      border-radius: 14px;
+      margin-top: .95rem;
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, #f9f6ff, #fff);
+      border-radius: 14px;
+      padding: .86rem 1rem;
       font-weight: 600;
-      color: #2e325d;
-      font-size: clamp(.88rem, 1.55vw, 1.01rem);
+      color: #2f3560;
+      background: linear-gradient(180deg, #f9f6ff 0%, #ffffff 100%);
       line-height: 1.55;
+      font-size: clamp(.87rem, 1.55vw, 1.01rem);
     }
 
-    .cta-row { margin-top: 1.1rem; display: flex; flex-wrap: wrap; gap: .6rem; }
+    .governing-line {
+      margin-top: .8rem;
+      padding: .8rem .95rem;
+      border: 1px dashed #c8b9ff;
+      border-radius: 14px;
+      color: #3c407a;
+      font-weight: 700;
+      background: #faf7ff;
+    }
+
+    .cta-row {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: .58rem;
+    }
 
     .btn {
       display: inline-flex;
@@ -203,116 +232,136 @@
       gap: .4rem;
       border-radius: 999px;
       border: 1px solid var(--line);
-      padding: .68rem 1rem;
       background: #fff;
-      font-weight: 600;
-      font-size: .95rem;
-      color: #2e325d;
+      color: #2f3560;
+      font-weight: 650;
+      font-size: .93rem;
+      padding: .68rem 1rem;
+      transition: transform .2s ease, box-shadow .2s ease;
     }
 
     .btn.primary {
-      border-color: transparent;
       color: #fff;
+      border-color: transparent;
       background: linear-gradient(130deg, var(--purple), var(--indigo));
     }
 
     .btn:hover,
-    .btn:focus-visible { outline: none; transform: translateY(-1px); }
+    .btn:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(49, 46, 129, .18);
+      outline: none;
+    }
 
     .visual { padding: clamp(1.2rem, 2.3vw, 2rem); display: grid; gap: .8rem; }
 
     .orbital {
+      min-height: 290px;
       border-radius: 18px;
       border: 1px solid #d8ccff;
-      background: radial-gradient(circle at 20% 20%, rgba(124, 60, 255, 0.22), transparent 46%), linear-gradient(180deg, #fbf9ff, #f5f0ff);
+      background: radial-gradient(circle at 18% 20%, rgba(124, 60, 255, .22), transparent 47%), linear-gradient(180deg, #fbf9ff 0%, #f5f0ff 100%);
       padding: 1rem;
-      min-height: 280px;
       display: grid;
       align-items: center;
     }
 
-    .visual-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+    .visual-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .52rem; }
+
     .chip {
       min-width: 0;
+      text-align: center;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: .44rem .65rem;
-      color: #364068;
-      font-size: .82rem;
       background: #fff;
-      text-align: center;
+      color: #374168;
+      font-size: .82rem;
+      padding: .43rem .62rem;
     }
 
     .map-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: .75rem;
+      gap: .76rem;
       align-items: stretch;
     }
 
     .organ {
       min-width: 0;
+      display: grid;
+      gap: .38rem;
       padding: 1rem;
       border-radius: 16px;
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, #fff, #fbf9ff);
-      display: grid;
-      gap: .38rem;
+      background: linear-gradient(180deg, #ffffff 0%, #fbf9ff 100%);
     }
 
-    .organ .step { color: #6f62c6; font-weight: 700; font-size: .77rem; letter-spacing: .08em; text-transform: uppercase; }
+    .organ .step {
+      color: #6f62c6;
+      font-size: .77rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
     .organ p { margin: 0; color: #555f81; }
+
     .flowline {
       margin-top: .9rem;
-      padding: .9rem 1rem;
-      border-radius: 14px;
       border: 1px dashed #c8b9ff;
+      border-radius: 14px;
+      background: #faf7ff;
       color: #3d3f75;
       font-weight: 600;
-      background: #faf7ff;
+      padding: .9rem 1rem;
     }
 
-    .jobs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: .8rem; }
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: .8rem;
+    }
 
-    .job-card { min-width: 0; padding: 1rem; display: grid; gap: .75rem; }
+    .job-card { min-width: 0; display: grid; gap: .75rem; padding: 1rem; }
     .addr-list { display: grid; gap: .5rem; }
+
     .addr-chip {
       min-width: 0;
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: .45rem;
       align-items: center;
+      gap: .45rem;
+      padding: .55rem .62rem;
       border: 1px solid var(--line);
       border-radius: 12px;
-      padding: .55rem .62rem;
       background: #faf9ff;
     }
 
     .addr-chip code {
       min-width: 0;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: .8rem;
       color: #2f355d;
+      font-size: .8rem;
     }
 
     .copy-btn {
+      white-space: nowrap;
+      cursor: pointer;
+      border-radius: 10px;
       border: 1px solid #cfc3ff;
       background: #fff;
       color: #4a3fa5;
-      border-radius: 10px;
-      padding: .35rem .52rem;
-      font-size: .74rem;
       font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
+      font-size: .74rem;
+      padding: .35rem .52rem;
     }
 
     .button-row { display: flex; flex-wrap: wrap; gap: .45rem; }
 
-    .timeline-card, .status {
+    .timeline-card,
+    .status {
       padding: 1rem;
-      border-radius: 16px;
       border: 1px solid var(--line);
+      border-radius: 16px;
       background: #fff;
     }
 
@@ -324,18 +373,17 @@
 
     .grammar {
       padding: 1rem;
-      background: linear-gradient(180deg, #f8f6ff, #fff);
-      border: 1px solid var(--line);
       border-radius: 16px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #f8f6ff 0%, #fff 100%);
     }
 
     .code-line {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-weight: 700;
-      font-size: clamp(1rem, 2.5vw, 1.52rem);
-      color: #111433;
       margin-bottom: .7rem;
-      overflow-wrap: anywhere;
+      color: #111433;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-weight: 700;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
 
     .ens-chip {
@@ -343,31 +391,45 @@
       display: inline-block;
       margin: .14rem .2rem .14rem 0;
       padding: .4rem .52rem;
-      border: 1px solid var(--line);
       border-radius: 10px;
+      border: 1px solid var(--line);
       background: #fff;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-size: .85rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       overflow-wrap: anywhere;
     }
 
-    .clock-grid, .flywheel { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: .7rem; }
-    .clock, .wheel-item { min-width: 0; padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
-
-    .doctrine {
-      border-radius: 18px;
-      border: 1px solid #ccbfff;
-      background: linear-gradient(140deg, #2a1669, #4a22aa 62%, #6c2dff);
-      color: #fff;
-      padding: clamp(1rem, 2.8vw, 2rem);
+    .clock-grid,
+    .flywheel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: .7rem;
     }
 
-    .doctrine ul { margin: .7rem 0 0 0; padding-left: 1.1rem; }
+    .clock,
+    .wheel-item {
+      min-width: 0;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .doctrine {
+      margin-top: 1rem;
+      padding: clamp(1rem, 2.8vw, 2rem);
+      border-radius: 18px;
+      border: 1px solid #ccbfff;
+      color: #fff;
+      background: linear-gradient(140deg, #2a1669 0%, #4a22aa 62%, #6c2dff 100%);
+    }
+
+    .doctrine ul { margin: .7rem 0 0; padding-left: 1.1rem; }
 
     footer {
       margin-top: 1rem;
-      border-top: 1px solid var(--line);
       padding: 2rem 0 2.8rem;
+      border-top: 1px solid var(--line);
       background: #fff;
     }
 
@@ -377,9 +439,17 @@
       gap: .9rem;
     }
 
-    .link-list { list-style: none; margin: .45rem 0 0; padding: 0; display: grid; gap: .33rem; }
+    .link-list {
+      list-style: none;
+      margin: .45rem 0 0;
+      padding: 0;
+      display: grid;
+      gap: .33rem;
+    }
+
     .link-list a { color: #2f3b62; }
-    .link-list a:hover, .link-list a:focus-visible { color: var(--purple); outline: none; }
+    .link-list a:hover,
+    .link-list a:focus-visible { color: var(--purple); outline: none; }
 
     :focus-visible {
       outline: 2px solid var(--purple);
@@ -389,7 +459,7 @@
 
     @media (max-width: 970px) {
       .hero-grid { grid-template-columns: 1fr; }
-      .orbital { min-height: 220px; }
+      .orbital { min-height: 230px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -409,15 +479,15 @@
         <svg class="logo" viewBox="0 0 100 100" role="img" aria-label="AGI Alpha emblem">
           <defs>
             <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#6d2cff" />
-              <stop offset="100%" stop-color="#312e81" />
+              <stop offset="0%" stop-color="#6d2cff"></stop>
+              <stop offset="100%" stop-color="#312e81"></stop>
             </linearGradient>
           </defs>
-          <circle cx="50" cy="50" r="46" fill="#fff" stroke="#d9cdfd" stroke-width="4"/>
-          <polygon points="50,32 64,40 64,58 50,66 36,58 36,40" fill="none" stroke="url(#g)" stroke-width="4"/>
+          <circle cx="50" cy="50" r="46" fill="#fff" stroke="#d9cdfd" stroke-width="4"></circle>
+          <polygon points="50,32 64,40 64,58 50,66 36,58 36,40" fill="none" stroke="url(#g)" stroke-width="4"></polygon>
           <g stroke="url(#g)" stroke-width="4" fill="none" stroke-linecap="round">
-            <path d="M50 7v15"/><path d="M50 78v15"/><path d="M7 50h15"/><path d="M78 50h15"/>
-            <path d="M20 20l11 11"/><path d="M69 69l11 11"/><path d="M80 20L69 31"/><path d="M20 80l11-11"/>
+            <path d="M50 7v15"></path><path d="M50 78v15"></path><path d="M7 50h15"></path><path d="M78 50h15"></path>
+            <path d="M20 20l11 11"></path><path d="M69 69l11 11"></path><path d="M80 20L69 31"></path><path d="M20 80l11-11"></path>
           </g>
         </svg>
         AGI Alpha
@@ -445,6 +515,7 @@
           <p class="lead">How a large multi-agent system can autonomously coordinate to maximum effect.</p>
           <p class="muted">A governed organism for turning exploration into verified work, verified work into settled value, and settled value into stronger future capability.</p>
           <p class="chain">Insight → Nova-Seeds → MARK → Sovereign → Business → Marketplace → AGI Jobs → Agents → Validators → Value Reservoir → Architect → Archive</p>
+          <p class="governing-line">Exploration proposes. Proof verifies. Settlement moves value. Governance decides what becomes law.</p>
           <div class="cta-row">
             <a class="btn primary" href="#organism">Explore the organism</a>
             <a class="btn" href="#agijobs">View AGI Jobs rails</a>
@@ -455,25 +526,25 @@
             <svg viewBox="0 0 640 320" role="img" aria-label="Ascension command emblem" style="width:100%;height:auto;max-width:100%;">
               <defs>
                 <linearGradient id="p1" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#7c3cff"/>
-                  <stop offset="100%" stop-color="#312e81"/>
+                  <stop offset="0%" stop-color="#7c3cff"></stop>
+                  <stop offset="100%" stop-color="#312e81"></stop>
                 </linearGradient>
                 <radialGradient id="glow" cx="50%" cy="50%" r="55%">
-                  <stop offset="0%" stop-color="#b998ff" stop-opacity=".55"/>
-                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+                  <stop offset="0%" stop-color="#b998ff" stop-opacity=".55"></stop>
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0"></stop>
                 </radialGradient>
               </defs>
-              <ellipse cx="320" cy="160" rx="240" ry="104" fill="url(#glow)"/>
-              <rect x="106" y="56" width="428" height="206" rx="26" fill="none" stroke="#d9cdfd" stroke-width="2"/>
-              <path d="M150 103H490" stroke="#cfc3ff" stroke-width="2"/>
-              <path d="M150 160H490" stroke="#cfc3ff" stroke-width="2"/>
-              <path d="M150 217H490" stroke="#cfc3ff" stroke-width="2"/>
-              <circle cx="320" cy="160" r="45" fill="#fff" stroke="url(#p1)" stroke-width="4"/>
-              <polygon points="320,126 350,143 350,177 320,194 290,177 290,143" fill="none" stroke="url(#p1)" stroke-width="4"/>
-              <circle cx="214" cy="103" r="9" fill="#7c3cff"/>
-              <circle cx="426" cy="103" r="9" fill="#7c3cff"/>
-              <circle cx="214" cy="217" r="9" fill="#312e81"/>
-              <circle cx="426" cy="217" r="9" fill="#312e81"/>
+              <ellipse cx="320" cy="160" rx="240" ry="104" fill="url(#glow)"></ellipse>
+              <rect x="106" y="56" width="428" height="206" rx="26" fill="none" stroke="#d9cdfd" stroke-width="2"></rect>
+              <path d="M150 103H490" stroke="#cfc3ff" stroke-width="2"></path>
+              <path d="M150 160H490" stroke="#cfc3ff" stroke-width="2"></path>
+              <path d="M150 217H490" stroke="#cfc3ff" stroke-width="2"></path>
+              <circle cx="320" cy="160" r="45" fill="#fff" stroke="url(#p1)" stroke-width="4"></circle>
+              <polygon points="320,126 350,143 350,177 320,194 290,177 290,143" fill="none" stroke="url(#p1)" stroke-width="4"></polygon>
+              <circle cx="214" cy="103" r="9" fill="#7c3cff"></circle>
+              <circle cx="426" cy="103" r="9" fill="#7c3cff"></circle>
+              <circle cx="214" cy="217" r="9" fill="#312e81"></circle>
+              <circle cx="426" cy="217" r="9" fill="#312e81"></circle>
             </svg>
           </div>
           <div class="visual-grid">
@@ -594,7 +665,7 @@
         <span class="eyebrow">AGI.Eth Namespace Grammar</span>
         <h2>One rule. Scoped meaning. Machine-readable authority.</h2>
         <article class="grammar" style="margin-top:.9rem;">
-          <div class="code-line">&lt;entity&gt;.( &lt;env&gt;. )&lt;role&gt;.agi.eth</div>
+          <div class="code-line">&lt;entity&gt;.(<wbr>&lt;env&gt;.)&lt;role&gt;.agi.eth</div>
           <p class="muted">role ∈ {club, agent, node} · env ∈ ENV_SET, optional; examples: alpha, x, …</p>
         </article>
         <div class="namespace" style="margin-top:.8rem;">
@@ -636,7 +707,7 @@
         </div>
         <p class="flowline">Machine speed belongs in execution. Trust belongs in proof. Permanence belongs in governance.</p>
 
-        <article class="doctrine" style="margin-top:1rem;">
+        <article class="doctrine">
           <h3>Proof-First Doctrine</h3>
           <ul>
             <li>No value without evidence.</li>
