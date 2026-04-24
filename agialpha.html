@@ -712,6 +712,33 @@
 
   <script>
     (function () {
+      function setButtonText(btn, message) {
+        var old = btn.getAttribute('data-old-label') || btn.textContent;
+        btn.setAttribute('data-old-label', old);
+        btn.textContent = message;
+        setTimeout(function () { btn.textContent = old; }, 1200);
+      }
+
+      function fallbackCopy(text) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '-9999px';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        var ok = false;
+        try {
+          ok = document.execCommand('copy');
+        } catch (_err) {
+          ok = false;
+        }
+        document.body.removeChild(ta);
+        return ok;
+      }
+
       var buttons = document.querySelectorAll('[data-copy]');
       buttons.forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -719,10 +746,18 @@
           if (!text) return;
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(function () {
-              var old = btn.textContent;
-              btn.textContent = 'Copied';
-              setTimeout(function () { btn.textContent = old; }, 900);
+              setButtonText(btn, 'Copied');
+            }).catch(function () {
+              if (fallbackCopy(text)) {
+                setButtonText(btn, 'Copied');
+              } else {
+                setButtonText(btn, 'Copy failed');
+              }
             });
+          } else if (fallbackCopy(text)) {
+            setButtonText(btn, 'Copied');
+          } else {
+            setButtonText(btn, 'Copy failed');
           }
         });
       });
