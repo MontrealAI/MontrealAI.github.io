@@ -1050,24 +1050,29 @@
         btn.addEventListener('click', async function () {
           const text = btn.getAttribute('data-copy') || '';
           const original = btn.textContent;
+          const legacyCopy = function (value) {
+            const ta = document.createElement('textarea');
+            ta.value = value;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'absolute';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            const copied = document.execCommand('copy');
+            document.body.removeChild(ta);
+            return copied;
+          };
           try {
             if (navigator.clipboard && navigator.clipboard.writeText) {
               await navigator.clipboard.writeText(text);
               btn.textContent = 'Copied';
             } else {
-              const ta = document.createElement('textarea');
-              ta.value = text;
-              ta.setAttribute('readonly', '');
-              ta.style.position = 'absolute';
-              ta.style.left = '-9999px';
-              document.body.appendChild(ta);
-              ta.select();
-              const copied = document.execCommand('copy');
-              document.body.removeChild(ta);
+              const copied = legacyCopy(text);
               btn.textContent = copied ? 'Copied' : 'Copy failed';
             }
           } catch (e) {
-            btn.textContent = 'Copy failed';
+            const copied = legacyCopy(text);
+            btn.textContent = copied ? 'Copied' : 'Copy failed';
           }
           window.setTimeout(function () { btn.textContent = original; }, 1400);
         });
