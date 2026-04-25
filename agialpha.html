@@ -1054,8 +1054,8 @@
           const text = btn.getAttribute('data-copy') || '';
           const baseLabel = btn.dataset.baseLabel || 'Copy';
           const legacyCopy = function (value) {
+            const ta = document.createElement('textarea');
             try {
-              const ta = document.createElement('textarea');
               ta.value = value;
               ta.setAttribute('readonly', '');
               ta.style.position = 'absolute';
@@ -1063,10 +1063,13 @@
               document.body.appendChild(ta);
               ta.select();
               const copied = document.execCommand('copy');
-              document.body.removeChild(ta);
               return copied;
             } catch (legacyError) {
               return false;
+            } finally {
+              if (ta.parentNode) {
+                ta.parentNode.removeChild(ta);
+              }
             }
           };
           try {
