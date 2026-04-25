@@ -537,11 +537,9 @@
         justify-content: flex-start;
       }
       .js .menu {
-        overflow: hidden;
-        max-height: 0;
-        transition: max-height 0.25s ease;
+        display: none;
       }
-      .js .menu.open { max-height: 250px; }
+      .js .menu.open { display: flex; }
       .nav-ctas { grid-area: cta; justify-content: flex-start; }
     }
 
@@ -1168,11 +1166,41 @@
     (function () {
       const toggle = document.getElementById('menuToggle');
       const menu = document.getElementById('menu');
+      const mobileMq = window.matchMedia('(max-width: 1100px)');
+
+      function syncMenuAccessibilityState() {
+        if (!toggle || !menu) return;
+        if (!mobileMq.matches) {
+          menu.classList.remove('open');
+          menu.removeAttribute('aria-hidden');
+          menu.removeAttribute('inert');
+          toggle.setAttribute('aria-expanded', 'true');
+          return;
+        }
+        const isOpen = menu.classList.contains('open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        if (isOpen) {
+          menu.removeAttribute('aria-hidden');
+          menu.removeAttribute('inert');
+        } else {
+          menu.setAttribute('aria-hidden', 'true');
+          menu.setAttribute('inert', '');
+        }
+      }
+
       if (toggle && menu) {
+        toggle.setAttribute('aria-expanded', 'false');
         toggle.addEventListener('click', function () {
           const next = menu.classList.toggle('open');
           toggle.setAttribute('aria-expanded', String(next));
+          syncMenuAccessibilityState();
         });
+        if (mobileMq.addEventListener) {
+          mobileMq.addEventListener('change', syncMenuAccessibilityState);
+        } else if (mobileMq.addListener) {
+          mobileMq.addListener(syncMenuAccessibilityState);
+        }
+        syncMenuAccessibilityState();
       }
 
       const progress = document.getElementById('scrollProgress');
@@ -1186,12 +1214,36 @@
       document.addEventListener('scroll', paintProgress, { passive: true });
       paintProgress();
 
+      function fallbackCopy(value) {
+        const ta = document.createElement('textarea');
+        ta.value = value;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.top = '-9999px';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        let ok = false;
+        try {
+          ok = document.execCommand('copy');
+        } catch (e) {
+          ok = false;
+        }
+        document.body.removeChild(ta);
+        return ok;
+      }
+
       document.querySelectorAll('.copy-btn').forEach(function (btn) {
         btn.addEventListener('click', async function () {
           const value = btn.getAttribute('data-copy');
           if (!value) return;
           try {
-            await navigator.clipboard.writeText(value);
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(value);
+            } else if (!fallbackCopy(value)) {
+              throw new Error('fallback-copy-failed');
+            }
             const old = btn.textContent;
             btn.textContent = 'Copied';
             setTimeout(function () { btn.textContent = old; }, 1000);
