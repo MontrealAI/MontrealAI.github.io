@@ -1047,9 +1047,12 @@
       }
 
       document.querySelectorAll('.copy-btn').forEach(function (btn) {
+        if (!btn.dataset.baseLabel) {
+          btn.dataset.baseLabel = (btn.textContent || 'Copy').trim() || 'Copy';
+        }
         btn.addEventListener('click', async function () {
           const text = btn.getAttribute('data-copy') || '';
-          const original = btn.textContent;
+          const original = btn.dataset.baseLabel || 'Copy';
           const legacyCopy = function (value) {
             try {
               const ta = document.createElement('textarea');
