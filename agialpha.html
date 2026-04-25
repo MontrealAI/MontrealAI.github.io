@@ -1051,16 +1051,20 @@
           const text = btn.getAttribute('data-copy') || '';
           const original = btn.textContent;
           const legacyCopy = function (value) {
-            const ta = document.createElement('textarea');
-            ta.value = value;
-            ta.setAttribute('readonly', '');
-            ta.style.position = 'absolute';
-            ta.style.left = '-9999px';
-            document.body.appendChild(ta);
-            ta.select();
-            const copied = document.execCommand('copy');
-            document.body.removeChild(ta);
-            return copied;
+            try {
+              const ta = document.createElement('textarea');
+              ta.value = value;
+              ta.setAttribute('readonly', '');
+              ta.style.position = 'absolute';
+              ta.style.left = '-9999px';
+              document.body.appendChild(ta);
+              ta.select();
+              const copied = document.execCommand('copy');
+              document.body.removeChild(ta);
+              return copied;
+            } catch (legacyError) {
+              return false;
+            }
           };
           try {
             if (navigator.clipboard && navigator.clipboard.writeText) {
