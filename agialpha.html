@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,6 +15,7 @@
   <meta name="twitter:description" content="How large-scale multi-agent systems autonomously coordinate for maximum impact." />
   <meta name="twitter:image" content="https://montrealai.github.io/AGI_ASCENSION_V5.png" />
   <link rel="canonical" href="https://montrealai.github.io/agialpha.html" />
+  <script>document.documentElement.classList.remove('no-js');document.documentElement.classList.add('js');</script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -207,6 +208,7 @@
 
     .nav-ctas { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: flex-end; }
     .menu-toggle { display: none; min-height: 40px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--deep-purple); font-weight: 800; padding: .45rem .7rem; }
+    .no-js .menu-toggle { display: none !important; }
 
     .hero-grid {
       display: grid;
@@ -327,8 +329,9 @@
     @media (max-width: 1100px) {
       .nav-wrap { grid-template-columns: auto auto; }
       .menu-toggle { display: inline-flex; }
-      .nav-shell { grid-column: 1 / -1; display: none; }
-      .nav-shell.open { display: grid; gap: .6rem; padding-bottom: .8rem; }
+      .nav-shell { grid-column: 1 / -1; }
+      .js .nav-shell { display: none; }
+      .js .nav-shell.open { display: grid; gap: .6rem; padding-bottom: .8rem; }
       .menu { justify-content: flex-start; }
     }
 
@@ -868,14 +871,37 @@
     document.querySelectorAll('.copy-btn').forEach((btn) => {
       btn.addEventListener('click', async () => {
         const value = btn.getAttribute('data-copy') || '';
+        const legacyCopy = (text) => {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.top = '-1000px';
+          document.body.appendChild(ta);
+          ta.select();
+          let ok = false;
+          try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
+          document.body.removeChild(ta);
+          return ok;
+        };
         try {
-          await navigator.clipboard.writeText(value);
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(value);
+          } else if (!legacyCopy(value)) {
+            throw new Error('clipboard unavailable');
+          }
           const old = btn.textContent;
           btn.textContent = 'Copied';
           setTimeout(() => { btn.textContent = old; }, 1200);
         } catch (_) {
-          btn.textContent = 'Copy failed';
-          setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+          if (legacyCopy(value)) {
+            const old = btn.textContent;
+            btn.textContent = 'Copied';
+            setTimeout(() => { btn.textContent = old; }, 1200);
+          } else {
+            btn.textContent = 'Copy failed';
+            setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+          }
         }
       });
     });
