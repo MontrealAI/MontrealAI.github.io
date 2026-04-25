@@ -15,6 +15,7 @@
   <meta name="twitter:description" content="How large-scale multi-agent systems autonomously coordinate for maximum impact." />
   <meta name="twitter:image" content="AGI_ASCENSION_V5.png" />
   <link rel="canonical" href="https://montrealai.github.io/agialpha.html" />
+  <script>document.documentElement.classList.add('js');</script>
   <style>
     :root {
       --ink: #070817;
@@ -344,8 +345,8 @@
       .nav-wrap { grid-template-columns: auto auto; }
       .menu-toggle { display: inline-flex; }
       nav { grid-column: 1 / -1; }
-      nav[data-open="false"] { display: none; }
-      nav[data-open="true"] { display: block; }
+      .js nav[data-open="false"] { display: none; }
+      .js nav[data-open="true"] { display: block; }
       .menu { justify-content: flex-start; }
       .nav-cta { grid-column: 1 / -1; justify-content: flex-start; }
     }
@@ -871,15 +872,41 @@
       }
 
       document.querySelectorAll('.copy-btn').forEach((btn) => {
+        const fallbackCopy = (text) => {
+          const area = document.createElement('textarea');
+          area.value = text;
+          area.setAttribute('readonly', '');
+          area.style.position = 'fixed';
+          area.style.opacity = '0';
+          area.style.pointerEvents = 'none';
+          document.body.appendChild(area);
+          area.focus();
+          area.select();
+          let ok = false;
+          try {
+            ok = document.execCommand('copy');
+          } catch (_e) {
+            ok = false;
+          }
+          document.body.removeChild(area);
+          return ok;
+        };
+
         btn.addEventListener('click', async () => {
           const value = btn.getAttribute('data-copy') || '';
+          const prev = btn.textContent;
           try {
-            await navigator.clipboard.writeText(value);
-            const prev = btn.textContent;
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(value);
+            } else if (!fallbackCopy(value)) {
+              throw new Error('fallback-copy-failed');
+            }
             btn.textContent = 'Copied';
             setTimeout(() => (btn.textContent = prev), 1200);
           } catch (_e) {
-            btn.textContent = 'Copy unavailable';
+            const didFallback = fallbackCopy(value);
+            btn.textContent = didFallback ? 'Copied' : 'Select text manually';
+            setTimeout(() => (btn.textContent = prev), 1400);
           }
         });
       });
