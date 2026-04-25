@@ -864,14 +864,32 @@
       const toggle = document.getElementById('menuToggle');
       const nav = document.getElementById('siteNav');
       if (toggle && nav) {
+        const mobileQuery = window.matchMedia('(max-width: 900px)');
+        const syncNavState = () => {
+          if (!mobileQuery.matches) {
+            nav.setAttribute('data-open', 'false');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        };
         toggle.addEventListener('click', function () {
           const isOpen = nav.getAttribute('data-open') === 'true';
           nav.setAttribute('data-open', String(!isOpen));
           toggle.setAttribute('aria-expanded', String(!isOpen));
         });
+        if (typeof mobileQuery.addEventListener === 'function') {
+          mobileQuery.addEventListener('change', syncNavState);
+        } else if (typeof mobileQuery.addListener === 'function') {
+          mobileQuery.addListener(syncNavState);
+        }
+        window.addEventListener('resize', syncNavState, { passive: true });
+        syncNavState();
       }
 
+      const copyTimers = new WeakMap();
       document.querySelectorAll('.copy-btn').forEach((btn) => {
+        if (!btn.dataset.baseLabel) {
+          btn.dataset.baseLabel = btn.textContent.trim();
+        }
         const fallbackCopy = (text) => {
           const area = document.createElement('textarea');
           area.value = text;
@@ -894,7 +912,11 @@
 
         btn.addEventListener('click', async () => {
           const value = btn.getAttribute('data-copy') || '';
-          const prev = btn.textContent;
+          const baseLabel = btn.dataset.baseLabel || 'Copy';
+          const existing = copyTimers.get(btn);
+          if (existing) {
+            clearTimeout(existing);
+          }
           try {
             if (navigator.clipboard && window.isSecureContext) {
               await navigator.clipboard.writeText(value);
@@ -902,11 +924,11 @@
               throw new Error('fallback-copy-failed');
             }
             btn.textContent = 'Copied';
-            setTimeout(() => (btn.textContent = prev), 1200);
+            copyTimers.set(btn, setTimeout(() => (btn.textContent = baseLabel), 1200));
           } catch (_e) {
             const didFallback = fallbackCopy(value);
             btn.textContent = didFallback ? 'Copied' : 'Select text manually';
-            setTimeout(() => (btn.textContent = prev), 1400);
+            copyTimers.set(btn, setTimeout(() => (btn.textContent = baseLabel), 1400));
           }
         });
       });
