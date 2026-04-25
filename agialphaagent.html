@@ -419,7 +419,7 @@
 
     document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{
       const value=btn.getAttribute('data-copy')||'';
-      const fallback=()=>{const ta=document.createElement('textarea');ta.value=value;document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return !!ok;};
+      const fallback=()=>{if(typeof document.execCommand!=='function'){return false;}try{const ta=document.createElement('textarea');ta.value=value;document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return !!ok;}catch(_){return false;}};
       let copied=false;
       try{
         if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);copied=true;}
