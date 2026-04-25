@@ -414,7 +414,16 @@
   <script>
     const menuToggle=document.getElementById('menuToggle');
     const navStack=document.getElementById('navStack');
-    if(window.innerWidth>1030){navStack.classList.add('open');menuToggle.setAttribute('aria-expanded','true');}
+    let isMobileView=window.innerWidth<=1030;
+    if(isMobileView){navStack.classList.remove('open');menuToggle.setAttribute('aria-expanded','false');}
+    else{navStack.classList.add('open');menuToggle.setAttribute('aria-expanded','true');}
+    window.addEventListener('resize',()=>{
+      const mobileNow=window.innerWidth<=1030;
+      if(mobileNow===isMobileView) return;
+      isMobileView=mobileNow;
+      if(isMobileView){navStack.classList.remove('open');menuToggle.setAttribute('aria-expanded','false');}
+      else{navStack.classList.add('open');menuToggle.setAttribute('aria-expanded','true');}
+    });
     menuToggle.addEventListener('click',()=>{const open=navStack.classList.toggle('open');menuToggle.setAttribute('aria-expanded',String(open));});
 
     document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{
