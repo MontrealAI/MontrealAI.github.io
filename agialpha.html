@@ -1062,9 +1062,9 @@
               ta.style.left = '-9999px';
               document.body.appendChild(ta);
               ta.select();
-              document.execCommand('copy');
+              const copied = document.execCommand('copy');
               document.body.removeChild(ta);
-              btn.textContent = 'Copied';
+              btn.textContent = copied ? 'Copied' : 'Copy failed';
             }
           } catch (e) {
             btn.textContent = 'Copy failed';
