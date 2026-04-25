@@ -1238,17 +1238,22 @@
         btn.addEventListener('click', async function () {
           const value = btn.getAttribute('data-copy');
           if (!value) return;
+          const old = btn.textContent;
           try {
             if (navigator.clipboard && window.isSecureContext) {
               await navigator.clipboard.writeText(value);
             } else if (!fallbackCopy(value)) {
               throw new Error('fallback-copy-failed');
             }
-            const old = btn.textContent;
             btn.textContent = 'Copied';
             setTimeout(function () { btn.textContent = old; }, 1000);
           } catch (e) {
-            btn.textContent = 'Copy failed';
+            if (fallbackCopy(value)) {
+              btn.textContent = 'Copied';
+              setTimeout(function () { btn.textContent = old; }, 1000);
+            } else {
+              btn.textContent = 'Copy failed';
+            }
           }
         });
       });
