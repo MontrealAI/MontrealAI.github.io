@@ -156,12 +156,12 @@
           </div>
         </article>
         <article class="crystal">
-          <picture>
-            <source srcset="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v10.png" />
-            <source srcset="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v9.png" />
-            <source srcset="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v7.png" />
-            <img src="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v6.png" alt="α‑AGI Ascension crystalline command flagship" loading="eager" />
-          </picture>
+          <img
+            src="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v10.png"
+            data-fallbacks="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v9.png,AGI_Ascension_Autonomous_Multi-Agent_Coordination_v7.png,AGI_Ascension_Autonomous_Multi-Agent_Coordination_v6.png"
+            alt="α‑AGI Ascension crystalline command flagship"
+            loading="eager"
+          />
         </article>
       </div>
     </section>
@@ -196,10 +196,12 @@
       <div class="container">
         <h2>Ascension Command Map</h2>
         <article class="panel" style="padding:.8rem; margin-top:1rem;">
-          <picture>
-            <source srcset="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v9.png" />
-            <img src="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v10.png" alt="Ascension command map for twelve-organ system" loading="lazy" />
-          </picture>
+          <img
+            src="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v9.png"
+            data-fallbacks="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v10.png,AGI_Ascension_Autonomous_Multi-Agent_Coordination_v7.png,AGI_Ascension_Autonomous_Multi-Agent_Coordination_v6.png"
+            alt="Ascension command map for twelve-organ system"
+            loading="lazy"
+          />
         </article>
         <div class="grid cards" style="margin-top:1rem;">
           <article class="panel" style="padding:1rem;"><h3>Insight</h3><p class="muted">Strategic sensing.</p></article><article class="panel" style="padding:1rem;"><h3>Nova‑Seeds</h3><p class="muted">Foresight genomes.</p></article><article class="panel" style="padding:1rem;"><h3>MARK</h3><p class="muted">Market routing intelligence.</p></article><article class="panel" style="padding:1rem;"><h3>Sovereign</h3><p class="muted">Authority and command graph.</p></article><article class="panel" style="padding:1rem;"><h3>Business</h3><p class="muted">Operational packaging.</p></article><article class="panel" style="padding:1rem;"><h3>Marketplace</h3><p class="muted">Demand and route matching.</p></article><article class="panel" style="padding:1rem;"><h3>AGI Jobs</h3><p class="muted">Work OS kernel.</p></article><article class="panel" style="padding:1rem;"><h3>Agents</h3><p class="muted">Execution population.</p></article><article class="panel" style="padding:1rem;"><h3>Validators</h3><p class="muted">Integrity and adjudication.</p></article><article class="panel" style="padding:1rem;"><h3>Value Reservoir</h3><p class="muted">Economic continuity.</p></article><article class="panel" style="padding:1rem;"><h3>Architect</h3><p class="muted">System redesign engine.</p></article><article class="panel" style="padding:1rem;"><h3>Archive</h3><p class="muted">Institutional memory heredity.</p></article>
@@ -302,7 +304,14 @@
         <p class="eyebrow" style="color:#c9b6ff;">α‑AGI Club</p>
         <h2>α‑AGI Club — The Sovereign Order of Proof</h2>
         <p style="max-width:78ch; color:#ded2f6;">The Validator Council of the Sovereign Machine — where proof becomes settlement, reputation becomes law, and protocol evolution is guarded by those entrusted to preserve integrity. Agents may execute. Markets may route. Jobs may complete. But value does not move without validation.</p>
-        <article class="panel" style="padding:.8rem; margin-top:1rem;"><picture><source srcset="The_AGI_Club_Aesthetic_v2.png" /><source srcset="The_AGI_Club_Aesthetic_v1.png" /><img src="The_AGI_Club_Aesthetic_v0.png" alt="The AGI Club sovereign validation chamber" loading="lazy" /></picture></article>
+        <article class="panel" style="padding:.8rem; margin-top:1rem;">
+          <img
+            src="The_AGI_Club_Aesthetic_v2.png"
+            data-fallbacks="The_AGI_Club_Aesthetic_v1.png,The_AGI_Club_Aesthetic_v0.png"
+            alt="The AGI Club sovereign validation chamber"
+            loading="lazy"
+          />
+        </article>
         <div class="grid cards" style="margin-top:1rem;">
           <article class="panel" style="padding:1rem;"><h3 class="gold">Proof Chamber</h3><p>Evidence review and adjudication.</p></article>
           <article class="panel" style="padding:1rem;"><h3 class="gold">Vault of Finality</h3><p>Settlement custody discipline.</p></article>
@@ -504,6 +513,18 @@
   </footer>
 
   <script>
+    document.querySelectorAll('img[data-fallbacks]').forEach((img) => {
+      const queue = (img.getAttribute('data-fallbacks') || '')
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      img.addEventListener('error', () => {
+        const next = queue.shift();
+        if (next) img.src = next;
+      });
+    });
+
     const navBtn = document.querySelector('.nav-toggle');
     const nav = document.getElementById('main-nav');
     if (navBtn && nav) {
