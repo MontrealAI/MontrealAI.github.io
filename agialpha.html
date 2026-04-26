@@ -539,6 +539,13 @@
         const open = nav.classList.toggle('open');
         navBtn.setAttribute('aria-expanded', String(open));
       });
+
+      nav.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          nav.classList.remove('open');
+          navBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
     }
 
     document.querySelectorAll('.copy-btn').forEach((btn) => {
