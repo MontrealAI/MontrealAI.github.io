@@ -519,10 +519,17 @@
         .map((item) => item.trim())
         .filter(Boolean);
 
-      img.addEventListener('error', () => {
+      const advanceFallback = () => {
         const next = queue.shift();
         if (next) img.src = next;
-      });
+      };
+
+      img.addEventListener('error', advanceFallback);
+
+      // Catch images that already failed before this footer script executed.
+      if (img.complete && img.naturalWidth === 0) {
+        advanceFallback();
+      }
     });
 
     const navBtn = document.querySelector('.nav-toggle');
