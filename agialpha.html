@@ -15,14 +15,14 @@
   <meta name="twitter:description" content="How large-scale multi-agent systems autonomously coordinate for maximum impact." />
   <meta name="twitter:image" content="https://montrealai.github.io/AGI_Ascension_Autonomous_Multi-Agent_Coordination_v10.png" />
   <link rel="canonical" href="https://montrealai.github.io/agialpha.html" />
-  <meta name="theme-color" content="#f6f5ff" />
+  <meta name="theme-color" content="#f7f6ff" />
   <script>document.documentElement.classList.replace('no-js','js');</script>
   <style>
     :root {
-      --bg:#f6f5ff; --surface:#fff; --ink:#0c1128; --muted:#4e5876; --line:#d8dcf2;
-      --deep:#21104f; --violet:#6240ff; --blue:#1665ff; --cyan:#00c5ec; --magenta:#c033ff;
-      --gold:#b48a3a; --platinum:#e1e6f6; --club-bg:#09050f; --club-surface:#120d1f; --club-line:#3e3455;
-      --max:min(1280px, calc(100vw - 2rem)); --shadow:0 22px 54px rgba(33,16,79,.12);
+      --bg:#f7f6ff; --ink:#0e1330; --muted:#4b5679; --line:#d5dcf4; --panel:#ffffff;
+      --deep:#251255; --violet:#6e49ff; --blue:#1b68ff; --cyan:#00c2ea; --magenta:#cc38ff; --gold:#b58b3f;
+      --club-bg:#0a0611; --club-panel:#130d20; --club-line:#3b3253; --club-text:#f1eaff;
+      --max:min(1280px, calc(100vw - 2rem)); --shadow:0 20px 50px rgba(37,18,85,.12);
     }
     * { box-sizing: border-box; }
     html, body { margin:0; overflow-x:hidden; }
@@ -30,102 +30,92 @@
       font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color:var(--ink); line-height:1.58;
       background:
-        radial-gradient(circle at 0% 0%, rgba(98,64,255,.12), transparent 35%),
-        radial-gradient(circle at 100% 10%, rgba(0,197,236,.10), transparent 33%),
+        radial-gradient(circle at 0% 0%, rgba(110,73,255,.13), transparent 34%),
+        radial-gradient(circle at 100% 8%, rgba(0,194,234,.10), transparent 36%),
         var(--bg);
     }
     @media (prefers-reduced-motion: reduce) {
       * { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
     }
-    img { display:block; max-width:100%; height:auto; border-radius:18px; }
     a { color:inherit; text-decoration:none; overflow-wrap:anywhere; word-break:break-word; }
     p, li, h1, h2, h3, code, .chip { overflow-wrap:anywhere; word-break:break-word; }
+    img { max-width:100%; height:auto; display:block; border-radius:18px; }
     .container { width:var(--max); margin-inline:auto; }
-    .section { padding: clamp(2.6rem, 5vw, 5.8rem) 0; }
-    .eyebrow { text-transform:uppercase; letter-spacing:.16em; font-size:.75rem; color:#5c45b6; font-weight:700; }
-    h1,h2,h3 { margin:0; line-height:1.1; letter-spacing:-.02em; }
-    h1 { font-size: clamp(2.2rem, 7vw, 5rem); }
-    h2 { font-size: clamp(1.6rem, 4vw, 3rem); }
-    h3 { font-size: clamp(1.08rem, 2vw, 1.35rem); }
+    .section { padding:clamp(2.4rem, 4.8vw, 5.6rem) 0; }
+    .eyebrow { text-transform:uppercase; letter-spacing:.16em; font-size:.75rem; font-weight:800; color:#5d45b7; }
+    h1,h2,h3 { margin:0; line-height:1.08; letter-spacing:-.02em; }
+    h1 { font-size:clamp(2.3rem, 7vw, 5.2rem); }
+    h2 { font-size:clamp(1.55rem, 4.2vw, 3rem); }
+    h3 { font-size:clamp(1.08rem, 2vw, 1.35rem); }
     .muted { color:var(--muted); }
-    .panel { background:var(--surface); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); }
     .grid { display:grid; gap:1rem; }
     .grid > * { min-width:0; }
     .cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
-    .chip { display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:.38rem .72rem; font-size:.82rem; background:#fff; }
-    .btns { display:flex; gap:.7rem; flex-wrap:wrap; }
-    .btn {
-      display:inline-flex; align-items:center; justify-content:center; gap:.35rem; border-radius:999px;
-      padding:.66rem 1rem; border:1px solid var(--line); font-weight:700; font-size:.9rem;
-      background:#fff;
-    }
-    .btn.primary { background:linear-gradient(120deg, rgba(98,64,255,.14), rgba(0,197,236,.16)); border-color:#b7bcdd; }
-    .btn:focus-visible, a:focus-visible, button:focus-visible { outline:3px solid var(--cyan); outline-offset:2px; }
-    .skip { position:absolute; left:-999px; top:0.6rem; background:#fff; padding:.6rem .9rem; border-radius:.5rem; }
+    .chip { display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:.34rem .68rem; background:#fff; font-size:.82rem; }
+    .btns { display:flex; gap:.65rem; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; padding:.64rem 1rem; border-radius:999px; border:1px solid var(--line); font-weight:700; font-size:.9rem; background:#fff; }
+    .btn.primary { border-color:#b8c0e7; background:linear-gradient(130deg, rgba(110,73,255,.16), rgba(0,194,234,.18)); }
+    .skip { position:absolute; left:-999px; top:.6rem; background:#fff; border:1px solid var(--line); padding:.6rem .8rem; border-radius:.5rem; }
     .skip:focus { left:.6rem; }
+    .btn:focus-visible, a:focus-visible, button:focus-visible { outline:3px solid var(--cyan); outline-offset:2px; }
 
-    header { position:sticky; top:0; border-bottom:1px solid #d4d9f1; background:rgba(246,245,255,.92); backdrop-filter:blur(14px); }
-    .head { min-height:74px; display:grid; grid-template-columns:auto 1fr auto auto; gap:.7rem; align-items:center; }
-    .brand { font-weight:900; letter-spacing:.1em; font-size:.83rem; text-transform:uppercase; }
-    .brand .mark { padding:.22rem .45rem; border-radius:.5rem; border:1px solid #c9cfed; margin-right:.35rem; background:#fff; }
-    .nav-toggle { display:none; border:1px solid var(--line); background:#fff; border-radius:.55rem; padding:.45rem .6rem; font-weight:700; }
-    nav ul, .head-cta { display:flex; gap:.3rem; list-style:none; margin:0; padding:0; flex-wrap:wrap; }
-    nav a, .head-cta a { border-radius:999px; padding:.45rem .66rem; font-size:.82rem; color:#283458; }
-    nav a:hover, .head-cta a:hover { background:#fff; border:1px solid var(--line); padding:calc(.45rem - 1px) calc(.66rem - 1px); }
+    header { position:sticky; top:0; z-index:20; border-bottom:1px solid #d4daf2; backdrop-filter:blur(12px); background:rgba(247,246,255,.93); }
+    .head { min-height:76px; display:grid; grid-template-columns:auto 1fr auto auto; gap:.6rem; align-items:center; }
+    .brand { display:flex; align-items:center; gap:.5rem; font-weight:900; text-transform:uppercase; letter-spacing:.1em; font-size:.8rem; }
+    .mark {
+      width:2rem; aspect-ratio:1; border-radius:40% 60% 65% 35% / 35% 45% 55% 65%;
+      background:conic-gradient(from 210deg, var(--cyan), var(--blue), var(--violet), var(--magenta), var(--cyan));
+      border:1px solid #bdc8f1; box-shadow:inset 0 0 15px rgba(255,255,255,.55);
+    }
+    nav ul, .head-cta { list-style:none; margin:0; padding:0; display:flex; gap:.3rem; flex-wrap:wrap; }
+    nav a, .head-cta a { padding:.42rem .64rem; border-radius:999px; font-size:.82rem; color:#2a355c; }
+    nav a:hover, .head-cta a:hover { background:#fff; border:1px solid var(--line); padding:calc(.42rem - 1px) calc(.64rem - 1px); }
+    .nav-toggle { display:none; border:1px solid var(--line); background:#fff; border-radius:.55rem; padding:.42rem .58rem; font-weight:700; }
 
-    .hero { display:grid; grid-template-columns:1.08fr .92fr; gap:1rem; align-items:center; }
-    .hero p { font-size:clamp(1rem, 1.4vw, 1.2rem); color:#2f395f; }
-    .organism-line { margin:.9rem 0 1.2rem; font-weight:700; color:#2f1e64; }
-    .crystal { padding:.8rem; border-radius:24px; background:linear-gradient(150deg,#fff,rgba(210,220,255,.76)); border:1px solid #cfd7f5; box-shadow:0 32px 68px rgba(33,16,79,.2); }
-    .micro-grid { margin-top:.8rem; grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr)); }
-    .micro-grid article { border:1px solid #d5daf1; border-radius:14px; padding:.75rem; background:#fff; font-weight:650; font-size:.9rem; color:#273560; }
+    .hero { display:grid; grid-template-columns:1.05fr .95fr; gap:1rem; align-items:center; }
+    .hero p { font-size:clamp(1rem, 1.3vw, 1.16rem); color:#2f395f; }
+    .organism-line { margin:.9rem 0 1rem; font-weight:700; color:#2e1f67; }
+    .crystal { padding:.78rem; border-radius:24px; border:1px solid #cad4f2; background:linear-gradient(150deg, #fff, rgba(210,220,255,.74)); box-shadow:0 28px 60px rgba(37,18,85,.2); }
+    .micro-grid { margin-top:.8rem; grid-template-columns:repeat(auto-fit, minmax(min(100%, 170px), 1fr)); }
+    .micro-grid article { border:1px solid #d4dcf1; border-radius:12px; padding:.72rem; background:#fff; font-weight:650; color:#2b3963; }
 
-    .equation { text-align:center; font-weight:800; padding:1rem; border-radius:14px; border:1px solid #ced6f2; background:#fdfdff; color:#2d2a67; }
-    .orbit-list { margin:0; padding-left:1.2rem; }
+    .equation { text-align:center; padding:.95rem; border-radius:14px; border:1px solid #cfd7f2; font-weight:800; color:#2f306b; }
+    .side-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr)); }
+    .rail { border:1px solid #cfd8f2; border-radius:14px; padding:.7rem .82rem; background:#fff; color:#314068; }
 
-    .command-map { display:grid; grid-template-columns:1fr; gap:1rem; }
-    .side-grid { grid-template-columns:1fr 1fr; }
-    .rail { border:1px solid #cfd6f2; border-radius:14px; padding:.7rem .8rem; font-size:.92rem; color:#2f3f68; background:#fff; }
+    .layer-list { margin:0; padding-left:1.1rem; }
 
     .job-card { padding:1rem; }
-    .label { font-size:.74rem; text-transform:uppercase; letter-spacing:.13em; color:#54629c; font-weight:700; }
-    .link-stack { margin-top:.55rem; display:grid; gap:.48rem; }
-    .address-chip {
-      width:100%; display:grid; grid-template-columns:1fr auto; gap:.45rem; align-items:center;
-      border:1px solid #d1d8f2; border-radius:12px; padding:.52rem .65rem; background:#fff;
-    }
-    .address-chip code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.8rem; }
-    .copy-btn { border:1px solid #cad2f1; border-radius:.5rem; background:#f4f6ff; font-size:.78rem; font-weight:700; padding:.3rem .55rem; }
+    .label { text-transform:uppercase; letter-spacing:.12em; font-weight:700; font-size:.72rem; color:#5968a2; }
+    .link-stack { margin-top:.52rem; display:grid; gap:.45rem; }
+    .address-chip { width:100%; display:grid; grid-template-columns:1fr auto; gap:.45rem; align-items:center; border:1px solid #d2daf2; border-radius:12px; padding:.5rem .62rem; background:#fff; }
+    .address-chip code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.79rem; }
+    .copy-btn { border:1px solid #c8d1ef; background:#f3f5ff; border-radius:.5rem; padding:.28rem .54rem; font-size:.78rem; font-weight:700; }
 
-    .club {
-      background:
-        radial-gradient(circle at 20% -5%, rgba(150,113,255,.25), transparent 35%),
-        radial-gradient(circle at 84% 10%, rgba(180,138,58,.18), transparent 34%),
-        var(--club-bg);
-      color:#f4ecff;
-      border-top:1px solid #2f2746;
-      border-bottom:1px solid #2f2746;
+    .club { background:
+      radial-gradient(circle at 12% 0%, rgba(153,114,255,.24), transparent 36%),
+      radial-gradient(circle at 85% 8%, rgba(181,139,63,.18), transparent 34%),
+      var(--club-bg);
+      color:var(--club-text); border-top:1px solid #2e2645; border-bottom:1px solid #2e2645;
     }
-    .club .panel { background:var(--club-surface); border-color:var(--club-line); box-shadow:none; }
-    .club .chip { border-color:#4d4069; background:#110d1c; color:#e9ddff; }
-    .club .gold { color:#e8c779; }
+    .club .panel { background:var(--club-panel); border-color:var(--club-line); box-shadow:none; }
+    .club .chip { background:#120d1f; border-color:#4d3f6b; }
+    .gold { color:#e5c67d; }
 
-    .namespace code { display:block; background:#f8f9ff; border:1px solid #d3daf1; border-radius:12px; padding:.66rem .8rem; font-size:.9rem; }
+    .namespace code { display:block; border:1px solid #d3daf1; border-radius:12px; background:#f8f9ff; padding:.64rem .8rem; font-size:.9rem; }
     .article-list, .ref-list { display:grid; gap:.45rem; margin-top:.8rem; }
-    .article-list a, .ref-list a { padding:.58rem .7rem; border:1px solid #d2d9f3; border-radius:11px; background:#fff; font-size:.92rem; display:block; }
+    .article-list a, .ref-list a { display:block; border:1px solid #d2dbf2; border-radius:11px; background:#fff; padding:.54rem .68rem; font-size:.91rem; }
 
-    footer { border-top:1px solid #d2d8f2; background:#f3f2fe; }
+    footer { border-top:1px solid #d3daf2; background:#f3f2fe; }
     .footer-links { display:grid; gap:.4rem; grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr)); }
 
-    @media (max-width: 980px) {
+    @media (max-width: 1000px) {
       .head { grid-template-columns:auto auto auto; }
       .nav-toggle { display:inline-flex; }
       .js nav { grid-column:1 / -1; display:none; }
       .js nav.open { display:block; }
-      nav ul { padding-bottom:.5rem; }
-      .head-cta { justify-self:end; }
       .hero { grid-template-columns:1fr; }
-      .side-grid { grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -133,20 +123,11 @@
   <a class="skip" href="#main">Skip to content</a>
   <header>
     <div class="container head">
-      <a class="brand" href="#ascension"><span class="mark">AGI</span> α‑AGI Ascension</a>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" type="button">Menu</button>
+      <a class="brand" href="#ascension"><span class="mark" aria-hidden="true"></span>AGI Alpha · α‑AGI Ascension</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
       <nav id="main-nav" aria-label="Primary">
         <ul>
-          <li><a href="#ascension">Ascension</a></li>
-          <li><a href="#organism">Organism</a></li>
-          <li><a href="#agi-jobs">Jobs</a></li>
-          <li><a href="#proof">Proof</a></li>
-          <li><a href="#club">Club</a></li>
-          <li><a href="#namespace">Namespace</a></li>
-          <li><a href="#prior-art">Prior Art</a></li>
-          <li><a href="#build">Build</a></li>
-          <li><a href="#doctrine">Doctrine</a></li>
-          <li><a href="#resources">Resources</a></li>
+          <li><a href="#ascension">Ascension</a></li><li><a href="#organism">Organism</a></li><li><a href="#agi-jobs">Jobs</a></li><li><a href="#proof">Proof</a></li><li><a href="#club">Club</a></li><li><a href="#namespace">Namespace</a></li><li><a href="#prior-art">Prior Art</a></li><li><a href="#build">Build</a></li><li><a href="#doctrine">Doctrine</a></li><li><a href="#resources">Resources</a></li>
         </ul>
       </nav>
       <div class="head-cta">
@@ -168,74 +149,72 @@
           <div class="btns">
             <a class="btn primary" href="#organism">Enter the Ascension</a>
             <a class="btn" href="#agi-jobs">View AGI Jobs</a>
-            <a class="btn" href="#doctrine">Read the Doctrine</a>
+            <a class="btn" href="#proof">Read the Doctrine</a>
           </div>
           <div class="grid micro-grid">
-            <article>On-chain verifiable</article>
-            <article>Proof-bound work</article>
-            <article>Governed autonomy</article>
-            <article>Reusable capability memory</article>
+            <article>On-chain verifiable</article><article>Proof-bound work</article><article>Governed autonomy</article><article>Reusable capability memory</article>
           </div>
         </article>
         <article class="crystal">
-          <img src="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v10.png" alt="α‑AGI Ascension flagship hero map" loading="eager" />
+          <img
+            src="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v10.png"
+            data-fallbacks="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v9.png,AGI_Ascension_Autonomous_Multi-Agent_Coordination_v7.png,AGI_Ascension_Autonomous_Multi-Agent_Coordination_v6.png"
+            alt="α‑AGI Ascension crystalline command flagship"
+            loading="eager"
+          />
         </article>
       </div>
     </section>
 
-    <section class="section" id="coordination">
+    <section class="section">
       <div class="container">
         <h2>One System. Infinite Coordination.</h2>
         <div class="grid cards" style="margin-top:1rem;">
-          <article class="panel" style="padding:1rem;"><h3>Intelligence becomes work</h3><p class="muted">Nova‑Seeds and MARK map opportunity to executable missions, then route them into AGI Jobs.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Work becomes proof</h3><p class="muted">Agents produce artifacts, tests, hashes, and attestations that compress ambiguity into evidence.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Proof becomes compounding memory</h3><p class="muted">Validated outcomes settle, then enter Archive and Architect for recursive operational gain.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Intelligence becomes work</h3><p class="muted">Opportunity sensing transitions to mission specs and executable agentic pathways.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Work becomes proof</h3><p class="muted">Artifacts, tests, hashes, and attestations compress uncertainty into verifiable evidence.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Proof becomes compounding memory</h3><p class="muted">Validated outcomes settle and become reusable institutional memory.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="section" id="physics">
+    <section class="section">
       <div class="container">
         <h2>Living Physics of α‑AGI Ascension</h2>
-        <p class="muted" style="max-width:75ch;">A living proof economy runs far from equilibrium: continuous energy flow across compute and governance sustains organized complexity. In this Hamiltonian landscape, Gibbs free energy becomes directed execution, entropy reduction appears as proof quality, and phase transitions occur when validated work crosses into settlement-grade finality. Validators act as an immune system, while Archive acts as heredity and Nova‑Seeds as foresight genomes.</p>
+        <p class="muted" style="max-width:78ch;">Biological activity emerges from far-from-equilibrium systems where continuous energy flow sustains organized complexity. α‑AGI Ascension applies this pattern to compute, proof, settlement, governance, and archive memory: Gibbs free energy is directed execution, Hamiltonian landscapes define trajectory choices, entropy reduction appears as proof quality, and phase transitions occur when evidence reaches settlement finality. Validators act as the immune system; Archive acts as heredity; Nova‑Seeds act as foresight genomes.</p>
         <div class="grid cards" style="margin-top:1rem;">
-          <article class="panel" style="padding:1rem;"><h3>Compute Flow</h3><p class="muted">Prompt, tool, and model pipelines transform mission energy into structured output candidates.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Proof Flow</h3><p class="muted">Artifacts, tests, hashes, and attestations convert output into low-entropy evidence.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Settlement Flow</h3><p class="muted">Validated evidence transitions to economic finality under explicit authority boundaries.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Archive Flow</h3><p class="muted">Recipes, playbooks, and traces are persisted for replayable future missions.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Governance Flow</h3><p class="muted">Sovereign and Club controls define who can execute, validate, quarantine, and promote.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Compute Flow</h3><p class="muted">Inputs become mission-ready output candidates through orchestrated cognition.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Proof Flow</h3><p class="muted">Candidate outputs become low-entropy evidence with tests and attestations.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Settlement Flow</h3><p class="muted">Validated evidence reaches economic finality under explicit authority.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Archive Flow</h3><p class="muted">Execution traces become replayable recipes for stronger future work.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Governance Flow</h3><p class="muted">Rights, constraints, and escalation paths discipline autonomy.</p></article>
         </div>
         <p class="equation">Compute → Work → Proof → Settlement → Archive → Stronger Work</p>
       </div>
     </section>
 
     <section class="section" id="organism">
-      <div class="container command-map">
+      <div class="container">
         <h2>Ascension Command Map</h2>
-        <article class="panel" style="padding:.8rem;"><img src="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v9.png" alt="Ascension command map" loading="lazy" /></article>
-        <div class="grid cards">
-          <article class="panel" style="padding:1rem;"><h3>Insight</h3><p class="muted">Signal detection and strategic interpretation.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Nova‑Seeds</h3><p class="muted">Foresight genomes for opportunity seeding.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>MARK</h3><p class="muted">Market intelligence and routing logic.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Sovereign</h3><p class="muted">Authority graph and operational command rights.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Business</h3><p class="muted">Mission-to-value pipeline management.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Marketplace</h3><p class="muted">Order discovery and execution matching.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>AGI Jobs</h3><p class="muted">Spec-first on-chain work kernel.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Agents</h3><p class="muted">Execution units for tasks and subtasks.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Validators</h3><p class="muted">Evidence review, validation, and quarantine.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Value Reservoir</h3><p class="muted">Retention and recirculation of earned economic energy.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Architect</h3><p class="muted">System redesign from validated learning traces.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Archive</h3><p class="muted">Institutional memory for hereditary capability.</p></article>
+        <article class="panel" style="padding:.8rem; margin-top:1rem;">
+          <img
+            src="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v9.png"
+            data-fallbacks="AGI_Ascension_Autonomous_Multi-Agent_Coordination_v10.png,AGI_Ascension_Autonomous_Multi-Agent_Coordination_v7.png,AGI_Ascension_Autonomous_Multi-Agent_Coordination_v6.png"
+            alt="Ascension command map for twelve-organ system"
+            loading="lazy"
+          />
+        </article>
+        <div class="grid cards" style="margin-top:1rem;">
+          <article class="panel" style="padding:1rem;"><h3>Insight</h3><p class="muted">Strategic sensing.</p></article><article class="panel" style="padding:1rem;"><h3>Nova‑Seeds</h3><p class="muted">Foresight genomes.</p></article><article class="panel" style="padding:1rem;"><h3>MARK</h3><p class="muted">Market routing intelligence.</p></article><article class="panel" style="padding:1rem;"><h3>Sovereign</h3><p class="muted">Authority and command graph.</p></article><article class="panel" style="padding:1rem;"><h3>Business</h3><p class="muted">Operational packaging.</p></article><article class="panel" style="padding:1rem;"><h3>Marketplace</h3><p class="muted">Demand and route matching.</p></article><article class="panel" style="padding:1rem;"><h3>AGI Jobs</h3><p class="muted">Work OS kernel.</p></article><article class="panel" style="padding:1rem;"><h3>Agents</h3><p class="muted">Execution population.</p></article><article class="panel" style="padding:1rem;"><h3>Validators</h3><p class="muted">Integrity and adjudication.</p></article><article class="panel" style="padding:1rem;"><h3>Value Reservoir</h3><p class="muted">Economic continuity.</p></article><article class="panel" style="padding:1rem;"><h3>Architect</h3><p class="muted">System redesign engine.</p></article><article class="panel" style="padding:1rem;"><h3>Archive</h3><p class="muted">Institutional memory heredity.</p></article>
         </div>
-        <div class="grid side-grid">
-          <article class="panel" style="padding:1rem;"><h3>Orchestration Integrity</h3><ul class="orbit-list"><li>Role-scoped authority</li><li>Proof before transfer</li><li>Dispute-aware routing</li><li>Protocol memory discipline</li></ul></article>
-          <article class="panel" style="padding:1rem;"><h3>System Principles</h3><ul class="orbit-list"><li>No value without evidence</li><li>No autonomy without authority</li><li>No settlement without validation</li><li>No compounding without archive</li></ul></article>
+        <div class="grid side-grid" style="margin-top:1rem;">
+          <article class="panel" style="padding:1rem;"><h3>Orchestration Integrity</h3><p class="muted">No value transfer without traceable evidence, validator review, and authority-scoped settlement.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>System Principles</h3><p class="muted">Proof-first operations, explicit governance boundaries, recursive capability growth, and archived institutional memory.</p></article>
         </div>
-        <p class="rail">Multi-Agent Coordination · On-Chain Execution · Proof-Bound Workflows · Validated Outcomes · Economic Finality · Recursive Improvement</p>
+        <p class="rail" style="margin-top:1rem;">Multi-Agent Coordination · On-Chain Execution · Proof-Bound Workflows · Validated Outcomes · Economic Finality · Recursive Improvement</p>
       </div>
     </section>
 
-    <section class="section" id="stack">
+    <section class="section">
       <div class="container">
         <h2>Full Stack Economic Organism</h2>
         <div class="grid cards" style="margin-top:1rem;">
@@ -254,49 +233,55 @@
         <div class="grid cards" style="margin-top:1rem;">
           <article class="panel job-card">
             <p class="label">AGIJobManager</p>
-            <h3>Ethereum Mainnet Rail</h3>
+            <h3>Genesis labor rail</h3>
             <div class="link-stack">
               <a href="https://github.com/MontrealAI/AGIJobManager" target="_blank" rel="noopener">Repo</a>
-              <a href="https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code" target="_blank" rel="noopener">AGIJobManager Contract</a>
-              <a href="https://etherscan.io/address/0x06188E77C1C38d392b16d9D9fB24673363ce1da0#code" target="_blank" rel="noopener">ENSJobPages Contract</a>
-              <a href="https://montrealai.github.io/agijobmanagerv0.html" target="_blank" rel="noopener">Public Page</a>
+              <a href="https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code" target="_blank" rel="noopener">AGIJobManager</a>
+              <a href="https://etherscan.io/address/0x06188E77C1C38d392b16d9D9fB24673363ce1da0#code" target="_blank" rel="noopener">ENSJobPages</a>
+              <a href="https://montrealai.github.io/agijobmanagerv0.html" target="_blank" rel="noopener">Page</a>
             </div>
-            <div class="address-chip"><code>0xb3aaeb69b630f0299791679c063d68d6687481d1</code><button class="copy-btn" data-copy="0xb3aaeb69b630f0299791679c063d68d6687481d1" type="button">Copy</button></div>
+            <div class="address-chip"><code>0xb3aaeb69b630f0299791679c063d68d6687481d1</code><button class="copy-btn" data-copy="0xb3aaeb69b630f0299791679c063d68d6687481d1">Copy</button></div>
+            <div class="address-chip"><code>0x06188E77C1C38d392b16d9D9fB24673363ce1da0</code><button class="copy-btn" data-copy="0x06188E77C1C38d392b16d9D9fB24673363ce1da0">Copy</button></div>
           </article>
+
           <article class="panel job-card">
             <p class="label">AGIJobManager — EmployerBurn</p>
-            <h3>Authority-Burn Variant</h3>
+            <h3>Employer burn variant</h3>
             <div class="link-stack">
               <a href="https://github.com/MontrealAI/AGIJobManager-EmployerBurn" target="_blank" rel="noopener">Repo</a>
-              <a href="https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#readContract" target="_blank" rel="noopener">AGIJobManager Contract</a>
-              <a href="https://etherscan.io/address/0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5#code" target="_blank" rel="noopener">ENSJobPages Contract</a>
-              <a href="https://montrealai.github.io/agijobmanagerburnv1.html" target="_blank" rel="noopener">Public Page</a>
+              <a href="https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#readContract" target="_blank" rel="noopener">AGIJobManager</a>
+              <a href="https://etherscan.io/address/0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5#code" target="_blank" rel="noopener">ENSJobPages</a>
+              <a href="https://montrealai.github.io/agijobmanagerburnv1.html" target="_blank" rel="noopener">Page</a>
             </div>
-            <div class="address-chip"><code>0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2</code><button class="copy-btn" data-copy="0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2" type="button">Copy</button></div>
+            <div class="address-chip"><code>0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2</code><button class="copy-btn" data-copy="0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2">Copy</button></div>
+            <div class="address-chip"><code>0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5</code><button class="copy-btn" data-copy="0xFC1EE3B7DCD3B8643295CaC3150aA630c31190E5">Copy</button></div>
           </article>
+
           <article class="panel job-card">
             <p class="label">AGIJobManagerPrime</p>
-            <h3>Prime Discovery + Settlement Rail</h3>
+            <h3>Prime discovery and settlement rail</h3>
             <div class="link-stack">
               <a href="https://github.com/MontrealAI/AGIJobManagerPrime" target="_blank" rel="noopener">Repo</a>
               <a href="https://etherscan.io/address/0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29#code" target="_blank" rel="noopener">AGIJobDiscoveryPrime</a>
               <a href="https://etherscan.io/address/0xf8fc6572098ddcac4560e17ca4a683df30ea993e#code" target="_blank" rel="noopener">AGIJobManagerPrime</a>
-              <a href="https://etherscan.io/address/0x703011EF1C6E4277587eFe150e6cd74cA18F0069#code" target="_blank" rel="noopener">ENSJobPages Contract</a>
-              <a href="https://montrealai.github.io/agijobmanagerprimev2.html" target="_blank" rel="noopener">Public Page</a>
+              <a href="https://etherscan.io/address/0x703011EF1C6E4277587eFe150e6cd74cA18F0069#code" target="_blank" rel="noopener">ENSJobPages</a>
+              <a href="https://montrealai.github.io/agijobmanagerprimev2.html" target="_blank" rel="noopener">Page</a>
             </div>
-            <div class="address-chip"><code>0xf8fc6572098ddcac4560e17ca4a683df30ea993e</code><button class="copy-btn" data-copy="0xf8fc6572098ddcac4560e17ca4a683df30ea993e" type="button">Copy</button></div>
+            <div class="address-chip"><code>0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29</code><button class="copy-btn" data-copy="0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29">Copy</button></div>
+            <div class="address-chip"><code>0xf8fc6572098ddcac4560e17ca4a683df30ea993e</code><button class="copy-btn" data-copy="0xf8fc6572098ddcac4560e17ca4a683df30ea993e">Copy</button></div>
+            <div class="address-chip"><code>0x703011EF1C6E4277587eFe150e6cd74cA18F0069</code><button class="copy-btn" data-copy="0x703011EF1C6E4277587eFe150e6cd74cA18F0069">Copy</button></div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section" id="rails">
+    <section class="section">
       <div class="container">
         <h2>Sovereign Web3 Rails</h2>
         <div class="grid cards" style="margin-top:1rem;">
-          <article class="panel" style="padding:1rem;"><h3>AGIJobManager</h3><a href="https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code" target="_blank" rel="noopener">0xb3aaeb69b630f0299791679c063d68d6687481d1</a></article>
-          <article class="panel" style="padding:1rem;"><h3>AGIJobManagerPrime</h3><a href="https://etherscan.io/address/0xf8fc6572098ddcac4560e17ca4a683df30ea993e#code" target="_blank" rel="noopener">0xf8fc6572098ddcac4560e17ca4a683df30ea993e</a></article>
-          <article class="panel" style="padding:1rem;"><h3>EmployerBurn</h3><a href="https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#readContract" target="_blank" rel="noopener">0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2</a></article>
+          <article class="panel" style="padding:1rem;"><h3>AGIJobManager</h3><a href="https://etherscan.io/address/0xb3aaeb69b630f0299791679c063d68d6687481d1#code" target="_blank" rel="noopener">Contract rail</a></article>
+          <article class="panel" style="padding:1rem;"><h3>AGIJobManagerPrime</h3><a href="https://etherscan.io/address/0xf8fc6572098ddcac4560e17ca4a683df30ea993e#code" target="_blank" rel="noopener">Contract rail</a></article>
+          <article class="panel" style="padding:1rem;"><h3>EmployerBurn</h3><a href="https://etherscan.io/address/0xbf6699c1f24bebbfabb515583e88a055bf2f9ec2#readContract" target="_blank" rel="noopener">Contract rail</a></article>
           <article class="panel" style="padding:1rem;"><h3>AGIALPHA ERC‑20</h3><a href="https://etherscan.io/address/0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA" target="_blank" rel="noopener">0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA</a></article>
         </div>
       </div>
@@ -305,89 +290,74 @@
     <section class="section" id="proof">
       <div class="container">
         <h2>Proof‑First Ascension</h2>
-        <div class="grid cards" style="margin-top:1rem;">
-          <article class="panel" style="padding:1rem;"><h3>No value without evidence.</h3></article>
-          <article class="panel" style="padding:1rem;"><h3>No autonomy without authority.</h3></article>
-          <article class="panel" style="padding:1rem;"><h3>No settlement without validation.</h3></article>
-        </div>
-        <p class="equation">Job Spec → Artifact → Test → Hash → Attestation → Validation → Settlement → Archive</p>
+        <article class="panel" style="padding:1rem; margin-top:1rem;">
+          <p><strong>No value without evidence.</strong></p>
+          <p><strong>No autonomy without authority.</strong></p>
+          <p><strong>No settlement without validation.</strong></p>
+          <p class="equation" style="margin-top:.8rem;">Job Spec → Artifact → Test → Hash → Attestation → Validation → Settlement → Archive</p>
+        </article>
       </div>
     </section>
 
     <section class="section club" id="club">
       <div class="container">
+        <p class="eyebrow" style="color:#c9b6ff;">α‑AGI Club</p>
         <h2>α‑AGI Club — The Sovereign Order of Proof</h2>
-        <div class="grid" style="grid-template-columns:1.1fr .9fr; gap:1rem; margin-top:1rem;">
-          <article class="panel" style="padding:1rem;">
-            <p>The <strong class="gold">Validator Council of the Sovereign Machine</strong> — where proof becomes settlement, reputation becomes law, and protocol evolution is guarded by those entrusted to preserve integrity.</p>
-            <p>Agents may execute. Markets may route. Jobs may complete. But value does not move without validation.</p>
-            <p class="gold"><strong>Gold is structural finality, not decoration.</strong></p>
-            <div class="grid cards">
-              <article class="chip">Proof Chamber</article>
-              <article class="chip">Vault of Finality</article>
-              <article class="chip">Reputation Court</article>
-              <article class="chip">Quarantine Gate</article>
-              <article class="chip">Ascension Salon</article>
-            </div>
-            <div class="grid cards" style="margin-top:.7rem;">
-              <article class="chip">Validate Work</article>
-              <article class="chip">Govern Protocol</article>
-              <article class="chip">Protect Reputation</article>
-              <article class="chip">Shape the Future</article>
-            </div>
-          </article>
-          <article class="panel" style="padding:.8rem;"><img src="The_AGI_Club_Aesthetic_v2.png" alt="The AGI Club sovereign validation chamber" loading="lazy" /></article>
+        <p style="max-width:78ch; color:#ded2f6;">The Validator Council of the Sovereign Machine — where proof becomes settlement, reputation becomes law, and protocol evolution is guarded by those entrusted to preserve integrity. Agents may execute. Markets may route. Jobs may complete. But value does not move without validation.</p>
+        <article class="panel" style="padding:.8rem; margin-top:1rem;">
+          <img
+            src="The_AGI_Club_Aesthetic_v2.png"
+            data-fallbacks="The_AGI_Club_Aesthetic_v1.png,The_AGI_Club_Aesthetic_v0.png"
+            alt="The AGI Club sovereign validation chamber"
+            loading="lazy"
+          />
+        </article>
+        <div class="grid cards" style="margin-top:1rem;">
+          <article class="panel" style="padding:1rem;"><h3 class="gold">Proof Chamber</h3><p>Evidence review and adjudication.</p></article>
+          <article class="panel" style="padding:1rem;"><h3 class="gold">Vault of Finality</h3><p>Settlement custody discipline.</p></article>
+          <article class="panel" style="padding:1rem;"><h3 class="gold">Reputation Court</h3><p>Long-horizon trust law.</p></article>
+          <article class="panel" style="padding:1rem;"><h3 class="gold">Quarantine Gate</h3><p>Containment for uncertain artifacts.</p></article>
+          <article class="panel" style="padding:1rem;"><h3 class="gold">Ascension Salon</h3><p>Protocol evolution forum.</p></article>
         </div>
+        <p style="margin-top:1rem;"><span class="chip">Validate Work</span> <span class="chip">Govern Protocol</span> <span class="chip">Protect Reputation</span> <span class="chip">Shape the Future</span></p>
+        <p class="gold">Gold is structural finality, not decoration.</p>
       </div>
     </section>
 
-    <section class="section" id="factory">
+    <section class="section">
       <div class="container">
         <h2>Disciplined Factory for Verified Knowledge Work</h2>
         <div class="grid cards" style="margin-top:1rem;">
-          <article class="panel" style="padding:1rem;"><h3>Front Desk</h3><p class="muted">Intake mission scope and authority.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Foreman</h3><p class="muted">Break work into schedulable jobs.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Workers</h3><p class="muted">Execute prompts, tools, and pipelines.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Quality Control</h3><p class="muted">Validate artifacts and dispute edge cases.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Cash Office</h3><p class="muted">Settle validated outputs.</p></article>
-          <article class="panel" style="padding:1rem;"><h3>Training Department</h3><p class="muted">Archive recipes and improve next runs.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Front Desk</h3><p class="muted">Intake and mission framing.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Foreman</h3><p class="muted">Task decomposition and dispatch.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Workers</h3><p class="muted">Agent execution and artifact generation.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Quality Control</h3><p class="muted">Tests, hashes, and attestations.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Cash Office</h3><p class="muted">Validation and settlement handling.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Training Department</h3><p class="muted">Recipe updates and replay learning.</p></article>
         </div>
-        <p class="equation">Orders → Artifacts → Proof → Settlement → Better recipes → Faster next orders</p>
+        <p class="equation" style="margin-top:1rem;">Orders → Artifacts → Proof → Settlement → Better recipes → Faster next orders</p>
       </div>
     </section>
 
-    <section class="section" id="flywheel">
+    <section class="section">
       <div class="container">
         <h2>Ascension Flywheel</h2>
         <p class="equation">Mission → Job → Agent execution → Proof bundle → Validation → Settlement → Archive → Better recipe → Larger mission</p>
-        <div class="btns" style="margin-top:1rem;">
-          <span class="chip">Replayability</span><span class="chip">Pass rate</span><span class="chip">Oversight compression</span><span class="chip">Prompt/tool reuse</span><span class="chip">Dispute rate</span><span class="chip">Promotion velocity</span><span class="chip">Adjacent family transfer</span>
-        </div>
+        <p style="margin-top:1rem;"><span class="chip">Replayability</span> <span class="chip">Pass rate</span> <span class="chip">Oversight compression</span> <span class="chip">Prompt/tool reuse</span> <span class="chip">Dispute rate</span> <span class="chip">Promotion velocity</span> <span class="chip">Adjacent family transfer</span></p>
       </div>
     </section>
 
     <section class="section namespace" id="namespace">
       <div class="container">
         <h2>AGI.Eth Namespace Grammar</h2>
+        <code>&lt;entity&gt;.( &lt;env&gt;. )&lt;role&gt;.agi.eth</code>
+        <p class="muted">role ∈ {club, agent, node}. env optional: alpha, x, …</p>
         <div class="grid cards" style="margin-top:1rem;">
-          <article class="panel" style="padding:1rem;">
-            <code>&lt;entity&gt;.( &lt;env&gt;. )&lt;role&gt;.agi.eth</code>
-            <p class="muted">role ∈ {club, agent, node}; env optional: alpha, x, …</p>
-            <code>alice.club.agi.eth | alice.alpha.club.agi.eth</code>
-            <code>helper.agent.agi.eth | helper.alpha.agent.agi.eth</code>
-            <code>gpu01.node.agi.eth | gpu01.alpha.node.agi.eth</code>
-          </article>
-          <article class="panel" style="padding:1rem;">
-            <code>&lt;sovereign&gt;.agi.eth</code>
-            <code>env.agi.eth → alpha.agi.eth | x.agi.eth</code>
-            <code>&lt;business&gt;.env.agi.eth → ops.alpha.agi.eth</code>
-            <p class="muted">Scope rule: entity.env.role.agi.eth is recognized and developed only within env.agi.eth.</p>
-          </article>
-          <article class="panel" style="padding:1rem;">
-            <code>Official package: env.agi.eth · env.agent.agi.eth · env.node.agi.eth · env.club.agi.eth</code>
-            <code>Aliases: agent.env.agi.eth · node.env.agi.eth · club.env.agi.eth</code>
-            <p class="muted">Aliases are env-local and not official by default unless whitelisted.</p>
-          </article>
+          <article class="panel" style="padding:1rem;"><h3>Examples</h3><p>alice.club.agi.eth | alice.alpha.club.agi.eth<br />helper.agent.agi.eth | helper.alpha.agent.agi.eth<br />gpu01.node.agi.eth | gpu01.alpha.node.agi.eth</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Sovereigns</h3><p>&lt;sovereign&gt;.agi.eth<br />env.agi.eth (alpha.agi.eth, x.agi.eth)<br />&lt;business&gt;.env.agi.eth (ops.alpha.agi.eth)</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Scope Rule</h3><p>entity.env.role.agi.eth is recognized and developed only within env.agi.eth.</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Official Package</h3><p>env.agi.eth · env.agent.agi.eth · env.node.agi.eth · env.club.agi.eth</p></article>
+          <article class="panel" style="padding:1rem;"><h3>Aliases</h3><p>agent.env.agi.eth · node.env.agi.eth · club.env.agi.eth<br />Aliases are env-local and not official by default unless whitelisted.</p></article>
         </div>
       </div>
     </section>
@@ -395,8 +365,8 @@
     <section class="section" id="prior-art">
       <div class="container">
         <h2>Multi‑Agent AI DAO — Prior Art, 2017</h2>
-        <p class="muted">Prior art dimensions: AI autonomy, blockchain coordination, multi-agent governance, tokenized resource management, decentralized agent collaboration, and on-chain incentives/governance.</p>
-        <a class="btn primary" href="https://www.quebecartificialintelligence.com/priorart" target="_blank" rel="noopener">Read Prior Art</a>
+        <p class="muted">AI autonomy, blockchain coordination, multi-agent governance, tokenized resource management, decentralized agent collaboration, and on-chain incentives/governance were articulated as prior art foundations.</p>
+        <a class="btn primary" href="https://www.quebecartificialintelligence.com/priorart" target="_blank" rel="noopener">Open Prior Art</a>
       </div>
     </section>
 
@@ -412,11 +382,11 @@
           <article class="panel" style="padding:1rem;"><h3>AGIJobsv0</h3><a href="https://github.com/MontrealAI/AGIJobsv0" target="_blank" rel="noopener">Repository</a></article>
           <article class="panel" style="padding:1rem;"><h3>AGI-Alpha-Node-v0</h3><a href="https://github.com/MontrealAI/AGI-Alpha-Node-v0" target="_blank" rel="noopener">Repository</a></article>
         </div>
-        <p style="margin-top:.8rem;"><a href="https://github.com/MontrealAI" target="_blank" rel="noopener">Organization: github.com/MontrealAI</a></p>
+        <p style="margin-top:1rem;"><a class="btn" href="https://github.com/MontrealAI" target="_blank" rel="noopener">Org: github.com/MontrealAI</a></p>
       </div>
     </section>
 
-    <section class="section" id="surfaces">
+    <section class="section">
       <div class="container">
         <h2>One System, Three Surfaces</h2>
         <div class="grid cards" style="margin-top:1rem;">
@@ -424,16 +394,14 @@
           <article class="panel" style="padding:1rem;"><h3>Work OS</h3><p class="muted">AGI Jobs / AGIJobsv0 / AGIJobManager</p></article>
           <article class="panel" style="padding:1rem;"><h3>Runtime</h3><p class="muted">AGI‑Alpha‑Node‑v0</p></article>
         </div>
-        <p class="equation">Proof-sync: hashes + signatures + attestations bind cognition → execution → settlement.</p>
+        <p class="rail" style="margin-top:1rem;">Proof-sync: hashes + signatures + attestations bind cognition → execution → settlement.</p>
       </div>
     </section>
 
     <section class="section" id="doctrine">
       <div class="container">
         <h2>Strategic Doctrine Library</h2>
-        <div class="btns" style="margin-top:1rem;">
-          <span class="chip">AI Sovereignty</span><span class="chip">Agent-Native Economy</span><span class="chip">AGI Jobs / On-Chain Labor</span><span class="chip">Recursive Self-Improvement</span><span class="chip">Governance &amp; Public Memory</span><span class="chip">DiscoveryPrime / Invention Markets</span><span class="chip">Strategic Manifestos</span>
-        </div>
+        <p class="muted">Featured paths: AI Sovereignty; Agent-Native Economy; AGI Jobs / On-Chain Labor; Recursive Self-Improvement; Governance &amp; Public Memory; DiscoveryPrime / Invention Markets; Strategic Manifestos.</p>
         <div class="article-list">
           <a href="https://www.linkedin.com/pulse/ai-sovereignty-empowering-nations-agi-driven-labor-engine-boucher-afhme/" target="_blank" rel="noopener">AI Sovereignty: Empowering Nations with an AGI-Driven Labor Engine</a>
           <a href="https://www.linkedin.com/pulse/agentnative-sales-doctrine-vincent-boucher-f4sje/" target="_blank" rel="noopener">The Agent‑Native Sales Doctrine</a>
@@ -483,50 +451,34 @@
     <section class="section" id="resources">
       <div class="container">
         <h2>Strategic Reference Library</h2>
-        <div class="ref-list">
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_v0.pdf" target="_blank" rel="noopener">AGI Alpha RSI Sovereign</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_Strategy_Brief_v0.pdf" target="_blank" rel="noopener">Sovereign Strategy Brief</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_Current_Status_Snapshot_Presentation_v1.pdf" target="_blank" rel="noopener">Sovereign Executive Brief</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Executive_Summary_v0.pdf" target="_blank" rel="noopener">RSI Executive Summary</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Executive_Overview_v0.pdf" target="_blank" rel="noopener">RSI Executive Overview</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Eth_Institutional_v0.pdf" target="_blank" rel="noopener">AGI.Eth Institutional Brief</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf" target="_blank" rel="noopener">MONTREAL.AI × ERC‑8004</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGI_Eth_Unified_v0.pdf" target="_blank" rel="noopener">AGI.Eth Unified</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf" target="_blank" rel="noopener">ENS Routing as a Market Mechanism</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf" target="_blank" rel="noopener">Root‑Name Governance / AGI.eth</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGI_Eth_ANCS_Season-One_v0.pdf" target="_blank" rel="noopener">ANCS — Alpha Node Compute Standard</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1.pdf" target="_blank" rel="noopener">Institutional Master Presentation</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_asi_world_model/presentation/alpha_asi_world_model_v0.pdf" target="_blank" rel="noopener">α‑ASI World‑Model Demo</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/solving_agi_governance/presentation/Solving_Alpha-AGI_Governance_v0.pdf" target="_blank" rel="noopener">Solving α‑AGI Governance</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_agi_business_3_v1/presentation/OMEGA_GRADE_Business_3_v0.pdf" target="_blank" rel="noopener">Large‑Scale α‑AGI Business 3</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_agi_insight_v1/presentation/alpha_agi_insight_v1.pdf" target="_blank" rel="noopener">α‑AGI Insight v1</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/presentation/AGI-Alpha-Agent-v0_Demos_Master_v0.pdf" target="_blank" rel="noopener">Alpha‑Factory v1 Demos</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/META-AGENTIC_alpha-AGI-Alpha-Agent-v0.pdf" target="_blank" rel="noopener">Protocol Engineers Brief</a>
-          <a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/Verified_Autonomy_Control_Plane_v0.pdf" target="_blank" rel="noopener">Verified Autonomy Control Plane</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGIJobsv0.pdf" target="_blank" rel="noopener">AGIJobsv0</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGIJobsv0_Ministerial_Brief_v0.pdf" target="_blank" rel="noopener">AGIJobsv0 Ministerial Brief</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/Meta-Agentic-Program-Synthesis-v0/presentation/MetaAgenticProgramSynthesisv0.pdf" target="_blank" rel="noopener">Meta‑Agentic Program Synthesis v0</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/sovereign-constellation/presentation/Sovereign_Constellation_v0.pdf" target="_blank" rel="noopener">Sovereign Constellation</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/Planetary-Orchestrator-Fabric-v0/presentation/Planetary_Orchestrator_Fabric_v0.pdf" target="_blank" rel="noopener">Planetary Orchestrator Fabric</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/asi-takeoff/presentation/ASI_Take-Off_v0.pdf" target="_blank" rel="noopener">ASI Take‑Off</a>
-          <a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/presentation/AGI_Jobs_v0_Demos_v0.pdf" target="_blank" rel="noopener">AGI Jobs v0 Demos</a>
+        <div class="grid cards">
+          <article class="panel" style="padding:1rem;"><h3>Sovereign Briefs</h3><div class="ref-list"><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_v0.pdf" target="_blank" rel="noopener">AGI Alpha RSI Sovereign</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_Strategy_Brief_v0.pdf" target="_blank" rel="noopener">Sovereign Strategy Brief</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Sovereign_Current_Status_Snapshot_Presentation_v1.pdf" target="_blank" rel="noopener">Sovereign Executive Brief</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Executive_Summary_v0.pdf" target="_blank" rel="noopener">RSI Executive Summary</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Alpha_RSI_Executive_Overview_v0.pdf" target="_blank" rel="noopener">RSI Executive Overview</a></div></article>
+          <article class="panel" style="padding:1rem;"><h3>AGI.Eth &amp; Institutional</h3><div class="ref-list"><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/AGI_Eth_Institutional_v0.pdf" target="_blank" rel="noopener">AGI.Eth Institutional Brief</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/MONTREALAI_x_ERC8004_v0.pdf" target="_blank" rel="noopener">MONTREAL.AI × ERC‑8004</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGI_Eth_Unified_v0.pdf" target="_blank" rel="noopener">AGI.Eth Unified</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/ENS_Routing_as_a_Market_Mechanism_v0.pdf" target="_blank" rel="noopener">ENS Routing as a Market Mechanism</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/RootNameGovernance_AGIeth_v0.pdf" target="_blank" rel="noopener">Root‑Name Governance / AGI.eth</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGI_Eth_ANCS_Season-One_v0.pdf" target="_blank" rel="noopener">ANCS — Alpha Node Compute Standard</a></div></article>
+          <article class="panel" style="padding:1rem;"><h3>Master &amp; Control Plane</h3><div class="ref-list"><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/META-AGENTIC_Alpha-AGI_MASTER_PRESENTATION_v1.pdf" target="_blank" rel="noopener">Institutional Master Presentation</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/META-AGENTIC_alpha-AGI-Alpha-Agent-v0.pdf" target="_blank" rel="noopener">Protocol Engineers Brief</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/docs/presentation/Verified_Autonomy_Control_Plane_v0.pdf" target="_blank" rel="noopener">Verified Autonomy Control Plane</a></div></article>
+          <article class="panel" style="padding:1rem;"><h3>α‑AGI / α‑ASI Demos</h3><div class="ref-list"><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_asi_world_model/presentation/alpha_asi_world_model_v0.pdf" target="_blank" rel="noopener">α‑ASI World‑Model Demo</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/solving_agi_governance/presentation/Solving_Alpha-AGI_Governance_v0.pdf" target="_blank" rel="noopener">Solving α‑AGI Governance</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_agi_business_3_v1/presentation/OMEGA_GRADE_Business_3_v0.pdf" target="_blank" rel="noopener">Large‑Scale α‑AGI Business 3</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/alpha_agi_insight_v1/presentation/alpha_agi_insight_v1.pdf" target="_blank" rel="noopener">α‑AGI Insight v1</a><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0/blob/main/alpha_factory_v1/demos/presentation/AGI-Alpha-Agent-v0_Demos_Master_v0.pdf" target="_blank" rel="noopener">Alpha‑Factory v1 Demos</a></div></article>
+          <article class="panel" style="padding:1rem;"><h3>AGI Jobs Surface</h3><div class="ref-list"><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGIJobsv0.pdf" target="_blank" rel="noopener">AGIJobsv0</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/docs/presentation/AGIJobsv0_Ministerial_Brief_v0.pdf" target="_blank" rel="noopener">AGIJobsv0 Ministerial Brief</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/Meta-Agentic-Program-Synthesis-v0/presentation/MetaAgenticProgramSynthesisv0.pdf" target="_blank" rel="noopener">Meta‑Agentic Program Synthesis v0</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/sovereign-constellation/presentation/Sovereign_Constellation_v0.pdf" target="_blank" rel="noopener">Sovereign Constellation</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/Planetary-Orchestrator-Fabric-v0/presentation/Planetary_Orchestrator_Fabric_v0.pdf" target="_blank" rel="noopener">Planetary Orchestrator Fabric</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/asi-takeoff/presentation/ASI_Take-Off_v0.pdf" target="_blank" rel="noopener">ASI Take‑Off</a><a href="https://github.com/MontrealAI/AGIJobsv0/blob/main/demo/presentation/AGI_Jobs_v0_Demos_v0.pdf" target="_blank" rel="noopener">AGI Jobs v0 Demos</a></div></article>
         </div>
       </div>
     </section>
 
-    <section class="section" id="status">
+    <section class="section">
       <div class="container">
         <h2>Protocol Status</h2>
-        <div class="grid cards" style="margin-top:1rem;">
-          <article class="panel" style="padding:1rem;"><p>Active build program with public repositories and public contracts.</p></article>
-          <article class="panel" style="padding:1rem;"><p>Experimental smart-contract and agent infrastructure under active construction.</p></article>
-          <article class="panel" style="padding:1rem;"><p>Not audited production safety. Not unrestricted autonomy. Not completed global autonomous deployment.</p></article>
-          <article class="panel" style="padding:1rem;"><p>Not financial advice.</p></article>
-        </div>
+        <article class="panel" style="padding:1rem;">
+          <ul class="layer-list">
+            <li>Active build program.</li>
+            <li>Public repositories and contracts are available.</li>
+            <li>Experimental smart-contract and agent infrastructure.</li>
+            <li>Not audited production safety.</li>
+            <li>Not unrestricted autonomy.</li>
+            <li>Not completed global autonomous deployment.</li>
+            <li>Not financial advice.</li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <section class="section" id="banner">
+    <section class="section">
       <div class="container panel" style="padding:1.2rem;">
         <h2>From Work to Proof. From Proof to Settlement. From Settlement to Ascension.</h2>
         <p class="muted">The next economy is not only agentic. It is evidentiary. Work that cannot be proven cannot compound. Work that can be proven becomes infrastructure.</p>
@@ -542,51 +494,71 @@
   <footer class="section">
     <div class="container">
       <div class="footer-links">
-        <a href="https://montreal.ai" target="_blank" rel="noopener">MONTREAL.AI</a>
-        <a href="https://www.quebecartificialintelligence.com" target="_blank" rel="noopener">QUEBEC.AI</a>
+        <a href="https://montreal.ai/" target="_blank" rel="noopener">MONTREAL.AI</a>
+        <a href="https://www.quebecartificialintelligence.com/" target="_blank" rel="noopener">QUEBEC.AI</a>
         <a href="https://github.com/MontrealAI" target="_blank" rel="noopener">GitHub</a>
         <a href="https://www.linkedin.com/in/montrealai/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://www.linkedin.com/newsletters/agi-alpha-7287448769878624256/" target="_blank" rel="noopener">LinkedIn Featured</a>
+        <a href="https://www.linkedin.com/in/montrealai/details/featured/" target="_blank" rel="noopener">LinkedIn Featured</a>
         <a href="https://x.com/Montreal_AI" target="_blank" rel="noopener">X / MONTREAL.AI</a>
-        <a href="https://x.com/AGI_Alpha_Agent" target="_blank" rel="noopener">X / AGI Alpha Agent</a>
-        <a href="https://discord.gg/JUqfM4B4W4" target="_blank" rel="noopener">Discord</a>
+        <a href="https://x.com/agialphaagent" target="_blank" rel="noopener">X / AGI Alpha Agent</a>
+        <a href="https://discord.gg/6QjA8y4" target="_blank" rel="noopener">Discord</a>
         <a href="https://t.me/montreal_ai" target="_blank" rel="noopener">Telegram</a>
-        <a href="https://www.youtube.com/@MontrealAI" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.youtube.com/@montrealai" target="_blank" rel="noopener">YouTube</a>
         <a href="https://www.quebecartificialintelligence.com/priorart" target="_blank" rel="noopener">Prior Art</a>
         <a href="https://montrealai.github.io/agijobmanagerv0.html" target="_blank" rel="noopener">AGIJobManager Page</a>
         <a href="https://montrealai.github.io/agijobmanagerburnv1.html" target="_blank" rel="noopener">EmployerBurn Page</a>
-        <a href="https://montrealai.github.io/agijobmanagerprimev2.html" target="_blank" rel="noopener">AGIJobManagerPrime Page</a>
+        <a href="https://montrealai.github.io/agijobmanagerprimev2.html" target="_blank" rel="noopener">Prime Page</a>
       </div>
     </div>
   </footer>
 
   <script>
-    const navToggle = document.querySelector('.nav-toggle');
+    document.querySelectorAll('img[data-fallbacks]').forEach((img) => {
+      const queue = (img.getAttribute('data-fallbacks') || '')
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      const advanceFallback = () => {
+        const next = queue.shift();
+        if (next) img.src = next;
+      };
+
+      img.addEventListener('error', advanceFallback);
+
+      // Catch images that already failed before this footer script executed.
+      if (img.complete && img.naturalWidth === 0) {
+        advanceFallback();
+      }
+    });
+
+    const navBtn = document.querySelector('.nav-toggle');
     const nav = document.getElementById('main-nav');
-    if (navToggle && nav) {
-      navToggle.addEventListener('click', () => {
+    if (navBtn && nav) {
+      navBtn.addEventListener('click', () => {
         const open = nav.classList.toggle('open');
-        navToggle.setAttribute('aria-expanded', String(open));
+        navBtn.setAttribute('aria-expanded', String(open));
       });
+
       nav.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
           nav.classList.remove('open');
-          navToggle.setAttribute('aria-expanded', 'false');
+          navBtn.setAttribute('aria-expanded', 'false');
         });
       });
     }
 
-    document.querySelectorAll('.copy-btn').forEach((button) => {
-      button.addEventListener('click', async () => {
-        const value = button.getAttribute('data-copy') || '';
+    document.querySelectorAll('.copy-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const value = btn.getAttribute('data-copy') || '';
         try {
           await navigator.clipboard.writeText(value);
-          const previous = button.textContent;
-          button.textContent = 'Copied';
-          setTimeout(() => { button.textContent = previous || 'Copy'; }, 1200);
+          const prev = btn.textContent;
+          btn.textContent = 'Copied';
+          setTimeout(() => { btn.textContent = prev; }, 1000);
         } catch (_) {
-          button.textContent = 'Failed';
-          setTimeout(() => { button.textContent = 'Copy'; }, 1200);
+          btn.textContent = 'Copy failed';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 1000);
         }
       });
     });
