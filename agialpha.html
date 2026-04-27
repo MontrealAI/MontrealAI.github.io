@@ -319,6 +319,17 @@
     }
     .footer a { color: #2d3764; text-decoration: none; }
     .footer a:hover { text-decoration: underline; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
     @media (max-width: 1160px) {
       .nav-wrap { grid-template-columns: auto auto; }
@@ -744,6 +755,7 @@
       <a href="https://montrealai.github.io/agijobmanagerprimev2.html" target="_blank" rel="noopener noreferrer">https://montrealai.github.io/agijobmanagerprimev2.html</a>
     </div>
   </footer>
+  <div id="copyStatus" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
   <script>
     (function () {
@@ -758,16 +770,19 @@
 
       document.querySelectorAll('.copy-btn').forEach(function (btn) {
         btn.addEventListener('click', async function () {
+          const copyStatus = document.getElementById('copyStatus');
           const val = btn.getAttribute('data-copy');
           if (!val) return;
+          const base = btn.textContent || 'Copy';
           try {
             await navigator.clipboard.writeText(val);
-            const old = btn.textContent;
             btn.textContent = 'Copied';
-            setTimeout(function () { btn.textContent = old; }, 1100);
+            if (copyStatus) { copyStatus.textContent = 'Address copied to clipboard.'; }
+            setTimeout(function () { btn.textContent = base; }, 1100);
           } catch (_) {
             btn.textContent = 'Copy failed';
-            setTimeout(function () { btn.textContent = 'Copy'; }, 1100);
+            if (copyStatus) { copyStatus.textContent = 'Copy failed. Clipboard permission may be unavailable.'; }
+            setTimeout(function () { btn.textContent = base; }, 1400);
           }
         });
       });
