@@ -653,15 +653,20 @@
       }
 
       document.querySelectorAll('.copy-btn').forEach(function (btn) {
+        const baseLabel = btn.textContent;
+        btn.setAttribute('data-base-label', baseLabel);
+
         btn.addEventListener('click', async function () {
           const value = btn.getAttribute('data-copy') || '';
+          const original = btn.getAttribute('data-base-label') || 'Copy';
+
           try {
             await navigator.clipboard.writeText(value);
-            const old = btn.textContent;
             btn.textContent = 'Copied';
-            setTimeout(function () { btn.textContent = old; }, 1100);
+            setTimeout(function () { btn.textContent = original; }, 1100);
           } catch (e) {
             btn.textContent = 'Copy failed';
+            setTimeout(function () { btn.textContent = original; }, 1300);
           }
         });
       });
