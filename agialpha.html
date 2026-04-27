@@ -769,11 +769,13 @@
       }
 
       document.querySelectorAll('.copy-btn').forEach(function (btn) {
+        const originalLabel = btn.textContent ? btn.textContent.trim() : 'Copy';
+        btn.setAttribute('data-original-label', originalLabel);
         btn.addEventListener('click', async function () {
           const copyStatus = document.getElementById('copyStatus');
           const val = btn.getAttribute('data-copy');
           if (!val) return;
-          const base = btn.textContent || 'Copy';
+          const base = btn.getAttribute('data-original-label') || 'Copy';
           try {
             await navigator.clipboard.writeText(val);
             btn.textContent = 'Copied';
