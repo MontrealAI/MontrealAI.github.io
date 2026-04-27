@@ -115,6 +115,17 @@
       padding: .55rem .8rem;
     }
     .skip-link:focus { left: .65rem; }
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
     a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; }
 
     header {
@@ -273,6 +284,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div id="copyStatus" class="sr-only" aria-live="polite" aria-atomic="true"></div>
   <header>
     <div class="container nav-wrap">
       <a class="brand" href="#ascension" aria-label="AGI Alpha">
@@ -652,6 +664,7 @@
         });
       }
 
+      const copyStatus = document.getElementById('copyStatus');
       document.querySelectorAll('.copy-btn').forEach(function (btn) {
         btn.addEventListener('click', async function () {
           const value = btn.getAttribute('data-copy') || '';
@@ -660,9 +673,11 @@
           try {
             await navigator.clipboard.writeText(value);
             btn.textContent = 'Copied';
+            if (copyStatus) copyStatus.textContent = 'Address copied to clipboard.';
             setTimeout(function () { btn.textContent = base; }, 1100);
           } catch (e) {
             btn.textContent = 'Copy failed';
+            if (copyStatus) copyStatus.textContent = 'Copy failed. Clipboard permission may be unavailable.';
             setTimeout(function () { btn.textContent = base; }, 1400);
           }
         });
