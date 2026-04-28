@@ -499,7 +499,7 @@ by default unless whitelisted.</pre></article>
         <h2>Strategic Reference Library</h2>
         <div class="grid cards">
           <article class="panel"><h3>AGI Alpha RSI</h3><p><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0" target="_blank" rel="noopener noreferrer">AGI-Alpha-Agent-v0 repository</a></p></article>
-          <article class="panel"><h3>AGI.Eth</h3><p><a href="https://github.com/MontrealAI/AGIJobsv0" target="_blank" rel="noopener noreferrer">AGIJobsv0 repository</a></p></article>
+          <article class="panel"><h3>AGI.Eth</h3><p><a href="https://app.ens.domains/agi.eth" target="_blank" rel="noopener noreferrer">agi.eth namespace root</a></p></article>
           <article class="panel"><h3>AGI Jobs</h3><p><a href="https://github.com/MontrealAI/AGIJobManager" target="_blank" rel="noopener noreferrer">AGIJobManager repository</a></p></article>
           <article class="panel"><h3>Alpha Factory</h3><p><a href="https://github.com/MontrealAI/AGIJobManagerPrime" target="_blank" rel="noopener noreferrer">AGIJobManagerPrime repository</a></p></article>
           <article class="panel"><h3>Meta-Agentic Program Synthesis</h3><p><a href="https://github.com/MontrealAI/AGI-Alpha-Agent-v0" target="_blank" rel="noopener noreferrer">Program synthesis surface</a></p></article>
@@ -574,6 +574,7 @@ by default unless whitelisted.</pre></article>
       document.querySelectorAll('.copy-btn').forEach(function (btn) {
         btn.addEventListener('click', async function () {
           const text = btn.getAttribute('data-copy') || '';
+          const old = btn.textContent;
           try {
             if (navigator.clipboard && window.isSecureContext) {
               await navigator.clipboard.writeText(text);
@@ -589,11 +590,11 @@ by default unless whitelisted.</pre></article>
               helper.remove();
               if (!ok) throw new Error('fallback-copy-failed');
             }
-            const old = btn.textContent;
             btn.textContent = 'Copied';
             setTimeout(function () { btn.textContent = old; }, 1200);
           } catch (e) {
             btn.textContent = 'Copy failed';
+            setTimeout(function () { btn.textContent = old; }, 1200);
           }
         });
       });
