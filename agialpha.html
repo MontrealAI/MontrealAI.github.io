@@ -91,9 +91,9 @@
     footer{padding:2rem 0 2.6rem;background:#f2f0ff;border-top:1px solid var(--line)}
 
     @media (max-width:1080px){
-      .menu-btn{display:inline-flex}
-      .nav-stack{display:none;position:absolute;left:0;right:0;top:78px;background:#fff;border-bottom:1px solid var(--line);padding:.8rem 1rem;grid-template-columns:1fr}
-      .nav-stack.open{display:grid}
+      .js .menu-btn{display:inline-flex}
+      .js .nav-stack{display:none;position:absolute;left:0;right:0;top:78px;background:#fff;border-bottom:1px solid var(--line);padding:.8rem 1rem;grid-template-columns:1fr}
+      .js .nav-stack.open{display:grid}
       .nav-links{justify-content:flex-start}
       .hero,.split{grid-template-columns:1fr}
     }
@@ -415,9 +415,22 @@ Aliases are env-local and not official by default unless whitelisted.</pre></art
       document.querySelectorAll('.copy-btn').forEach((btn) => {
         btn.addEventListener('click', async () => {
           const text = btn.getAttribute('data-copy') || '';
+          const old = btn.textContent;
           try {
-            await navigator.clipboard.writeText(text);
-            const old = btn.textContent;
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(text);
+            } else {
+              const helper = document.createElement('textarea');
+              helper.value = text;
+              helper.style.position = 'fixed';
+              helper.style.opacity = '0';
+              document.body.appendChild(helper);
+              helper.focus();
+              helper.select();
+              const ok = document.execCommand('copy');
+              helper.remove();
+              if (!ok) throw new Error('fallback-copy-failed');
+            }
             btn.textContent = 'Copied';
             setTimeout(() => { btn.textContent = old; }, 1200);
           } catch (_) {
