@@ -576,17 +576,45 @@ default unless whitelisted.</pre></article>
       });
     });
 
+    function copyWithFallback(text) {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly', '');
+      area.style.position = 'fixed';
+      area.style.top = '-1000px';
+      area.style.left = '-1000px';
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      let ok = false;
+      try {
+        ok = document.execCommand('copy');
+      } catch (_) {
+        ok = false;
+      }
+      document.body.removeChild(area);
+      return ok;
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch (_) {
+          return copyWithFallback(text);
+        }
+      }
+      return copyWithFallback(text);
+    }
+
     document.querySelectorAll('.copy').forEach((button) => {
       button.addEventListener('click', async () => {
         const value = button.getAttribute('data-copy') || '';
-        try {
-          await navigator.clipboard.writeText(value);
-          const old = button.textContent;
-          button.textContent = 'Copied';
-          setTimeout(() => { button.textContent = old; }, 900);
-        } catch (_) {
-          button.textContent = 'Copy failed';
-        }
+        const ok = await copyText(value);
+        const old = button.textContent;
+        button.textContent = ok ? 'Copied' : 'Copy failed';
+        setTimeout(() => { button.textContent = old; }, 900);
       });
     });
   </script>
