@@ -71,7 +71,15 @@
     .club .gold{color:#e2c994}
     .code-card{padding:.9rem;border:1px solid var(--line);border-radius:14px;background:#fff;white-space:normal;overflow-wrap:anywhere;word-break:break-word}
     footer{padding:2.3rem 0;background:#f9f8ff;border-top:1px solid var(--line)}
-    @media (max-width:1100px){.hero{grid-template-columns:1fr}.nav-wrap{grid-template-columns:auto auto}.menu-btn{display:inline-flex}.nav-stack{display:none;position:absolute;top:78px;left:0;right:0;background:#fff;border-bottom:1px solid var(--line);padding:.8rem;grid-template-columns:1fr}.nav-stack.open{display:grid}.nav-links{justify-content:flex-start}}
+    @media (max-width:1100px){
+      .hero{grid-template-columns:1fr}
+      .nav-wrap{grid-template-columns:auto auto}
+      .js .menu-btn{display:inline-flex}
+      .js .nav-stack{display:none;position:absolute;top:78px;left:0;right:0;background:#fff;border-bottom:1px solid var(--line);padding:.8rem;grid-template-columns:1fr}
+      .js .nav-stack.open{display:grid}
+      .nav-links{justify-content:flex-start}
+      .no-js .nav-stack{display:grid;position:static;padding:0;border:0;background:transparent}
+    }
   </style>
 </head>
 <body>
@@ -326,11 +334,30 @@
     menuBtn.addEventListener('click',()=>{const open=navStack.classList.toggle('open');menuBtn.setAttribute('aria-expanded',String(open));});
     navStack.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(window.innerWidth<=1100){navStack.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');}}));
   }
+  const copyText=async(value)=>{
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(value);
+      return true;
+    }
+    const area=document.createElement('textarea');
+    area.value=value;
+    area.setAttribute('readonly','');
+    area.style.position='fixed';
+    area.style.opacity='0';
+    document.body.appendChild(area);
+    area.focus();
+    area.select();
+    let ok=false;
+    try{ok=document.execCommand('copy');}catch(_e){ok=false;}
+    document.body.removeChild(area);
+    if(!ok){throw new Error('copy failed');}
+    return true;
+  };
   document.querySelectorAll('.copy-btn').forEach(btn=>{
     btn.addEventListener('click',async()=>{
       const value=btn.getAttribute('data-copy');
       if(!value) return;
-      try{await navigator.clipboard.writeText(value);const label=btn.textContent;btn.textContent='Copied';setTimeout(()=>btn.textContent=label||'Copy',1200);}catch(_e){btn.textContent='Copy failed';setTimeout(()=>btn.textContent='Copy',1200);}
+      try{await copyText(value);const label=btn.textContent;btn.textContent='Copied';setTimeout(()=>btn.textContent=label||'Copy',1200);}catch(_e){btn.textContent='Copy failed';setTimeout(()=>btn.textContent='Copy',1200);}
     });
   });
 </script>
