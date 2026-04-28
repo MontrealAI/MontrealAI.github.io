@@ -79,6 +79,9 @@
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.86rem; background:#f4f1ff; border-radius:8px; padding:.18rem .38rem; }
 
     .site-header {
+      position:sticky;
+      top:0;
+      z-index:100;
       border-bottom:1px solid var(--line);
       background:rgba(248,246,255,.92); backdrop-filter:blur(10px);
     }
@@ -568,7 +571,20 @@ by default unless whitelisted.</pre></article>
         btn.addEventListener('click', async function () {
           const text = btn.getAttribute('data-copy') || '';
           try {
-            await navigator.clipboard.writeText(text);
+            if (navigator.clipboard && window.isSecureContext) {
+              await navigator.clipboard.writeText(text);
+            } else {
+              const helper = document.createElement('textarea');
+              helper.value = text;
+              helper.style.position = 'fixed';
+              helper.style.opacity = '0';
+              document.body.appendChild(helper);
+              helper.focus();
+              helper.select();
+              const ok = document.execCommand('copy');
+              helper.remove();
+              if (!ok) throw new Error('fallback-copy-failed');
+            }
             const old = btn.textContent;
             btn.textContent = 'Copied';
             setTimeout(function () { btn.textContent = old; }, 1200);
