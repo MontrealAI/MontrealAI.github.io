@@ -570,6 +570,14 @@ Aliases are env-local and not official by default unless whitelisted.</pre></art
     applyMenuState();
     window.addEventListener('resize', applyMenuState);
     menuBtn.addEventListener('click',()=>{const open=navStack.classList.toggle('open');menuBtn.setAttribute('aria-expanded',String(open));});
+    navStack.querySelectorAll('a[href^="#"]').forEach(link=>{
+      link.addEventListener('click',()=>{
+        if(window.innerWidth<=1080){
+          navStack.classList.remove('open');
+          menuBtn.setAttribute('aria-expanded','false');
+        }
+      });
+    });
 
     document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{
       const value=btn.getAttribute('data-copy')||'';
