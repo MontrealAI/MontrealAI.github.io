@@ -1,44 +1,35 @@
 # ED‑001 — AI‑First Executive Intelligence Briefing
 
-## Public summary
+**Flagship Evidence Docket**
 
-This Evidence Docket shows how a successful enterprise process can become a governed AI‑First capability loop.
+## Executive summary
 
-The process selected is an executive intelligence briefing: a recurring, high-value enterprise workflow that helps leaders understand a strategic question, assess risk, and decide what to do next.
+This docket shows how QUEBEC.AI transforms a standard enterprise process — the executive intelligence briefing — into compounding AI‑First capability.
 
-## The transformation
+A normal briefing ends when the meeting ends. An AI‑First briefing leaves behind reusable intelligence: prompts, checklists, evaluation criteria, claim boundaries, reviewer notes, decision memory, and a capability package that improves the next briefing.
 
-```text
-Executive question
-→ AI‑First mission
-→ Agent constellation
-→ Bounded work
-→ Validator review
-→ Evidence-backed briefing
-→ Capability Archive
-→ Stronger next briefing
-```
+## The proof in one sentence
 
-## The plain-English point
+A successful enterprise process becomes more valuable when specialized AI agents perform bounded work, validators review the outputs, memory preserves what was learned, and governance turns the result into reusable capability.
 
-A normal briefing produces a document.
+## What changed
 
-An AI‑First briefing produces a document, a proof trail, reusable templates, a better signal map, stronger review criteria, and a capability archive that improves the next cycle.
+Before: a manual briefing process dependent on individual effort, scattered notes, and one-time deliverables.
 
-## Files in this docket
+After: a repeatable AI‑First briefing system with documented mission scope, agent roles, review gates, reusable assets, proof bundle, and next-cycle improvements.
 
-```text
-00_public_summary.md
-01_claims_matrix.md
-02_mission.md
-03_agent_constellation.md
-04_validation_and_governance.md
-05_proofbundle_summary.md
-06_capability_archive.md
-07_replay_and_review.md
-08_reviewer_honesty_box.md
-09_next_dockets.md
-proofbundle.example.json
-capability-archive.json
-evidence-status.json
-```
+## Public evidence map
+
+1. `01_claims_matrix.md` — the claims and their evidence level.
+2. `03_agent_constellation.md` — the agent roles used for the work.
+3. `04_validation_and_governance.md` — how outputs are reviewed.
+4. `05_proofbundle_summary.md` — public proof package summary.
+5. `06_capability_archive.md` — what becomes reusable.
+6. `07_replay_and_review.md` — how a reviewer can inspect the work.
+7. `08_reviewer_honesty_box.md` — what is proven and what remains to strengthen.
+
+## Why this matters
+
+The real transformation is not “using AI.” The transformation is becoming an AI‑First intelligence organization.
+
+Each cycle creates a stronger next cycle.

@@ -1,72 +1,30 @@
-# How to upload this Proof Room to GitHub
+# How to upload to GitHub — super simple
 
-This guide is for non-technical users.
+## Best repository name
 
-## Step 1 — Create the repository
+Use this exact name: `proof-room`
 
-1. Go to: https://github.com/QuebecAI/
+## Steps
+
+1. Go to https://github.com/QuebecAI/
 2. Click **New**.
-3. Use this repository name:
-
-```text
-proof-room
-```
-
-4. Set visibility to:
-
-```text
-Public
-```
-
+3. Repository name: `proof-room`
+4. Choose **Public**.
 5. Click **Create repository**.
+6. Click **uploading an existing file**.
+7. Open the downloaded ZIP on your computer.
+8. Drag the entire `proof-room` folder into GitHub.
+9. In “Commit changes”, type: `Launch QUEBEC.AI Proof Room`
+10. Click **Commit changes**.
 
-## Step 2 — Upload the files
+## Turn on the website
 
-1. Unzip the file named:
+1. In the repository, click **Settings**.
+2. Click **Pages** on the left.
+3. Under **Build and deployment**, choose **Deploy from a branch**.
+4. Branch: `main`; Folder: `/root`.
+5. Click **Save**.
 
-```text
-proof-room-world-publication-files.zip
-```
+## Public URL
 
-2. Open the new GitHub repository.
-3. Click **Add file**.
-4. Click **Upload files**.
-5. Drag all unzipped files and folders into GitHub.
-6. Click **Commit changes**.
-
-## Step 3 — Publish with GitHub Pages
-
-Go to:
-
-```text
-Settings → Pages
-```
-
-Then select:
-
-```text
-Source: Deploy from a branch
-Branch: main
-Folder: /root
-Save
-```
-
-Your public page should appear at:
-
-```text
-https://quebecai.github.io/proof-room/
-```
-
-## Step 4 — Add to QUEBEC.AI
-
-On the QUEBEC.AI website, add a navigation link:
-
-```text
-Proof
-```
-
-Link it to:
-
-```text
-https://quebecai.github.io/proof-room/
-```
+After a few minutes, your Proof Room should be live at: `https://QuebecAI.github.io/proof-room/`

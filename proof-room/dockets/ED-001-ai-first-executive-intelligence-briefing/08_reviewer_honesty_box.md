@@ -1,33 +1,21 @@
-# Reviewer honesty box
+# Reviewer Honesty Box
 
 ## What this docket proves
 
-This docket proves the public method and the evidence structure:
+It proves the public structure of a credible AI‑First transformation evidence layer: mission, agents, validation, proof bundle, capability archive, review notes, and next-cycle learning.
 
-```text
-Mission → Agents → Validation → Evidence → Capability Archive → Stronger next cycle
-```
+## What it does not yet prove
 
-## What makes future dockets stronger
+It does not yet prove external benchmark superiority, independent audit, or long-run measured compounding.
 
-Future dockets should add:
+## What would make it stronger
 
-```text
-Real run artifacts
-Baseline comparison
-Timing/cost estimates
-Independent reviewer notes
-Replay instructions
-Delayed outcome notes
-```
+- A completed real client-safe case study.
+- Before/after time, cost, and quality measurements.
+- External reviewer notes.
+- Multiple cycles showing reuse and improvement.
+- A public scorecard of validated capability growth.
 
-## What would be most convincing
+## Why this honesty strengthens QUEBEC.AI
 
-The strongest next public proof would be a live, public-safe QUEBEC.AI-owned transformation run, such as:
-
-```text
-AI‑First Press Command Center
-AI‑First Website Intelligence Workflow
-AI‑First Security and Governance Review
-AI‑First Enterprise Transformation Briefing
-```
+Sophisticated observers trust systems that can state exactly what is proven and what comes next.

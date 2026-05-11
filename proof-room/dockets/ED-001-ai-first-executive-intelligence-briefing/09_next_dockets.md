@@ -1,17 +1,9 @@
-# Recommended next dockets
+# Next Evidence Dockets
 
-## ED‑002 — AI‑First Press Command Center
+Recommended next public dockets:
 
-Show how a media/press workflow becomes agentic, validated, and reusable.
-
-## ED‑003 — AI‑First Website Intelligence Workflow
-
-Show how QUEBEC.AI uses agentic workflows to improve SEO, messaging, page structure, and publication readiness.
-
-## ED‑004 — AI‑First Security and Governance Review
-
-Show how security and governance work becomes proof-bearing and reusable.
-
-## ED‑005 — AI‑First Enterprise Transformation Case
-
-Show how a successful enterprise process becomes a compounding AI‑First operating loop.
+1. ED‑002 — AI‑First Sales Intelligence System
+2. ED‑003 — AI‑First Governance Review
+3. ED‑004 — AI‑First Security & Risk Briefing
+4. ED‑005 — AI‑First Market Expansion Map
+5. ED‑006 — AI‑First Board Decision System

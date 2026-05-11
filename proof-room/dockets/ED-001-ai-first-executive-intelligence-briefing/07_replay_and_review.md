@@ -1,35 +1,16 @@
-# Replay and review
+# Replay and Review
 
-## Reviewer path
+A public reviewer can inspect the docket in this order:
 
-A reviewer should be able to inspect this docket in this order:
+1. Read the README.
+2. Read the Claims Matrix.
+3. Read the Agent Constellation.
+4. Read Validation and Governance.
+5. Inspect the ProofBundle example.
+6. Read the Reviewer Honesty Box.
 
-```text
-1. Public summary
-2. Claims matrix
-3. Mission definition
-4. Agent constellation
-5. Validation and governance plan
-6. ProofBundle summary
-7. Capability Archive
-8. Reviewer honesty box
-```
+## Reviewer question
 
-## Future live replay path
+Would this make a successful enterprise process more repeatable, more governable, and more capable over time?
 
-For a live enterprise run, add:
-
-```text
-Actual input manifest
-Actual model/tool configuration
-Actual output artifacts
-Actual validator reports
-Actual cost ledger
-Actual safety ledger
-Actual replay instructions
-Actual reviewer notes
-```
-
-## Review question
-
-Did the process produce something useful, evidence-backed, reusable, and stronger for the next cycle?
+That is the core proof question.

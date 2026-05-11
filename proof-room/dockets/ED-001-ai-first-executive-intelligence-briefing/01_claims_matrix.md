@@ -1,9 +1,12 @@
-# Claims matrix
+# Claims Matrix
 
-| Claim | Public meaning | Evidence object | Status |
-|---|---|---|---|
-| A successful enterprise process can be redesigned around AI‑First work. | The process is broken into missions, roles, validations, and reusable capabilities. | Mission file, agent constellation, validation checklist. | Public demonstration |
-| Specialized agents can divide the work into useful roles. | Different agent roles focus on strategy, research, analysis, risk, validation, and editing. | Agent constellation. | Defined |
-| Validation improves trust. | Outputs are checked before being promoted. | Validator checklist, ProofBundle. | Defined |
-| Reusable capability compounds. | What works is stored and reused. | Capability Archive. | Defined |
-| The next cycle starts stronger. | Future work can reuse templates, signals, roles, and review criteria. | Capability Archive and next-cycle notes. | Demonstrated conceptually |
+| Claim | Evidence status | Public proof |
+|---|---|---|
+| QUEBEC.AI can turn a standard executive briefing into an AI‑First workflow. | Demonstrated as a docket pattern. | This docket defines the workflow, roles, validation, and reusable outputs. |
+| The process produces reusable capability, not just a one-time deliverable. | Demonstrated structurally. | Capability Archive documents templates, checklists, and review criteria. |
+| The next cycle can start stronger. | Plausible and testable. | Reuse metrics should be recorded after the next completed briefing cycle. |
+| The system is governed. | Demonstrated at process level. | Validation, claim boundaries, and reviewer honesty box are included. |
+
+## Strong public posture
+
+We do not ask the public to accept vague claims. We show the mission, the method, the controls, the artifacts, and the remaining burden of proof.

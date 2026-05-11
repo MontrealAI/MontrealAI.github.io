@@ -1,23 +1,16 @@
-# Agent constellation
+# Agent Constellation
 
-## Plain-language explanation
+A non-technical view of the work system.
 
-Instead of asking one AI system to do everything, the work is divided into specialized roles.
+| Role | Plain-language function |
+|---|---|
+| Mission Framer | Converts a leadership question into a bounded task. |
+| Research Scout | Finds relevant facts, context, risks, and opportunities. |
+| Strategy Synthesizer | Turns raw findings into executive options. |
+| Red-Team Reviewer | Looks for weak assumptions, missing risks, and overclaims. |
+| Governance Reviewer | Checks claim boundaries, safety, usefulness, and decision quality. |
+| Capability Archivist | Converts the work into reusable templates and playbooks. |
 
-Each role has a specific job.
+## Operating principle
 
-## Suggested roles
-
-| Role | Purpose | Output |
-|---|---|---|
-| Mission Architect | Turns the executive question into a clear mission. | Mission brief |
-| Research Agent | Finds relevant public information and context. | Source notes |
-| Signal Agent | Identifies market, technology, customer, and risk signals. | Signal map |
-| Strategic Analyst | Converts findings into options and implications. | Strategic analysis |
-| Governance Reviewer | Checks risk, evidence, accountability, and boundaries. | Governance review |
-| Validator | Reviews quality, clarity, usefulness, and evidence. | Validator report |
-| Executive Editor | Produces a concise, board-grade briefing. | Final briefing |
-
-## Why this matters
-
-The enterprise benefits because each future briefing can reuse the same role structure and improve it over time.
+Agents discover. Validators prove. Memory preserves. Governance controls. The enterprise compounds.

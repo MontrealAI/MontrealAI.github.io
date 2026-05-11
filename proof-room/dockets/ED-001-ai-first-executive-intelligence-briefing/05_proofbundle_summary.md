@@ -1,27 +1,17 @@
-# ProofBundle summary
+# ProofBundle Summary
 
-A ProofBundle is the reviewable packet that shows what work was requested, what happened, what was produced, how it was checked, and what became reusable.
+The ProofBundle is the public package that lets a reviewer understand what happened.
 
-## Minimum public ProofBundle contents
+## Includes
 
-```text
-Mission
-Agent roles
-Inputs
-Outputs
-Validation checklist
-Evidence notes
-Risk notes
-Capability Archive entry
-Replay notes
-```
+- Mission summary
+- Agent roles
+- Work products
+- Validation notes
+- Reusable assets
+- Claim boundaries
+- Next-cycle recommendations
 
-## Why this matters
+## Why it is convincing
 
-A ProofBundle makes AI work inspectable.
-
-Inspectable work is easier to trust.
-
-Trusted work is easier to reuse.
-
-Reusable work compounds.
+The ProofBundle changes the conversation from “trust us” to “inspect the work.”
