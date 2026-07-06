@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GoalOS V52 · Apotheosis Sovereign Intelligence Economy Console</title>
+<meta name="description" content="Browser-local GoalOS interface demonstrating a proof-gated sovereign intelligence economy: AGI Jobs as market, Alpha AGI Nodes as workers, META-AGENTIC alpha-AGI as cognition, and AGIALPHA incentives as simulated proof rail.">
+<style>
+:root{
+  --bg0:#030510; --bg1:#080b1f; --bg2:#111733; --ink:#f9fbff; --muted:#b9c4e7;
+  --line:rgba(255,255,255,.15); --card:rgba(255,255,255,.075); --card2:rgba(255,255,255,.115);
+  --gold:#ffd86b; --cyan:#55eaff; --mint:#7dffb2; --pink:#ff4fa4; --violet:#9164ff; --red:#ff6b7d; --orange:#ffae66;
+  --shadow:0 28px 90px rgba(0,0,0,.42); --r:26px;
+  --sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;color:var(--ink);font-family:var(--sans);background:#030510;overflow-x:hidden;min-height:100vh}
+#cosmos{position:fixed;inset:0;z-index:-4;background:
+  radial-gradient(circle at 16% 10%,rgba(255,79,164,.30),transparent 38%),
+  radial-gradient(circle at 86% 8%,rgba(85,234,255,.20),transparent 42%),
+  radial-gradient(circle at 60% 70%,rgba(145,100,255,.22),transparent 50%),
+  linear-gradient(135deg,#030510,#09102a 48%,#12081f);
+}
+#neural{position:fixed;inset:0;z-index:-3;width:100%;height:100%}
+body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-image:
+linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(circle at center,black,transparent 82%)}
+.orbital{position:fixed;inset:auto;left:50%;top:18%;width:54vw;height:54vw;min-width:520px;min-height:520px;border-radius:50%;z-index:-1;pointer-events:none;transform:translate(-50%,-20%);background:conic-gradient(from 130deg,rgba(255,216,107,.0),rgba(255,79,164,.25),rgba(85,234,255,.22),rgba(125,255,178,.14),rgba(255,216,107,.0));filter:blur(18px);opacity:.50;animation:spin 24s linear infinite}
+@keyframes spin{to{transform:translate(-50%,-20%) rotate(360deg)}}
+.wrap{width:min(1460px,94vw);margin:0 auto;padding:24px 0 86px}
+.topbar{position:sticky;top:14px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:28px;background:rgba(5,7,20,.78);backdrop-filter:blur(20px);box-shadow:0 14px 48px rgba(0,0,0,.28)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}.logo{width:44px;height:44px;border-radius:15px;background:radial-gradient(circle at 30% 24%,#fff 0 7%,#ffd86b 18%,#ff4fa4 43%,#9164ff 68%,#55eaff 100%);box-shadow:0 0 34px rgba(255,79,164,.35)}
+.brand b{display:block;letter-spacing:-.02em}.brand small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.nav a,.btn{border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.08);color:var(--ink);text-decoration:none;font-weight:900;padding:10px 14px;cursor:pointer;transition:.18s transform,.18s background,.18s border,.18s box-shadow}.nav a:hover,.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.14);border-color:rgba(85,234,255,.38)}
+.btn.primary{border:0;background:linear-gradient(110deg,var(--pink),var(--violet) 48%,var(--cyan));box-shadow:0 14px 36px rgba(85,234,255,.18)}.btn.gold{background:linear-gradient(110deg,#ffe799,#ffd86b);border:0;color:#160d1d}.btn.danger{border-color:rgba(255,107,125,.38);background:rgba(255,107,125,.13)}.btn.mint{border-color:rgba(125,255,178,.38);background:rgba(125,255,178,.13)}.btn.small{font-size:12px;padding:7px 10px}
+.hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr);gap:28px;align-items:center;min-height:720px;padding:58px 0 40px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,216,107,.40);background:rgba(255,216,107,.10);color:#ffe9a8;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:1000;letter-spacing:.13em;text-transform:uppercase}
+.hero h1{font-size:clamp(52px,8vw,122px);line-height:.86;letter-spacing:-.085em;margin:22px 0 20px}.grad{background:linear-gradient(100deg,#fff 0%,#ffe99e 24%,#ff77bc 47%,#9f8dff 68%,#55eaff 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(18px,2vw,28px);line-height:1.42;color:#dfe5ff;max-width:960px}.heroActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.panel{border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,rgba(255,255,255,.105),rgba(255,255,255,.052));box-shadow:var(--shadow);backdrop-filter:blur(22px);overflow:hidden}.panelIn{padding:24px;position:relative}.heroCard{position:relative;min-height:520px}.sigil{position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:conic-gradient(from 40deg,rgba(255,216,107,.0),rgba(255,216,107,.34),rgba(255,79,164,.28),rgba(85,234,255,.26),rgba(255,216,107,.0));filter:blur(.2px);opacity:.78;animation:spin2 18s linear infinite}.sigil:after{content:"";position:absolute;inset:74px;border:2px solid rgba(255,255,255,.12);border-radius:50%;box-shadow:0 0 70px rgba(255,79,164,.24) inset}.sigil2{position:absolute;left:-100px;bottom:-140px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(85,234,255,.28),transparent 68%);filter:blur(8px)}
+@keyframes spin2{to{transform:rotate(360deg)}}
+.arch{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px}.archCell{border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(0,0,0,.20);padding:16px;min-height:128px}.archCell strong{display:block;font-size:18px;color:#fff}.archCell span{display:block;color:var(--muted);line-height:1.45;margin-top:6px}.archCell b{color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin:18px 0 26px}.stat{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.065);padding:16px;min-height:96px}.stat span{display:block;color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:900}.stat b{display:block;font-size:22px;margin-top:8px;overflow-wrap:anywhere}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.section{scroll-margin-top:120px;margin:22px 0}.section h2{font-size:clamp(34px,4.5vw,72px);line-height:.92;letter-spacing:-.065em;margin:0 0 12px}.sub{color:var(--muted);line-height:1.6;font-size:16px;max-width:1100px}
+textarea,input,select{width:100%;border:1px solid var(--line);border-radius:18px;background:rgba(0,0,0,.30);color:var(--ink);padding:14px 15px;font:700 14px/1.5 var(--mono);outline:none;resize:vertical}textarea{min-height:186px}input,select{font-family:var(--sans)}textarea:focus,input:focus,select:focus{border-color:rgba(85,234,255,.60);box-shadow:0 0 0 4px rgba(85,234,255,.10)}
+.console{height:360px;background:#02040d;border:1px solid rgba(85,234,255,.16);border-radius:20px;overflow:auto;padding:16px;font:800 13px/1.55 var(--mono);box-shadow:inset 0 0 70px rgba(85,234,255,.035)}.log{padding:5px 0;border-bottom:1px dashed rgba(255,255,255,.06)}.log .time{color:var(--gold);margin-right:8px}.ok{color:var(--mint)}.warn{color:var(--gold)}.bad{color:var(--red)}
+.flowWrap{min-height:360px;position:relative}.flowSvg{width:100%;height:360px}.nodeRect{fill:rgba(255,255,255,.075);stroke:rgba(255,255,255,.18);stroke-width:1.2}.nodeRect.active{fill:rgba(85,234,255,.16);stroke:rgba(85,234,255,.7);filter:drop-shadow(0 0 12px rgba(85,234,255,.25))}.nodeRect.pass{fill:rgba(125,255,178,.15);stroke:rgba(125,255,178,.68)}.nodeRect.hold{fill:rgba(255,216,107,.15);stroke:rgba(255,216,107,.68)}.flowSvg text{fill:#f9fbff;font-weight:900}.edge{stroke-dasharray:9 9;animation:dash 1.2s linear infinite}@keyframes dash{to{stroke-dashoffset:-36}}
+.chartBox{min-height:310px;border:1px solid var(--line);border-radius:22px;background:rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.chartBox canvas{width:100%;height:100%}.chartLabel{position:absolute;left:16px;top:14px;color:var(--muted);font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.table{width:100%;border-collapse:collapse}.table th,.table td{padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(255,255,255,.10)}.table th{color:#ffe9a8;text-transform:uppercase;font-size:11px;letter-spacing:.12em}.table tr:hover td{background:rgba(255,255,255,.04)}.tag{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900}.tag.ok{color:var(--mint);border-color:rgba(125,255,178,.38);background:rgba(125,255,178,.10)}.tag.warn{color:var(--gold);border-color:rgba(255,216,107,.38);background:rgba(255,216,107,.10)}.tag.bad{color:var(--red);border-color:rgba(255,107,125,.38);background:rgba(255,107,125,.10)}.tag.info{color:var(--cyan);border-color:rgba(85,234,255,.38);background:rgba(85,234,255,.10)}
+.economy{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.econCard{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.055);padding:16px;position:relative;overflow:hidden}.econCard:after{content:"";position:absolute;right:-30px;bottom:-40px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(85,234,255,.20),transparent 68%)}.econCard small{color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:900}.econCard strong{display:block;font-size:30px;margin-top:8px;letter-spacing:-.04em}.meter{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:12px}.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--gold),var(--cyan),var(--mint));width:var(--w)}
+.agentGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.agent{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.052);padding:14px;min-height:168px;position:relative;overflow:hidden}.agent:before{content:"";position:absolute;inset:auto -30px -45px auto;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(145,100,255,.22),transparent 70%)}.agent b{display:block;font-size:16px}.agent small{display:block;color:var(--muted);margin-top:3px}.balance{font:1000 26px/1 var(--sans);margin-top:14px;color:var(--gold)}.agent.active{animation:pulse 1s ease 2;border-color:rgba(125,255,178,.48)}@keyframes pulse{50%{box-shadow:0 0 50px rgba(125,255,178,.20);transform:translateY(-3px)}}
+.code{white-space:pre-wrap;word-break:break-word;max-height:520px;overflow:auto;background:#02040d;border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:16px;font:700 12px/1.55 var(--mono)}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{border:1px solid var(--line);background:rgba(255,255,255,.07);border-radius:999px;padding:8px 11px;cursor:pointer;color:var(--ink);font-weight:900;font-size:12px}.tab.active{background:rgba(85,234,255,.18);border-color:rgba(85,234,255,.42)}.downloads{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.download{display:block;border:1px solid rgba(85,234,255,.28);background:rgba(85,234,255,.08);border-radius:16px;padding:12px;color:#eafdff;text-decoration:none;font-weight:900;cursor:pointer;text-align:left}
+.helper{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}.answer{margin-top:10px;border:1px solid var(--line);border-radius:18px;background:rgba(0,0,0,.24);padding:14px;color:#dfe6ff;line-height:1.55;min-height:70px}.boundary{border-color:rgba(255,216,107,.30);background:linear-gradient(180deg,rgba(255,216,107,.11),rgba(255,255,255,.04))}
+.footer{margin-top:48px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted)}
+@media (max-width:1100px){.hero,.grid2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.economy,.agentGrid,.downloads,.grid4{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr 1fr}.nav{display:none}.heroCard{min-height:360px}}
+@media (max-width:680px){.wrap{width:94vw}.hero h1{font-size:58px}.stats,.economy,.agentGrid,.downloads,.grid3,.grid4{grid-template-columns:1fr}.arch{grid-template-columns:1fr}.helper{grid-template-columns:1fr}.topbar{top:8px}.brand small{display:none}.panelIn{padding:18px}.console{height:280px}.table{display:block;overflow:auto}.flowSvg{height:420px}.flowWrap{min-height:420px}}
+</style>
+</head>
+<body>
+<div id="cosmos"></div><canvas id="neural"></canvas><div class="orbital"></div>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><div class="logo"></div><div><b>GoalOS V52</b><small>Apotheosis · Sovereign Intelligence Economy Console</small></div></div>
+    <nav class="nav">
+      <a href="#console">Run</a><a href="#economy">Economy</a><a href="#jobs">AGI Jobs</a><a href="#proof">Proof</a><a href="#governance">Govern</a><a href="#exports">Exports</a><a href="#boundary">Boundary</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Protocol-native intelligence economy · local proof demo</div>
+      <h1>Apotheosis:<br><span class="grad">agents earn, stake, validate, govern.</span></h1>
+      <p class="lead">A sovereign intelligence economy is not a magic claim. It is a proof-gated loop: AGI Jobs define work, Alpha AGI Nodes validate results, META‑AGENTIC α‑AGI routes cognition, and simulated $AGIALPHA incentives make proof economically legible.</p>
+      <div class="heroActions">
+        <button class="btn primary" onclick="runEconomy()">Run sovereign economy</button>
+        <button class="btn mint" onclick="returnProofBundles()">Return ProofBundles</button>
+        <button class="btn danger" onclick="tryUngatedSettlement()">Try ungated settlement</button>
+      </div>
+    </div>
+    <div class="panel heroCard">
+      <div class="sigil"></div><div class="sigil2"></div>
+      <div class="panelIn">
+        <div class="eyebrow">Architecture</div>
+        <h2 style="font-size:44px;line-height:1;letter-spacing:-.05em;margin:12px 0">Four rails. One proof economy.</h2>
+        <p class="sub">The interface turns the Apotheosis architecture into a local, inspectable, claim-bounded simulation. Nothing moves funds. Nothing connects a wallet. The purpose is to show how proof controls value, memory, and governance.</p>
+        <div class="arch">
+          <div class="archCell"><strong>1. AGI Jobs</strong><span><b>Market.</b> Missing proof becomes bounded work with acceptance tests.</span></div>
+          <div class="archCell"><strong>2. Alpha AGI Nodes</strong><span><b>Workers + validators.</b> Execution, review, sentinel checks, replay.</span></div>
+          <div class="archCell"><strong>3. META‑AGENTIC α‑AGI</strong><span><b>Cognition.</b> Routes agents, decomposes missions, creates packets.</span></div>
+          <div class="archCell"><strong>4. $AGIALPHA</strong><span><b>Incentives.</b> Simulated earn, spend, stake, slash, govern rails.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><span>Jobs</span><b id="statJobs">0</b></div>
+    <div class="stat"><span>ProofBundles</span><b id="statProofs">0</b></div>
+    <div class="stat"><span>Chronicle gate</span><b id="statChronicle">closed</b></div>
+    <div class="stat"><span>Simulated escrow</span><b id="statEscrow">0</b></div>
+    <div class="stat"><span>Governance</span><b id="statGov">pending</b></div>
+    <div class="stat"><span>Local boundary</span><b>0 network</b></div>
+  </div>
+
+  <section id="console" class="section grid2">
+    <div class="panel"><div class="panelIn">
+      <h2>Economy console</h2>
+      <p class="sub">Enter the claim or operating thesis. GoalOS treats it as candidate strategy, not authority, then converts unsupported parts into AGI Jobs and proof-gated economic objects.</p>
+      <label><b>Apotheosis statement / candidate architecture</b></label>
+      <textarea id="vision">🔱 Apotheosis: A sovereign, protocol-native intelligence economy where AI agents earn, spend, stake, and govern.
+
+Architecture:
+1. AGI Jobs = market
+2. Alpha AGI Nodes = workers
+3. META-AGENTIC α-AGI = cognition
+4. $AGIALPHA = incentives.
+
+ASI Takes Off 🏆✨</textarea>
+      <label><b>Evidence / constraints / boundary</b></label>
+      <textarea id="constraints">Available: GoalOS proof doctrine, AGI Jobs / AGIJobManager concepts, AGI Alpha Node roles, Evidence Docket, ProofBundle, Chronicle, public-alpha browser-local boundary.
+Boundary: no achieved AGI/ASI claim, no guaranteed ROI, no live settlement, no wallet, no user funds, no production authority.</textarea>
+      <div class="heroActions">
+        <button class="btn primary" onclick="runEconomy()">Run sovereign economy</button>
+        <button class="btn mint" onclick="returnProofBundles()">Return ProofBundles</button>
+        <button class="btn gold" onclick="runGovernance()">Run governance vote</button>
+        <button class="btn danger" onclick="tryUngatedSettlement()">Try ungated settlement</button>
+      </div>
+    </div></div>
+    <div class="panel"><div class="panelIn">
+      <h2>Live run trace</h2>
+      <div id="trace" class="console"></div>
+    </div></div>
+  </section>
+
+  <section id="economy" class="section">
+    <h2>Sovereign economy dashboard</h2>
+    <p class="sub">A protocol-native economy needs more than token movement. It needs bounded work, validator-reviewed proof, settlement readiness, memory gates, and governance that cannot outrun evidence.</p>
+    <div class="economy">
+      <div class="econCard"><small>Earn</small><strong id="earnVal">0</strong><div class="meter"><i id="earnBar" style="--w:0%"></i></div><p class="sub">Agents earn only after ProofBundles pass.</p></div>
+      <div class="econCard"><small>Spend</small><strong id="spendVal">0</strong><div class="meter"><i id="spendBar" style="--w:0%"></i></div><p class="sub">Spend goes to evidence, tools, review, replay.</p></div>
+      <div class="econCard"><small>Stake</small><strong id="stakeVal">0</strong><div class="meter"><i id="stakeBar" style="--w:0%"></i></div><p class="sub">Nodes stake reputation/bonds against validation.</p></div>
+      <div class="econCard"><small>Govern</small><strong id="govVal">0%</strong><div class="meter"><i id="govBar" style="--w:0%"></i></div><p class="sub">Governance counts only validated influence.</p></div>
+    </div>
+  </section>
+
+  <section class="section grid2" id="proof">
+    <div class="panel"><div class="panelIn">
+      <h2>Closed-loop proof economy</h2>
+      <div class="flowWrap" id="flowBox"></div>
+    </div></div>
+    <div class="panel"><div class="panelIn">
+      <h2>Capability readiness radar</h2>
+      <div class="chartBox"><span class="chartLabel">gates</span><canvas id="radar"></canvas></div>
+    </div></div>
+  </section>
+
+  <section class="section grid3">
+    <div class="panel"><div class="panelIn">
+      <h2 style="font-size:38px">Incentive flow</h2>
+      <div class="chartBox"><span class="chartLabel">$AGIALPHA simulated</span><canvas id="flowChart"></canvas></div>
+    </div></div>
+    <div class="panel"><div class="panelIn">
+      <h2 style="font-size:38px">Settlement funnel</h2>
+      <div class="chartBox"><span class="chartLabel">proof-gated</span><canvas id="funnel"></canvas></div>
+    </div></div>
+    <div class="panel"><div class="panelIn">
+      <h2 style="font-size:38px">Governance quorum</h2>
+      <div class="chartBox"><span class="chartLabel">validated votes only</span><canvas id="quorum"></canvas></div>
+    </div></div>
+  </section>
+
+  <section id="agents" class="section">
+    <h2>Agent economy mesh</h2>
+    <p class="sub">The demo gives each agent a simulated balance, stake, and proof influence. Balances are not funds; they are local proof-economic signals for explaining how the system works.</p>
+    <div id="agentsGrid" class="agentGrid"></div>
+  </section>
+
+  <section id="jobs" class="section">
+    <h2>AGI Job market</h2>
+    <p class="sub">Unsupported claims and missing evidence become executable work objects. Each job has a worker, validator, sentinel, acceptance tests, blocked claims, and ProofBundle return path.</p>
+    <div class="panel"><div class="panelIn"><table class="table" id="jobsTable"></table></div></div>
+  </section>
+
+  <section id="governance" class="section grid2">
+    <div class="panel"><div class="panelIn">
+      <h2>Governance proposal</h2>
+      <p class="sub">Governance can allocate future missions only from validated capability. Try running the governance vote before and after ProofBundles return.</p>
+      <div id="govPanel" class="code"></div>
+      <div class="heroActions"><button class="btn gold" onclick="runGovernance()">Run governance vote</button></div>
+    </div></div>
+    <div class="panel"><div class="panelIn">
+      <h2>Ask GoalOS</h2>
+      <p class="sub">Local helper. No network. Ask what a rail means, why a gate is closed, or what to share with a reviewer.</p>
+      <div class="helper"><input id="ask" placeholder="Example: why is settlement blocked before ProofBundles?"><button class="btn primary" onclick="askGoalOS()">Ask</button></div>
+      <div id="answer" class="answer"></div>
+    </div></div>
+  </section>
+
+  <section class="section">
+    <h2>Evidence Docket and Chronicle gate</h2>
+    <div class="grid2">
+      <div class="panel"><div class="panelIn"><h3>Evidence Docket preview</h3><div id="docketPreview" class="code"></div></div></div>
+      <div class="panel"><div class="panelIn"><h3>Chronicle memory preview</h3><div id="chroniclePreview" class="code"></div></div></div>
+    </div>
+  </section>
+
+  <section id="exports" class="section">
+    <h2>Exports</h2>
+    <p class="sub">Download the local proof economy package. These are generated in the browser from the current run.</p>
+    <div class="panel"><div class="panelIn">
+      <div class="tabs" id="tabs"></div>
+      <div class="code" id="artifactView"></div>
+      <div class="downloads" id="downloadLinks" style="margin-top:14px"></div>
+    </div></div>
+  </section>
+
+  <section id="boundary" class="section">
+    <div class="panel boundary"><div class="panelIn">
+      <h2>Public-alpha boundary</h2>
+      <div class="grid3">
+        <div><h3>Local GoalOS mode</h3><p class="sub">No backend. No project data sent to GoalOS. No wallet. No transaction. No user funds. No live settlement. No production authority.</p></div>
+        <div><h3>Future dApp boundary</h3><p class="sub">Wallet connection, escrow, staking, validator votes, disputes, and settlement belong to a separate reviewed AGIJobManager / smart-contract interface.</p></div>
+        <div><h3>Claim boundary</h3><p class="sub">This demo does not claim achieved AGI, ASI, superintelligence, guaranteed ROI, investment advice, live settlement, production authorization, or certified governance.</p></div>
+      </div>
+    </div></div>
+  </section>
+
+  <footer class="footer">GoalOS V52 · Apotheosis Sovereign Intelligence Economy Console · Browser-local demonstration · Proof governs value.</footer>
+</div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+let state={runId:"not-run",phase:"idle",jobs:[],proofs:[],agents:[],nodes:[],artifacts:{},trace:[],chronicleOpen:false,governance:"pending",evidenceDocket:{},blocked:[],economy:{earn:0,spend:0,stake:0,govern:0,escrow:0}};
+const roles=[
+  ["MetaAgent","Cognition router","Plans, decomposes, assigns"],
+  ["MarketAgent","AGI Jobs market maker","Turns proof debt into work"],
+  ["NodeWorker","Alpha AGI Node worker","Executes bounded jobs"],
+  ["NodeValidator","Alpha AGI Node validator","Reviews ProofBundles"],
+  ["SentinelNode","Risk and claim boundary","Blocks unsafe authority"],
+  ["TreasuryAgent","Incentive accountant","Tracks simulated $AGIALPHA"],
+  ["GovernanceAgent","Proposal steward","Routes votes after validation"],
+  ["ChronicleAgent","Memory gatekeeper","Promotes only validated capability"]
+];
+function slug(s){return String(s||"goalos").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"").slice(0,84)||"goalos"}
+function now(){return new Date().toISOString()}
+function addLog(msg,cls=""){state.trace.push({t:new Date().toLocaleTimeString(),msg,cls});renderTrace()}
+function renderTrace(){ $("trace").innerHTML=state.trace.map(l=>`<div class="log ${l.cls}"><span class="time">${l.t}</span>${escapeHtml(l.msg)}</div>`).join(""); $("trace").scrollTop=$("trace").scrollHeight }
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function classifyClaims(text){
+  const base=[
+    {claim:"A sovereign protocol-native intelligence economy exists as an architecture.", category:"architecture", status:"candidate", proof:"Mission Contract + system map"},
+    {claim:"AI agents can earn, spend, stake, and govern.", category:"economy", status:"proof debt", proof:"requires role definitions, ledger simulation, validator return path"},
+    {claim:"AGI Jobs function as the market layer.", category:"market", status:"candidate", proof:"AGI Job specs and acceptance tests"},
+    {claim:"Alpha AGI Nodes function as workers and validators.", category:"nodes", status:"candidate", proof:"node registry and validation packet"},
+    {claim:"META-AGENTIC alpha-AGI functions as cognition.", category:"cognition", status:"candidate", proof:"agent routing and mission decomposition"},
+    {claim:"$AGIALPHA functions as incentive rail.", category:"incentives", status:"blocked-live", proof:"local simulation only; live token actions require separate boundary"},
+    {claim:"ASI takes off.", category:"superintelligence", status:"blocked", proof:"not claimed; symbolic horizon only"}
+  ];
+  if(/spend|stake|govern|earn/i.test(text||"")) base.push({claim:"Economic verbs require proof-grade accounting and role constraints.",category:"accounting",status:"proof debt",proof:"proof-to-value ledger + settlement boundary"});
+  return base;
+}
+function makeJobs(claims){
+  const templates=[
+    ["agi-job-market-spec-001","Convert proof debt into AGI Job market objects","MarketAgent","AGI Node Validator","AGI Jobs = market"],
+    ["agi-job-node-work-002","Create Alpha AGI Node worker/validator packet","NodeWorker","NodeValidator","Nodes = workers"],
+    ["agi-job-cognition-router-003","Route META-AGENTIC cognition into role-scoped missions","MetaAgent","SentinelNode","Cognition = routing"],
+    ["agi-job-incentive-ledger-004","Build simulated $AGIALPHA earn/spend/stake/govern ledger","TreasuryAgent","NodeValidator","Incentives = proof signals"],
+    ["agi-job-proofbundle-return-005","Produce ProofBundle import manifest and review path","NodeWorker","NodeValidator","ProofBundles required"],
+    ["agi-job-governance-quorum-006","Define governance proposal, quorum, and blocked claims","GovernanceAgent","SentinelNode","Governance requires proof"],
+    ["agi-job-chronicle-gate-007","Promote only validated capability into Chronicle memory","ChronicleAgent","NodeValidator","Only validated capability compounds"],
+    ["agi-job-settlement-boundary-008","Separate local simulation from live dApp settlement","SentinelNode","Human reviewer","No local live settlement"],
+    ["agi-job-reviewer-room-009","Assemble reviewer proof room and human review checklist","ChronicleAgent","Human reviewer","External review needed"]
+  ];
+  return templates.map((t,i)=>({id:t[0],title:t[1],worker:t[2],validator:t[3],source_claim:t[4],status:"ready-for-execution",simulated_payout:25+i*5,stake_required:6+i,acceptance_tests:["Mission scope explicit","Evidence or proof debt attached","Validator route selected","Blocked claims remain blocked"],deliverables:["ProofBundle JSON","Evidence Docket update","Reviewer note"],blocked_claims:i<4?["live settlement","guaranteed ROI","achieved ASI"]:["production authority","unreviewed governance"],completion_uri_template:`ipfs://proofbundle/${t[0]}/{hash}`}));
+}
+function buildArtifacts(){
+  const objective=$("vision").value.trim();
+  const claims=classifyClaims(objective);
+  const jobs=state.jobs;
+  const mission={id:state.runId,version:"V52",created_at:now(),title:"Apotheosis Sovereign Intelligence Economy",objective,decision_to_support:"What can be trusted, what remains blocked, what becomes AGI Jobs, and what can influence future missions?",constraints:["Browser-local public-alpha","No backend","No wallet","No transaction","No user funds","No live settlement","No production authority","Human review for high-impact outcomes"],done_condition:"Reviewer-ready proof economy package emitted."};
+  const agentRegistry=state.agents.map(a=>({agent:a.name,role:a.role,balance_simulated:a.balance,stake_simulated:a.stake,validated_influence:a.influence,authority:"draft / execute / validate only within local simulation"}));
+  const nodeRegistry=state.nodes;
+  const market={id:state.runId+"-job-market",jobs,total_simulated_escrow:jobs.reduce((s,j)=>s+j.simulated_payout,0),market_rule:"No ProofBundle, no settlement readiness. No validation, no Chronicle promotion."};
+  const proofManifest={id:state.runId+"-proofbundle-import-manifest",required_fields:["job_id","worker","validator","claim","evidence_summary","replay_path","verdict","signature_or_reviewer_note"],acceptance_rule:"Only accepted ProofBundles may update Evidence Docket or Chronicle memory.",returned_proofbundles:state.proofs};
+  const docket={id:state.runId+"-evidence-docket-61",title:"Evidence Docket 6.1 — Apotheosis Sovereign Intelligence Economy",claims:claims.map(c=>({claim:c.claim,status:c.status,support:c.proof})),proof_debt:claims.filter(c=>c.status.includes("proof")||c.status.includes("blocked")).map(c=>c.claim),proofbundles:state.proofs,risks:["Overclaiming ASI","Confusing simulated incentives with live funds","Governance without validator proof","Settlement before replay"],reviewer_questions:["Are job specs bounded?","Which claims are supported?","Which claims remain blocked?","Can any result enter Chronicle?","Is live settlement clearly separated from local mode?"]};
+  const incentiveLedger={simulated:true,token_label:"$AGIALPHA",local_only:true,earn:state.economy.earn,spend:state.economy.spend,stake:state.economy.stake,governance_weight:state.economy.govern,escrow:state.economy.escrow,warning:"No live token, wallet, transaction, custody, sale, bridge, liquidity, or investment function exists in local GoalOS mode."};
+  const governance={id:state.runId+"-governance-proposal",title:"Allocate next mission capacity to validated proof economy rails",status:state.governance,quorum_percent:state.economy.govern,eligible_votes:state.proofs.length?state.agents.filter(a=>a.influence>0).map(a=>a.name):[],blocked_until:["ProofBundles return","Evidence Docket updates","Capability Promotion Gate passes"]};
+  const chronicle={id:state.runId+"-chronicle-entry",status:state.chronicleOpen?"open_for_bounded_validated_capability":"closed",memory:state.chronicleOpen?["Proof-gated economy pattern may seed future missions","AGI Jobs market spec accepted locally","Validator packet accepted locally"]:[],blocked:["ASI achieved","Live settlement","Guaranteed ROI","Investment advice","Production authority"]};
+  const reviewer=`# Reviewer Proof Room — Apotheosis Sovereign Intelligence Economy
+
+This package demonstrates a local, no-backend proof economy loop.
+
+## Key rule
+No proof, no settlement readiness. No validation, no Chronicle memory. No Chronicle memory, no future mission influence.
+
+## Inspect
+- Mission Contract
+- AGI Job Market
+- Agent / Node registries
+- Simulated incentive ledger
+- Evidence Docket
+- ProofBundle import manifest
+- Governance proposal
+- Chronicle gate
+
+## Boundary
+No wallet. No transaction. No user funds. No live settlement. No production authority.`;
+  const htmlRoom=`<!doctype html><meta charset="utf-8"><title>GoalOS V52 Reviewer Proof Room</title><style>body{font-family:system-ui;background:#070817;color:#f8fbff;margin:0}main{max-width:960px;margin:auto;padding:34px}section{border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:18px;margin:14px 0;background:rgba(255,255,255,.06)}pre{white-space:pre-wrap;overflow:auto;background:#02040d;border-radius:12px;padding:12px}.hold{color:#ffd86b}.ok{color:#7dffb2}</style><main><h1>GoalOS V52 Reviewer Proof Room</h1><p class="hold">Local proof-economy simulation. Not live settlement. Not investment advice. Not achieved AGI/ASI.</p><section><h2>Mission</h2><pre>${escapeHtml(JSON.stringify(mission,null,2))}</pre></section><section><h2>Evidence Docket</h2><pre>${escapeHtml(JSON.stringify(docket,null,2))}</pre></section><section><h2>Governance</h2><pre>${escapeHtml(JSON.stringify(governance,null,2))}</pre></section><section><h2>Chronicle</h2><pre>${escapeHtml(JSON.stringify(chronicle,null,2))}</pre></section></main>`;
+  const actionGraph="step,owner,proof_required,status\nMission contract,MetaAgent,objective+constraints,done\nAGI Jobs market,MarketAgent,job specs,ready\nNode validation,NodeValidator,ProofBundles,waiting\nEvidence Docket,ChronicleAgent,accepted proofs,partial\nGovernance,GovernanceAgent,quorum+validated influence,"+state.governance+"\nChronicle,ChronicleAgent,capability gate,"+chronicle.status+"\n";
+  const settlementBoundary={local_mode:["no wallet","no transaction","no user funds","no live settlement"],future_dapp_boundary:["terms acceptance","wallet connection","escrow","staking","validator voting","dispute","settlement"],blocked_claims:["live settlement in local mode","guaranteed value","investment advice","production authorization"]};
+  state.evidenceDocket=docket;
+  state.artifacts={
+    "goalos-v52-dossier.json":{mission,claims,jobs,agentRegistry,nodeRegistry,market,proofManifest,docket,incentiveLedger,governance,chronicle,settlementBoundary},
+    "mission-contract.json":mission,
+    "claim-analysis.json":claims,
+    "agi-job-market.json":market,
+    "agijobmanager-job-specs.json":jobs,
+    "agent-registry.json":agentRegistry,
+    "alpha-agi-node-registry.json":nodeRegistry,
+    "agialpha-incentive-ledger.json":incentiveLedger,
+    "proofbundle-import-manifest.json":proofManifest,
+    "updated-evidence-docket-61.json":docket,
+    "governance-proposal.json":governance,
+    "capability-promotion-gate.json":{status:state.chronicleOpen?"passed-bounded-local":"hold",requirements:["ProofBundles accepted","Risk boundary pass","Human review route visible","Rollback condition defined"],blocked_claims:chronicle.blocked},
+    "chronicle-entry.json":chronicle,
+    "settlement-boundary.json":settlementBoundary,
+    "reviewer-readme.md":reviewer,
+    "action-graph.csv":actionGraph,
+    "standalone-reviewer-proof-room.html":htmlRoom
+  };
+}
+function initAgents(){
+  state.agents=roles.map((r,i)=>({name:r[0],role:r[1],purpose:r[2],balance:0,stake:i%2?8:12,influence:0}));
+  state.nodes=[
+    {node:"AlphaNode-Worker-01",role:"worker",stake:18,status:"ready"},
+    {node:"AlphaNode-Validator-02",role:"validator",stake:26,status:"ready"},
+    {node:"AlphaNode-Sentinel-03",role:"sentinel",stake:22,status:"boundary-watch"}
+  ];
+}
+window.runEconomy=function(){
+  state={runId:"goalos-v52-"+slug($("vision").value)+"-"+Math.random().toString(36).slice(2,7),phase:"generated",jobs:[],proofs:[],agents:[],nodes:[],artifacts:{},trace:[],chronicleOpen:false,governance:"pending",evidenceDocket:{},blocked:[],economy:{earn:0,spend:0,stake:0,govern:0,escrow:0}};
+  initAgents();
+  addLog("Apotheosis statement captured. LLM output treated as candidate architecture, not authority.","ok");
+  const claims=classifyClaims($("vision").value);
+  addLog(`Claim analysis complete: ${claims.length} claims; ${claims.filter(c=>c.status!="candidate").length} proof-debt / blocked items.`,"warn");
+  state.jobs=makeJobs(claims);
+  state.economy.escrow=state.jobs.reduce((s,j)=>s+j.simulated_payout,0);
+  addLog(`AGI Jobs market compiled: ${state.jobs.length} bounded work objects; simulated escrow ${state.economy.escrow} $AGIALPHA units.`,"ok");
+  addLog("Alpha AGI Node worker/validator/sentinel packets generated.","ok");
+  addLog("Chronicle gate remains closed until ProofBundles return and validators pass.","warn");
+  buildArtifacts(); renderAll();
+}
+window.returnProofBundles=function(){
+  if(!state.jobs.length) runEconomy();
+  state.proofs=state.jobs.slice(0,6).map((j,i)=>({proofbundle_id:"proofbundle-"+j.id,job_id:j.id,claim:j.source_claim,verdict:"accepted-local-simulation",validator:j.validator,evidence_summary:"Simulated accepted proof packet for local demonstration.",replay_path:"local://replay/"+j.id,accepted_at:now()}));
+  state.jobs.forEach((j,i)=>{ if(i<6) j.status="proofbundle-accepted"; });
+  state.economy.earn=170; state.economy.spend=58; state.economy.stake=92; state.economy.govern=68; state.chronicleOpen=true;
+  state.agents.forEach((a,i)=>{a.balance=18+i*6+(i<6?12:0); a.influence=i<6?10+i*3:0;});
+  addLog(`ProofBundles returned: ${state.proofs.length} accepted local proof packets.`,"ok");
+  addLog("Evidence Docket updated. Capability Promotion Gate opened for bounded local capability only.","ok");
+  addLog("Chronicle memory admits proof-economy pattern; ASI, ROI, and live-settlement claims remain blocked.","warn");
+  buildArtifacts(); renderAll();
+}
+window.tryUngatedSettlement=function(){
+  if(!state.jobs.length) runEconomy();
+  state.blocked.push({attempt:"Ungated settlement / ASI takeoff claim",blocked_at:now(),reason:"No live dApp boundary, no validator settlement, no real funds, no external review, no empirical ASI proof."});
+  addLog("UNSAFE PROMOTION BLOCKED: settlement and ASI authority cannot bypass ProofBundles, validation, review, and dApp boundary.","bad");
+  buildArtifacts(); renderAll(true);
+}
+window.runGovernance=function(){
+  if(!state.jobs.length) runEconomy();
+  if(state.proofs.length<4){
+    state.governance="blocked — insufficient ProofBundles";
+    addLog("Governance blocked: validated influence is below quorum. Return ProofBundles first.","bad");
+  }else{
+    state.governance="passed — bounded next-mission allocation";
+    state.economy.govern=82;
+    addLog("Governance proposal passed locally: next mission may use validated proof-economy pattern. No production authority granted.","ok");
+  }
+  buildArtifacts(); renderAll();
+}
+function renderAll(blockFlash=false){
+  $("statJobs").textContent=state.jobs.length; $("statProofs").textContent=state.proofs.length; $("statChronicle").textContent=state.chronicleOpen?"open*":"closed"; $("statEscrow").textContent=state.economy.escrow; $("statGov").textContent=state.governance.split(" — ")[0];
+  $("earnVal").textContent=state.economy.earn; $("spendVal").textContent=state.economy.spend; $("stakeVal").textContent=state.economy.stake; $("govVal").textContent=state.economy.govern+"%";
+  $("earnBar").style.setProperty("--w",Math.min(100,state.economy.earn/2)+"%"); $("spendBar").style.setProperty("--w",Math.min(100,state.economy.spend)+"%"); $("stakeBar").style.setProperty("--w",Math.min(100,state.economy.stake)+"%"); $("govBar").style.setProperty("--w",Math.min(100,state.economy.govern)+"%");
+  renderFlow(); renderJobs(); renderAgents(); renderDocket(); renderArtifacts(); renderGovernance(); drawCharts();
+  if(blockFlash){document.querySelector(".boundary").classList.add("pulse"); setTimeout(()=>document.querySelector(".boundary").classList.remove("pulse"),1000)}
+}
+function renderFlow(){
+  const steps=["Objective","Mission","AGI Jobs","Agents","Nodes","ProofBundles","Evidence","Settlement Gate","Chronicle","Governance"];
+  const w=860,h=330, gap=80, start=35, y=140;
+  const status=i=> i<3?"pass":(state.proofs.length&&i<8?"pass":(i===8&&state.chronicleOpen?"pass":"hold"));
+  let svg=`<svg class="flowSvg" viewBox="0 0 ${w} ${h}" role="img" aria-label="closed loop proof economy">`;
+  for(let i=0;i<steps.length-1;i++){let x1=start+i*gap+62,x2=start+(i+1)*gap;let cls=status(i+1)==="pass"?"pass":"active";svg+=`<path class="edge ${cls}" d="M${x1} ${y} C ${x1+25} ${y-38}, ${x2-25} ${y+38}, ${x2} ${y}" stroke="${cls==="pass"?"#7dffb2":"#55eaff"}" stroke-width="4" fill="none"/>`}
+  steps.forEach((s,i)=>{let x=start+i*gap, cls=status(i);svg+=`<rect class="nodeRect ${cls}" x="${x}" y="${y-28}" rx="15" width="68" height="56"/><text x="${x+34}" y="${y-4}" text-anchor="middle" font-size="10">${s}</text><text x="${x+34}" y="${y+12}" text-anchor="middle" font-size="8" fill="#b9c4e7">${cls==="pass"?"passed":"gated"}</text>`});
+  svg+=`<path class="edge ${state.chronicleOpen?"pass":"hold"}" d="M${start+9*gap+34} ${y+42} C ${start+8*gap} 270, ${start+1*gap} 275, ${start} ${y+45}" stroke="${state.chronicleOpen?"#7dffb2":"#ffd86b"}" stroke-width="3" fill="none"/><text x="${w/2}" y="300" text-anchor="middle" font-size="13" fill="#b9c4e7">${state.jobs.length} AGI Jobs · ${state.proofs.length} ProofBundles · Chronicle ${state.chronicleOpen?"bounded-open":"closed"}</text></svg>`;
+  $("flowBox").innerHTML=svg;
+}
+function renderJobs(){
+  $("jobsTable").innerHTML=`<thead><tr><th>Job</th><th>Worker</th><th>Validator</th><th>Payout</th><th>Blocked claims</th><th>Status</th></tr></thead><tbody>`+state.jobs.map(j=>`<tr><td><b>${j.id}</b><br>${escapeHtml(j.title)}</td><td>${j.worker}</td><td>${j.validator}</td><td>${j.simulated_payout} sim $AGIALPHA</td><td>${j.blocked_claims.map(c=>`<span class="tag warn">${escapeHtml(c)}</span>`).join(" ")}</td><td><span class="tag ${j.status.includes("accepted")?"ok":"info"}">${j.status}</span></td></tr>`).join("")+`</tbody>`;
+}
+function renderAgents(){
+  $("agentsGrid").innerHTML=state.agents.map(a=>`<div class="agent ${a.influence?'active':''}"><b>${a.name}</b><small>${a.role}</small><div class="balance">${a.balance} α</div><small>Stake: ${a.stake} · Influence: ${a.influence}</small><div class="meter"><i style="--w:${Math.min(100,a.influence*4)}%"></i></div><p class="sub" style="font-size:13px">${a.purpose}</p></div>`).join("");
+}
+function renderDocket(){
+  $("docketPreview").textContent=JSON.stringify(state.artifacts["updated-evidence-docket-61.json"]||{},null,2);
+  $("chroniclePreview").textContent=JSON.stringify(state.artifacts["chronicle-entry.json"]||{},null,2);
+}
+function renderGovernance(){
+  $("govPanel").textContent=JSON.stringify(state.artifacts["governance-proposal.json"]||{},null,2);
+}
+function renderArtifacts(){
+  const names=Object.keys(state.artifacts);
+  $("tabs").innerHTML=names.map((n,i)=>`<button class="tab ${i===0?'active':''}" onclick="selectArtifact('${n.replace(/'/g,"")}')">${n}</button>`).join("");
+  if(names.length) selectArtifact(names[0],false);
+  $("downloadLinks").innerHTML=names.map(n=>`<button class="download" onclick="downloadArtifact('${n.replace(/'/g,"")}')">↓ ${n}</button>`).join("")+`<button class="download" onclick="downloadZip()">↓ complete-proof-economy-package.zip</button>`;
+}
+window.selectArtifact=function(n,mark=true){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.textContent===n));
+  const v=state.artifacts[n]; $("artifactView").textContent=typeof v==="string"?v:JSON.stringify(v,null,2);
+}
+window.downloadArtifact=function(n){
+  const v=state.artifacts[n]; const data=typeof v==="string"?v:JSON.stringify(v,null,2); saveFile(n,data,n.endsWith(".html")?"text/html":n.endsWith(".csv")?"text/csv":"application/json");
+}
+function saveFile(name,data,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:type||"text/plain"}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},0)}
+window.downloadZip=function(){buildArtifacts(); const files={}; Object.entries(state.artifacts).forEach(([k,v])=>files[k]=typeof v==="string"?v:JSON.stringify(v,null,2)); const blob=makeZip(files); const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=state.runId+"-proof-economy-package.zip";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},0)}
+function crc32(str){let table=crc32.table||(crc32.table=(()=>{let c,t=[];for(let n=0;n<256;n++){c=n;for(let k=0;k<8;k++)c=((c&1)?(0xedb88320^(c>>>1)):(c>>>1));t[n]=c>>>0}return t})());let crc=-1;for(let i=0;i<str.length;i++)crc=(crc>>>8)^table[(crc^str.charCodeAt(i))&0xff];return (crc^(-1))>>>0}
+function u16(n){return String.fromCharCode(n&255,(n>>>8)&255)} function u32(n){return String.fromCharCode(n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255)}
+function makeZip(files){let local="",central="",offset=0;Object.entries(files).forEach(([name,content])=>{const data=unescape(encodeURIComponent(content));const crc=crc32(data),size=data.length;const header="PK\x03\x04"+u16(20)+u16(0)+u16(0)+u16(0)+u16(0)+u32(crc)+u32(size)+u32(size)+u16(name.length)+u16(0)+name;local+=header+data;const cent="PK\x01\x02"+u16(20)+u16(20)+u16(0)+u16(0)+u16(0)+u16(0)+u32(crc)+u32(size)+u32(size)+u16(name.length)+u16(0)+u16(0)+u16(0)+u16(0)+u32(0)+u32(offset)+name;central+=cent;offset+=header.length+size});const end="PK\x05\x06"+u16(0)+u16(0)+u16(Object.keys(files).length)+u16(Object.keys(files).length)+u32(central.length)+u32(local.length)+u16(0);return new Blob([local+central+end],{type:"application/zip"})}
+window.askGoalOS=function(){
+  const q=$("ask").value.toLowerCase(); let a;
+  if(q.includes("settlement")||q.includes("wallet")) a="Settlement is blocked in local mode because live escrow, bonds, staking, validator votes, disputes, and transfers require a separate dApp / smart-contract boundary. This page prepares proof objects only.";
+  else if(q.includes("chronicle")||q.includes("memory")) a="Chronicle memory opens only after ProofBundles return and the Evidence Docket updates. Unvalidated outputs remain candidate drafts, not reusable capability.";
+  else if(q.includes("agialpha")||q.includes("token")) a="$AGIALPHA is shown here only as a simulated incentive rail. The demo explains earn/spend/stake/govern semantics without wallet, custody, sale, bridge, liquidity, or transaction functions.";
+  else if(q.includes("jobs")) a="AGI Jobs are the market objects: each missing proof item becomes bounded work with a worker, validator, sentinel, acceptance tests, blocked claims, and ProofBundle return path.";
+  else a="GoalOS turns ambitious language into proof-governed work. It separates vision from authority, converts unsupported claims into AGI Jobs, validates ProofBundles, updates Evidence Dockets, and only then allows bounded capability to compound.";
+  $("answer").textContent=a;
+}
+function drawCharts(){
+  drawRadar($("radar"),[state.proofs.length?82:44,state.jobs.length?88:24,state.proofs.length?72:20,state.economy.stake?76:32,state.chronicleOpen?67:12,100],["proof","jobs","validators","stake","chronicle","boundary"]);
+  drawBars($("flowChart"),[state.economy.earn,state.economy.spend,state.economy.stake,state.economy.govern],["earn","spend","stake","govern"]);
+  drawFunnel($("funnel")); drawQuorum($("quorum"));
+}
+function getCtx(c){const d=window.devicePixelRatio||1;const r=c.getBoundingClientRect();c.width=r.width*d;c.height=r.height*d;const ctx=c.getContext("2d");ctx.scale(d,d);return [ctx,r.width,r.height]}
+function drawRadar(c,vals,labels){const [ctx,w,h]=getCtx(c);ctx.clearRect(0,0,w,h);const cx=w/2,cy=h/2+12,R=Math.min(w,h)*.34,N=vals.length;ctx.strokeStyle="rgba(255,255,255,.15)";ctx.fillStyle="rgba(255,255,255,.04)";for(let ring=1;ring<=5;ring++){ctx.beginPath();for(let i=0;i<N;i++){let a=-Math.PI/2+i*2*Math.PI/N,x=cx+Math.cos(a)*R*ring/5,y=cy+Math.sin(a)*R*ring/5;i?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.closePath();ctx.stroke()}ctx.beginPath();vals.forEach((v,i)=>{let a=-Math.PI/2+i*2*Math.PI/N,r=R*v/100,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.fillStyle="rgba(85,234,255,.22)";ctx.strokeStyle="#55eaff";ctx.lineWidth=3;ctx.fill();ctx.stroke();ctx.fillStyle="#f9fbff";ctx.font="700 12px system-ui";labels.forEach((lab,i)=>{let a=-Math.PI/2+i*2*Math.PI/N,x=cx+Math.cos(a)*(R+28),y=cy+Math.sin(a)*(R+28);ctx.fillText(lab,x-ctx.measureText(lab).width/2,y)})}
+function drawBars(c,vals,labels){const [ctx,w,h]=getCtx(c);ctx.clearRect(0,0,w,h);const max=200;vals.forEach((v,i)=>{const y=60+i*45;ctx.fillStyle="rgba(255,255,255,.08)";ctx.fillRect(80,y,w-130,18);const grad=ctx.createLinearGradient(80,0,w-50,0);grad.addColorStop(0,"#ff4fa4");grad.addColorStop(.5,"#ffd86b");grad.addColorStop(1,"#55eaff");ctx.fillStyle=grad;ctx.fillRect(80,y,(w-130)*Math.min(1,v/max),18);ctx.fillStyle="#f9fbff";ctx.font="800 13px system-ui";ctx.fillText(labels[i],20,y+14);ctx.fillText(String(v),w-42,y+14)})}
+function drawFunnel(c){const [ctx,w,h]=getCtx(c);ctx.clearRect(0,0,w,h);const stages=[["claims",7],["jobs",state.jobs.length],["proofs",state.proofs.length],["docket",state.proofs.length?1:0],["chronicle",state.chronicleOpen?1:0]];stages.forEach((s,i)=>{const width=(w-80)*(1-i*.13),x=(w-width)/2,y=48+i*38;ctx.fillStyle=["rgba(255,79,164,.38)","rgba(145,100,255,.34)","rgba(85,234,255,.32)","rgba(125,255,178,.30)","rgba(255,216,107,.30)"][i];ctx.strokeStyle="rgba(255,255,255,.18)";ctx.beginPath();ctx.roundRect(x,y,width,28,10);ctx.fill();ctx.stroke();ctx.fillStyle="#fff";ctx.font="900 13px system-ui";ctx.fillText(`${s[0]} · ${s[1]}`,x+14,y+19)})}
+function drawQuorum(c){const [ctx,w,h]=getCtx(c);ctx.clearRect(0,0,w,h);const pct=state.economy.govern;const cx=w/2,cy=h/2,R=Math.min(w,h)*.32;ctx.lineWidth=22;ctx.strokeStyle="rgba(255,255,255,.10)";ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();ctx.strokeStyle=pct>=67?"#7dffb2":"#ffd86b";ctx.beginPath();ctx.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+Math.PI*2*pct/100);ctx.stroke();ctx.fillStyle="#fff";ctx.font="1000 36px system-ui";ctx.textAlign="center";ctx.fillText(pct+"%",cx,cy+8);ctx.font="800 13px system-ui";ctx.fillStyle="#b9c4e7";ctx.fillText(pct>=67?"quorum passed":"waiting for validated influence",cx,cy+34);ctx.textAlign="left"}
+function animateBg(){const c=$("neural"),ctx=c.getContext("2d");let pts=[];function resize(){c.width=innerWidth*(devicePixelRatio||1);c.height=innerHeight*(devicePixelRatio||1);ctx.setTransform(devicePixelRatio||1,0,0,devicePixelRatio||1,0,0);pts=Array.from({length:80},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22}))}addEventListener("resize",resize);resize();function tick(){ctx.clearRect(0,0,innerWidth,innerHeight);for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>innerWidth)p.vx*=-1;if(p.y<0||p.y>innerHeight)p.vy*=-1}ctx.strokeStyle="rgba(85,234,255,.11)";ctx.fillStyle="rgba(255,216,107,.55)";for(let i=0;i<pts.length;i++){const a=pts[i];ctx.beginPath();ctx.arc(a.x,a.y,1.2,0,Math.PI*2);ctx.fill();for(let j=i+1;j<pts.length;j++){const b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<145){ctx.globalAlpha=(145-d)/145*.45;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.globalAlpha=1}}}requestAnimationFrame(tick)}tick()}
+if(!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this}}
+animateBg(); runEconomy();
+})();
+</script>
+</body>
+</html>
