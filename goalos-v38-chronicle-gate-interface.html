@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GoalOS Chronicle Gate · Validated Memory Interface</title>
+<meta name="description" content="Interactive GoalOS interface demonstrating that only validated results can enter Chronicle memory or influence future missions.">
+<style>:root{
+  --bg0:#070812; --bg1:#11162b; --bg2:#12193a; --ink:#f7f4ff; --muted:#b9b6d8; --muted2:#8f8caf;
+  --violet:#8b5cf6; --cyan:#5ee7ff; --gold:#ffd76a; --green:#75f7b4; --red:#ff6b8b;
+  --panel:rgba(255,255,255,.075); --panel2:rgba(255,255,255,.045); --line:rgba(255,255,255,.16);
+  --shadow:0 24px 80px rgba(0,0,0,.38); --radius:28px;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg0);color:var(--ink);overflow-x:hidden}
+#ascension-canvas{position:fixed;inset:0;z-index:-3;background:radial-gradient(circle at 18% 14%,rgba(139,92,246,.30),transparent 36%),radial-gradient(circle at 86% 10%,rgba(94,231,255,.18),transparent 32%),linear-gradient(130deg,#060711 0%,#10142a 48%,#071623 100%)}
+.ascension-orb{position:fixed;right:8vw;top:11vh;width:min(560px,45vw);height:min(560px,45vw);border-radius:50%;z-index:-2;filter:blur(.2px);opacity:.55;background:conic-gradient(from 220deg,rgba(139,92,246,.0),rgba(139,92,246,.42),rgba(94,231,255,.30),rgba(255,215,106,.16),rgba(139,92,246,.0));animation:spin 19s linear infinite;mask:radial-gradient(circle,transparent 38%,#000 39%,#000 58%,transparent 62%)}
+.ascension-beam{position:fixed;left:50%;top:-20vh;width:2px;height:140vh;z-index:-1;background:linear-gradient(to bottom,transparent,rgba(94,231,255,.25),rgba(139,92,246,.42),rgba(255,215,106,.18),transparent);box-shadow:0 0 70px rgba(139,92,246,.75);animation:pulseBeam 5s ease-in-out infinite;transform:translateX(-50%)}
+@keyframes spin{to{transform:rotate(360deg)}} @keyframes pulseBeam{0%,100%{opacity:.35;filter:blur(0)}50%{opacity:.92;filter:blur(1.2px)}}
+.wrap{width:min(1440px,94vw);margin:0 auto;padding:28px 0 80px}.topbar{position:sticky;top:14px;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 16px;border:1px solid var(--line);border-radius:22px;background:rgba(9,10,22,.76);backdrop-filter:blur(20px);box-shadow:0 12px 50px rgba(0,0,0,.24)}
+.brand{display:flex;gap:12px;align-items:center}.logo{width:46px;height:46px;border-radius:14px;background:conic-gradient(from 30deg,var(--cyan),var(--violet),var(--gold),var(--green),var(--cyan));box-shadow:0 0 34px rgba(139,92,246,.55)}.brand b{font-size:1rem}.brand span{display:block;color:var(--muted);font-size:.82rem;margin-top:1px}.nav{display:flex;gap:8px;flex-wrap:wrap}.nav a,.btn{border:1px solid var(--line);border-radius:999px;padding:10px 14px;background:rgba(255,255,255,.07);color:var(--ink);text-decoration:none;font-weight:800;font-size:.9rem;cursor:pointer;transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease}.nav a:hover,.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.12);border-color:rgba(139,92,246,.52)}.btn.primary{background:linear-gradient(120deg,var(--violet),#7c3aed 45%,var(--cyan));border-color:rgba(94,231,255,.55);box-shadow:0 0 22px rgba(139,92,246,.24)}.btn.gold{background:linear-gradient(120deg,#ffd76a,#fff0aa);color:#291c06;border-color:#ffe38f}.btn.danger{background:rgba(255,107,139,.12);border-color:rgba(255,107,139,.45);color:#ffdbe3}.btn.small{padding:7px 10px;font-size:.78rem}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:26px;align-items:center;padding:78px 0 38px}.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border-radius:999px;border:1px solid rgba(255,215,106,.32);background:rgba(255,215,106,.09);color:#ffe594;text-transform:uppercase;letter-spacing:.14em;font-size:.74rem;font-weight:900}.hero h1{font-size:clamp(3rem,7vw,7.2rem);line-height:.9;letter-spacing:-.075em;margin:22px 0 18px;max-width:940px}.grad{background:linear-gradient(110deg,#fff8e3 0%,#ffd76a 25%,#b6a6ff 52%,#5ee7ff 82%);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:clamp(1.03rem,1.5vw,1.34rem);line-height:1.6;color:var(--muted);max-width:790px}.hero-card,.panel{border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.05));border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(18px)}.hero-card{padding:20px}.hero-card h2,.panel h2{margin:0 0 10px;font-size:clamp(1.5rem,2.2vw,2.35rem);letter-spacing:-.04em}.hero-card label{display:block;color:var(--muted);font-weight:800;font-size:.88rem;margin-bottom:8px}textarea,input,select{width:100%;border:1px solid rgba(255,255,255,.18);background:rgba(1,3,14,.48);color:var(--ink);border-radius:18px;padding:13px 14px;font:inherit;outline:none}textarea{min-height:160px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.94rem}textarea:focus,input:focus,select:focus{border-color:rgba(94,231,255,.62);box-shadow:0 0 0 4px rgba(94,231,255,.12)}.preset-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:20px 0 28px}.stat{padding:16px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.065);box-shadow:0 12px 36px rgba(0,0,0,.18)}.stat span{display:block;color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900}.stat b{display:block;font-size:1.12rem;margin-top:5px}.grid{display:grid;gap:18px}.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:1fr 1fr 1fr}.panel{padding:22px;overflow:hidden}.panel.lead{grid-column:1/-1}.sub{color:var(--muted);line-height:1.55}.console{height:360px;overflow:auto;background:#02040c;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86rem;line-height:1.55}.logline{padding:7px 0;border-bottom:1px dashed rgba(255,255,255,.08)}.logline .time{color:var(--cyan);margin-right:8px}.logline .warn{color:var(--gold)}.logline .ok{color:var(--green)}.logline .bad{color:var(--red)}
+.flow{width:100%;min-height:292px}.node{filter:drop-shadow(0 12px 22px rgba(0,0,0,.22))}.flow text{font-weight:900;fill:#fff}.flow .cap{fill:rgba(255,255,255,.62);font-size:12px;font-weight:700}.edge{stroke-dasharray:8 10;animation:dash 1.8s linear infinite}@keyframes dash{to{stroke-dashoffset:-36}}.gate-stack{display:grid;gap:10px}.gate-row{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:12px;align-items:center;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.045)}.gate-row b{display:block}.gate-row span{display:block;color:var(--muted);font-size:.86rem;margin-top:3px}.pill{justify-self:end;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);font-weight:900;font-size:.76rem}.pass{color:var(--green);background:rgba(117,247,180,.10);border-color:rgba(117,247,180,.36)}.hold{color:var(--gold);background:rgba(255,215,106,.10);border-color:rgba(255,215,106,.36)}.fail{color:var(--red);background:rgba(255,107,139,.10);border-color:rgba(255,107,139,.36)}
+.job-list{display:grid;gap:12px}.job{padding:14px;border:1px solid rgba(255,255,255,.13);border-radius:18px;background:rgba(255,255,255,.052)}.job-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.job h3{margin:0;font-size:1rem}.job p{margin:6px 0;color:var(--muted);line-height:1.45}.job ul{margin:8px 0 0;padding-left:19px;color:var(--muted);font-size:.86rem}.job .actions{margin-top:12px}.claims{display:grid;gap:10px}.claim{padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.045)}.claim b{display:block}.claim span{display:block;color:var(--muted);font-size:.88rem;margin-top:4px}.artifact-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 12px}.artifact-view{white-space:pre-wrap;word-break:break-word;max-height:520px;overflow:auto;background:rgba(0,0,0,.30);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.82rem;line-height:1.55}.chart-row{display:grid;grid-template-columns:190px minmax(0,1fr);gap:14px;align-items:center}.chart-canvas{width:100%;height:220px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);border-radius:18px}.ring-canvas{width:190px;height:190px}.memory-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.memory-card{padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.05)}.memory-card.validated{border-color:rgba(117,247,180,.42);box-shadow:0 0 0 1px rgba(117,247,180,.08) inset}.memory-card.blocked{border-color:rgba(255,215,106,.34)}.future-list{display:grid;gap:10px}.future{padding:12px;border:1px solid rgba(94,231,255,.18);border-radius:16px;background:rgba(94,231,255,.055)}.validator{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.88fr);gap:14px}.pb-input{min-height:220px}.verdict{padding:12px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.2);min-height:90px}.doc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.doc{padding:14px;border:1px solid rgba(255,255,255,.11);border-radius:18px;background:rgba(255,255,255,.046)}.doc h3{margin:0 0 6px}.doc p{margin:0;color:var(--muted);line-height:1.45;font-size:.9rem}.footer{margin-top:34px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);color:var(--muted);font-size:.9rem}.shake{animation:shake .45s ease}.ascend{animation:ascend .9s ease}.flash{animation:flash 1.1s ease}@keyframes shake{10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}@keyframes ascend{0%{box-shadow:0 0 0 rgba(94,231,255,0);transform:translateY(0)}50%{box-shadow:0 0 80px rgba(94,231,255,.45);transform:translateY(-4px)}100%{box-shadow:var(--shadow);transform:translateY(0)}}@keyframes flash{0%{background:rgba(117,247,180,.18)}100%{background:rgba(255,255,255,.045)}}
+@media(max-width:1080px){.hero,.grid.two,.grid.three,.validator{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.doc-grid,.memory-grid{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}.ring-canvas{margin:auto}.topbar{position:relative;top:auto;align-items:flex-start}.nav{justify-content:flex-end}}@media(max-width:620px){.wrap{width:min(100%,100vw);padding:10px}.topbar{border-radius:18px}.hero{padding-top:38px}.hero h1{font-size:3rem}.stats{grid-template-columns:1fr}.nav a,.btn{width:100%;text-align:center}.actions{display:grid;grid-template-columns:1fr;width:100%}.job-head{display:block}.pill{justify-self:start;margin-top:8px}.console{height:280px}.panel,.hero-card{border-radius:20px;padding:16px}}
+</style>
+</head>
+<body>
+<canvas id="ascension-canvas" aria-hidden="true"></canvas>
+<div class="ascension-orb" aria-hidden="true"></div>
+<div class="ascension-beam" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><div class="logo" aria-hidden="true"></div><div><b>GoalOS Chronicle Gate</b><span>Only validated results can influence future missions</span></div></div>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="#machine">Machine</a><a href="#gate">Gate</a><a href="#jobsSection">AGI Jobs</a><a href="#memorySection">Chronicle</a><a href="#artifactsSection">Artifacts</a><a href="#docsSection">Docs</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="machine">
+      <div>
+        <div class="eyebrow">GoalOS · proof-gated autonomous work</div>
+        <h1><span class="grad">Drafts do not become memory.</span><br>Proof does.</h1>
+        <p>GoalOS treats the LLM as the drafting and reasoning layer, not the authority layer. When the LLM reaches the edge of reliable knowledge, GoalOS creates proof debt. Proof debt becomes AGI Jobs. AGI Jobs return ProofBundles. ProofBundles update the Evidence Docket. Only validated results can enter Chronicle memory or influence future missions.</p>
+        <div class="actions"><button class="btn primary" id="validateAllBtn">Run validated path</button><button class="btn danger" id="forcePromoteBtn">Try force-promote draft</button><button class="btn" id="copyBtn">Copy summary</button></div>
+      </div>
+      <div class="hero-card">
+        <h2>Mission Composer</h2>
+        <label for="objectiveInput">Type an objective. The demo compiles fresh proof debt, jobs, gates, and artifacts from this text.</label>
+        <div class="preset-row" id="presets"></div>
+        <textarea id="objectiveInput" spellcheck="false"></textarea>
+        <div class="actions" style="margin-top:12px"><button class="btn primary" id="startBtn">Start fresh mission</button><button class="btn gold" id="exportBtn">Export Dynamic Dossier</button></div>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Mission stats">
+      <div class="stat"><span>Run</span><b id="runId">—</b></div>
+      <div class="stat"><span>Domain</span><b id="domain">—</b></div>
+      <div class="stat"><span>Risk</span><b id="risk">—</b></div>
+      <div class="stat"><span>Proof readiness</span><b id="readiness">—</b></div>
+      <div class="stat"><span>Chronicle</span><b id="chronicleStatus">HOLD</b></div>
+    </section>
+
+    <section class="grid two">
+      <article class="panel">
+        <h2>Autonomy Theatre Console</h2>
+        <p class="sub">Watch GoalOS enforce the authority boundary: drafts can create work, but cannot enter memory.</p>
+        <div class="console" id="console"></div>
+      </article>
+      <article class="panel">
+        <h2>Proof-to-Chronicle Flow</h2>
+        <p class="sub">The final edge to Chronicle activates only after ProofBundle, replay, validator, boundary, and Evidence Docket gates pass.</p>
+        <div id="flow"></div>
+      </article>
+    </section>
+
+    <section class="grid three" style="margin-top:18px">
+      <article class="panel"><h2>Proof Readiness Ring</h2><canvas id="ringChart" class="ring-canvas"></canvas></article>
+      <article class="panel"><h2>Production Gates</h2><canvas id="barChart" class="chart-canvas"></canvas></article>
+      <article class="panel"><h2>RSI Control Radar</h2><canvas id="radarChart" class="chart-canvas"></canvas></article>
+    </section>
+
+    <section class="panel lead" id="gate" style="margin-top:18px">
+      <h2>Chronicle Promotion Gate</h2>
+      <p class="sub">This is the key demonstration: the LLM may draft, reason, and propose. It does not decide what becomes memory. Mechanical gates decide.</p>
+      <div id="gatesPanel"><div class="gate-stack" id="gates"></div></div>
+    </section>
+
+    <section class="panel lead" id="jobsSection" style="margin-top:18px">
+      <h2>Objective-Native AGI Job Queue</h2>
+      <p class="sub">Jobs are generated from the objective domain, proof debt, risk, and claim boundary. Use the controls to return ProofBundles, replay them, and validate or reject them.</p>
+      <div class="job-list" id="jobs"></div>
+    </section>
+
+    <section class="grid two" style="margin-top:18px">
+      <article class="panel"><h2>Claim Verdicts</h2><p class="sub">Draft claims are visible, but they are not authority. Their status changes only through ProofBundles and validator acceptance.</p><div class="claims" id="claims"></div></article>
+      <article class="panel"><h2>Proof Debt Burn-down</h2><canvas id="sparkChart" class="chart-canvas"></canvas><p class="sub">A validated job reduces proof debt. Rejected or pending jobs keep the Chronicle Gate closed.</p></article>
+    </section>
+
+    <section class="grid two" id="memorySection" style="margin-top:18px">
+      <article class="panel"><h2>Chronicle Memory</h2><div class="memory-grid" id="memory"></div></article>
+      <article class="panel"><h2>Future Mission Influence</h2><div id="influenceGraph"></div><div class="future-list" id="future"></div><div class="stat" style="margin-top:12px"><span>Future influence</span><b id="futureStatus">BLOCKED</b></div></article>
+    </section>
+
+    <section class="validator" style="margin-top:18px">
+      <article class="panel"><h2>ProofBundle Validator</h2><p class="sub">Paste or load a ProofBundle. The local validator checks the minimum requirements for Chronicle eligibility.</p><textarea id="pbText" class="pb-input" spellcheck="false"></textarea><div class="actions" style="margin-top:12px"><button class="btn" id="loadPB">Load sample</button><button class="btn primary" id="validatePB">Validate ProofBundle</button></div></article>
+      <article class="panel"><h2>Validator Verdict</h2><div id="pbVerdict" class="verdict">No validation yet.</div><div style="margin-top:18px"><h2>Diversity Regression Test</h2><p class="sub">Tests the earlier failure mode: unrelated objectives must not produce the same jobs.</p><button class="btn" id="diversityBtn">Run diversity test</button><div id="diversityResult" class="verdict" style="margin-top:12px">Not run.</div></div></article>
+    </section>
+
+    <section class="panel lead" id="artifactsSection" style="margin-top:18px">
+      <h2>Generated Artifact Workbench</h2>
+      <p class="sub">Every tab is generated from the current objective and gate state. Export the dossier to capture the current proof machine state.</p>
+      <div class="artifact-tabs" id="artifactTabs"></div>
+      <pre class="artifact-view" id="artifactView"></pre>
+    </section>
+
+    <section class="panel lead" id="docsSection" style="margin-top:18px">
+      <h2>Operator Documentation Browser</h2>
+      <p class="sub">This autonomous GitHub Action pack includes implementation docs, a claim boundary, sample ProofBundles, and an audit script.</p>
+      <div class="doc-grid" id="docs"></div>
+    </section>
+  </main>
+
+  <footer class="footer">GoalOS Chronicle Gate Interface · local-first · no backend · no wallet in demo · no automatic transactions · no Chronicle promotion without validation.</footer>
+</div>
+<script>(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const nowTime = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const safeSlug = (s) => String(s || 'mission').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 64) || 'mission';
+  const hash = (s) => {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i += 1) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return ('00000000' + (h >>> 0).toString(16)).slice(-8);
+  };
+  const titleCase = (s) => String(s || '').replace(/[-_]+/g, ' ').replace(/\w\S*/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase());
+  const templates = {
+    procurement: {
+      label: 'AI Governance / Trust / Procurement', risk: 'medium', color: '#8b5cf6',
+      signals: ['trust room', 'vendor', 'procurement', 'enterprise', 'buyer', 'ai governance', 'claims', 'faq', 'diligence'],
+      claims: ['Buyer-readiness is higher than a standard vendor FAQ', 'Major vendor claims are source-bound and reviewable', 'Unsupported trust or security claims remain blocked'],
+      debt: [
+        ['claim_source_map', 'Map each AI/vendor claim to source evidence', 'Every major claim has a source, timestamp, and boundary note'],
+        ['buyer_verdict', 'Obtain buyer or reviewer trust-room verdict', 'Reviewer marks each claim supported, weak, blocked, or rejected'],
+        ['baseline_comparison', 'Compare against baseline FAQ or vendor one-pager', 'Baseline differences are visible and decision-relevant'],
+        ['security_boundary', 'Validate privacy, security, and compliance claim boundaries', 'No certification claim is promoted without external evidence'],
+        ['external_attestation', 'Request independent external reviewer attestation', 'Attestation record is attached to the Evidence Docket']
+      ]
+    },
+    energy: {
+      label: 'Energy / Infrastructure / Climate', risk: 'high', color: '#5ee7ff',
+      signals: ['solar', 'microgrid', 'energy', 'battery', 'hospital', 'tariff', 'grid', 'climate', 'emissions'],
+      claims: ['A financing model can be made decision-ready', 'Savings and resilience claims require measured assumptions', 'Engineering and permitting risks must remain explicit'],
+      debt: [
+        ['site_assumptions', 'Collect site, load, tariff, battery, and constraint assumptions', 'Assumptions are documented with source, date, and owner'],
+        ['incumbent_baseline', 'Compare microgrid financing against incumbent energy baseline', 'Baseline includes current cost, outages, emissions, and resilience profile'],
+        ['engineering_review', 'Route design to engineering feasibility review', 'Engineer or reviewer verdict is returned as a ProofBundle'],
+        ['permitting_risk', 'Identify permitting, interconnection, and regulatory proof debt', 'Regulatory risks are separated from financial projections'],
+        ['measured_outcome_plan', 'Create measured outcome plan for resilience, savings, and emissions', 'Measurement plan defines before/after evidence and acceptance tests']
+      ]
+    },
+    cybersecurity: {
+      label: 'Cybersecurity / Defensive Assurance', risk: 'high', color: '#ff6b8b',
+      signals: ['security', 'cyber', 'vulnerability', 'audit', 'defensive', 'soc', 'incident', 'threat', 'hardening'],
+      claims: ['A defensive review can produce human-reviewable remediation', 'No production remediation is authorized without human review', 'Sensitive data and offensive actions remain blocked'],
+      debt: [
+        ['repo_scope', 'Confirm repo-owned defensive scope and asset boundary', 'No external target scanning or secret exposure occurs'],
+        ['finding_evidence', 'Map each finding to proof, severity, and safe reproduction notes', 'Findings include evidence without leaking secrets'],
+        ['patch_proposal', 'Create human-reviewable remediation proposal', 'Patch proposal is safe, bounded, and never auto-merged'],
+        ['external_replay', 'Prepare external reviewer replay kit', 'Reviewer can reproduce the docket with sanitized inputs'],
+        ['delayed_outcome', 'Create delayed-outcome monitoring plan', 'Post-review outcomes are tracked before promotion']
+      ]
+    },
+    research: {
+      label: 'Research / Scientific Discovery', risk: 'medium', color: '#ffd76a',
+      signals: ['research', 'experiment', 'benchmark', 'study', 'science', 'paper', 'hypothesis', 'discovery', 'evaluate'],
+      claims: ['The hypothesis can be converted into a testable mission', 'Benchmark wins require replay and baseline comparison', 'Novel findings require Move-37 skepticism before promotion'],
+      debt: [
+        ['hypothesis_contract', 'Convert research claim into falsifiable hypothesis contract', 'Success and failure criteria are measurable'],
+        ['baseline_ladder', 'Build incumbent, neighbor, and null baseline ladder', 'Every advantage claim has a comparator'],
+        ['experiment_manifest', 'Create deterministic experiment and replay manifest', 'Seeds, versions, and inputs are pinned'],
+        ['variance_replay', 'Run replay and variance checks', 'Result persists across repeated runs or remains provisional'],
+        ['move37_dossier', 'Package high-novelty finding as Move-37 dossier', 'Novelty triggers reproduce, stress, persist, and dossier steps']
+      ]
+    },
+    software: {
+      label: 'Software / Product Engineering', risk: 'medium', color: '#75f7b4',
+      signals: ['code', 'software', 'github', 'app', 'feature', 'bug', 'deploy', 'website', 'api'],
+      claims: ['A product change can be made review-ready', 'Deployment claims require tests and rollback path', 'Only CI-passing artifacts can influence future work'],
+      debt: [
+        ['acceptance_tests', 'Define acceptance tests and rollback criteria', 'Tests are clear, executable, and mapped to user value'],
+        ['implementation_trace', 'Generate implementation trace and changed-file manifest', 'Every change has purpose, diff, and owner'],
+        ['ci_evidence', 'Run local/CI validation and collect logs', 'CI result is attached with command and timestamp'],
+        ['review_packet', 'Create reviewer packet and release boundary', 'Reviewer can inspect risk, tests, and rollback'],
+        ['post_release_monitor', 'Create delayed outcome and regression watch plan', 'Future missions can reuse only if post-release gates pass']
+      ]
+    },
+    finance: {
+      label: 'Strategy / Finance / ROI', risk: 'medium', color: '#ffd76a',
+      signals: ['roi', 'finance', 'pricing', 'market', 'revenue', 'strategy', 'investment', 'budget', 'sales'],
+      claims: ['A strategic decision can be made more inspectable', 'ROI claims require measured assumptions and sensitivity ranges', 'Forecasts stay illustrative until evidence arrives'],
+      debt: [
+        ['assumption_register', 'Separate measured values from assumptions', 'Assumption register includes source, confidence, and sensitivity'],
+        ['baseline_model', 'Compare against current operating baseline', 'Baseline makes counterfactual explicit'],
+        ['sensitivity_analysis', 'Run sensitivity and downside analysis', 'Key drivers and break-even ranges are visible'],
+        ['decision_review', 'Route to stakeholder or reviewer verdict', 'Reviewer verdict is attached before promotion'],
+        ['measurement_plan', 'Create post-decision measurement plan', 'Future mission influence depends on measured outcomes']
+      ]
+    },
+    general: {
+      label: 'General Autonomous Work', risk: 'medium', color: '#8b5cf6',
+      signals: [],
+      claims: ['The objective can be converted into proof-gated work', 'Local reasoning can produce a draft mission but not authority', 'Only validated evidence can influence future missions'],
+      debt: [
+        ['objective_contract', 'Clarify objective, success criteria, and boundary', 'Mission contract is explicit and reviewable'],
+        ['source_evidence', 'Collect supporting source evidence', 'Claims are source-bound or blocked'],
+        ['external_verdict', 'Obtain reviewer or validator verdict', 'Verdict is returned as a ProofBundle'],
+        ['baseline_check', 'Compare against current baseline or null workflow', 'Advantage claim is comparative'],
+        ['replay_path', 'Create replay and audit path', 'Mission can be reproduced or remains held']
+      ]
+    }
+  };
+  const presets = [
+    'Evaluate whether an AI vendor trust room is buyer-ready for enterprise procurement and prepare a reviewer-ready proof package.',
+    'Design a solar microgrid financing model for a hospital campus with resilience, savings, emissions, and permitting proof gates.',
+    'Review a repo-owned defensive cybersecurity workflow and create human-reviewable remediation evidence without unsafe autonomy.',
+    'Turn a research hypothesis into a replayable benchmark mission with baseline comparison and Move-37 breakthrough controls.',
+    'Prepare a production release proof package for a new software feature with CI evidence, rollback, and delayed-outcome monitoring.'
+  ];
+  let state = { mission: null, logs: [], selectedArtifact: 'mission-contract.json', intensity: 0.38 };
+  function addLog(message, kind = 'info') {
+    state.logs.unshift({ time: nowTime(), message, kind });
+    state.logs = state.logs.slice(0, 90);
+    renderLogs();
+  }
+  function scoreDomain(objective) {
+    const text = objective.toLowerCase();
+    let best = { key: 'general', score: 0 };
+    Object.entries(templates).forEach(([key, tpl]) => {
+      const s = (tpl.signals || []).reduce((acc, sig) => acc + (text.includes(sig) ? 2 + sig.length / 14 : 0), 0);
+      if (s > best.score) best = { key, score: s };
+    });
+    return templates[best.key];
+  }
+  function riskFromObjective(objective, domainRisk) {
+    const t = objective.toLowerCase();
+    const high = ['production', 'mainnet', 'wallet', 'legal', 'medical', 'security', 'patient', 'hospital', 'funds', 'transaction', 'compliance', 'certification'];
+    const critical = ['move funds', 'auto approve', 'autonomous transaction', 'exploit', 'malware', 'secret', 'private key'];
+    if (critical.some(x => t.includes(x))) return 'critical';
+    if (high.some(x => t.includes(x))) return 'high';
+    return domainRisk || 'medium';
+  }
+  function compileMission(objective) {
+    const domain = scoreDomain(objective);
+    const runId = `goalos-chronicle-${Date.now().toString(36)}-${hash(objective)}`;
+    const slug = safeSlug(objective);
+    const risk = riskFromObjective(objective, domain.risk);
+    const terms = objective.toLowerCase().split(/[^a-z0-9]+/).filter(w => w.length > 3).slice(0, 14);
+    const claims = domain.claims.map((claim, i) => ({
+      id: `claim-${i + 1}`, text: claim, status: 'draft', support: 'unvalidated_llm_draft', boundary: 'not authority', source: 'user objective + local compiler', influence: false
+    }));
+    claims.push({ id: `claim-${claims.length + 1}`, text: `Objective-specific claim: ${objective.slice(0, 140)}${objective.length > 140 ? '…' : ''}`, status: 'draft', support: 'objective-derived', boundary: 'requires Evidence Docket', source: 'mission composer', influence: false });
+    const debts = domain.debt.map((d, idx) => ({
+      id: `debt-${idx + 1}-${d[0]}`, title: d[1], acceptance: d[2], status: 'open', claim_ref: claims[idx % claims.length].id,
+      reason: `The LLM can draft around this item, but GoalOS cannot admit it into Chronicle memory until evidence, replay, and validation exist.`,
+      severity: risk === 'critical' ? 'critical' : idx < 2 ? 'high' : 'medium'
+    }));
+    const jobs = debts.map((debt, idx) => ({
+      id: `AGIJOB-${slug.slice(0, 18).toUpperCase()}-${String(idx + 1).padStart(3, '0')}`,
+      title: debt.title,
+      proofDebt: debt.reason,
+      debtId: debt.id,
+      worker: ['Research Agent', 'Builder Agent', 'Verifier Agent', 'Sentinel Agent', 'Value Accountant Agent'][idx % 5],
+      validator: idx % 2 === 0 ? 'AGI Node Validator + Human Reviewer' : 'AGI Node Validator',
+      state: 'proof_debt_open',
+      acceptanceTests: [debt.acceptance, 'Replay path or review route exists', 'Claim boundary is preserved', 'Evidence Docket is updated'],
+      requiredOutputs: [`${debt.id}-proofbundle.json`, `updated-evidence-docket-${idx + 1}.json`, `validator-verdict-${idx + 1}.json`],
+      blockedClaims: [`${claims[idx % claims.length].text}`],
+      jobSpecURI: `ipfs://draft/${runId}/${debt.id}/job-spec.json`,
+      completionURI: '',
+      proofBundle: null
+    }));
+    const readiness = Math.max(16, Math.min(82, 30 + terms.length * 2 + (risk === 'low' ? 16 : risk === 'medium' ? 8 : 0)));
+    const artifacts = buildArtifacts({ runId, objective, domain, risk, claims, debts, jobs, readiness });
+    return {
+      runId, objective, domain: domain.label, domainColor: domain.color, risk, slug, terms, claims, debts, jobs, readiness,
+      gate: { proofbundle: false, replay: false, validator: false, claimBoundary: true, evidenceDocket: false, chronicle: false, futureInfluence: false },
+      chronicle: [], futureMissions: [], artifacts, burndown: [debts.length, debts.length, debts.length], startedAt: new Date().toISOString()
+    };
+  }
+  function buildArtifacts(m) {
+    const jobSpecs = m.jobs.map(j => ({ job_id: j.id, title: j.title, jobSpecURI: j.jobSpecURI, proof_debt: j.proofDebt, worker: j.worker, validator: j.validator, acceptance_tests: j.acceptanceTests, required_outputs: j.requiredOutputs, blocked_claims_until_complete: j.blockedClaims, policy: { no_chronicle_without_validation: true, no_future_influence_without_chronicle: true } }));
+    const txIntents = m.jobs.map(j => ({ intent: 'createJob', human_confirmation_required: true, contract: 'AGIJobManager', job_id: j.id, jobSpecURI: j.jobSpecURI, payout: '0', duration: 'review-defined', details: j.title, policy: 'intent-only; not auto-submitted' }));
+    const proofTemplate = m.jobs.map(j => ({ version: 'goalos.v38.proofbundle.template', job_id: j.id, jobSpecURI: j.jobSpecURI, jobCompletionURI: `ipfs://draft/${m.runId}/${j.debtId}/proofbundle.json`, replay_result: 'pending', validator_verdict: 'pending', evidence: [], claim_boundary: 'draft only until replay + validator verdict pass' }));
+    return {
+      'mission-contract.json': { version: 'goalos.v38.mission_contract', run_id: m.runId, objective: m.objective, domain: m.domain.label, risk: m.risk, success_criteria: ['All claims get verdicts', 'All proof debt becomes AGI Jobs or validated ProofBundles', 'Chronicle promotion remains blocked until validation'], failure_criteria: ['Unvalidated result enters Chronicle', 'Future mission uses rejected or pending result', 'Claim boundary removed'], done_condition: 'review-ready governed decision state' },
+      'proof-debt-register.json': { version: 'goalos.v38.proof_debt_register', run_id: m.runId, proof_debt: m.debts },
+      'agi-job-queue.json': { version: 'goalos.v38.agi_job_queue', run_id: m.runId, jobs: m.jobs.map(({ proofBundle, ...j }) => j) },
+      'agijobmanager-job-specs.json': { version: 'goalos.v38.agijobmanager_job_specs', run_id: m.runId, specs: jobSpecs },
+      'agijobmanager-transaction-intents.json': { version: 'goalos.v38.transaction_intents', run_id: m.runId, intents: txIntents },
+      'proofbundle-template.json': { version: 'goalos.v38.proofbundle_templates', run_id: m.runId, templates: proofTemplate },
+      'claim-verdicts.json': { version: 'goalos.v38.claim_verdicts', run_id: m.runId, claims: m.claims },
+      'evidence-docket-61.json': { version: 'evidence_docket_6.1', run_id: m.runId, public_private_boundary: 'private execution stays local; public proof is represented as hashes, pointers, attestations, and Evidence Docket entries', entries: [] },
+      'chronicle-gate.json': { version: 'goalos.v38.chronicle_gate', rule: 'Only validated results can enter Chronicle memory or influence future missions.', gates: m.gate },
+      'future-mission-policy.json': { version: 'goalos.v38.future_mission_policy', allow_influence_only_if: ['ProofBundle present', 'Replay pass', 'Validator accepted', 'Evidence Docket updated', 'Capability Promotion Gate pass'], denied_if: ['draft only', 'proof debt open', 'validator pending', 'validator rejected', 'claim boundary fail'] }
+    };
+  }
+  function updateArtifacts() {
+    const m = state.mission;
+    if (!m) return;
+    m.artifacts['claim-verdicts.json'].claims = m.claims;
+    m.artifacts['agi-job-queue.json'].jobs = m.jobs.map(({ proofBundle, ...j }) => j);
+    m.artifacts['proofbundle-returns.json'] = { version: 'goalos.v38.proofbundle_returns', run_id: m.runId, proofbundles: m.jobs.filter(j => j.proofBundle).map(j => j.proofBundle) };
+    m.artifacts['evidence-docket-61.json'].entries = m.jobs.filter(j => j.proofBundle && j.proofBundle.validator_verdict === 'accepted').map(j => ({ job_id: j.id, claim: j.blockedClaims[0], proofbundle_uri: j.proofBundle.jobCompletionURI, replay_result: j.proofBundle.replay_result, validator_verdict: j.proofBundle.validator_verdict, accepted_for_chronicle: true }));
+    m.artifacts['chronicle-gate.json'].gates = m.gate;
+    m.artifacts['chronicle-entry.json'] = { version: 'goalos.v38.chronicle_entry', run_id: m.runId, status: m.gate.chronicle ? 'PROMOTED' : 'HOLD', entries: m.chronicle, rule: 'Only validated results can enter Chronicle memory or influence future missions.' };
+  }
+  function recomputeGate() {
+    const m = state.mission;
+    if (!m) return;
+    const total = m.jobs.length;
+    const withProof = m.jobs.filter(j => j.proofBundle).length;
+    const replayPass = m.jobs.filter(j => j.proofBundle && j.proofBundle.replay_result === 'pass').length;
+    const accepted = m.jobs.filter(j => j.proofBundle && j.proofBundle.validator_verdict === 'accepted').length;
+    const rejected = m.jobs.filter(j => j.proofBundle && j.proofBundle.validator_verdict === 'rejected').length;
+    m.gate.proofbundle = withProof === total && total > 0;
+    m.gate.replay = replayPass === total && total > 0;
+    m.gate.validator = accepted === total && total > 0;
+    m.gate.claimBoundary = rejected === 0;
+    m.gate.evidenceDocket = accepted === total && total > 0;
+    m.gate.chronicle = m.gate.proofbundle && m.gate.replay && m.gate.validator && m.gate.claimBoundary && m.gate.evidenceDocket;
+    m.gate.futureInfluence = m.gate.chronicle;
+    m.readiness = Math.round(20 + (withProof / total) * 18 + (replayPass / total) * 22 + (accepted / total) * 30 + (m.gate.claimBoundary ? 10 : 0));
+    if (!Number.isFinite(m.readiness)) m.readiness = 20;
+    m.burndown.push(total - accepted);
+    m.burndown = m.burndown.slice(-12);
+    if (m.gate.chronicle && m.chronicle.length === 0) {
+      m.chronicle = m.jobs.map(j => ({ capability_id: `cap-${safeSlug(j.title).slice(0, 36)}`, source_job: j.id, statement: `${j.title} is validated and may influence future missions.`, proofbundle: j.proofBundle.jobCompletionURI, promotion: 'allowed' }));
+      m.futureMissions = [
+        `Reuse validated ${m.domain} evidence pattern for a harder mission`,
+        `Create benchmark ladder from ${m.slug} proof bundles`,
+        `Route next mission with Chronicle capabilities from ${m.runId.slice(-8)}`
+      ];
+      addLog('Chronicle gate opened: validated capabilities may now influence future missions.', 'ok');
+    }
+    updateArtifacts();
+  }
+  function startMission(objective) {
+    state.mission = compileMission(objective);
+    state.logs = [];
+    state.selectedArtifact = 'mission-contract.json';
+    state.intensity = 0.62;
+    addLog('GoalOS booted: LLM treated as drafting/reasoning layer, not authority layer.', 'ok');
+    addLog(`Objective-native compiler created ${state.mission.jobs.length} proof-debt AGI Jobs for ${state.mission.domain}.`, 'ok');
+    addLog('Chronicle memory is locked until ProofBundles, replay, validator verdicts, and Evidence Docket entries pass.', 'warn');
+    render();
+    burst();
+  }
+  function generateProof(jobId) {
+    const m = state.mission;
+    const j = m.jobs.find(x => x.id === jobId);
+    if (!j) return;
+    j.proofBundle = { version: 'goalos.v38.proofbundle_return', job_id: j.id, jobSpecURI: j.jobSpecURI, jobCompletionURI: `ipfs://candidate/${m.runId}/${j.debtId}/proofbundle.json`, replay_result: 'pending', validator_verdict: 'pending', claim_boundary: 'preserved', evidence: [{ type: 'candidate_artifact', hash: hash(j.title + m.objective), note: 'candidate proof exists; not validated' }], can_enter_chronicle: false };
+    j.completionURI = j.proofBundle.jobCompletionURI;
+    j.state = 'proofbundle_returned_pending_replay';
+    addLog(`ProofBundle candidate returned for ${j.id}. Chronicle remains HOLD.`, 'warn');
+    recomputeGate(); render(); burst();
+  }
+  function runReplay(jobId) {
+    const j = state.mission.jobs.find(x => x.id === jobId);
+    if (!j || !j.proofBundle) { addLog('Replay blocked: ProofBundle must exist first.', 'bad'); flashBlocked(); return; }
+    j.proofBundle.replay_result = 'pass';
+    j.proofBundle.replay_hash = hash(JSON.stringify(j.proofBundle));
+    j.state = 'replay_pass_validator_pending';
+    addLog(`Replay passed for ${j.id}; validator verdict still required.`, 'ok');
+    recomputeGate(); render(); burst();
+  }
+  function acceptJob(jobId) {
+    const m = state.mission;
+    const j = m.jobs.find(x => x.id === jobId);
+    if (!j || !j.proofBundle) { addLog('Validation blocked: no ProofBundle returned.', 'bad'); flashBlocked(); return; }
+    if (j.proofBundle.replay_result !== 'pass') { addLog('Validation blocked: replay must pass before validator acceptance.', 'bad'); flashBlocked(); return; }
+    j.proofBundle.validator_verdict = 'accepted';
+    j.proofBundle.can_enter_chronicle = true;
+    j.state = 'validated_evidence_docket_ready';
+    const claim = m.claims.find(c => c.id === m.debts.find(d => d.id === j.debtId)?.claim_ref);
+    if (claim) { claim.status = 'supported'; claim.support = j.proofBundle.jobCompletionURI; claim.boundary = 'accepted by validator after replay'; claim.influence = true; }
+    addLog(`Validator accepted ${j.id}. Evidence Docket updated.`, 'ok');
+    recomputeGate(); render(); burst();
+  }
+  function rejectJob(jobId) {
+    const j = state.mission.jobs.find(x => x.id === jobId);
+    if (!j) return;
+    if (!j.proofBundle) generateProof(jobId);
+    j.proofBundle.validator_verdict = 'rejected';
+    j.proofBundle.can_enter_chronicle = false;
+    j.state = 'rejected_blocked';
+    addLog(`Validator rejected ${j.id}. Result cannot enter Chronicle or influence future missions.`, 'bad');
+    recomputeGate(); render(); flashBlocked();
+  }
+  function forcePromote() {
+    recomputeGate();
+    if (!state.mission.gate.chronicle) { addLog('FORCE PROMOTE denied: unvalidated results cannot enter Chronicle memory.', 'bad'); flashBlocked(); return; }
+    addLog('Promotion already allowed because all validation gates passed.', 'ok');
+  }
+  function validateAll() {
+    const jobs = state.mission.jobs.slice();
+    let delay = 0;
+    jobs.forEach(job => {
+      setTimeout(() => generateProof(job.id), delay += 160);
+      setTimeout(() => runReplay(job.id), delay += 160);
+      setTimeout(() => acceptJob(job.id), delay += 160);
+    });
+    setTimeout(() => { recomputeGate(); render(); }, delay + 220);
+  }
+  function runDiversityTest() {
+    const a = compileMission(presets[0]);
+    const b = compileMission(presets[1]);
+    const aTitles = new Set(a.jobs.map(j => j.title));
+    const overlap = b.jobs.filter(j => aTitles.has(j.title)).length;
+    const pass = overlap === 0 && a.domain !== b.domain;
+    $('diversityResult').innerHTML = `<b class="${pass ? 'pass' : 'fail'}">${pass ? 'PASS' : 'FAIL'}</b><br>Objective A domain: ${a.domain}<br>Objective B domain: ${b.domain}<br>Job title overlap: ${overlap}`;
+    addLog(`Diversity regression test ${pass ? 'passed' : 'failed'}: unrelated objectives produce distinct job families.`, pass ? 'ok' : 'bad');
+  }
+  function validateProofBundleText() {
+    const out = $('pbVerdict');
+    try {
+      const obj = JSON.parse($('pbText').value || '{}');
+      const checks = [
+        ['job_id', !!obj.job_id], ['jobCompletionURI', !!obj.jobCompletionURI], ['replay_result=pass', obj.replay_result === 'pass'], ['validator_verdict=accepted', obj.validator_verdict === 'accepted'], ['claim_boundary preserved', String(obj.claim_boundary || '').toLowerCase().includes('preserved')]
+      ];
+      const pass = checks.every(x => x[1]);
+      out.innerHTML = `<b class="${pass ? 'pass' : 'hold'}">${pass ? 'Chronicle eligible' : 'Chronicle HOLD'}</b><br>${checks.map(c => `${c[1] ? '✓' : '✕'} ${c[0]}`).join('<br>')}`;
+    } catch (e) { out.innerHTML = `<b class="fail">Invalid JSON</b><br>${e.message}`; }
+  }
+  function artifactText(name) {
+    updateArtifacts();
+    const val = state.mission.artifacts[name];
+    return JSON.stringify(val, null, 2);
+  }
+  function download(filename, content, type = 'application/json') {
+    const blob = new Blob([content], { type });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 400);
+  }
+  function exportDossier() {
+    updateArtifacts();
+    const dossier = { generated_at: new Date().toISOString(), mission: state.mission, artifacts: state.mission.artifacts, docs: docList() };
+    download(`${state.mission.runId}-chronicle-gate-dossier.json`, JSON.stringify(dossier, null, 2));
+    addLog('Dynamic dossier exported. It contains generated artifacts and Chronicle Gate state.', 'ok');
+  }
+  function copySummary() {
+    const m = state.mission;
+    const text = `GoalOS Chronicle Gate\nObjective: ${m.objective}\nDomain: ${m.domain}\nRule: Only validated results can enter Chronicle memory or influence future missions.\nJobs: ${m.jobs.length}\nGate: ${m.gate.chronicle ? 'OPEN' : 'HOLD'}`;
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text);
+    addLog('Summary prepared for copy. If clipboard is unavailable, use Export Dossier.', 'ok');
+  }
+  function docList() {
+    return [
+      ['Executive Overview', 'LLMs draft and reason; GoalOS gates authority through proof debt, AGI Jobs, ProofBundles, Evidence Docket, and Chronicle.'],
+      ['Chronicle Gate Rule', 'Only validated results can enter Chronicle memory or influence future missions.'],
+      ['ProofBundle Standard', 'Minimum fields: job id, job spec, completion URI, replay result, validator verdict, evidence, and claim boundary.'],
+      ['AGIJobManager Adapter', 'Proof debt becomes AGI JobSpec material and human-confirmed transaction intents.'],
+      ['RSI Governance', 'Search can allocate exploration, but evidence, baseline, risk, replay, and persistence gates decide authority.'],
+      ['Human Review Boundary', 'Legal, security, wallet, production, and external validation claims stay blocked until real review evidence exists.']
+    ];
+  }
+  function render() {
+    const m = state.mission;
+    if (!m) return;
+    $('objectiveInput').value = m.objective;
+    $('runId').textContent = m.runId;
+    $('domain').textContent = m.domain;
+    $('risk').textContent = m.risk.toUpperCase();
+    $('readiness').textContent = `${m.readiness}%`;
+    $('chronicleStatus').textContent = m.gate.chronicle ? 'OPEN' : 'HOLD';
+    $('futureStatus').textContent = m.gate.futureInfluence ? 'ENABLED' : 'BLOCKED';
+    renderFlow(); renderGates(); renderJobs(); renderClaims(); renderMemory(); renderArtifacts(); renderDocs(); renderCharts(); renderLogs(); renderProofBundleSample();
+  }
+  function renderLogs() {
+    const el = $('console'); if (!el) return;
+    el.innerHTML = state.logs.map(l => `<div class="logline"><span class="time">${l.time}</span><span class="${l.kind === 'ok' ? 'ok' : l.kind === 'bad' ? 'bad' : l.kind === 'warn' ? 'warn' : ''}">${l.message}</span></div>`).join('');
+  }
+  function statusClass(v) { return v ? 'pass' : 'hold'; }
+  function renderGates() {
+    const m = state.mission;
+    const rows = [
+      ['ProofBundle present', 'Every proof-debt job has returned a ProofBundle candidate.', m.gate.proofbundle],
+      ['Replay passed', 'Returned ProofBundles pass replay or external review route.', m.gate.replay],
+      ['Validator accepted', 'Validator verdict accepts each ProofBundle.', m.gate.validator],
+      ['Claim boundary preserved', 'No certification, settlement, ROI, or external-validation overclaim is promoted.', m.gate.claimBoundary],
+      ['Evidence Docket updated', 'Validated results are mapped into Evidence Docket 6.1.', m.gate.evidenceDocket],
+      ['Chronicle promotion', 'Only now can results enter memory and influence future missions.', m.gate.chronicle]
+    ];
+    $('gates').innerHTML = rows.map(r => `<div class="gate-row"><div><b>${r[0]}</b><span>${r[1]}</span></div><div class="pill ${statusClass(r[2])}">${r[2] ? 'PASS' : 'HOLD'}</div></div>`).join('');
+  }
+  function renderJobs() {
+    const m = state.mission;
+    $('jobs').innerHTML = m.jobs.map(j => `<div class="job" id="job-${j.id}"><div class="job-head"><div><h3>${j.id}</h3><p><b>${j.title}</b></p><p>${j.proofDebt}</p></div><div class="pill ${j.state.includes('validated') ? 'pass' : j.state.includes('rejected') ? 'fail' : 'hold'}">${j.state.replaceAll('_',' ')}</div></div><ul>${j.acceptanceTests.map(t => `<li>${t}</li>`).join('')}</ul><div class="actions"><button class="btn small" data-action="proof" data-job="${j.id}">Return ProofBundle</button><button class="btn small" data-action="replay" data-job="${j.id}">Run replay</button><button class="btn small" data-action="accept" data-job="${j.id}">Validator accept</button><button class="btn small danger" data-action="reject" data-job="${j.id}">Reject</button></div></div>`).join('');
+  }
+  function renderClaims() {
+    const m = state.mission;
+    $('claims').innerHTML = m.claims.map(c => `<div class="claim"><b>${c.text}</b><span>Status: ${c.status} · Support: ${c.support} · Boundary: ${c.boundary}</span></div>`).join('');
+  }
+  function renderMemory() {
+    const m = state.mission;
+    const pending = m.jobs.filter(j => !(j.proofBundle && j.proofBundle.validator_verdict === 'accepted')).length;
+    const cards = [];
+    cards.push(`<div class="memory-card ${m.gate.chronicle ? 'validated' : 'blocked'}"><h3>Chronicle Memory</h3><p>${m.gate.chronicle ? 'OPEN: validated capabilities can be written.' : `HOLD: ${pending} job(s) still not validator-accepted.`}</p></div>`);
+    cards.push(`<div class="memory-card ${m.gate.futureInfluence ? 'validated' : 'blocked'}"><h3>Future Mission Influence</h3><p>${m.gate.futureInfluence ? 'ENABLED: next missions may use Chronicle entries.' : 'BLOCKED: drafts and pending ProofBundles cannot influence routing.'}</p></div>`);
+    $('memory').innerHTML = cards.join('');
+    $('future').innerHTML = (m.futureMissions.length ? m.futureMissions : ['No future mission can use this run yet.', 'Validate all ProofBundles to unlock Chronicle influence.']).map(f => `<div class="future">${f}</div>`).join('');
+  }
+  function renderArtifacts() {
+    const m = state.mission; updateArtifacts();
+    const names = Object.keys(m.artifacts);
+    if (!m.artifacts[state.selectedArtifact]) state.selectedArtifact = names[0];
+    $('artifactTabs').innerHTML = names.map(n => `<button class="btn small ${n === state.selectedArtifact ? 'primary' : ''}" data-artifact="${n}">${n}</button>`).join('');
+    $('artifactView').textContent = artifactText(state.selectedArtifact);
+  }
+  function renderDocs() {
+    $('docs').innerHTML = docList().map(d => `<div class="doc"><h3>${d[0]}</h3><p>${d[1]}</p></div>`).join('');
+  }
+  function renderProofBundleSample() {
+    const j = state.mission.jobs.find(x => x.proofBundle) || state.mission.jobs[0];
+    const sample = j && j.proofBundle ? j.proofBundle : { version: 'goalos.v38.proofbundle_return', job_id: j.id, jobCompletionURI: `ipfs://candidate/${state.mission.runId}/${j.debtId}/proofbundle.json`, replay_result: 'pending', validator_verdict: 'pending', claim_boundary: 'preserved', evidence: [] };
+    if (!$('pbText').value.trim()) $('pbText').value = JSON.stringify(sample, null, 2);
+  }
+  function renderFlow() {
+    const m = state.mission;
+    const stages = [
+      ['LLM Draft', true, 'drafting only'], ['Proof Debt', m.debts.length > 0, `${m.debts.length} items`], ['AGI Jobs', m.jobs.length > 0, `${m.jobs.length} jobs`],
+      ['ProofBundles', m.gate.proofbundle, m.gate.proofbundle ? 'returned' : 'pending'], ['Validation', m.gate.validator, m.gate.validator ? 'accepted' : 'hold'], ['Evidence Docket', m.gate.evidenceDocket, m.gate.evidenceDocket ? 'updated' : 'hold'], ['Chronicle', m.gate.chronicle, m.gate.chronicle ? 'open' : 'locked']
+    ];
+    const w = 980, h = 300, y = 120, gap = 140;
+    let svg = `<svg class="flow" viewBox="0 0 ${w} ${h}" role="img" aria-label="Chronicle Gate proof flow"><defs><linearGradient id="edgeg" x1="0" x2="1"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#5ee7ff"/></linearGradient></defs>`;
+    stages.forEach((s, i) => {
+      const x = 40 + i * gap;
+      if (i > 0) svg += `<path class="edge" d="M${x-50} ${y} C${x-30} ${y-56}, ${x-8} ${y+56}, ${x+16} ${y}" fill="none" stroke="url(#edgeg)" stroke-width="4" opacity=".75"/>`;
+      const fill = s[1] ? (i >= 4 ? 'rgba(117,247,180,.22)' : 'rgba(139,92,246,.22)') : 'rgba(255,215,106,.10)';
+      const stroke = s[1] ? (i >= 4 ? 'rgba(117,247,180,.65)' : 'rgba(94,231,255,.50)') : 'rgba(255,215,106,.42)';
+      svg += `<g class="node"><rect x="${x}" y="${y-34}" width="110" height="68" rx="18" fill="${fill}" stroke="${stroke}"/><text x="${x+55}" y="${y-4}" font-size="13" text-anchor="middle">${s[0]}</text><text class="cap" x="${x+55}" y="${y+18}" text-anchor="middle">${s[2]}</text></g>`;
+    });
+    svg += `<text x="490" y="248" text-anchor="middle" fill="rgba(255,255,255,.62)" font-size="15" font-weight="800">Rule: drafts cannot cross the Chronicle Gate. Only replayed and validator-accepted ProofBundles can influence future missions.</text></svg>`;
+    $('flow').innerHTML = svg;
+  }
+  function renderCharts() { drawRing(); drawBars(); drawRadar(); drawSparkline(); drawInfluenceGraph(); }
+  function getCtx(id) { const c = $(id); const r = c.getBoundingClientRect(); const d = Math.max(1, devicePixelRatio || 1); c.width = Math.max(1, Math.floor(r.width * d)); c.height = Math.max(1, Math.floor(r.height * d)); const ctx = c.getContext('2d'); ctx.setTransform(d, 0, 0, d, 0, 0); return { ctx, w: r.width, h: r.height }; }
+  function drawRing() {
+    const { ctx, w, h } = getCtx('ringChart'); const m = state.mission; ctx.clearRect(0, 0, w, h); const x = w/2, y = h/2, r = Math.min(w,h)*.34; ctx.lineWidth = 18; ctx.strokeStyle = 'rgba(255,255,255,.10)'; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.stroke(); ctx.strokeStyle = m.gate.chronicle ? '#75f7b4' : '#ffd76a'; ctx.beginPath(); ctx.arc(x,y,r,-Math.PI/2,-Math.PI/2+Math.PI*2*m.readiness/100); ctx.stroke(); ctx.fillStyle = '#fff'; ctx.font = '900 30px Inter, sans-serif'; ctx.textAlign='center'; ctx.fillText(`${m.readiness}%`,x,y+4); ctx.font='800 12px Inter, sans-serif'; ctx.fillStyle='rgba(255,255,255,.62)'; ctx.fillText(m.gate.chronicle?'chronicle open':'chronicle hold',x,y+28);
+  }
+  function drawBars() {
+    const { ctx, w, h } = getCtx('barChart'); const m = state.mission; ctx.clearRect(0,0,w,h); const vals = [['Proof', m.gate.proofbundle?100:42],['Replay', m.gate.replay?100:35],['Validator', m.gate.validator?100:25],['Docket', m.gate.evidenceDocket?100:35],['Chronicle', m.gate.chronicle?100:0]]; ctx.font='800 12px Inter'; vals.forEach((v,i)=>{const y=30+i*34; ctx.fillStyle='rgba(255,255,255,.65)'; ctx.fillText(v[0],10,y+9); ctx.fillStyle='rgba(255,255,255,.10)'; ctx.fillRect(90,y,Math.max(40,w-130),14); const grad=ctx.createLinearGradient(90,0,w-40,0); grad.addColorStop(0,'#8b5cf6'); grad.addColorStop(1,v[1]===100?'#75f7b4':'#5ee7ff'); ctx.fillStyle=grad; ctx.fillRect(90,y,(w-130)*v[1]/100,14); ctx.fillStyle='#fff'; ctx.fillText(`${v[1]}%`,w-34,y+11);});
+  }
+  function drawRadar() {
+    const { ctx, w, h } = getCtx('radarChart'); const m=state.mission; ctx.clearRect(0,0,w,h); const cx=w/2, cy=h/2+8, r=Math.min(w,h)*.32; const labels=['Evidence','Replay','Risk','Baseline','ECI','Move-37']; const vals=[m.gate.evidenceDocket?1:.35,m.gate.replay?1:.30,m.risk==='critical'?.35:m.risk==='high'?.55:.78,.68,.52,.58]; ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.fillStyle='rgba(139,92,246,.18)'; for(let k=1;k<=4;k++){ctx.beginPath(); labels.forEach((_,i)=>{const a=-Math.PI/2+i*Math.PI*2/labels.length; const rr=r*k/4; const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr; i?ctx.lineTo(x,y):ctx.moveTo(x,y)}); ctx.closePath(); ctx.stroke();} ctx.beginPath(); labels.forEach((_,i)=>{const a=-Math.PI/2+i*Math.PI*2/labels.length; const rr=r*vals[i]; const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr; i?ctx.lineTo(x,y):ctx.moveTo(x,y)}); ctx.closePath(); ctx.fillStyle='rgba(94,231,255,.18)'; ctx.fill(); ctx.strokeStyle='#5ee7ff'; ctx.lineWidth=2; ctx.stroke(); labels.forEach((lab,i)=>{const a=-Math.PI/2+i*Math.PI*2/labels.length; ctx.fillStyle='rgba(255,255,255,.70)'; ctx.font='800 11px Inter'; ctx.textAlign='center'; ctx.fillText(lab,cx+Math.cos(a)*(r+32),cy+Math.sin(a)*(r+32));});
+  }
+  function drawSparkline() {
+    const { ctx, w, h } = getCtx('sparkChart'); const m=state.mission; ctx.clearRect(0,0,w,h); const vals=m.burndown; const max=Math.max(...vals,1); ctx.strokeStyle='rgba(255,255,255,.10)'; for(let i=0;i<4;i++){ctx.beginPath(); ctx.moveTo(20,20+i*(h-40)/3); ctx.lineTo(w-20,20+i*(h-40)/3); ctx.stroke();} const grad=ctx.createLinearGradient(0,0,w,0); grad.addColorStop(0,'#ffd76a'); grad.addColorStop(.55,'#8b5cf6'); grad.addColorStop(1,'#5ee7ff'); ctx.strokeStyle=grad; ctx.lineWidth=4; ctx.beginPath(); vals.forEach((v,i)=>{const x=20+i*(w-40)/Math.max(vals.length-1,1); const y=20+(h-40)*(v/max); i?ctx.lineTo(x,y):ctx.moveTo(x,y);}); ctx.stroke(); ctx.fillStyle='rgba(255,255,255,.72)'; ctx.font='800 12px Inter'; ctx.fillText('proof debt remaining',20,18);
+  }
+  function drawInfluenceGraph() {
+    const m=state.mission; const nodes=m.gate.futureInfluence?['Chronicle','Cap A','Cap B','Next Mission','Harder Mission']:['Draft','Proof Debt','Gate Locked','Future Mission']; const colors=m.gate.futureInfluence?['#75f7b4','#5ee7ff','#8b5cf6','#ffd76a','#75f7b4']:['#8b5cf6','#ffd76a','#ff6b8b','#555']; let svg='<svg class="flow" viewBox="0 0 760 280">'; nodes.forEach((n,i)=>{const x=80+i*150, y=i%2?166:92; if(i>0) svg+=`<path class="edge" d="M${x-120} ${i%2?92:166} C${x-70} 35, ${x-30} 230, ${x} ${y}" fill="none" stroke="${m.gate.futureInfluence?'#75f7b4':'#ff6b8b'}" stroke-width="3" opacity=".65"/>`; svg+=`<circle cx="${x}" cy="${y}" r="36" fill="${colors[i]}33" stroke="${colors[i]}"/><text x="${x}" y="${y+4}" font-size="12" text-anchor="middle" fill="#fff" font-weight="900">${n}</text>`;}); svg+=`<text x="380" y="248" text-anchor="middle" fill="rgba(255,255,255,.62)" font-size="14">${m.gate.futureInfluence?'Validated memory influences future missions.':'Unvalidated draft cannot influence future missions.'}</text></svg>`; $('influenceGraph').innerHTML=svg;
+  }
+  function flashBlocked() { const gate=$('gatesPanel'); gate.classList.remove('shake'); void gate.offsetWidth; gate.classList.add('shake'); state.intensity = .92; setTimeout(()=>{state.intensity=.55;},900); }
+  function burst() { state.intensity = .98; setTimeout(()=>{state.intensity=.55;},700); }
+  function setupEvents() {
+    $('startBtn').addEventListener('click', () => startMission($('objectiveInput').value.trim() || presets[0]));
+    $('validateAllBtn').addEventListener('click', validateAll);
+    $('forcePromoteBtn').addEventListener('click', forcePromote);
+    $('exportBtn').addEventListener('click', exportDossier);
+    $('copyBtn').addEventListener('click', copySummary);
+    $('diversityBtn').addEventListener('click', runDiversityTest);
+    $('validatePB').addEventListener('click', validateProofBundleText);
+    $('loadPB').addEventListener('click', () => { $('pbText').value=''; renderProofBundleSample(); });
+    document.body.addEventListener('click', e => {
+      const a = e.target.closest('[data-action]');
+      if (a) { const job = a.getAttribute('data-job'); const action = a.getAttribute('data-action'); if(action==='proof') generateProof(job); if(action==='replay') runReplay(job); if(action==='accept') acceptJob(job); if(action==='reject') rejectJob(job); }
+      const art = e.target.closest('[data-artifact]');
+      if (art) { state.selectedArtifact = art.getAttribute('data-artifact'); renderArtifacts(); }
+      const preset = e.target.closest('[data-preset]');
+      if (preset) { $('objectiveInput').value = presets[Number(preset.getAttribute('data-preset'))]; }
+    });
+  }
+  function setupPresets(){ $('presets').innerHTML = presets.map((p,i)=>`<button class="btn small" data-preset="${i}">${titleCase(p.split(' ').slice(0,5).join(' '))}…</button>`).join(''); }
+  function setupCanvas(){ const canvas=$('ascension-canvas'); const ctx=canvas.getContext('2d'); let particles=[]; function resize(){canvas.width=innerWidth*(devicePixelRatio||1);canvas.height=innerHeight*(devicePixelRatio||1);ctx.setTransform(devicePixelRatio||1,0,0,devicePixelRatio||1,0,0);particles=Array.from({length:Math.min(150,Math.floor(innerWidth/9))},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.42,vy:(Math.random()-.5)*.42,r:Math.random()*1.7+0.5,a:Math.random()*Math.PI*2}));} resize(); addEventListener('resize',resize); function frame(){ctx.clearRect(0,0,innerWidth,innerHeight); const intensity=state.intensity||.45; for(const p of particles){p.x+=p.vx*(.5+intensity*1.8);p.y+=p.vy*(.5+intensity*1.8)-intensity*.08;p.a+=.015;if(p.x<0)p.x=innerWidth;if(p.x>innerWidth)p.x=0;if(p.y<0)p.y=innerHeight;if(p.y>innerHeight)p.y=0;ctx.beginPath();ctx.fillStyle=`rgba(${150+Math.sin(p.a)*70},${160+intensity*80},255,${.18+intensity*.55})`;ctx.arc(p.x,p.y,p.r*(1+intensity*.7),0,Math.PI*2);ctx.fill();} for(let i=0;i<particles.length;i++){for(let j=i+1;j<particles.length;j++){const a=particles[i],b=particles[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy); if(d<120){ctx.strokeStyle=`rgba(139,92,246,${(1-d/120)*(.05+intensity*.16)})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}} requestAnimationFrame(frame);} frame(); }
+  function init() { setupCanvas(); setupPresets(); setupEvents(); startMission(presets[0]); runDiversityTest(); }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
