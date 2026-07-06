@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GoalOS V39 — One Agent learns. All Agents level up.</title>
+<meta name="description" content="GoalOS Chronicle Gate demo: Only validated results can enter Chronicle memory or influence future missions." />
+<style>
+:root{
+  --bg0:#040613; --bg1:#0b1230; --panel:rgba(255,255,255,.075); --panel2:rgba(255,255,255,.11);
+  --line:rgba(255,255,255,.18); --text:#f8fbff; --muted:rgba(235,241,255,.72);
+  --violet:#8b5cf6; --cyan:#5ee7ff; --mint:#69f0ae; --gold:#ffd66b; --pink:#ff77aa; --red:#ff647c;
+  --shadow:0 30px 80px rgba(0,0,0,.34); --r:28px; --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  --sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;color:var(--text);font-family:var(--sans);background:radial-gradient(circle at 20% 8%,rgba(139,92,246,.42),transparent 42%),radial-gradient(circle at 86% 18%,rgba(94,231,255,.18),transparent 40%),linear-gradient(140deg,#060714,#0b1029 48%,#061d2a);min-height:100vh;overflow-x:hidden}
+#ascension{position:fixed;inset:0;z-index:-2;background:#040613}.aurora{position:fixed;inset:-20%;z-index:-1;pointer-events:none;background:conic-gradient(from 20deg at 50% 50%,rgba(139,92,246,.18),rgba(94,231,255,.12),rgba(105,240,174,.08),rgba(255,214,107,.1),rgba(139,92,246,.18));filter:blur(60px);opacity:.72;animation:spin 24s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.wrap{width:min(1440px,94vw);margin:0 auto;padding:24px 0 80px}.topbar{position:sticky;top:16px;z-index:20;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 14px;border:1px solid var(--line);background:rgba(6,8,22,.72);backdrop-filter:blur(22px);border-radius:28px;box-shadow:var(--shadow)}.brand{display:flex;align-items:center;gap:12px;min-width:0}.logo{width:44px;height:44px;border-radius:14px;background:radial-gradient(circle at 28% 24%,#fff 0 7%,#8b5cf6 22%,#5ee7ff 52%,#69f0ae 78%);box-shadow:0 0 30px rgba(94,231,255,.35)}.brand b{display:block}.brand small{display:block;color:var(--muted)}.nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.nav a,.btn{border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--text);border-radius:999px;text-decoration:none;padding:11px 14px;font-weight:800;cursor:pointer;box-shadow:inset 0 1px rgba(255,255,255,.08);transition:.18s transform,.18s background,.18s border}.nav a:hover,.btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.15);border-color:rgba(94,231,255,.35)}.btn.primary{background:linear-gradient(90deg,var(--violet),var(--cyan));border-color:rgba(255,255,255,.3);color:white}.btn.gold{background:linear-gradient(90deg,#ffd66b,#ffeaa8);color:#17111f;border:0}.btn.danger{background:rgba(255,100,124,.13);border-color:rgba(255,100,124,.35)}
+.hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(380px,.88fr);gap:28px;align-items:center;min-height:690px;padding:44px 0}.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border:1px solid rgba(255,214,107,.35);background:rgba(255,214,107,.1);color:#ffeaa8;border-radius:999px;text-transform:uppercase;letter-spacing:.13em;font-weight:900;font-size:.75rem}.hero h1{font-size:clamp(4rem,8.6vw,8.7rem);line-height:.88;letter-spacing:-.08em;margin:22px 0 20px;text-wrap:balance}.gradient{background:linear-gradient(92deg,#fff7df 0%,#ffd66b 28%,#b8a2ff 58%,#5ee7ff 86%);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{font-size:clamp(1.08rem,1.8vw,1.42rem);line-height:1.62;color:var(--muted);max-width:850px}.heroActions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.055));border-radius:var(--r);box-shadow:var(--shadow);padding:22px;backdrop-filter:blur(20px)}.composer textarea,.composer select,.inputish{width:100%;border:1px solid var(--line);background:rgba(3,5,16,.58);color:var(--text);border-radius:20px;padding:15px 16px;font:700 1rem/1.35 var(--mono);outline:none;resize:vertical}.composer textarea{min-height:170px}.composer select{font-family:var(--sans);font-weight:800}.composer label{display:block;margin:12px 0 8px;color:var(--muted);font-weight:800}.micro{font-size:.86rem;color:var(--muted);line-height:1.5}.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:8px 0 22px}.stat{padding:16px;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:20px;min-width:0}.stat span{display:block;color:var(--muted);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase}.stat b{display:block;font-size:1.16rem;margin-top:6px;overflow-wrap:anywhere}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.section{scroll-margin-top:110px;margin:20px 0}.section h2{font-size:clamp(2rem,4vw,4rem);letter-spacing:-.06em;line-height:1;margin:0 0 12px}.sectionLead{color:var(--muted);font-size:1.05rem;line-height:1.6;margin:0 0 18px}.console{height:360px;overflow:auto;background:#03050e;border:1px solid rgba(94,231,255,.18);border-radius:22px;padding:16px;font:700 .92rem/1.55 var(--mono);box-shadow:inset 0 0 50px rgba(94,231,255,.035)}.logline{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}.logline .time{color:var(--cyan)}.logline.warn{color:#ffeaa8}.logline.ok{color:#8dffc7}.logline.bad{color:#ff93a8}.flow{width:100%;min-height:360px}.flowNode{fill:rgba(255,255,255,.08);stroke:rgba(255,255,255,.22);stroke-width:1.2}.flowNode.active{fill:rgba(139,92,246,.28);stroke:#8b5cf6}.flowNode.pass{fill:rgba(105,240,174,.22);stroke:#69f0ae}.flowNode.hold{fill:rgba(255,214,107,.18);stroke:#ffd66b}.flowText{fill:#f8fbff;font-weight:900;font-size:14px}.flowSub{fill:rgba(235,241,255,.75);font-size:10px}.flowEdge{stroke:rgba(255,255,255,.28);stroke-width:3;fill:none;stroke-dasharray:8 8;animation:dash 1.2s linear infinite}.flowEdge.pass{stroke:#69f0ae}.flowEdge.active{stroke:#5ee7ff}.flowEdge.block{stroke:#ffd66b}@keyframes dash{to{stroke-dashoffset:-32}}.chartCanvas{width:100%;height:280px;background:rgba(3,5,16,.28);border:1px solid var(--line);border-radius:22px}.ringWrap{position:relative;width:190px;height:190px;margin:auto}.ringWrap svg{transform:rotate(-90deg)}.ringCenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}.ringCenter b{font-size:2.1rem}.ringCenter span{color:var(--muted)}.gateList{display:grid;gap:10px}.gate{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center}.bar{height:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));border-radius:inherit;width:0%}.agents{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.agent{position:relative;overflow:hidden;padding:16px;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:22px;min-height:178px}.agent::after{content:"";position:absolute;inset:auto -30px -40px auto;width:120px;height:120px;background:radial-gradient(circle,rgba(94,231,255,.22),transparent 70%);opacity:.6}.agent .role{color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em}.agent h3{margin:8px 0 8px}.level{font:900 2.2rem/1 var(--sans);letter-spacing:-.05em}.agentMemory{margin-top:10px;color:var(--muted);font-size:.88rem;line-height:1.4}.levelup{animation:levelPulse 1s ease 2}@keyframes levelPulse{50%{transform:translateY(-4px) scale(1.02);box-shadow:0 0 40px rgba(105,240,174,.22);border-color:rgba(105,240,174,.6)}}table{width:100%;border-collapse:collapse;overflow:hidden;border-radius:18px}th,td{text-align:left;vertical-align:top;padding:12px;border-bottom:1px solid rgba(255,255,255,.11)}th{color:#ffeaa8;text-transform:uppercase;font-size:.75rem;letter-spacing:.12em}tbody tr:hover{background:rgba(255,255,255,.06)}.pill{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.08);font-size:.78rem;font-weight:900}.pill.pass{color:#8dffc7;border-color:rgba(105,240,174,.45)}.pill.hold{color:#ffeaa8;border-color:rgba(255,214,107,.45)}.pill.bad{color:#ff93a8;border-color:rgba(255,100,124,.45)}.code{white-space:pre-wrap;word-break:break-word;background:#040714;border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:16px;max-height:500px;overflow:auto;font:700 .86rem/1.55 var(--mono)}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tab{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);cursor:pointer;font-weight:900}.tab.active{background:rgba(139,92,246,.35);border-color:rgba(139,92,246,.7)}.validator textarea{min-height:230px}.verdict{margin-top:12px;padding:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:18px}.docGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.doc{border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.055);padding:16px}.doc h3{margin:0 0 8px}.doc p{color:var(--muted);line-height:1.5}.heat{display:grid;gap:6px}.heatRow{display:grid;grid-template-columns:110px repeat(5,1fr);gap:6px;align-items:center}.heatCell{height:24px;border-radius:7px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}.heatCell.on{background:linear-gradient(90deg,rgba(139,92,246,.65),rgba(94,231,255,.75))}.heatCell.hot{background:linear-gradient(90deg,rgba(255,214,107,.8),rgba(105,240,174,.75))}.footer{margin-top:60px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted)}.toast{position:fixed;right:22px;bottom:22px;z-index:50;max-width:460px;border:1px solid var(--line);border-radius:20px;padding:14px 16px;background:rgba(4,6,19,.9);backdrop-filter:blur(18px);box-shadow:var(--shadow);display:none}.toast.show{display:block;animation:toastIn .25s ease}@keyframes toastIn{from{transform:translateY(10px);opacity:0}}.ascendPulse{position:fixed;inset:0;pointer-events:none;z-index:4;background:radial-gradient(circle at 50% 50%,rgba(94,231,255,.22),transparent 30%),radial-gradient(circle at 50% 62%,rgba(139,92,246,.25),transparent 42%);opacity:0}.ascendPulse.on{animation:ascendFlash 1.8s ease}@keyframes ascendFlash{0%{opacity:0}25%{opacity:1}100%{opacity:0}}@media(max-width:1100px){.hero,.grid2{grid-template-columns:1fr}.stats,.grid4{grid-template-columns:repeat(2,1fr)}.agents,.grid3,.docGrid{grid-template-columns:repeat(2,1fr)}}@media(max-width:720px){.wrap{width:min(100%,94vw);padding-top:10px}.topbar{position:relative;top:0;border-radius:22px}.nav{display:none}.hero{min-height:auto;padding:34px 0}.hero h1{font-size:clamp(3.2rem,18vw,5rem)}.stats,.grid3,.grid4,.agents,.docGrid{grid-template-columns:1fr}.panel{padding:16px}.gate{grid-template-columns:1fr}.heatRow{grid-template-columns:80px repeat(5,1fr)}th,td{display:block;padding:8px 0}thead{display:none}tr{display:block;border-bottom:1px solid rgba(255,255,255,.14);padding:10px 0}}
+</style>
+</head>
+<body>
+<canvas id="ascension"></canvas><div class="aurora"></div><div class="ascendPulse" id="pulse"></div>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><div class="logo"></div><div><b>GoalOS V39</b><small>Agent Level-Up Chronicle Mesh</small></div></div>
+    <nav class="nav"><a href="#machine">Machine</a><a href="#agents">Agents</a><a href="#chronicle">Chronicle</a><a href="#artifacts">Artifacts</a><a href="#docs">Docs</a><button class="btn gold" id="exportBtn">Export Dynamic Dossier</button></nav>
+  </header>
+
+  <section class="hero" id="machine">
+    <div>
+      <span class="eyebrow">GoalOS : autonomous proof-gated open-ended work machine</span>
+      <h1>One Agent learns.<br><span class="gradient">All Agents level up.</span></h1>
+      <p id="heroSub">Only validated results can enter Chronicle memory or influence future missions. Drafts create work; proof creates authority.</p>
+      <div class="heroActions"><button class="btn primary" id="runBtn">Run Learning Cycle</button><button class="btn" id="returnBtn">Return ProofBundle</button><button class="btn" id="promoteBtn">Validate & Promote</button><button class="btn danger" id="forceBtn">Force Level-Up</button></div>
+    </div>
+    <div class="panel composer">
+      <h2 style="margin:0 0 8px">Mission Composer</h2><p class="micro">Type any objective. GoalOS compiles a fresh capability candidate, proof debt, AGI Jobs, ProofBundle path, Evidence Docket, and Chronicle Gate state.</p>
+      <label for="scenario">Scenario</label><select id="scenario"><option value="">Custom objective</option><option>Evaluate whether an AI vendor trust room is buyer-ready for enterprise procurement.</option><option>Design a solar microgrid financing model for a hospital campus.</option><option>Create a release-readiness proof package for a GitHub software security workflow.</option><option>Prepare a falsifiable benchmark plan for an automated AI research system.</option><option>Assess legal/token claim boundaries for an experimental smart-contract job protocol.</option></select>
+      <label for="objective">Objective</label><textarea id="objective">Evaluate whether an AI vendor trust room is buyer-ready for enterprise procurement and prepare a reviewer-ready proof package.</textarea>
+      <div class="heroActions"><button class="btn primary" id="startBtn">Start Fresh Mission</button><button class="btn" id="loadSampleBtn">Load ProofBundle Sample</button></div>
+    </div>
+  </section>
+
+  <div class="stats"><div class="stat"><span>Run</span><b id="runId">—</b></div><div class="stat"><span>Domain</span><b id="domain">—</b></div><div class="stat"><span>Risk</span><b id="risk">—</b></div><div class="stat"><span>Source learner</span><b id="sourceAgent">—</b></div><div class="stat"><span>Promotion</span><b id="promotion">HOLD</b></div></div>
+
+  <section class="section grid2">
+    <div class="panel"><h2>Autonomy Theatre Console</h2><p class="sectionLead">Watch the proof machine run: draft → proof debt → AGI Jobs → ProofBundle → validation → Chronicle → fleet level-up.</p><div class="console" id="console"></div></div>
+    <div class="panel"><h2>Proof-to-Chronicle Flow</h2><p class="sectionLead">The flowchart is regenerated from the current mission state.</p><div id="flowWrap"></div></div>
+  </section>
+
+  <section class="section grid3" id="chronicle">
+    <div class="panel"><h2>Chronicle Gate</h2><div class="ringWrap"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="16"/><circle id="ringBar" cx="70" cy="70" r="54" fill="none" stroke="url(#rg)" stroke-width="16" stroke-linecap="round"/><defs><linearGradient id="rg"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#5ee7ff"/></linearGradient></defs></svg><div class="ringCenter"><b id="ringPct">0%</b><span>promotion readiness</span></div></div><p class="micro" style="text-align:center">No proof, no memory. No replay, no promotion. No validation, no capability.</p></div>
+    <div class="panel"><h2>Production Gates</h2><div class="gateList" id="gates"></div></div>
+    <div class="panel"><h2>RSI Control Radar</h2><canvas class="chartCanvas" id="radar"></canvas></div>
+  </section>
+
+  <section class="section grid2">
+    <div class="panel"><h2>Agent Level Chart</h2><canvas class="chartCanvas" id="agentChart"></canvas></div>
+    <div class="panel"><h2>Proof Economy Sparkline</h2><canvas class="chartCanvas" id="spark"></canvas><p class="micro">Readiness reflects proof, replay, validator acceptance, and claim-boundary gates — not token value.</p></div>
+  </section>
+
+  <section class="section" id="agents"><h2>Agent Constellation</h2><p class="sectionLead">The source Agent may learn first, but the fleet only levels up after Chronicle acceptance.</p><div class="agents" id="agentGrid"></div></section>
+
+  <section class="section grid2">
+    <div class="panel"><h2>Knowledge Diffusion Map</h2><p class="sectionLead">Before validation, only the source Agent has a candidate. After validation, the capability propagates through the fleet.</p><div class="heat" id="heatmap"></div></div>
+    <div class="panel"><h2>Capability Candidate</h2><div class="stats" style="grid-template-columns:1fr"><div class="stat"><span>Capability</span><b id="capability">—</b></div><div class="stat"><span>Proof readiness</span><b id="readiness">—</b></div></div><p class="sectionLead">Capability cannot update future missions while Chronicle status is HOLD.</p></div>
+  </section>
+
+  <section class="section panel" id="jobs"><h2>AGI Job Queue</h2><p class="sectionLead">Proof debt becomes objective-specific executable work with acceptance tests and ProofBundle returns.</p><table><thead><tr><th>Job</th><th>Proof debt</th><th>State</th><th>Acceptance tests</th><th>Action</th></tr></thead><tbody id="jobsBody"></tbody></table></section>
+
+  <section class="section grid2">
+    <div class="panel"><h2>Claim Verdicts</h2><div id="claims"></div></div>
+    <div class="panel validator"><h2>ProofBundle Validator</h2><p class="sectionLead">A candidate result cannot enter Chronicle memory until the ProofBundle has required fields, replay passes, and validator verdict accepts.</p><textarea id="proofbundleInput" class="inputish" placeholder="Paste ProofBundle JSON here"></textarea><div class="heroActions"><button class="btn" id="validateBtn">Validate ProofBundle</button></div><div id="verdict" class="verdict">No validation yet.</div></div>
+  </section>
+
+  <section class="section grid2" id="artifacts">
+    <div class="panel"><h2>Artifact Workbench</h2><p class="sectionLead">Every panel and export is generated from the same mission state object.</p><div class="tabs" id="artifactTabs"></div><button class="btn" id="downloadArtifactBtn">Download selected artifact</button></div>
+    <div class="panel"><h2>Generated JSON</h2><pre class="code" id="artifactBox"></pre></div>
+  </section>
+
+  <section class="section grid2">
+    <div class="panel"><h2>Ask GoalOS</h2><p class="sectionLead">Ask why promotion is blocked, how fleet level-up works, or what AGI Jobs do.</p><textarea id="ask" class="inputish" placeholder="Why can't the agent update memory immediately?"></textarea><div class="heroActions"><button class="btn" id="askBtn">Ask</button></div><div class="verdict" id="answer">Ask a question to get an operator explanation.</div></div>
+    <div class="panel"><h2>Diversity Regression Test</h2><p class="sectionLead">Unrelated objectives must not generate the same jobs.</p><textarea id="divA" class="inputish">Evaluate whether an AI vendor trust room is buyer-ready for enterprise procurement.</textarea><textarea id="divB" class="inputish" style="margin-top:10px">Design a solar microgrid financing model for a hospital campus.</textarea><div class="heroActions"><button class="btn" id="divBtn">Run Diversity Test</button></div><div id="divResult" class="verdict">Not run yet.</div></div>
+  </section>
+
+  <section class="section" id="docs"><h2>Operator Documentation</h2><p class="sectionLead">The interface is built to teach the core rule at first use.</p><div class="docGrid" id="docsGrid"></div></section>
+  <footer class="footer">GoalOS V39 · local-first demo · no backend · no wallet · no automatic transaction · only validated results can enter Chronicle memory or influence future missions.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const fmtTime = () => new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
+  const h32 = (str) => { let h=2166136261; for (let i=0;i<str.length;i++){h^=str.charCodeAt(i); h=Math.imul(h,16777619);} return (h>>>0).toString(16).padStart(8,'0'); };
+  const titleCase = s => s.replace(/\w\S*/g,t=>t[0].toUpperCase()+t.slice(1).toLowerCase());
+  const words = s => (s.toLowerCase().match(/[a-z0-9]+/g)||[]).filter(w=>w.length>2);
+  const uniq = arr => [...new Set(arr)];
+  const nowIso = () => new Date().toISOString();
+
+  const AGENTS = [
+    {id:'architect', name:'Architect Agent', role:'Frames missions', base:7},
+    {id:'planner', name:'Planner Agent', role:'Splits work', base:6},
+    {id:'research', name:'Research Agent', role:'Finds evidence', base:6},
+    {id:'builder', name:'Builder Agent', role:'Builds artifacts', base:7},
+    {id:'verifier', name:'Verifier Agent', role:'Checks replay', base:8},
+    {id:'sentinel', name:'Sentinel Agent', role:'Blocks overclaim', base:8},
+    {id:'chronicle', name:'Chronicle Agent', role:'Gates memory', base:6},
+    {id:'value', name:'Value Accountant', role:'Measures impact', base:5}
+  ];
+
+  const DOMAIN_RULES = [
+    {id:'ai_governance', label:'AI Governance / Trust / Procurement', source:'Verifier Agent', keys:['ai','vendor','trust','procurement','policy','governance','compliance','model','risk','audit'], caps:['Claim Boundary Router','Evidence Docket Mapper','Buyer-Readiness Rubric'], jobs:['Map every AI/vendor claim to source evidence','Obtain buyer or reviewer verdict on trust-room readiness','Compare against baseline FAQ or vendor one-pager','Validate privacy, security, and compliance claim boundaries','Create ProofBundle for procurement decision readiness']},
+    {id:'energy', label:'Energy / Infrastructure / Climate', source:'Value Accountant', keys:['solar','microgrid','energy','battery','hospital','climate','emissions','grid','tariff','resilience'], caps:['Energy Baseline Comparator','Infrastructure Assumption Ledger','Resilience Proof Planner'], jobs:['Collect site, load, tariff, battery, and constraint assumptions','Compare proposed model against incumbent energy baseline','Route design to engineering and finance feasibility review','Identify permitting, interconnection, and regulatory proof debt','Create measured outcome plan for resilience, savings, and emissions']},
+    {id:'software', label:'Software / Product / Engineering', source:'Builder Agent', keys:['code','software','github','repo','bug','feature','api','deployment','test','security'], caps:['Repo Evidence Harness','Regression Trace Reader','Release Gate Template'], jobs:['Create reproducible test plan for the requested software change','Compare implementation against existing baseline behavior','Run security and dependency boundary review','Package build logs and regression evidence as ProofBundle','Create reviewer-ready release gate and rollback plan']},
+    {id:'science', label:'Research / Science / Discovery', source:'Research Agent', keys:['research','experiment','science','paper','benchmark','hypothesis','data','study','lab'], caps:['Hypothesis Falsification Ladder','Benchmark Evidence Binder','Novelty Stress-Test Dossier'], jobs:['Convert hypothesis into falsifiable test plan','Compare against incumbent and null baselines','Collect or request primary evidence and datasets','Run novelty / Move-37 skepticism review','Package reproducibility and reviewer attestation path']},
+    {id:'finance', label:'Finance / Strategy / Investment', source:'Value Accountant', keys:['finance','roi','investment','pricing','market','revenue','cost','valuation','deal','business'], caps:['Assumption-to-Measurement Ledger','ROI Claim Boundary','Scenario Risk Gate'], jobs:['Separate assumptions from measured financial evidence','Build baseline scenario and sensitivity table','Route high-impact claims to reviewer or financial expert','Create ProofBundle for decision, risk, and uncertainty','Block guaranteed ROI language until measured outcomes exist']},
+    {id:'healthcare', label:'Healthcare / Clinical / Safety', source:'Sentinel Agent', keys:['health','clinical','patient','medical','hospital','disease','therapy','diagnosis','care'], caps:['Clinical Claim Boundary Gate','Safety Evidence Docket','Human Review Escalation Map'], jobs:['Classify clinical or health-related claim boundaries','Require authoritative source and human expert review','Separate operational recommendation from medical advice','Create safety and privacy risk ledger','Block clinical authority claims until external validation exists']},
+    {id:'legal', label:'Legal / Policy / Regulatory', source:'Sentinel Agent', keys:['legal','contract','law','regulation','terms','liability','license','token','securities'], caps:['Legal Claim Boundary Gate','Regulatory Proof Debt Mapper','Human Counsel Escalation Template'], jobs:['Separate legal information from legal advice','Map regulatory claims to cited authority or proof debt','Route unresolved legal risk to qualified human review','Create jurisdiction and uncertainty ledger','Block certification or compliance claims until counsel review exists']},
+    {id:'general', label:'General / Open-Ended Work', source:'Architect Agent', keys:[], caps:['Objective-to-Proof Compiler','General Evidence Docket','AGI Job Synthesis Pattern'], jobs:['Clarify objective, success criteria, and failure criteria','Map major claims to evidence or proof debt','Create AGI Jobs for missing external evidence','Run baseline and replay readiness check','Package reviewer-ready governed decision state']}
+  ];
+
+  const docs = [
+    ['Concept','One Agent learns. All Agents level up only after the Chronicle Gate accepts a validated ProofBundle.'],
+    ['Authority Boundary','The LLM drafts and reasons. The gate, not the draft, authorizes memory and future influence.'],
+    ['Proof Debt','When knowledge is missing, GoalOS creates proof debt instead of guessing harder.'],
+    ['AGI Jobs','Proof debt becomes executable work with acceptance tests, blocked claims, and ProofBundle returns.'],
+    ['ProofBundle','A returned package with job id, outputs, replay result, evidence links, validator verdict, and claim boundary.'],
+    ['Evidence Docket','The proof room where claims, evidence, baselines, replay, risks, and verdicts are reviewable.'],
+    ['Chronicle Gate','Promotion is held until replay passes and validator verdict accepts.'],
+    ['Fleet Level-Up','Once promoted, the capability capsule updates role policies for all agents in future missions.'],
+    ['Safety Rule','No proof, no memory. No replay, no promotion. No validation, no capability.']
+  ];
+
+  let state = { mission:null, phase:'draft', console:[], selectedArtifact:'mission-contract.json', selectedDoc:0, ascension:0 };
+
+  function classifyObjective(objective){
+    const w = words(objective); let best = DOMAIN_RULES[DOMAIN_RULES.length-1], score=-1;
+    for(const rule of DOMAIN_RULES){
+      const s = rule.keys.reduce((a,k)=>a+(w.includes(k)?1:0),0);
+      if(s>score){score=s; best=rule;}
+    }
+    const risk = /health|clinical|legal|security|token|wallet|patient|fund|investment|hospital|regulation|compliance|mainnet|transaction/i.test(objective) ? 'HIGH' : (/enterprise|procurement|finance|market|customer|infrastructure/i.test(objective) ? 'MEDIUM' : 'LOW');
+    return {domain:best, risk, keywords:uniq(w).slice(0,12)};
+  }
+
+  function compileMission(objective){
+    const cleaned = (objective||'Turn a high-stakes AI workflow into proof-gated reusable capability.').trim();
+    const cls = classifyObjective(cleaned); const rule = cls.domain;
+    const hash = h32(cleaned + nowIso().slice(0,10));
+    const runId = 'GOALOS-V39-LEVELUP-' + hash.toUpperCase();
+    const capName = rule.caps[Math.abs(parseInt(hash.slice(0,2),16)) % rule.caps.length];
+    const source = rule.source;
+    const jobs = rule.jobs.map((j,i)=>({
+      job_id:`AGIJOB-${rule.id.toUpperCase().replace(/[^A-Z0-9]/g,'')}-${String(i+1).padStart(3,'0')}`,
+      title:j,
+      proof_debt: i===0 ? 'Evidence not yet sufficient for Chronicle promotion.' : 'External or replayable proof required before fleet-wide memory update.',
+      state:'ready_for_posting',
+      worker_role:i%2?'Specialist AGI Agent':'AGI Node Worker',
+      validator_role:'AGI Node Validator',
+      acceptance_tests:[`Artifact is specific to ${rule.label}`, 'Evidence links or explicit uncertainty are included', 'Replay result and validator verdict can be attached', 'Blocked claims remain blocked until proof exists'],
+      blocked_claims_until_complete:['validated capability','fleet-wide memory update','future mission influence'],
+      required_outputs:['proofbundle.json','evidence-docket-update.json','validator-verdict.json'],
+      job_spec_uri:`ipfs://pending/${runId.toLowerCase()}/job-${i+1}.json`,
+      transaction_intent:{contract:'AGIJobManager',method:'createJob',args:{jobSpecURI:`ipfs://pending/${runId.toLowerCase()}/job-${i+1}.json`,payout:'operator_defined',duration:'operator_defined',details:j},policy:'human-confirmed intent only'}
+    }));
+    const claims = [
+      {claim:`The objective belongs to ${rule.label}.`, verdict:'supported_locally', evidence:'Objective classifier and keyword trace.', boundary:'classification is heuristic, not external truth'},
+      {claim:`${source} produced a candidate capability: ${capName}.`, verdict:'candidate', evidence:'Local mission compile result.', boundary:'candidate only until proof passes'},
+      {claim:'The capability can improve all future agents immediately.', verdict:'blocked', evidence:'Chronicle Gate not accepted yet.', boundary:'future influence requires ProofBundle replay and validator verdict'},
+      {claim:'Proof debt should become AGI Jobs rather than ungrounded guessing.', verdict:'supported_by_goalos_law', evidence:'Generated AGI Job queue and blocked claims.', boundary:'execution/settlement requires external action or human-confirmed live rail'}
+    ];
+    const proofDebt = jobs.map((j,i)=>({id:`PD-${i+1}`,item:j.proof_debt, converted_to:j.job_id, status:'jobified', severity:i<2?'high':'medium'}));
+    const readiness = 58 + Math.min(28, jobs.length*4) - (cls.risk==='HIGH'?8:cls.risk==='MEDIUM'?3:0);
+    const gates = {draft:100, proof_debt:100, agi_jobs:92, proofbundle:35, replay:20, validator:0, evidence_docket:48, chronicle:0, fleet_influence:0};
+    const artifacts = buildArtifacts({runId, objective:cleaned, rule, cls, jobs, claims, proofDebt, capName, source, readiness, gates, phase:'compiled'});
+    return {runId, objective:cleaned, domain:rule.label, domainId:rule.id, risk:cls.risk, keywords:cls.keywords, sourceAgent:source, capabilityName:capName, capabilityHash:h32(capName+cleaned), jobs, claims, proofDebt, readiness, gates, artifacts, levelDelta:0, history:[], proofbundle:null, validation:null, promoted:false};
+  }
+
+  function buildArtifacts(ctx){
+    const {runId, objective, rule, cls, jobs, claims, proofDebt, capName, source, readiness, gates, phase} = ctx;
+    const capsule = {version:'goalos.v39.capability_capsule',capability_id:'cap-'+h32(capName+objective),name:capName,source_agent:source,domain:rule.label,status:'candidate_hold',may_influence_future_missions:false,required_for_promotion:['replay_result == pass','validator_verdict == accepted','evidence_docket_update present','claim_boundary preserved'],learned_policy_patch:{routing_hint:`Use ${capName} when objectives resemble ${rule.label}.`,claim_boundary:'Do not convert candidate output into authority without Chronicle acceptance.'}};
+    const pbTemplate = {version:'goalos.v39.proofbundle_return',job_id:jobs[0]?.job_id||'AGIJOB-PENDING',run_id:runId,capability_id:capsule.capability_id,outputs:['artifact pointer required'],replay_result:'pending',validator_verdict:'pending',evidence_docket_update:'pending',claim_boundary:'candidate artifact only; not Chronicle memory'};
+    return {
+      'mission-contract.json':{version:'goalos.v39.mission_contract',run_id:runId,objective,success_criteria:['objective-specific proof debt extracted','AGI Jobs generated with acceptance tests','ProofBundle path defined','Chronicle promotion blocked until validation'],failure_criteria:['unvalidated output enters memory','future missions influenced by draft-only result','claim boundary removed'],risk_class:cls.risk,domain:rule.label},
+      'agent-learning-event.json':{version:'goalos.v39.agent_learning_event',run_id:runId,source_agent:source,event:'candidate capability produced',capability:capName,authority:'drafting_and_reasoning_only',chronicle_status:'HOLD'},
+      'proof-debt-register.json':{version:'goalos.v39.proof_debt_register',run_id:runId,items:proofDebt},
+      'agi-job-queue.json':{version:'goalos.v39.agi_job_queue',run_id:runId,jobs},
+      'agijobmanager-job-specs.json':{version:'goalos.v39.agijobmanager_job_specs',run_id:runId,specs:jobs.map(j=>({job_id:j.job_id,jobSpecURI:j.job_spec_uri,title:j.title,acceptance_tests:j.acceptance_tests,required_outputs:j.required_outputs,blocked_claims_until_complete:j.blocked_claims_until_complete}))},
+      'proofbundle-template.json':pbTemplate,
+      'claim-verdicts.json':{version:'goalos.v39.claim_verdicts',run_id:runId,claims},
+      'evidence-docket-61.json':{version:'evidence_docket_6.1',run_id:runId,domain:rule.label,claims_matrix:claims,proof_debt:proofDebt,proofbundle_status:'pending',chronicle_status:'HOLD',public_private_boundary:'private reasoning local; public proof artifacts exportable'},
+      'capability-capsule.json':capsule,
+      'chronicle-entry.json':{version:'goalos.v39.chronicle_entry',run_id:runId,status:'HOLD',reason:'Only validated ProofBundles may enter Chronicle memory.',capability_candidate:capsule.name,may_influence_future_missions:false},
+      'fleet-level-up-event.json':{version:'goalos.v39.fleet_level_up_event',run_id:runId,status:'BLOCKED_UNTIL_VALIDATED',agents:AGENTS.map(a=>({agent:a.name,current_level:a.base,level_up_pending:true,level_up_applied:false})),rule:'One Agent learns. All Agents level up only after Chronicle Gate accepts.'},
+      'future-mission-influence.json':{version:'goalos.v39.future_mission_influence',run_id:runId,status:'HOLD',influence_allowed:false,blocked_reason:'validator/replay proof missing'},
+      'rsi-gates.json':{version:'goalos.v39.rsi_gates',run_id:runId,gates,principles:['search control is not outcome authority','ECI confidence cannot inflate without execution','Move-37 novelty increases skepticism','replay before promotion']},
+      'claim-boundary-audit.json':{version:'goalos.v39.claim_boundary_audit',run_id:runId,boundary_preserved:true,blocked_claims:['validated result','external validation','settlement complete','future mission influence'],phase}
+    };
+  }
+
+  function log(msg,type=''){
+    const line = {time:fmtTime(),msg,type}; state.console.unshift(line); state.console = state.console.slice(0,80); renderConsole();
+  }
+  function renderConsole(){ $('console').innerHTML = state.console.map(l=>`<div class="logline ${l.type}"><span class="time">${l.time}</span> · ${escapeHtml(l.msg)}</div>`).join(''); }
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function showToast(s){const t=$('toast'); t.textContent=s; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200);}
+  function pulse(){state.ascension=1; $('pulse').classList.add('on'); setTimeout(()=>$('pulse').classList.remove('on'),1800);}
+
+  function startMission(){
+    const m = compileMission($('objective').value); state.mission=m; state.phase='compiled'; state.selectedArtifact='mission-contract.json';
+    log('Mission compiled from user objective.','ok');
+    log(`Domain: ${m.domain}. Risk: ${m.risk}. Source learner: ${m.sourceAgent}.`,'ok');
+    log('Proof debt converted into objective-specific AGI Jobs.','warn');
+    pulse(); renderAll();
+  }
+  function runLearningCycle(){
+    if(!state.mission) startMission(); const m=state.mission; state.phase='jobs';
+    const steps=['LLM draft treated as candidate, not authority.','Proof debt extracted at the edge of reliable knowledge.','AGI Jobs created with acceptance tests and blocked claims.','ProofBundle return paths generated.','Chronicle promotion remains HOLD until replay and validator acceptance.'];
+    steps.forEach((s,i)=>setTimeout(()=>log(s,i===4?'warn':'ok'),i*260));
+    m.gates.proofbundle=45; m.gates.replay=30; m.gates.evidence_docket=60; m.readiness=clamp(m.readiness+5,0,94); m.artifacts=buildArtifacts({...m,rule:DOMAIN_RULES.find(r=>r.label===m.domain)||DOMAIN_RULES.at(-1),cls:{risk:m.risk},phase:'jobs'});
+    pulse(); renderAll();
+  }
+  function returnProofBundle(){
+    if(!state.mission) startMission(); const m=state.mission;
+    m.proofbundle={version:'goalos.v39.proofbundle_return',job_id:m.jobs[0].job_id,run_id:m.runId,capability_id:'cap-'+m.capabilityHash,outputs:[`${m.capabilityName} evidence packet`, 'claim verdict update', 'acceptance test trace'],replay_result:'pass',validator_verdict:'pending',evidence_docket_update:{claims_updated:m.claims.length,proof_debt_reduced:1},claim_boundary:'proofbundle candidate; validator verdict pending'};
+    m.gates.proofbundle=86; m.gates.replay=92; m.gates.evidence_docket=74; m.readiness=88;
+    m.artifacts['sample-proofbundle-return.json']=m.proofbundle;
+    m.artifacts['evidence-docket-61.json'].proofbundle_status='returned_pending_validator';
+    log('ProofBundle candidate returned. Replay passed, validator still pending.','ok'); log('Chronicle Gate still HOLD: replay alone is not enough.','warn'); pulse(); renderAll();
+  }
+  function validateAndPromote(){
+    if(!state.mission) startMission(); const m=state.mission;
+    if(!m.proofbundle){ log('Promotion blocked: no ProofBundle returned.','bad'); showToast('No ProofBundle yet. Return proof first.'); return; }
+    m.proofbundle.validator_verdict='accepted'; m.proofbundle.claim_boundary='validated for scoped Chronicle promotion'; m.validation={validator:'AGI Node Validator',verdict:'accepted',at:nowIso(),scope:'capability may influence future missions within domain/risk boundary'};
+    m.gates.validator=100; m.gates.chronicle=100; m.gates.fleet_influence=92; m.gates.evidence_docket=95; m.readiness=96; m.promoted=true; m.levelDelta=1;
+    m.artifacts['sample-proofbundle-return.json']=m.proofbundle;
+    m.artifacts['evidence-docket-61.json'].proofbundle_status='validated'; m.artifacts['evidence-docket-61.json'].chronicle_status='ACCEPTED';
+    m.artifacts['capability-capsule.json'].status='validated_chronicle_memory'; m.artifacts['capability-capsule.json'].may_influence_future_missions=true;
+    m.artifacts['chronicle-entry.json']={version:'goalos.v39.chronicle_entry',run_id:m.runId,status:'ACCEPTED',accepted_at:nowIso(),capability:m.capabilityName,source_agent:m.sourceAgent,proofbundle:m.proofbundle,scope:'domain-bounded future mission influence'};
+    m.artifacts['fleet-level-up-event.json']={version:'goalos.v39.fleet_level_up_event',run_id:m.runId,status:'APPLIED',capability:m.capabilityName,agents:AGENTS.map(a=>({agent:a.name,previous_level:a.base,current_level:a.base+1,level_up_applied:true,learned_policy_patch:m.artifacts['capability-capsule.json'].learned_policy_patch})),rule:'One Agent learns. All Agents level up after proof passes.'};
+    m.artifacts['future-mission-influence.json']={version:'goalos.v39.future_mission_influence',run_id:m.runId,status:'ENABLED',influence_allowed:true,capability:m.capabilityName,scope:m.domain};
+    log('Validator accepted ProofBundle. Evidence Docket updated.','ok');
+    log('Chronicle Gate opened. One Agent learned; all Agents level up.','ok');
+    pulse(); renderAll(); document.querySelectorAll('.agent').forEach(el=>el.classList.add('levelup')); setTimeout(()=>document.querySelectorAll('.agent').forEach(el=>el.classList.remove('levelup')),2200);
+  }
+  function forcePromote(){ log('FORCE LEVEL-UP denied: unvalidated results cannot enter Chronicle memory or influence future missions.','bad'); showToast('Denied by Chronicle Gate.'); pulse(); }
+
+  function renderAll(){ renderHeader(); renderFlow(); renderCharts(); renderJobs(); renderClaims(); renderAgents(); renderArtifacts(); renderDocs(); renderHeatmap(); renderConsole(); }
+  function renderHeader(){
+    const m=state.mission; if(!m) return;
+    $('runId').textContent=m.runId; $('domain').textContent=m.domain; $('risk').textContent=m.risk; $('sourceAgent').textContent=m.sourceAgent; $('capability').textContent=m.capabilityName; $('readiness').textContent=m.readiness+'%'; $('promotion').textContent=m.promoted?'ACCEPTED':'HOLD';
+    $('heroSub').textContent = `Fresh ${m.domain} mission. ${m.sourceAgent} produced ${m.capabilityName}; Chronicle promotion is ${m.promoted?'accepted':'held'} by proof gates.`;
+  }
+  function renderFlow(){
+    const m=state.mission; if(!m) return; const pass = m.promoted; const proof = !!m.proofbundle;
+    const nodes=[['Draft','LLM candidate',70,75,'pass'],['Proof Debt','edge found',205,75,'pass'],['AGI Job','work order',340,75,'pass'],['ProofBundle','return proof',475,75,proof?'pass':'active'],['Replay','deterministic',610,75,proof?'pass':'hold'],['Validator','verdict',745,75,pass?'pass':'hold'],['Evidence Docket','proof room',880,75,pass?'pass':'active'],['Chronicle','memory gate',1015,75,pass?'pass':'hold']];
+    let svg='<svg class="flow" viewBox="0 0 1160 220" aria-label="Proof to Chronicle flow">';
+    for(let i=0;i<nodes.length-1;i++){svg+=`<path class="flowEdge ${i<3?'pass':(proof&&i<5?'active':pass?'pass':'block')}" d="M${nodes[i][2]+62} ${nodes[i][3]+31} H${nodes[i+1][2]-12}"/>`;}
+    nodes.forEach(n=>{svg+=`<rect class="flowNode ${n[4]}" x="${n[2]}" y="${n[3]}" rx="18" width="120" height="62"/><text class="flowText" x="${n[2]+60}" y="${n[3]+28}" text-anchor="middle">${n[0]}</text><text class="flowSub" x="${n[2]+60}" y="${n[3]+47}" text-anchor="middle">${n[1]}</text>`});
+    svg+='<text x="580" y="185" text-anchor="middle" fill="rgba(235,241,255,.76)" font-size="14">Drafts can create work. Only validated ProofBundles can create memory.</text></svg>';
+    $('flowWrap').innerHTML=svg;
+  }
+  function renderCharts(){
+    const m=state.mission; if(!m) return; const pct=m.promoted?100:Math.round((m.gates.proofbundle+m.gates.replay+m.gates.validator+m.gates.evidence_docket)/4);
+    $('ringPct').textContent=pct+'%'; const c=2*Math.PI*54; $('ringBar').setAttribute('stroke-dasharray',`${c*pct/100} ${c}`);
+    const gateOrder=['draft','proof_debt','agi_jobs','proofbundle','replay','validator','evidence_docket','chronicle','fleet_influence'];
+    $('gates').innerHTML=gateOrder.map(g=>`<div class="gate"><b>${g.replaceAll('_',' ')}</b><div class="bar"><i style="width:${m.gates[g]||0}%"></i></div><span>${m.gates[g]||0}%</span></div>`).join('');
+    drawAgentBars(); drawRadar(); drawSparkline();
+  }
+  function drawAgentBars(){ const cv=$('agentChart'),ctx=cv.getContext('2d'); const dim=fitCanvas(cv); const w=dim.w,h=dim.h; ctx.clearRect(0,0,w,h); const m=state.mission; const max=10; AGENTS.forEach((a,i)=>{const x=40+i*(w-70)/AGENTS.length; const bw=(w-100)/AGENTS.length*0.55; const lvl=a.base+(m?.promoted?1:0); const bh=(h-70)*lvl/max; const gr=ctx.createLinearGradient(0,h-bh,0,h); gr.addColorStop(0,'#5ee7ff'); gr.addColorStop(.55,'#8b5cf6'); gr.addColorStop(1,'#ffd66b'); ctx.fillStyle=gr; roundRect(ctx,x,h-42-bh,bw,bh,10); ctx.fill(); ctx.fillStyle='rgba(248,251,255,.85)'; ctx.font='700 12px sans-serif'; ctx.textAlign='center'; ctx.fillText(String(lvl),x+bw/2,h-50-bh); ctx.save(); ctx.translate(x+bw/2,h-18); ctx.rotate(-.48); ctx.fillStyle='rgba(235,241,255,.72)'; ctx.fillText(a.id,x*0,0); ctx.restore(); }); }
+  function drawRadar(){ const cv=$('radar'),ctx=cv.getContext('2d'); const dim=fitCanvas(cv); const w=dim.w,h=dim.h; ctx.clearRect(0,0,w,h); const m=state.mission; const labels=['Replay','Evidence','Validator','Risk','Baseline','Scope']; const vals=[m.gates.replay,m.gates.evidence_docket,m.gates.validator,m.risk==='HIGH'?55:m.risk==='MEDIUM'?75:90,70,m.promoted?95:60]; const cx=w/2,cy=h/2+8,r=Math.min(w,h)*.31; ctx.strokeStyle='rgba(255,255,255,.15)'; ctx.fillStyle='rgba(255,255,255,.04)'; for(let k=1;k<=4;k++){ctx.beginPath(); labels.forEach((_,i)=>{const ang=-Math.PI/2+i*2*Math.PI/labels.length; const rr=r*k/4; const x=cx+Math.cos(ang)*rr,y=cy+Math.sin(ang)*rr; i?ctx.lineTo(x,y):ctx.moveTo(x,y);}); ctx.closePath(); ctx.stroke();} ctx.beginPath(); vals.forEach((v,i)=>{const ang=-Math.PI/2+i*2*Math.PI/labels.length; const rr=r*v/100; const x=cx+Math.cos(ang)*rr,y=cy+Math.sin(ang)*rr; i?ctx.lineTo(x,y):ctx.moveTo(x,y);}); ctx.closePath(); const gr=ctx.createLinearGradient(0,0,w,h); gr.addColorStop(0,'rgba(94,231,255,.5)'); gr.addColorStop(1,'rgba(139,92,246,.32)'); ctx.fillStyle=gr; ctx.fill(); ctx.strokeStyle='#5ee7ff'; ctx.lineWidth=2; ctx.stroke(); ctx.fillStyle='rgba(235,241,255,.78)'; ctx.font='700 12px sans-serif'; labels.forEach((lab,i)=>{const ang=-Math.PI/2+i*2*Math.PI/labels.length; ctx.fillText(lab,cx+Math.cos(ang)*(r+34)-20,cy+Math.sin(ang)*(r+34));}); }
+  function drawSparkline(){ const cv=$('spark'),ctx=cv.getContext('2d'); const dim=fitCanvas(cv); const w=dim.w,h=dim.h; ctx.clearRect(0,0,w,h); const m=state.mission; const vals=m.promoted?[32,45,56,70,86,100]:m.proofbundle?[20,30,45,58,72,78]:[12,25,34,42,51,60]; ctx.strokeStyle='rgba(255,255,255,.14)'; ctx.beginPath(); ctx.moveTo(28,h-35); ctx.lineTo(w-22,h-35); ctx.stroke(); ctx.beginPath(); vals.forEach((v,i)=>{const x=30+i*(w-60)/(vals.length-1); const y=h-35-(h-70)*v/100; i?ctx.lineTo(x,y):ctx.moveTo(x,y);}); const gr=ctx.createLinearGradient(0,0,w,0); gr.addColorStop(0,'#ffd66b'); gr.addColorStop(.5,'#69f0ae'); gr.addColorStop(1,'#5ee7ff'); ctx.strokeStyle=gr; ctx.lineWidth=4; ctx.stroke(); ctx.fillStyle='rgba(248,251,255,.84)'; ctx.font='800 13px sans-serif'; ctx.fillText('Proof readiness trend',30,30); }
+  function fitCanvas(cv){ const rect=cv.getBoundingClientRect(); const d=window.devicePixelRatio||1; const w=Math.max(300,rect.width||300); const h=Math.max(220,rect.height||260); cv.width=Math.floor(w*d); cv.height=Math.floor(h*d); const ctx=cv.getContext('2d'); ctx.setTransform(d,0,0,d,0,0); return {w,h}; }
+  function roundRect(ctx,x,y,w,h,r){ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();}
+  function renderJobs(){ const m=state.mission; if(!m) return; $('jobsBody').innerHTML=m.jobs.map(j=>`<tr><td><b>${j.job_id}</b><br><span class="micro">${escapeHtml(j.title)}</span></td><td>${escapeHtml(j.proof_debt)}</td><td><span class="pill hold">${j.state}</span></td><td>${j.acceptance_tests.slice(0,2).map(escapeHtml).join('<br>')}</td><td><button class="btn" data-art="${j.job_id}">JobSpec</button></td></tr>`).join(''); }
+  function renderClaims(){ const m=state.mission; if(!m) return; $('claims').innerHTML=m.claims.map(c=>`<div class="panel" style="padding:14px;margin-bottom:10px"><b>${escapeHtml(c.claim)}</b><br><span class="pill ${c.verdict.includes('blocked')?'bad':c.verdict.includes('candidate')?'hold':'pass'}">${c.verdict}</span><p class="micro">Evidence: ${escapeHtml(c.evidence)}<br>Boundary: ${escapeHtml(c.boundary)}</p></div>`).join(''); }
+  function renderAgents(){ const m=state.mission; if(!m) return; $('agentGrid').innerHTML=AGENTS.map(a=>`<div class="agent"><div class="role">${a.role}</div><h3>${a.name}</h3><div class="level">Lv ${a.base+(m.promoted?1:0)}</div><div class="agentMemory">${m.promoted?`Learned: ${escapeHtml(m.capabilityName)}`:'Candidate memory locked by Chronicle Gate.'}</div></div>`).join(''); }
+  function renderHeatmap(){ const m=state.mission; if(!m) return; const comps=['route','claims','replay','risk','reuse']; $('heatmap').innerHTML=AGENTS.map((a,idx)=>`<div class="heatRow"><b class="micro">${a.id}</b>${comps.map((c,j)=>`<div class="heatCell ${(m.promoted||idx===AGENTS.findIndex(x=>x.name===m.sourceAgent))?(j<3?'on':'hot'):''}" title="${a.name} · ${c}"></div>`).join('')}</div>`).join(''); }
+  function renderArtifacts(){ const m=state.mission; if(!m) return; const names=Object.keys(m.artifacts); $('artifactTabs').innerHTML=names.map(n=>`<button class="tab ${n===state.selectedArtifact?'active':''}" data-artifact="${n}">${n}</button>`).join(''); $('artifactBox').textContent=JSON.stringify(m.artifacts[state.selectedArtifact]||m.artifacts[names[0]],null,2); }
+  function renderDocs(){ $('docsGrid').innerHTML=docs.map(([h,p],i)=>`<div class="doc"><h3>${h}</h3><p>${p}</p></div>`).join(''); }
+
+  function validateProofBundle(){ let obj; try{ obj=JSON.parse($('proofbundleInput').value); }catch(e){ $('verdict').innerHTML='<b class="pill bad">INVALID JSON</b><p>Paste a valid ProofBundle JSON.</p>'; return; } const missing=['version','job_id','run_id','outputs','replay_result','validator_verdict','evidence_docket_update','claim_boundary'].filter(k=>!(k in obj)); const replay=obj.replay_result==='pass'; const verdict=obj.validator_verdict==='accepted'; if(missing.length){$('verdict').innerHTML=`<b class="pill bad">BLOCKED</b><p>Missing fields: ${missing.join(', ')}</p>`; return;} if(!replay||!verdict){$('verdict').innerHTML=`<b class="pill hold">HOLD</b><p>Replay pass: ${replay}. Validator accepted: ${verdict}. Chronicle memory remains locked.</p>`; return;} $('verdict').innerHTML='<b class="pill pass">ACCEPTED</b><p>ProofBundle is promotion-eligible. Use Validate & Promote to update Chronicle memory.</p>'; }
+  function loadSamplePB(){ if(!state.mission) startMission(); const m=state.mission; const sample={version:'goalos.v39.proofbundle_return',job_id:m.jobs[0].job_id,run_id:m.runId,capability_id:'cap-'+m.capabilityHash,outputs:[m.capabilityName,'replay log','evidence docket update'],replay_result:m.proofbundle?'pass':'pending',validator_verdict:m.promoted?'accepted':'pending',evidence_docket_update:{status:m.promoted?'accepted':'pending'},claim_boundary:m.promoted?'validated scoped capability':'not accepted yet'}; $('proofbundleInput').value=JSON.stringify(sample,null,2); }
+  function askGoalOS(){ const q=$('ask').value.toLowerCase(); let a='GoalOS blocks unvalidated propagation. Drafts create proof debt, proof debt creates AGI Jobs, and validated ProofBundles unlock Chronicle memory.'; if(q.includes('why')) a='Because a model can draft and reason, but authority belongs to proof gates: replay, evidence, validator verdict, claim boundary, and Chronicle acceptance.'; if(q.includes('level')) a='One Agent levels up the fleet only by producing a validated capability capsule. Until then, every other agent sees the candidate as HOLD.'; if(q.includes('job')) a='AGI Jobs are the executable form of proof debt: worker, validator, acceptance tests, required outputs, and blocked claims until complete.'; $('answer').textContent=a; }
+  function runDiversity(){ const a=compileMission($('divA').value); const b=compileMission($('divB').value); const fa=uniq(a.jobs.map(j=>j.title.split(' ').slice(0,4).join(' '))); const fb=uniq(b.jobs.map(j=>j.title.split(' ').slice(0,4).join(' '))); const overlap=fa.filter(x=>fb.includes(x)).length; $('divResult').innerHTML=`<b class="pill ${overlap===0?'pass':'hold'}">overlap ${overlap}</b><p>Objective A domain: ${a.domain}<br>Objective B domain: ${b.domain}</p><p>A jobs:<br>${a.jobs.map(j=>'• '+j.title).join('<br>')}</p><p>B jobs:<br>${b.jobs.map(j=>'• '+j.title).join('<br>')}</p>`; }
+
+  async function exportDossier(){ if(!state.mission) startMission(); const m=state.mission; const files={}; for(const [name,obj] of Object.entries(m.artifacts)) files['dossier/'+name]=JSON.stringify(obj,null,2); files['dossier/README.md']=`# ${m.runId}\n\nObjective: ${m.objective}\n\nCapability: ${m.capabilityName}\n\nChronicle: ${m.promoted?'ACCEPTED':'HOLD'}\n\nRule: Only validated results can enter Chronicle memory or influence future missions.\n`; files['dossier/reviewer-room.html']=`<!doctype html><meta charset="utf-8"><title>${m.runId}</title><body><h1>GoalOS Reviewer Room</h1><p>${escapeHtml(m.objective)}</p><h2>${escapeHtml(m.capabilityName)}</h2><p>Chronicle status: ${m.promoted?'ACCEPTED':'HOLD'}</p><pre>${escapeHtml(JSON.stringify(m.artifacts['evidence-docket-61.json'],null,2))}</pre></body>`; const blob=makeZip(files); downloadBlob(blob,`${m.runId.toLowerCase()}-chronicle-levelup-dossier.zip`); log('Dynamic dossier ZIP exported client-side.','ok'); }
+  function downloadArtifact(){ if(!state.mission) return; const name=state.selectedArtifact; downloadBlob(new Blob([JSON.stringify(state.mission.artifacts[name],null,2)],{type:'application/json'}),name); }
+  function downloadBlob(blob,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800); }
+  function makeZip(files){ const encoder=new TextEncoder(); const local=[]; const central=[]; let offset=0; const crcTable=makeCRCTable(); for(const [name,content] of Object.entries(files)){ const nameBytes=encoder.encode(name); const data=encoder.encode(content); const crc=crc32(data,crcTable); const lh=new Uint8Array(30+nameBytes.length); const dv=new DataView(lh.buffer); dv.setUint32(0,0x04034b50,true); dv.setUint16(8,0,true); dv.setUint16(10,0,true); dv.setUint32(14,crc,true); dv.setUint32(18,data.length,true); dv.setUint32(22,data.length,true); dv.setUint16(26,nameBytes.length,true); lh.set(nameBytes,30); local.push(lh,data); const ch=new Uint8Array(46+nameBytes.length); const cd=new DataView(ch.buffer); cd.setUint32(0,0x02014b50,true); cd.setUint16(4,20,true); cd.setUint16(6,20,true); cd.setUint32(16,crc,true); cd.setUint32(20,data.length,true); cd.setUint32(24,data.length,true); cd.setUint16(28,nameBytes.length,true); cd.setUint32(42,offset,true); ch.set(nameBytes,46); central.push(ch); offset+=lh.length+data.length; } const centralSize=central.reduce((a,b)=>a+b.length,0); const end=new Uint8Array(22); const ed=new DataView(end.buffer); ed.setUint32(0,0x06054b50,true); ed.setUint16(8,Object.keys(files).length,true); ed.setUint16(10,Object.keys(files).length,true); ed.setUint32(12,centralSize,true); ed.setUint32(16,offset,true); return new Blob([...local,...central,end],{type:'application/zip'}); }
+  function makeCRCTable(){ let c, table=[]; for(let n=0;n<256;n++){ c=n; for(let k=0;k<8;k++) c=((c&1)?(0xedb88320^(c>>>1)):(c>>>1)); table[n]=c>>>0;} return table;}
+  function crc32(data,table){ let c=0xffffffff; for(let i=0;i<data.length;i++) c=table[(c^data[i])&0xff]^(c>>>8); return (c^0xffffffff)>>>0; }
+
+  function initAscension(){ const cv=$('ascension'); const ctx=cv.getContext('2d'); let particles=[]; function resize(){cv.width=innerWidth*(devicePixelRatio||1); cv.height=innerHeight*(devicePixelRatio||1); ctx.setTransform(devicePixelRatio||1,0,0,devicePixelRatio||1,0,0); const n=Math.min(160,Math.floor(innerWidth/8)); particles=Array.from({length:n},(_,i)=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:1+Math.random()*2,a:.25+Math.random()*.65,phase:Math.random()*6.28}));} resize(); addEventListener('resize',resize); function tick(t){ctx.clearRect(0,0,innerWidth,innerHeight); const intense=state.ascension; for(const p of particles){p.x+=p.vx*(1+intense*4); p.y+=p.vy*(1+intense*4)-intense*.45*Math.sin(t/700+p.phase); if(p.x<0)p.x=innerWidth;if(p.x>innerWidth)p.x=0;if(p.y<0)p.y=innerHeight;if(p.y>innerHeight)p.y=0;} for(let i=0;i<particles.length;i++){ for(let j=i+1;j<Math.min(particles.length,i+10);j++){ const a=particles[i],b=particles[j]; const dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy); if(d<125+intense*90){ctx.strokeStyle=`rgba(${intense?94:139},${intense?231:92},255,${(1-d/(125+intense*90))*.18})`; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();}} } for(const p of particles){const gr=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*(8+intense*8)); gr.addColorStop(0,`rgba(255,255,255,${p.a})`); gr.addColorStop(.25,`rgba(94,231,255,${.35+intense*.35})`); gr.addColorStop(1,'rgba(139,92,246,0)'); ctx.fillStyle=gr; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*(3+intense*2),0,Math.PI*2); ctx.fill();} if(intense>0) state.ascension=Math.max(0,state.ascension-.006); requestAnimationFrame(tick);} requestAnimationFrame(tick); }
+
+  document.addEventListener('click', e=>{ const a=e.target.closest('[data-artifact]'); if(a){state.selectedArtifact=a.dataset.artifact; renderArtifacts();} });
+  $('startBtn').onclick=startMission; $('runBtn').onclick=runLearningCycle; $('returnBtn').onclick=returnProofBundle; $('promoteBtn').onclick=validateAndPromote; $('forceBtn').onclick=forcePromote; $('exportBtn').onclick=exportDossier; $('validateBtn').onclick=validateProofBundle; $('loadSampleBtn').onclick=loadSamplePB; $('askBtn').onclick=askGoalOS; $('divBtn').onclick=runDiversity; $('downloadArtifactBtn').onclick=downloadArtifact;
+  $('scenario').onchange=()=>{ if($('scenario').value) $('objective').value=$('scenario').value; };
+  window.addEventListener('resize',()=>{ if(state.mission) renderCharts(); });
+  initAscension(); state.mission=compileMission($('objective').value); state.console=[{time:fmtTime(),msg:'GoalOS V39 booted. Chronicle Gate online. Drafts cannot level up the fleet.',type:'ok'},{time:fmtTime(),msg:'Default mission compiled. Type a new objective and run a fresh learning cycle.',type:'warn'}]; renderAll();
+})();
+</script>
+</body></html>
