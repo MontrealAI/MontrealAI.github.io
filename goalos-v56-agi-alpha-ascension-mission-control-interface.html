@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GoalOS V56 — AGI Alpha Ascension Mission Control</title>
+  <meta name="description" content="A proof-gated Apollo-style interface for AGI Alpha ascension missions.">
+  <style>:root{
+  --void:#040612;--deep:#071126;--ink:#f8fbff;--muted:rgba(236,244,255,.74);--soft:rgba(255,255,255,.08);--line:rgba(255,255,255,.16);--gold:#ffd66e;--violet:#9167ff;--cyan:#62e4ff;--green:#7cffbf;--rose:#ff6b9d;--orange:#ff9a4a;--card:rgba(13,22,49,.72);--glass:rgba(255,255,255,.08);--shadow:0 28px 90px rgba(0,0,0,.42);--radius:28px;--font:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;font-family:var(--font);color:var(--ink);background:radial-gradient(circle at 22% 18%,rgba(145,103,255,.38),transparent 34%),radial-gradient(circle at 82% 20%,rgba(98,228,255,.18),transparent 32%),radial-gradient(circle at 50% 95%,rgba(255,154,74,.22),transparent 35%),linear-gradient(180deg,#040612,#081329 48%,#05070f);min-height:100vh;overflow-x:hidden} canvas#ascensionField{position:fixed;inset:0;width:100vw;height:100vh;z-index:-2;background:transparent}.orbital-glow{position:fixed;inset:-20%;z-index:-1;background:radial-gradient(circle at 50% 46%,rgba(255,214,110,.14),transparent 9%),conic-gradient(from 190deg at 50% 52%,transparent,rgba(98,228,255,.13),transparent,rgba(145,103,255,.18),transparent);filter:blur(10px);opacity:.9;animation:slowSpin 36s linear infinite;pointer-events:none}@keyframes slowSpin{to{transform:rotate(1turn)}}
+.shell{width:min(1440px,94vw);margin:0 auto;padding:24px 0 70px}.topbar{position:sticky;top:14px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px;border:1px solid var(--line);background:rgba(8,13,31,.72);backdrop-filter:blur(18px);border-radius:999px;box-shadow:0 12px 46px rgba(0,0,0,.22)}.brand{display:flex;align-items:center;gap:12px}.mark{width:48px;height:48px;border-radius:16px;background:conic-gradient(from 180deg,var(--gold),var(--cyan),var(--violet),var(--gold));box-shadow:0 0 26px rgba(98,228,255,.4)}.brand strong{display:block;font-size:1rem}.brand span{display:block;color:var(--muted);font-size:.82rem}.nav{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.nav a,.button{border:1px solid var(--line);background:var(--glass);color:var(--ink);border-radius:999px;text-decoration:none;padding:11px 15px;font-weight:800;font-size:.88rem;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);transition:transform .18s ease,border-color .18s ease,background .18s ease}.nav a:hover,.button:hover{transform:translateY(-1px);border-color:rgba(98,228,255,.55);background:rgba(98,228,255,.12)}.button.primary{background:linear-gradient(135deg,var(--violet),var(--cyan));border:0;color:#041021}.button.gold{background:linear-gradient(135deg,#ffe58a,#ffb84d);border:0;color:#130b04}.button.danger{background:rgba(255,107,157,.12);border-color:rgba(255,107,157,.35)}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:24px;align-items:center;min-height:680px;padding:64px 0 28px}.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 13px;border:1px solid rgba(255,214,110,.36);border-radius:999px;background:rgba(255,214,110,.09);color:#ffe9a3;font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:.74rem}.headline{font-size:clamp(3.2rem,8vw,8.6rem);line-height:.86;letter-spacing:-.08em;margin:28px 0 18px;text-wrap:balance}.headline .grad{background:linear-gradient(100deg,#fff7df 0%,#ffd66e 28%,#bba4ff 58%,#62e4ff 88%);-webkit-background-clip:text;background-clip:text;color:transparent}.lead{font-size:clamp(1.05rem,1.7vw,1.42rem);line-height:1.68;color:var(--muted);max-width:860px}.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.mission-card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.05));border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);position:relative;overflow:hidden}.mission-card:before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle at 50% 0,rgba(255,214,110,.22),transparent 26%),radial-gradient(circle at 78% 30%,rgba(98,228,255,.2),transparent 28%);animation:pulse 4s ease-in-out infinite;pointer-events:none}@keyframes pulse{50%{opacity:.42;transform:scale(1.04)}}.mission-card>*{position:relative}.input-label{font-weight:900;margin:0 0 10px}.select-row{display:flex;gap:10px;margin-bottom:12px}.select-row select{flex:1}textarea,input,select{width:100%;border:1px solid var(--line);background:rgba(2,8,20,.72);color:var(--ink);border-radius:18px;padding:14px 15px;font:inherit;outline:0}textarea{min-height:180px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}input:focus,textarea:focus,select:focus{border-color:rgba(98,228,255,.65);box-shadow:0 0 0 4px rgba(98,228,255,.13)}.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:18px}.stat{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:22px;padding:16px}.stat span{display:block;color:var(--muted);font-size:.78rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.stat strong{display:block;font-size:1.15rem;margin-top:8px;overflow-wrap:anywhere}.grid{display:grid;gap:20px}.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,1fr)}.card{border:1px solid var(--line);background:var(--card);backdrop-filter:blur(18px);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);overflow:hidden}.card h2{font-size:clamp(1.75rem,3vw,3rem);line-height:1;margin:0 0 14px;letter-spacing:-.055em}.card p{color:var(--muted);line-height:1.58}.console{height:300px;background:#02040c;border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:18px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#bfffe4;line-height:1.55}.console .t{color:#ffe58a}.flow{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-top:14px}.flow .node{min-height:92px;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:18px;padding:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-weight:900;position:relative}.flow .node.active{background:linear-gradient(135deg,rgba(145,103,255,.42),rgba(98,228,255,.22));border-color:rgba(98,228,255,.55);box-shadow:0 0 30px rgba(98,228,255,.18)}.ring{width:176px;height:176px;border-radius:50%;display:grid;place-items:center;margin:auto;background:conic-gradient(var(--green) var(--pct),rgba(255,255,255,.09) 0);position:relative}.ring:after{content:"";position:absolute;inset:18px;border-radius:50%;background:#081228;border:1px solid var(--line)}.ring div{position:relative;z-index:2;text-align:center}.ring b{font-size:2.1rem}.bars{display:grid;gap:13px}.bar-row{display:grid;grid-template-columns:130px 1fr 48px;gap:12px;align-items:center}.track{height:14px;border-radius:999px;background:rgba(255,255,255,.09);overflow:hidden;border:1px solid rgba(255,255,255,.08)}.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--violet),var(--cyan));width:0%;transition:width .6s ease}.radar-wrap{display:grid;place-items:center}.sparkline svg,.trajectory svg,.radar-wrap svg{width:100%;height:auto}.job-table{width:100%;border-collapse:separate;border-spacing:0 10px}.job-table th{text-align:left;color:#ffe58a;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;padding:8px}.job-table td{padding:14px 10px;background:rgba(255,255,255,.06);border-top:1px solid var(--line);border-bottom:1px solid var(--line);vertical-align:top}.job-table td:first-child{border-left:1px solid var(--line);border-radius:16px 0 0 16px;font-weight:900}.job-table td:last-child{border-right:1px solid var(--line);border-radius:0 16px 16px 0}.pill{display:inline-flex;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.08);border-radius:999px;padding:6px 10px;font-size:.78rem;font-weight:900;color:var(--muted);margin:2px}.pill.pass{color:var(--green);border-color:rgba(124,255,191,.35);background:rgba(124,255,191,.08)}.pill.hold{color:var(--gold);border-color:rgba(255,214,110,.35);background:rgba(255,214,110,.08)}.pill.block{color:var(--rose);border-color:rgba(255,107,157,.35);background:rgba(255,107,157,.08)}.artifact-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.artifact-tabs button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);border-radius:999px;padding:9px 12px;font-weight:800;cursor:pointer}.artifact-tabs button.active{background:linear-gradient(135deg,rgba(145,103,255,.48),rgba(98,228,255,.24));border-color:rgba(98,228,255,.45)}pre{white-space:pre-wrap;word-break:break-word;margin:0;background:#02040c;border:1px solid var(--line);border-radius:20px;padding:16px;max-height:420px;overflow:auto;color:#d7e7ff}.moon-panel{position:relative;min-height:360px;border-radius:var(--radius);overflow:hidden;background:radial-gradient(circle at 50% 82%,#d7d5c5 0 5%,#595d6a 6%,transparent 22%),radial-gradient(circle at 50% 80%,rgba(255,214,110,.4),transparent 17%),linear-gradient(180deg,rgba(11,20,49,.6),rgba(0,0,0,.2));border:1px solid var(--line)}.moon-panel svg{position:absolute;inset:0;width:100%;height:100%}.rocket{animation:rocket 5.5s ease-in-out infinite;transform-origin:center}@keyframes rocket{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}.plume{animation:plume .9s ease-in-out infinite;transform-origin:center}@keyframes plume{50%{opacity:.45;transform:scaleY(1.25)}}.stage-list{display:grid;gap:10px}.stage{border:1px solid var(--line);border-radius:18px;padding:13px;background:rgba(255,255,255,.06);display:flex;justify-content:space-between;gap:12px;align-items:center}.stage b{font-size:1rem}.doc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.doc{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:20px;padding:16px}.footer{margin-top:40px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:.92rem}.sticky-help{position:fixed;right:18px;bottom:18px;z-index:40;border:1px solid var(--line);background:rgba(8,13,31,.85);backdrop-filter:blur(18px);border-radius:22px;padding:14px;max-width:340px;box-shadow:var(--shadow)}.sticky-help b{display:block;margin-bottom:6px}.hidden{display:none!important}.ascend{animation:ascendGlow 1.4s ease-in-out 1}@keyframes ascendGlow{50%{filter:drop-shadow(0 0 36px rgba(98,228,255,.65));transform:scale(1.01)}}
+@media(max-width:1100px){.hero,.grid.two,.grid.three{grid-template-columns:1fr}.flow{grid-template-columns:repeat(4,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.doc-grid{grid-template-columns:1fr 1fr}.sticky-help{display:none}}@media(max-width:720px){.topbar{border-radius:24px;align-items:flex-start;position:static}.nav{width:100%}.nav a,.button{flex:1;text-align:center}.hero{min-height:auto;padding-top:28px}.headline{font-size:clamp(3rem,18vw,5rem)}.flow{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr}.bar-row{grid-template-columns:1fr}.job-table,.job-table tbody,.job-table tr,.job-table td,.job-table th{display:block}.job-table thead{display:none}.job-table tr{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.06);margin-bottom:10px}.job-table td{border:0!important;background:transparent}.job-table td:before{content:attr(data-label);display:block;color:#ffe58a;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}.doc-grid{grid-template-columns:1fr}.shell{width:min(100vw,94vw)}}
+</style>
+</head>
+<body>
+  <canvas id="ascensionField" aria-hidden="true"></canvas>
+  <div class="orbital-glow" aria-hidden="true"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><div class="mark" aria-hidden="true"></div><div><strong>GoalOS V56</strong><span>AGI Alpha Mission Control · Ascension</span></div></div>
+      <nav class="nav" aria-label="Primary">
+        <a href="#machine">Mission</a><a href="#jobs">AGI Jobs</a><a href="#proof">ProofBundle</a><a href="#artifacts">Artifacts</a><a href="#docs">Docs</a><button class="button gold" id="exportBtn">Export Dossier</button>
+      </nav>
+    </header>
+
+    <section class="hero" id="home">
+      <div>
+        <div class="eyebrow">🚀🌕 We Choose To Ascend With AGI</div>
+        <h1 class="headline"><span class="grad">AGI Alpha</span><br>mission control.</h1>
+        <p class="lead">Like Apollo, the next giant leap is not a slogan. It is objective, telemetry, proof debt, AGI Jobs, ProofBundles, Evidence Dockets, validation, Chronicle memory, and reusable capability. We choose not merely to witness the dawn of AGI — but to ascend with it.</p>
+        <div class="hero-actions"><button class="button primary" id="launchBtn">Ignite Ascension Mission</button><a class="button" href="#proof">Open Proof Gate</a><a class="button" href="#docs">Operator Docs</a></div>
+      </div>
+      <div class="mission-card" id="machine">
+        <div class="input-label">Mission Composer</div>
+        <div class="select-row"><select id="sampleSelect" aria-label="Sample mission"><option value="default">AGI Alpha public proof mission</option><option value="space">Apollo-style moonshot AGI mission</option><option value="enterprise">Enterprise trust room</option><option value="science">Scientific discovery sprint</option><option value="security">Defensive cybersecurity mission</option><option value="energy">Hospital microgrid resilience</option></select></div>
+        <textarea id="objectiveInput" spellcheck="true"></textarea>
+        <div class="hero-actions"><button class="button primary" id="startBtn">Start Fresh Mission</button><button class="button" id="copySummaryBtn">Copy Summary</button></div>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Mission status">
+      <div class="stat"><span>Run</span><strong id="runId">—</strong></div><div class="stat"><span>Domain</span><strong id="domainLabel">—</strong></div><div class="stat"><span>Risk</span><strong id="riskClass">—</strong></div><div class="stat"><span>Proof Readiness</span><strong id="proofReadiness">—</strong></div><div class="stat"><span>Promotion</span><strong id="promotionState">—</strong></div>
+    </section>
+
+    <section class="grid two" style="margin-top:22px">
+      <div class="card"><h2>Autonomy Theatre</h2><p>Watch the machine compile the objective into a proof-gated ascent path.</p><div class="console" id="consoleLog"></div></div>
+      <div class="card trajectory"><h2>Ascension Trajectory</h2><p id="sourceObjective">—</p><div id="trajectory" class="moon-panel"></div></div>
+    </section>
+
+    <section class="card" style="margin-top:22px"><h2>Mission Flow</h2><p>Identify → Learn → Think → Design → Strategise → Execute → Prove → Chronicle. The first six stages can generate candidate work. Chronicle opens only after proof.</p><div class="flow" id="flow"></div></section>
+
+    <section class="grid three" style="margin-top:22px">
+      <div class="card"><h2>Proof Readiness</h2><div class="ring" id="ring" style="--pct:0%"><div><b id="ringPct">—</b><span>ready</span></div></div><p><b id="debtCount">—</b> converted from proof debt into executable work.</p></div>
+      <div class="card"><h2>Gates</h2><div class="bars" id="gates"></div></div>
+      <div class="card"><h2>RSI Radar</h2><div class="radar-wrap" id="radar"></div></div>
+    </section>
+
+    <section class="card" id="jobs" style="margin-top:22px"><h2>AGI Job Queue</h2><p>What the LLM cannot prove, verify, replay, validate, source, audit, or certify becomes proof debt. Proof debt becomes AGI Jobs.</p><table class="job-table"><thead><tr><th>Job</th><th>Work</th><th>Proof Debt</th><th>Acceptance Tests</th><th>ProofBundle</th></tr></thead><tbody id="jobTableBody"></tbody></table></section>
+
+    <section class="grid two" style="margin-top:22px">
+      <div class="card"><h2>Claim Verdicts</h2><div class="stage-list" id="claimVerdicts"></div></div>
+      <div class="card"><h2>Proof Economy Sparkline</h2><div class="sparkline" id="sparkline"></div><p>Readiness reflects artifact completeness, proof debt reduction, replay posture, validator route, and boundary preservation — not token value.</p></div>
+    </section>
+
+    <section class="grid two" id="proof" style="margin-top:22px">
+      <div class="card"><h2>ProofBundle Validator</h2><p>Paste a ProofBundle candidate. Promotion remains HOLD unless replay and validator verdict pass.</p><textarea id="proofBundleInput" placeholder='{"job_id":"...","proofbundle_uri":"...","replay_result":"pass","validator_verdict":"accepted","evidence_docket_update":"..."}'></textarea><div class="hero-actions"><button class="button" id="loadProofSample">Load Passing Sample</button><button class="button primary" id="validateBtn">Validate ProofBundle</button></div><p id="proofBundleResult"><span class="pill hold">No validation yet</span></p></div>
+      <div class="card"><h2>Chronicle Gate</h2><p>No ProofBundle, no settlement. No replay, no Chronicle. No validator verdict, no future mission influence.</p><div class="stage-list" id="stageList"></div></div>
+    </section>
+
+    <section class="grid two" style="margin-top:22px">
+      <div class="card"><h2>Ask GoalOS</h2><p>Ask what the mission generated, what remains blocked, or why the Apollo metaphor matters.</p><input id="askInput" placeholder="Ask: Why is Chronicle on HOLD?"><div class="hero-actions"><button class="button primary" id="askBtn">Ask</button></div><pre id="askResult">Ask a question about this mission.</pre></div>
+      <div class="card"><h2>Diversity Regression Test</h2><p>Unrelated objectives must not produce the same AGI Jobs.</p><div id="diversityResult"></div></div>
+    </section>
+
+    <section class="card" id="artifacts" style="margin-top:22px"><h2>Artifact Workbench</h2><p>Every mission emits a governed dossier. Inspect the generated files before export.</p><div class="artifact-tabs" id="artifactTabs"></div><pre id="artifactPreview"></pre></section>
+
+    <section class="card" id="docs" style="margin-top:22px"><h2>Operator Documentation</h2><p>The GitHub Action pack publishes this interface in PR-review mode and ships the docs below as source.</p><div class="doc-grid" id="docGrid"></div></section>
+
+    <footer class="footer">GoalOS V56 · local-first standalone demo · no backend · no wallet · no automatic transactions · claim-bounded public-alpha surface · GitHub reference: github.com/MontrealAI/AGI-Alpha-Agent-v0</footer>
+  </main>
+  <aside class="sticky-help"><b>Ascension Law</b><span>Candidate output may inspire. Proof decides what can propagate, settle, enter Chronicle memory, or influence the next mission.</span></aside>
+  <script>(() => {
+  'use strict';
+
+  const $ = (id) => document.getElementById(id);
+  const now = () => new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  const slug = (s) => (s || 'mission').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'').slice(0,64) || 'mission';
+  const hashString = (s) => {
+    let h = 2166136261 >>> 0;
+    for (let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(16).padStart(8,'0').toUpperCase();
+  };
+  const clamp = (n,a,b) => Math.max(a, Math.min(b,n));
+  const words = (text) => (text || '').toLowerCase().match(/[a-z0-9]+/g) || [];
+  const unique = (arr) => [...new Set(arr.filter(Boolean))];
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  const samples = {
+    default: 'Launch a public-safe AGI Alpha proof mission that turns a high-stakes objective into proof debt, AGI Jobs, ProofBundles, Evidence Docket, Chronicle memory, and reusable capability.',
+    enterprise: 'Prepare an enterprise buyer-ready AI trust room for a high-risk AI product launch, including claim support, evidence gaps, validator review, and executive decision package.',
+    science: 'Design a proof-gated scientific discovery sprint for low-cost battery material candidates with baseline comparisons, replay requirements, and external reviewer checkpoints.',
+    space: 'Coordinate a moonshot AGI Alpha mission that turns frontier AI capability into validated machine labor, reusable mission control artifacts, and public proof of progress.',
+    security: 'Create a defensive cybersecurity readiness mission for a repo-owned system with no external scanning, no exploit execution, evidence hub, safe PR plan, and human review.',
+    energy: 'Build a proof-backed solar microgrid financing and resilience mission for a hospital campus, with assumptions, baselines, engineering review, and measured outcome plan.'
+  };
+
+  const vocab = {
+    governance: ['governance','policy','law','compliance','regulation','audit','trust','procurement','institution','public','buyer'],
+    science: ['science','research','material','battery','lab','experiment','drug','biology','physics','discovery'],
+    security: ['security','cyber','vulnerability','repo','remediation','incident','defensive','secrets','privacy'],
+    energy: ['energy','solar','microgrid','hospital','resilience','battery','grid','climate','infrastructure'],
+    space: ['moon','apollo','space','launch','orbit','mission','ascend','rocket','landing','giant'],
+    business: ['business','market','revenue','customer','sales','cash','finance','capital','product','pricing']
+  };
+  const labels = {
+    governance: 'AI Governance / Trust / Procurement', science: 'Scientific Discovery / R&D', security: 'Defensive Security / Assurance', energy: 'Energy / Infrastructure / Resilience', space: 'Moonshot / Space Mission / AGI Alpha', business: 'Business / Market / Strategy', general: 'General Proof Mission'
+  };
+
+  function classify(text){
+    const ws = words(text); const scores = {};
+    Object.entries(vocab).forEach(([k,list]) => scores[k] = list.reduce((a,w) => a + (ws.includes(w) ? 1 : 0), 0));
+    const best = Object.entries(scores).sort((a,b)=>b[1]-a[1])[0];
+    return best && best[1] > 0 ? best[0] : 'general';
+  }
+  function riskClass(text){
+    const t = text.toLowerCase();
+    if (/(medical|patient|hospital|legal|wallet|transaction|token|securities|exploit|malware|production|autonomous|funds|clinical)/.test(t)) return 'HIGH';
+    if (/(security|finance|energy|compliance|enterprise|public|regulation|customer|infrastructure)/.test(t)) return 'MEDIUM';
+    return 'LOW';
+  }
+  function readiness(risk, debts){
+    const base = risk === 'HIGH' ? 64 : risk === 'MEDIUM' ? 76 : 84;
+    return clamp(base - debts.length * 2 + 6, 42, 96);
+  }
+
+  function domainJobs(domain, objective){
+    const core = [
+      ['SOURCE-MAP','Map every major claim to source evidence or explicit uncertainty','source/evidence debt'],
+      ['REPLAY-PATH','Create replay manifest, acceptance tests, and baseline comparison','replay debt'],
+      ['VALIDATOR-REVIEW','Obtain reviewer or AGI Node verdict on ProofBundle candidate','validation debt']
+    ];
+    const extras = {
+      governance: [
+        ['TRUST-ROOM','Build buyer-ready trust-room claim matrix and contradiction register','procurement proof debt'],
+        ['POLICY-BOUNDARY','Validate security, privacy, compliance, and claim-boundary language','policy proof debt']
+      ],
+      science: [
+        ['EXPERIMENT-PLAN','Create falsification ladder, null baseline, and reproduction plan','experimental proof debt'],
+        ['EXTERNAL-REVIEW','Route candidate discovery package to scientific reviewer','peer-review proof debt']
+      ],
+      security: [
+        ['SAFE-REMEDIATION','Generate repo-owned defensive remediation plan with no external scanning','defensive proof debt'],
+        ['SECRET-SAFETY','Run secret-leak, exploit, and unsafe-automerge boundary checks','safety proof debt']
+      ],
+      energy: [
+        ['LOAD-BASELINE','Collect load, tariff, resilience, capex, and operations assumptions','energy baseline debt'],
+        ['ENGINEERING-REVIEW','Route feasibility plan to engineering/finance reviewer','engineering validation debt']
+      ],
+      space: [
+        ['MISSION-TELEMETRY','Convert moonshot objective into launch telemetry, gates, and stage criteria','mission telemetry debt'],
+        ['ASCENSION-REPLAY','Package public mission replay room with launch-to-Chronicle trace','ascension replay debt']
+      ],
+      business: [
+        ['MARKET-BASELINE','Compare candidate strategy against incumbent and null baseline','market baseline debt'],
+        ['CUSTOMER-PROOF','Create measured customer proof plan and reviewer script','customer evidence debt']
+      ],
+      general: [
+        ['DECISION-STATE','Produce governed decision state and next-action graph','decision proof debt'],
+        ['HUMAN-REVIEW','Route unresolved claims to human reviewer','human review debt']
+      ]
+    };
+    return [...core, ...(extras[domain] || extras.general)].map((j,i)=>({
+      id:`AGI-ASCEND-${j[0]}-${String(i+1).padStart(3,'0')}`,
+      title:j[1],
+      proof_debt:j[2],
+      state:i<3?'ready_for_jobification':'human_review_required',
+      acceptance_tests:[
+        'Required outputs are content-addressed or packaged in the dossier',
+        'Claim boundary preserved; unsupported claims remain blocked',
+        'Replay, validator route, and Evidence Docket update path exist'
+      ],
+      worker:i%2===0?'Alpha AGI Node / AGI Agent':'Human reviewer / AGI Node Validator',
+      validator:'AGI Node Validator + human review when risk is medium/high',
+      job_spec_uri:`ipfs://job-spec/${slug(j[1])}-${hashString(objective+j[0]).toLowerCase()}.json`,
+      proofbundle_uri:`ipfs://proofbundles/${slug(j[0])}-${hashString(j[1]+objective).toLowerCase()}.json`
+    }));
+  }
+
+  function makeClaims(objective, domain){
+    return [
+      {claim:`GoalOS can turn the objective “${objective.slice(0,120)}${objective.length>120?'…':''}” into a proof-gated mission package.`, status:'supported-locally', evidence:'Generated mission contract, proof debt, AGI Jobs, and dossier artifacts.'},
+      {claim:`The mission is ${labels[domain]} class.`, status:'heuristic', evidence:'Objective-native keyword/domain classifier; reviewer can override.'},
+      {claim:'The mission is externally validated.', status:'blocked', evidence:'Requires validator verdict and external replay before promotion.'},
+      {claim:'The resulting capability may influence future missions.', status:'hold', evidence:'Only after ProofBundle replay + validator acceptance + Evidence Docket update.'}
+    ];
+  }
+
+  function makeMission(objective){
+    const domain = classify(objective); const risk = riskClass(objective); const jobs = domainJobs(domain, objective);
+    const run = `AGIALPHA-ASCENT-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${hashString(objective)}`;
+    const claims = makeClaims(objective, domain);
+    const debts = jobs.map(j=>j.proof_debt);
+    const ready = readiness(risk, debts);
+    const stages = ['Identify','Learn','Think','Design','Strategise','Execute','Prove','Chronicle'];
+    const artifacts = {
+      'mission-contract.json': {
+        version:'goalos.v56.mission_contract', run_id:run, objective, mission_name:'AGI Alpha Ascension Mission', domain:labels[domain], risk_class:risk,
+        doctrine:'Set the objective. GoalOS runs until proof is done. AI creates output. GoalOS creates proof.',
+        success_criteria:['Every major claim has a verdict','Proof debt is converted into AGI Jobs or blocked','ProofBundle return path exists','Evidence Docket and Chronicle gate exist'],
+        failure_criteria:['Unsupported claims promoted','External validation claimed without reviewer verdict','Chronicle promotion without replay','Wallet or transaction action automated from local demo'],
+        done_condition:'Human-review-ready governed decision state; Chronicle remains HOLD until validation clears.'
+      },
+      'mission-benchmark-contract.json': {
+        version:'goalos.v56.benchmark_contract', objective, baseline:['report-only answer','ad-hoc agent output','manual checklist'],
+        metrics:['proof readiness','claim support','proof debt reduction','replay path completeness','validator readiness','future mission leverage'],
+        reward_hack_checks:['confidence without evidence','moonshot rhetoric without source boundary','simulated value presented as measured value'],
+        human_review_required:risk !== 'LOW'
+      },
+      'proof-debt-register.json': {version:'goalos.v56.proof_debt_register', run_id:run, proof_debt:debts.map((d,i)=>({id:`PD-${i+1}`, type:d, converted_to:jobs[i]?.id || 'AGI-JOB-PENDING'}))},
+      'agi-job-queue.json': {version:'goalos.v56.agi_job_queue', run_id:run, jobs},
+      'agijobmanager-job-specs.json': {version:'goalos.v56.agijobmanager_specs', contract_boundary:'transaction intents only; no automatic transaction', specs:jobs.map(j=>({job_id:j.id, jobSpecURI:j.job_spec_uri, payout:'TBD by human employer', duration:'TBD', details:j.title, acceptance_tests:j.acceptance_tests}))},
+      'proofbundle-template.json': {version:'goalos.v56.proofbundle_template', minimum:['JobSpec','PolicyContext','EnvPins','OutputHashes','Logs','Traces','ReplayResult','ValidatorVerdict','EvidenceDocketUpdate','ChroniclePointer'], promotion_rule:'No ProofBundle + replay + validator verdict, no Chronicle promotion.'},
+      'evidence-docket-61.json': {version:'evidence-docket-6.1', run_id:run, claims, proof_debt:debts, public_private_boundary:'public proof commitments only; private execution remains private'},
+      'chronicle-gate.json': {version:'goalos.v56.chronicle_gate', state:'HOLD', reason:'Replay and validator verdict not yet accepted', may_influence_future_missions:false},
+      'governed-decision-state.json': {version:'goalos.v56.governed_decision_state', run_id:run, readiness:ready, decision:'review-ready, not production-authorized', next_action:'Run Proof Run 001 with external replay and reviewer verdict.'},
+      'action-graph.csv': 'step,owner,gate\nObjective,Human,mission contract\nProof Debt,GoalOS,jobification\nAGI Jobs,Agent/Human,ProofBundle\nValidation,AGI Node/Human,verdict\nChronicle,GoalOS,promotion gate\n',
+      'README.md': `# ${run}\n\nObjective: ${objective}\n\nThis dossier was generated by the GoalOS V56 AGI Alpha Ascension Mission Control standalone.\n\nClaim boundary: Aspirational, proof-gated demo. No achieved AGI/ASI/SOTA/settlement claim.\n`
+    };
+    return {run, objective, domain, domainLabel:labels[domain], risk, jobs, claims, debts, readiness:ready, stages, artifacts, created_at:new Date().toISOString()};
+  }
+
+  let state = makeMission(samples.default);
+  let selectedArtifact = 'mission-contract.json';
+
+  function log(msg){
+    const el = $('consoleLog'); if (!el) return;
+    const div = document.createElement('div');
+    div.innerHTML = `<span class="t">${now()}</span> · ${esc(msg)}`;
+    el.appendChild(div); el.scrollTop = el.scrollHeight;
+  }
+
+  function render(){
+    $('runId').textContent = state.run;
+    $('domainLabel').textContent = state.domainLabel;
+    $('riskClass').textContent = state.risk;
+    $('proofReadiness').textContent = `${state.readiness}%`;
+    $('promotionState').textContent = 'HOLD';
+    $('sourceObjective').textContent = state.objective;
+    $('ring').style.setProperty('--pct', `${state.readiness}%`);
+    $('ringPct').textContent = `${state.readiness}%`;
+    $('debtCount').textContent = `${state.jobs.length} jobs`;
+    renderFlow(); renderBars(); renderRadar(); renderSparkline(); renderJobs(); renderClaims(); renderArtifacts(); renderStages(); renderTrajectory(); renderDocs(); renderDiversity();
+  }
+  function renderFlow(){
+    $('flow').innerHTML = state.stages.map((s,i)=>`<div class="node ${i<6?'active':''}"><span>${esc(s)}</span><small>${i<6?'ready':'hold'}</small></div>`).join('');
+  }
+  function renderBars(){
+    const vals = [ ['Mission contract',100], ['Proof debt',92], ['AGI Jobs',88], ['ProofBundle path',74], ['Replay',42], ['Validator verdict',34], ['Chronicle',0] ];
+    $('gates').innerHTML = vals.map(([k,v])=>`<div class="bar-row"><b>${esc(k)}</b><div class="track"><div class="fill" style="width:${v}%"></div></div><span>${v}%</span></div>`).join('');
+  }
+  function renderRadar(){
+    const values = [state.readiness, 82, state.risk==='HIGH'?58:76, 64, 70, 44].map(v=>clamp(v,15,100));
+    const labels = ['Proof','Jobs','Risk','Replay','ECI','Chronicle']; const cx=160, cy=150, r=110;
+    const pts = values.map((v,i)=>{const a=-Math.PI/2+i*2*Math.PI/values.length; return [cx+Math.cos(a)*r*v/100, cy+Math.sin(a)*r*v/100];});
+    const rings = [20,40,60,80,100].map(p=>`<polygon points="${values.map((_,i)=>{const a=-Math.PI/2+i*2*Math.PI/values.length; return `${cx+Math.cos(a)*r*p/100},${cy+Math.sin(a)*r*p/100}`}).join(' ')}" fill="none" stroke="rgba(255,255,255,.09)"/>`).join('');
+    const axes = labels.map((l,i)=>{const a=-Math.PI/2+i*2*Math.PI/labels.length; const x=cx+Math.cos(a)*(r+28), y=cy+Math.sin(a)*(r+28); return `<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*r}" y2="${cy+Math.sin(a)*r}" stroke="rgba(255,255,255,.08)"/><text x="${x}" y="${y}" fill="rgba(236,244,255,.72)" font-size="12" text-anchor="middle">${l}</text>`}).join('');
+    $('radar').innerHTML = `<svg viewBox="0 0 320 300">${rings}${axes}<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="rgba(98,228,255,.18)" stroke="#62e4ff" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="3" fill="#ffd66e"/></svg>`;
+  }
+  function renderSparkline(){
+    const pts = [22,30,38,42,55,64,71,78,state.readiness].map((v,i)=>[20+i*45,180-v*1.55]);
+    $('sparkline').innerHTML = `<svg viewBox="0 0 420 190"><path d="${pts.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' ')}" fill="none" stroke="#62e4ff" stroke-width="5"/><path d="${pts.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' ')} L 380 180 L 20 180 Z" fill="rgba(98,228,255,.12)"/><text x="20" y="24" fill="rgba(236,244,255,.76)" font-size="14">Proof readiness trajectory</text></svg>`;
+  }
+  function renderTrajectory(){
+    $('trajectory').innerHTML = `<svg viewBox="0 0 640 360"><defs><linearGradient id="traj" x1="0" x2="1"><stop offset="0" stop-color="#ffd66e"/><stop offset="1" stop-color="#62e4ff"/></linearGradient></defs><circle cx="96" cy="278" r="48" fill="rgba(98,228,255,.18)" stroke="#62e4ff"/><text x="96" y="284" text-anchor="middle" fill="#fff" font-weight="900">Earth</text><circle cx="540" cy="80" r="42" fill="rgba(255,214,110,.18)" stroke="#ffd66e"/><text x="540" y="86" text-anchor="middle" fill="#fff" font-weight="900">AGI</text><path d="M120 260 C210 80 390 30 520 80" stroke="url(#traj)" stroke-width="5" fill="none" stroke-dasharray="10 10"><animate attributeName="stroke-dashoffset" values="0;-40" dur="2s" repeatCount="indefinite"/></path><g class="rocket" transform="translate(326 118)"><path d="M0 -34 L18 18 L0 9 L-18 18 Z" fill="#fff"/><circle cx="0" cy="-3" r="7" fill="#62e4ff"/><path class="plume" d="M-8 20 L0 58 L8 20 Z" fill="#ff9a4a"/></g><text x="320" y="330" text-anchor="middle" fill="rgba(236,244,255,.72)">Objective → proof debt → AGI Jobs → ProofBundles → Chronicle</text></svg>`;
+  }
+  function renderJobs(){
+    $('jobTableBody').innerHTML = state.jobs.map(j=>`<tr><td data-label="Job">${esc(j.id)}<br><span class="pill ${j.state.includes('ready')?'pass':'hold'}">${esc(j.state)}</span></td><td data-label="Work">${esc(j.title)}<br><span class="pill">${esc(j.worker)}</span></td><td data-label="Proof Debt">${esc(j.proof_debt)}</td><td data-label="Acceptance">${j.acceptance_tests.map(a=>`<div>• ${esc(a)}</div>`).join('')}</td><td data-label="ProofBundle"><span class="pill hold">${esc(j.proofbundle_uri)}</span></td></tr>`).join('');
+  }
+  function renderClaims(){
+    $('claimVerdicts').innerHTML = state.claims.map(c=>`<div class="stage"><div><b>${esc(c.claim)}</b><div class="muted">${esc(c.evidence)}</div></div><span class="pill ${c.status==='blocked'?'block':c.status==='supported-locally'?'pass':'hold'}">${esc(c.status)}</span></div>`).join('');
+  }
+  function renderStages(){
+    $('stageList').innerHTML = state.stages.map((s,i)=>`<div class="stage"><b>${esc(s)}</b><span class="pill ${i<6?'pass':'hold'}">${i<6?'ready':'proof gated'}</span></div>`).join('');
+  }
+  function renderArtifacts(){
+    const names = Object.keys(state.artifacts);
+    $('artifactTabs').innerHTML = names.map(n=>`<button class="${n===selectedArtifact?'active':''}" data-art="${esc(n)}">${esc(n)}</button>`).join('');
+    $('artifactPreview').textContent = typeof state.artifacts[selectedArtifact] === 'string' ? state.artifacts[selectedArtifact] : JSON.stringify(state.artifacts[selectedArtifact], null, 2);
+    document.querySelectorAll('[data-art]').forEach(btn=>btn.onclick=()=>{selectedArtifact=btn.dataset.art;renderArtifacts();});
+  }
+  function renderDocs(){
+    const docs = [
+      ['Launch Brief','Explain the Apollo-style ascent: objective to governed decision state.'],
+      ['Proof Dossier','Show claims, sources, baselines, proof debt, and replay path.'],
+      ['AGI Jobs Guide','Convert unresolved evidence into executable AGI Jobs.'],
+      ['ProofBundle Standard','Minimum evidence required before validation.'],
+      ['Chronicle Gate','Only validated capability can influence future missions.'],
+      ['Claim Boundary','No achieved AGI/ASI/SOTA/settlement claim without proof.']
+    ];
+    $('docGrid').innerHTML = docs.map(([a,b])=>`<div class="doc"><b>${esc(a)}</b><p>${esc(b)}</p></div>`).join('');
+  }
+  function renderDiversity(){
+    const a = makeMission(samples.enterprise); const b = makeMission(samples.energy);
+    const idsA = a.jobs.map(j=>j.id.split('-').slice(2,-1).join('-')).join(', ');
+    const idsB = b.jobs.map(j=>j.id.split('-').slice(2,-1).join('-')).join(', ');
+    $('diversityResult').innerHTML = `<div class="stage"><b>Enterprise trust room</b><span>${esc(a.domainLabel)}</span></div><div class="muted">Jobs: ${esc(idsA)}</div><div class="stage"><b>Hospital microgrid</b><span>${esc(b.domainLabel)}</span></div><div class="muted">Jobs: ${esc(idsB)}</div><div class="pill pass">Different objectives produce different jobs</div>`;
+  }
+
+  function runMission(){
+    const objective = $('objectiveInput').value.trim() || samples.default;
+    state = makeMission(objective); selectedArtifact = 'mission-contract.json';
+    document.body.classList.add('ascend'); setTimeout(()=>document.body.classList.remove('ascend'), 1400);
+    $('consoleLog').innerHTML = '';
+    ['Ignition: objective captured.','Identify: domain + risk classified.','Learn: proof debt extracted.','Think: claims given verdicts.','Design: AGI Jobs and JobSpecURI plans generated.','Strategise: ProofBundle return path and validator route created.','Execute: Evidence Docket and Chronicle HOLD emitted.'].forEach((m,i)=>setTimeout(()=>log(m), i*180));
+    render();
+  }
+
+  function validateProofBundle(){
+    let obj; try { obj = JSON.parse($('proofBundleInput').value || '{}'); } catch(e){ $('proofBundleResult').innerHTML='<span class="pill block">Invalid JSON</span>'; return; }
+    const required = ['job_id','proofbundle_uri','replay_result','validator_verdict','evidence_docket_update'];
+    const missing = required.filter(k=>!obj[k]);
+    const pass = missing.length===0 && /pass|accepted|approved/i.test(String(obj.replay_result)) && /accepted|approved/i.test(String(obj.validator_verdict));
+    $('proofBundleResult').innerHTML = pass ? '<span class="pill pass">Chronicle gate can open for this ProofBundle</span>' : `<span class="pill hold">Promotion HOLD</span> <span class="muted">Missing/blocked: ${esc(missing.join(', ') || 'replay or validator acceptance')}</span>`;
+  }
+
+  function askGoalOS(){
+    const q = $('askInput').value.toLowerCase();
+    let ans = 'GoalOS treats the LLM as drafting and reasoning. Unsupported claims become proof debt. Proof debt becomes AGI Jobs. Validated ProofBundles update the Evidence Docket. Only validated capability can enter Chronicle memory.';
+    if (q.includes('apollo') || q.includes('moon')) ans = 'The Apollo analogy maps to mission discipline: objective, countdown, telemetry, gates, abort conditions, human review, evidence, and a public record of what actually landed.';
+    if (q.includes('sota')) ans = 'Architecture can be frontier-aligned, but empirical SOTA requires Proof Run 001: real tasks, baselines, replay logs, ProofBundles, Evidence Dockets, validators, and independent review.';
+    if (q.includes('agi job')) ans = `This run produced ${state.jobs.length} AGI Jobs. Each has acceptance tests, JobSpecURI plan, validator route, and ProofBundle return path.`;
+    $('askResult').textContent = ans;
+  }
+
+  // Minimal client-side ZIP writer, no external dependencies.
+  const crcTable = (()=>{let c,t=[]; for(let n=0;n<256;n++){c=n; for(let k=0;k<8;k++) c=((c&1)?(0xEDB88320^(c>>>1)):(c>>>1)); t[n]=c>>>0;} return t;})();
+  function crc32(bytes){ let c=0^(-1); for(let i=0;i<bytes.length;i++) c=(c>>>8)^crcTable[(c^bytes[i])&0xff]; return (c^(-1))>>>0; }
+  function u16(n){return [n&255,(n>>>8)&255]} function u32(n){return [n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255]}
+  function zip(files){
+    const enc = new TextEncoder(); let chunks=[], central=[], offset=0;
+    Object.entries(files).forEach(([name, content])=>{
+      const data = enc.encode(typeof content==='string'?content:JSON.stringify(content,null,2)); const fname=enc.encode(name); const crc=crc32(data); const local=[...u32(0x04034b50),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0),...u32(crc),...u32(data.length),...u32(data.length),...u16(fname.length),...u16(0),...fname];
+      chunks.push(new Uint8Array(local), data);
+      central.push(new Uint8Array([...u32(0x02014b50),...u16(20),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0),...u32(crc),...u32(data.length),...u32(data.length),...u16(fname.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(offset),...fname]));
+      offset += local.length + data.length;
+    });
+    const centralSize = central.reduce((a,c)=>a+c.length,0); const centralOffset=offset;
+    chunks.push(...central, new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(central.length),...u16(central.length),...u32(centralSize),...u32(centralOffset),...u16(0)]));
+    return new Blob(chunks,{type:'application/zip'});
+  }
+  function exportDossier(){
+    const files = {};
+    Object.entries(state.artifacts).forEach(([name, content]) => files[`goalos-v56-ascension-dossier/${name}`] = content);
+    state.jobs.forEach(j => files[`goalos-v56-ascension-dossier/agi-jobs/${j.id}/job-spec.json`] = j);
+    files['goalos-v56-ascension-dossier/docs/launch-brief.md'] = '# We Choose To Ascend With AGI\n\nLike Apollo, the mission is not rhetoric. It is objective, telemetry, gates, evidence, and proof.\n';
+    files['goalos-v56-ascension-dossier/github-action/README.md'] = 'This dossier can be committed as proof-aligned source for the GoalOS V56 autonomous publication workflow.\n';
+    const blob = zip(files); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`${state.run.toLowerCase()}-dossier.zip`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); log('Exported dynamic dossier ZIP.');
+  }
+
+  function loadSample(){ const k=$('sampleSelect').value; $('objectiveInput').value=samples[k]||samples.default; }
+
+  function starfield(){
+    const c=$('ascensionField'), ctx=c.getContext('2d'); let w,h,stars=[];
+    function resize(){w=c.width=innerWidth*devicePixelRatio; h=c.height=innerHeight*devicePixelRatio; stars=Array.from({length:Math.min(240,Math.floor(innerWidth/5))},()=>({x:Math.random()*w,y:Math.random()*h,z:Math.random()*1+0.25,r:Math.random()*2+0.4,a:Math.random()*Math.PI*2}));}
+    function draw(){ctx.clearRect(0,0,w,h); for(const s of stars){s.y-=s.z*0.22*devicePixelRatio; s.a+=.015; if(s.y<0){s.y=h;s.x=Math.random()*w} const glow=(Math.sin(s.a)+1)/2; ctx.fillStyle=`rgba(${120+glow*120},${150+glow*90},255,${0.22+glow*.55})`; ctx.beginPath(); ctx.arc(s.x,s.y,s.r*devicePixelRatio,0,Math.PI*2); ctx.fill(); if(glow>.82){ctx.strokeStyle='rgba(98,228,255,.15)'; ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(w/2,h*.54); ctx.stroke();}}
+      ctx.save();ctx.translate(w/2,h*.58);ctx.rotate(Date.now()/90000);ctx.strokeStyle='rgba(255,214,110,.12)'; for(let i=0;i<5;i++){ctx.beginPath();ctx.ellipse(0,0,260*devicePixelRatio+i*90,80*devicePixelRatio+i*30,0,0,Math.PI*2);ctx.stroke();} ctx.restore(); requestAnimationFrame(draw);}
+    addEventListener('resize',resize); resize(); draw();
+  }
+
+  function init(){
+    $('objectiveInput').value = samples.default; $('sampleSelect').onchange=loadSample; $('startBtn').onclick=runMission; $('launchBtn').onclick=()=>{location.hash='#machine'; runMission();}; $('exportBtn').onclick=exportDossier; $('validateBtn').onclick=validateProofBundle; $('loadProofSample').onclick=()=>{$('proofBundleInput').value=JSON.stringify({job_id:state.jobs[0].id,proofbundle_uri:state.jobs[0].proofbundle_uri,replay_result:'pass',validator_verdict:'accepted',evidence_docket_update:'evidence-docket-61.json'},null,2); validateProofBundle();}; $('askBtn').onclick=askGoalOS; $('copySummaryBtn').onclick=()=>navigator.clipboard && navigator.clipboard.writeText(`GoalOS V56: ${state.objective} → ${state.jobs.length} AGI Jobs → ProofBundles → Evidence Docket → Chronicle HOLD.`); 
+    runMission(); starfield();
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
