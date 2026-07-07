@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GoalOS V72 — Proof Mission Factory & Validated Skill Graph Command Center</title>
+<style>
+:root{
+  --bg:#02030b; --bg2:#081123; --panel:rgba(9,13,31,.78); --panel2:rgba(17,22,50,.86);
+  --stroke:rgba(207,225,255,.15); --stroke2:rgba(117,241,255,.34);
+  --text:#fbfcff; --muted:rgba(232,239,255,.73); --muted2:rgba(232,239,255,.54);
+  --gold:#ffd76f; --cyan:#75f1ff; --violet:#a77bff; --pink:#ff67d8; --green:#83ffc7; --red:#ff7895; --orange:#ffb35f;
+  --r:28px; --shadow:0 34px 90px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{
+  margin:0; min-height:100vh; color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 9% 6%,rgba(167,123,255,.24),transparent 32%),
+    radial-gradient(circle at 88% 0%,rgba(117,241,255,.15),transparent 30%),
+    radial-gradient(circle at 50% 9%,rgba(255,215,111,.09),transparent 18%),
+    linear-gradient(135deg,var(--bg),var(--bg2) 58%,#160720);
+  overflow-x:hidden;
+}
+#stars,#web,#halo{position:fixed;inset:0;pointer-events:none}#stars{z-index:-7}#web{z-index:-6}#halo{z-index:-5;mix-blend-mode:screen;opacity:.76}
+.veil{position:fixed;inset:0;z-index:-4;pointer-events:none;background:
+  linear-gradient(90deg,rgba(117,241,255,.032) 1px,transparent 1px),
+  linear-gradient(180deg,rgba(117,241,255,.026) 1px,transparent 1px),
+  radial-gradient(circle at 50% 18%,rgba(255,255,255,.05),transparent 11%),
+  linear-gradient(180deg,transparent,rgba(2,3,11,.35) 46%,rgba(2,3,11,.88) 100%);
+  background-size:72px 72px,72px 72px,auto,auto}
+.topbar{
+  position:sticky; top:14px; z-index:90; max-width:1540px; margin:14px auto 0; padding:10px 12px;
+  border:1px solid var(--stroke); border-radius:999px; background:rgba(5,8,22,.74);
+  backdrop-filter:blur(22px); box-shadow:0 18px 62px rgba(0,0,0,.36); display:flex; align-items:center; gap:13px;
+}
+.mark{width:46px;height:46px;border-radius:16px;background:conic-gradient(from 210deg,var(--gold),var(--pink),var(--violet),var(--cyan),var(--green),var(--gold));box-shadow:0 0 40px rgba(117,241,255,.36),inset 0 0 18px rgba(255,255,255,.28)}
+.brand{line-height:1.08;min-width:0}.brand b{display:block;font-weight:950}.brand span{display:block;color:var(--muted);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:760px}
+.nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}.nav a,.nav button{border:1px solid var(--stroke);background:rgba(255,255,255,.065);color:var(--text);border-radius:999px;padding:10px 14px;text-decoration:none;font-weight:850;cursor:pointer}.nav a:hover,.nav button:hover{border-color:rgba(117,241,255,.56);background:rgba(117,241,255,.10)}.nav .gold{background:linear-gradient(135deg,#ffe9aa,#bf8628);color:#17111f;border-color:rgba(255,215,111,.7)}
+.wrap{max-width:1540px;margin:0 auto;padding:72px 22px 100px}
+.hero{display:grid;grid-template-columns:minmax(0,1.03fr) minmax(450px,.97fr);gap:24px;align-items:center;min-height:760px}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,215,111,.32);background:rgba(255,215,111,.075);color:var(--gold);border-radius:999px;padding:8px 12px;font-size:.76rem;font-weight:950;letter-spacing:.14em;text-transform:uppercase}
+h1{font-size:clamp(3.25rem,7.3vw,8.1rem);line-height:.87;letter-spacing:-.086em;margin:20px 0 16px}.grad{background:linear-gradient(90deg,#fff,#ffe9ad 22%,#80f5ff 48%,#bd99ff 72%,#ff76db);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(1.02rem,1.65vw,1.28rem);line-height:1.62;color:var(--muted);max-width:880px}
+.card{border:1px solid var(--stroke);background:linear-gradient(180deg,var(--panel2),rgba(7,10,27,.72));border-radius:var(--r);box-shadow:var(--shadow);backdrop-filter:blur(19px);padding:22px;position:relative;overflow:hidden}.card:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.052),transparent 33%,transparent 67%,rgba(117,241,255,.043))}
+.panelTitle{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}.panelTitle h2{margin:0;font-size:clamp(1.75rem,3vw,2.7rem);line-height:.95;letter-spacing:-.06em}.muted{color:var(--muted)}.subtle{color:var(--muted2)}
+.tag{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--stroke);background:rgba(255,255,255,.06);border-radius:999px;padding:6px 10px;font-size:.78rem;font-weight:850}.tag.gold{color:var(--gold);border-color:rgba(255,215,111,.32);background:rgba(255,215,111,.08)}.tag.good{color:var(--green);border-color:rgba(132,255,200,.32);background:rgba(132,255,200,.08)}.tag.warn{color:var(--gold);border-color:rgba(255,215,111,.32);background:rgba(255,215,111,.08)}.tag.bad{color:var(--red);border-color:rgba(255,121,149,.32);background:rgba(255,121,149,.08)}
+.btn{border:1px solid var(--stroke);background:rgba(255,255,255,.075);color:var(--text);border-radius:999px;padding:12px 16px;font-weight:900;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease,background .14s ease}.btn:hover{transform:translateY(-1px);border-color:rgba(117,241,255,.56);box-shadow:0 12px 34px rgba(0,0,0,.24)}.btn.primary{background:linear-gradient(135deg,var(--violet),var(--cyan));color:#050815;border-color:rgba(117,241,255,.68)}.btn.gold{background:linear-gradient(135deg,#ffeaaa,#bb8328);color:#18111f}.btn.danger{background:rgba(255,121,149,.12);border-color:rgba(255,121,149,.32)}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.field textarea,.field input,.field select{width:100%;border:1px solid rgba(205,224,255,.16);background:rgba(4,8,20,.72);color:#fff;border-radius:18px;padding:15px 16px;font:inherit;outline:none}.field textarea{min-height:188px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(117,241,255,.48);box-shadow:0 0 0 3px rgba(117,241,255,.1)}
+.sliderGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.sliderCard{border:1px solid var(--stroke);background:rgba(255,255,255,.04);border-radius:18px;padding:12px}.sliderHead{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.84rem;font-weight:800;margin-bottom:8px}input[type=range]{width:100%;accent-color:#75f1ff}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:18px}.kpi{border:1px solid var(--stroke);background:rgba(255,255,255,.045);border-radius:22px;padding:15px}.kpi label{display:block;color:var(--muted2);font-size:.7rem;text-transform:uppercase;letter-spacing:.16em;font-weight:900;margin-bottom:9px}.kpi b{display:block;font-size:clamp(1.02rem,1.75vw,1.35rem);line-height:1.08}
+.section{margin-top:24px}.twoCol{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:22px}.threeCol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}.fourCol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.console{min-height:310px;background:#030914;border:1px solid rgba(117,241,255,.25);border-radius:18px;padding:16px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#dcfcff;overflow:auto;box-shadow:inset 0 0 55px rgba(0,0,0,.42)}.console .ok{color:var(--green)}.console .warn{color:var(--gold)}.console .bad{color:var(--red)}.console .info{color:var(--cyan)}.console .time{color:#87eeff}
+canvas.chart{width:100%;height:320px;border-radius:20px;background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.035),transparent 44%),rgba(255,255,255,.026);border:1px solid rgba(255,255,255,.055)}
+.mapGrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(360px,.65fr);gap:22px;align-items:start}.stage{position:relative;border:1px solid rgba(255,255,255,.10);border-radius:30px;overflow:hidden;background:radial-gradient(circle at 50% 22%,rgba(117,241,255,.05),transparent 42%),linear-gradient(180deg,rgba(2,10,24,.78),rgba(15,7,28,.96));box-shadow:inset 0 0 90px rgba(0,0,0,.42),0 30px 84px rgba(0,0,0,.34)}#skillGraphCanvas{display:block;width:100%;height:720px;cursor:crosshair}.hud{position:absolute;left:16px;right:16px;top:16px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}.hud .tag{background:rgba(3,8,20,.72);backdrop-filter:blur(10px)}.plate{position:absolute;left:18px;bottom:18px;max-width:600px;padding:14px 16px;border:1px solid rgba(255,215,111,.28);border-radius:20px;background:linear-gradient(180deg,rgba(4,8,20,.78),rgba(4,8,20,.52));backdrop-filter:blur(12px);pointer-events:none}.plate b{display:block;font-size:1.05rem;margin-bottom:6px}.plate span{display:block;color:var(--muted);font-size:.9rem;line-height:1.44}
+.ribbon{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px;margin-top:12px}.ribbonStep{border:1px solid var(--stroke);background:rgba(255,255,255,.035);border-radius:14px;padding:10px;text-align:center;font-size:.78rem;color:var(--muted)}.ribbonStep.on{background:rgba(117,241,255,.10);border-color:rgba(117,241,255,.45);color:white}.ribbonStep.done{background:rgba(132,255,200,.08);border-color:rgba(132,255,200,.38);color:var(--green)}
+.modeGrid,.roleGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.mode,.role{border:1px solid var(--stroke);background:rgba(255,255,255,.04);color:var(--text);border-radius:16px;padding:11px;text-align:left;font-weight:850;cursor:pointer}.mode.active,.role.active{border-color:rgba(255,215,111,.50);background:rgba(255,215,111,.10)}
+.metricGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{border:1px solid var(--stroke);background:rgba(255,255,255,.04);border-radius:16px;padding:12px}.metric label{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin:0 0 5px}.metric b{font-size:1rem}
+.cardGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.productCard,.lessonCard,.choiceCard{border:1px solid var(--stroke);background:rgba(255,255,255,.045);border-radius:18px;padding:14px;cursor:pointer;min-height:155px}.productCard:hover,.productCard.active,.lessonCard:hover,.lessonCard.active,.choiceCard:hover,.choiceCard.active{border-color:rgba(117,241,255,.55);background:rgba(117,241,255,.08);box-shadow:0 0 34px rgba(117,241,255,.08)}.productCard b,.lessonCard b,.choiceCard b{display:block;margin-bottom:6px}.productCard span,.lessonCard span,.choiceCard span{display:block;color:var(--muted);font-size:.88rem;line-height:1.42}
+#revenueCanvas,#skillCurveCanvas,#trustRoomCanvas,#radarCanvas,#marketCanvas,#compoundingCanvas{height:335px!important}
+.tableWrap{overflow:auto;border:1px solid var(--stroke);border-radius:18px}.tbl{width:100%;border-collapse:collapse;min-width:920px}.tbl th,.tbl td{text-align:left;padding:13px;border-bottom:1px solid rgba(255,255,255,.08);vertical-align:top}.tbl th{font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);background:rgba(255,255,255,.035)}.tbl tr:hover td{background:rgba(255,255,255,.025)}
+.code{white-space:pre-wrap;word-break:break-word;margin:0;background:#07101d;border:1px solid rgba(255,255,255,.08);border-radius:18px;color:#dff8ff;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:16px;min-height:330px;max-height:580px;overflow:auto}
+.artifactGrid{display:grid;grid-template-columns:minmax(280px,.7fr) minmax(0,1.3fr);gap:18px}.artifactList{display:flex;gap:9px;flex-wrap:wrap;align-content:flex-start}.artifactList button{border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);border-radius:999px;padding:9px 11px;font-weight:800;cursor:pointer}.artifactList button.active,.artifactList button:hover{border-color:rgba(117,241,255,.48);background:rgba(117,241,255,.10)}
+.helpCard,.miniCard{border:1px solid var(--stroke);background:rgba(255,255,255,.04);border-radius:20px;padding:16px;color:var(--muted);line-height:1.55}.helpCard b{color:white}.badgeRow{display:flex;gap:8px;flex-wrap:wrap}.badge{padding:7px 10px;border-radius:999px;border:1px solid var(--stroke);background:rgba(255,255,255,.04);font-size:.82rem;color:var(--muted)}.badge.earned{border-color:rgba(255,215,111,.5);background:rgba(255,215,111,.1);color:#fff}
+.flash{animation:flash .9s ease}@keyframes flash{0%{filter:brightness(1)}45%{filter:brightness(1.55) saturate(1.28)}100%{filter:brightness(1)}}
+.footer{color:var(--muted2);font-size:.88rem;padding:34px 0}
+@media(max-width:1280px){.hero,.twoCol,.threeCol,.fourCol,.artifactGrid,.kpis,.sliderGrid,.mapGrid,.cardGrid,.ribbon{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#skillGraphCanvas{height:560px}}@media(max-width:760px){.topbar{border-radius:24px;top:10px}.nav{display:none}.wrap{padding:50px 14px 82px}.hero{min-height:auto}.kpis{grid-template-columns:1fr}h1{font-size:3.05rem}.actions{display:grid;grid-template-columns:1fr}.btn{width:100%}.hud{position:static;padding:12px}.plate{position:static;border-radius:0}.stage{overflow:visible}.modeGrid,.roleGrid,.metricGrid{grid-template-columns:1fr}.cardGrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas><canvas id="web"></canvas><canvas id="halo"></canvas><div class="veil"></div>
+<header class="topbar">
+  <div class="mark"></div><div class="brand"><b>GoalOS V72</b><span>Proof Mission Factory · Proof Debt · Skill Capture Studio · AI Trust Room · Enterprise Proof OS · Validator Marketplace</span></div>
+  <nav class="nav"><a href="#factory">Factory</a><a href="#graph">Skill Graph</a><a href="#products">Products</a><a href="#masterclass">Masterclass</a><a href="#artifacts">Artifacts</a><button class="gold" id="exportTop">Export Dossier</button></nav>
+</header>
+
+<main class="wrap">
+<section class="hero" id="factory">
+  <div>
+    <div class="eyebrow">validated skill graph · proof-first business model</div>
+    <h1><span class="grad">Sell proof missions first.</span><br>Compound skills later.</h1>
+    <p class="lead">The business is a Proof Mission Factory plus a Skill Capture Studio. Start by selling proof missions. Then add subscriptions, governance, a marketplace, and network intelligence. The asset that compounds is not the prompt — it is the validated skill graph.</p>
+    <div class="actions">
+      <button class="btn primary" id="runMissionBtn">Run Proof Mission</button>
+      <button class="btn gold" id="captureBtn">Capture Expert Judgment</button>
+      <button class="btn" id="validateBtn">Validate Skill</button>
+      <button class="btn" id="marketBtn">Open Marketplace</button>
+      <button class="btn danger" id="overclaimBtn">Try Overclaim</button>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><label>Business stage</label><b id="stageKpi">Proof Mission</b></div>
+      <div class="kpi"><label>Proof missions</label><b id="missionsKpi">0</b></div>
+      <div class="kpi"><label>Captured traces</label><b id="tracesKpi">0</b></div>
+      <div class="kpi"><label>Candidate skills</label><b id="candidateKpi">0</b></div>
+      <div class="kpi"><label>Validated skills</label><b id="validatedKpi">0</b></div>
+      <div class="kpi"><label>Graph value</label><b id="valueKpi">—</b></div>
+    </div>
+  </div>
+
+  <aside class="card">
+    <div class="panelTitle"><div><h2>Mission Composer</h2><p class="muted">Pick a first workflow. The simulator turns it into a proof mission, trace schema, candidate skills, tests, offer ladder, and AGI Job intents.</p></div><span class="tag gold">utility before speculation</span></div>
+    <div class="field"><textarea id="objective">Launch a Proof Mission Factory for sales follow-up emails from call notes. Capture expert edits, convert repeated judgment into tested skills, package an AI Trust Room, and use validated skills to unlock subscriptions, governance, marketplace, and network intelligence.</textarea></div>
+    <div class="sliderGrid">
+      <div class="sliderCard"><div class="sliderHead"><span>Buyer pain</span><b id="painVal">82</b></div><input id="pain" type="range" min="0" max="100" value="82"></div>
+      <div class="sliderCard"><div class="sliderHead"><span>Workflow repetition</span><b id="repeatVal">88</b></div><input id="repeat" type="range" min="0" max="100" value="88"></div>
+      <div class="sliderCard"><div class="sliderHead"><span>Expert judgment density</span><b id="expertVal">76</b></div><input id="expert" type="range" min="0" max="100" value="76"></div>
+      <div class="sliderCard"><div class="sliderHead"><span>Evidence availability</span><b id="evidenceVal">70</b></div><input id="evidence" type="range" min="0" max="100" value="70"></div>
+      <div class="sliderCard"><div class="sliderHead"><span>Governance need</span><b id="governanceVal">72</b></div><input id="governance" type="range" min="0" max="100" value="72"></div>
+      <div class="sliderCard"><div class="sliderHead"><span>Marketplace readiness</span><b id="liquidityVal">34</b></div><input id="liquidity" type="range" min="0" max="100" value="34"></div>
+      <div class="sliderCard"><div class="sliderHead"><span>Network intelligence depth</span><b id="networkVal">24</b></div><input id="network" type="range" min="0" max="100" value="24"></div>
+      <div class="sliderCard"><div class="sliderHead"><span>ASI visual intensity</span><b id="visualVal">96</b></div><input id="visual" type="range" min="20" max="100" value="96"></div>
+    </div>
+  </aside>
+</section>
+
+<section class="section card" id="graph">
+  <div class="panelTitle">
+    <div><h2>Validated Skill Graph Simulator</h2><p class="muted">Click nodes and press buttons. Watch proof missions become traces, traces become lessons, lessons become candidate skills, candidate skills pass tests, and validated skills compound across authorized agents.</p></div>
+    <span class="tag gold">not prompts · validated skill graph</span>
+  </div>
+  <div class="mapGrid">
+    <div>
+      <div class="stage" id="stage">
+        <canvas id="skillGraphCanvas"></canvas>
+        <div class="hud"><span class="tag gold" id="hudMode">Mode: Skill Graph</span><span class="tag" id="hudSelected">Selected: Job</span><span class="tag warn" id="hudGate">Marketplace: HOLD</span><span class="tag" id="hudHint">Click a node · press a button</span></div>
+        <div class="plate"><b id="plateTitle">Proof Mission Factory</b><span id="plateBody">The first business is not a prompt marketplace. It is a repeatable factory for turning Proof Debt and real work into validated skills.</span></div>
+      </div>
+      <div class="ribbon" id="ribbon"></div>
+    </div>
+    <aside class="card" style="box-shadow:none">
+      <div class="panelTitle"><div><h2 style="font-size:2rem">Inspector</h2><p class="muted">Selected node, proof state, and next best action.</p></div><span class="tag">live</span></div>
+      <div class="modeGrid">
+        <button class="mode active" data-mode="skill">Skill Graph</button>
+        <button class="mode" data-mode="revenue">Revenue</button>
+        <button class="mode" data-mode="risk">Risk</button>
+        <button class="mode" data-mode="governance">Governance</button>
+      </div>
+      <div style="height:12px"></div>
+      <h3 id="selectedTitle">Job</h3>
+      <div class="metricGrid">
+        <div class="metric"><label>State</label><b id="nodeState">draft</b></div>
+        <div class="metric"><label>Proof</label><b id="nodeProof">—</b></div>
+        <div class="metric"><label>Risk</label><b id="nodeRisk">—</b></div>
+        <div class="metric"><label>Action</label><b id="nodeAction">capture</b></div>
+      </div>
+      <div class="helpCard" id="nodeExplain" style="margin-top:12px"></div>
+      <div class="actions"><button class="btn" id="jobifyBtn">Create AGI Job</button><button class="btn gold" id="packageBtn">Package Trust Room</button><button class="btn primary" id="compoundBtn">Compound Skill Graph</button></div>
+      <h3>Event log</h3>
+      <div class="console" id="console"></div>
+    </aside>
+  </div>
+</section>
+
+<section class="section card" id="products">
+  <div class="panelTitle"><div><h2>Proof-to-Market Ladder</h2><p class="muted">The business model is staged. Proof missions create trust. Skill capture creates the asset. Governance and enterprise Proof OS monetize control. Marketplace and network intelligence monetize validated reuse.</p></div><span class="tag gold">sell in this order</span></div>
+  <div class="cardGrid" id="productGrid"></div>
+</section>
+
+<section class="section threeCol">
+  <div class="card"><div class="panelTitle"><div><h2>Revenue Mix</h2><p class="muted">Why the sequence matters.</p></div><span class="tag">business</span></div><canvas id="revenueCanvas" class="chart"></canvas></div>
+  <div class="card"><div class="panelTitle"><div><h2>Skill Graph Curve</h2><p class="muted">Compounding from validated reuse, not prompts.</p></div><span class="tag">compounding</span></div><canvas id="skillCurveCanvas" class="chart"></canvas></div>
+  <div class="card"><div class="panelTitle"><div><h2>AI Trust Room Funnel</h2><p class="muted">Buyer-safe path from claim to evidence.</p></div><span class="tag">trust</span></div><canvas id="trustRoomCanvas" class="chart"></canvas></div>
+</section>
+
+<section class="section threeCol">
+  <div class="card"><div class="panelTitle"><div><h2>Governance Radar</h2><p class="muted">Replay, baseline, validator, boundary, rollback.</p></div><span class="tag">gates</span></div><canvas id="radarCanvas" class="chart"></canvas></div>
+  <div class="card"><div class="panelTitle"><div><h2>Marketplace Quality</h2><p class="muted">Only validated skills create liquidity.</p></div><span class="tag">market</span></div><canvas id="marketCanvas" class="chart"></canvas></div>
+  <div class="card"><div class="panelTitle"><div><h2>Network Intelligence</h2><p class="muted">Learning compounds after the graph has proof.</p></div><span class="tag">network</span></div><canvas id="compoundingCanvas" class="chart"></canvas></div>
+</section>
+
+<section class="section card">
+  <div class="panelTitle"><div><h2>Skill Capture Studio</h2><p class="muted">Convert expert judgment into proof work, validated skills, and reusable capability.</p></div><button class="btn primary" id="runStudioBtn">Run Studio Simulation</button></div>
+  <div class="tableWrap"><table class="tbl"><thead><tr><th>Stage</th><th>What is captured</th><th>Proof object</th><th>Business value</th><th>Gate</th></tr></thead><tbody id="studioBody"></tbody></table></div>
+</section>
+
+<section class="section card" id="masterclass">
+  <div class="panelTitle"><div><h2>Masterclass: The Business Model</h2><p class="muted">Click a card, then operate the matching controls above.</p></div><span class="tag gold">non-technical learning mode</span></div>
+  <div class="cardGrid">
+    <div class="lessonCard active" data-lesson="proof"><b>1. Proof missions first</b><span>Sell a clear outcome with an Evidence Docket.</span></div>
+    <div class="lessonCard" data-lesson="capture"><b>2. Capture skills</b><span>Use traces and expert edits as the learning substrate.</span></div>
+    <div class="lessonCard" data-lesson="governance"><b>3. Sell governance</b><span>Enterprises pay for approvals, rollback, audit, and policy.</span></div>
+    <div class="lessonCard" data-lesson="market"><b>4. Open marketplace</b><span>Only after enough validated skills exist.</span></div>
+    <div class="lessonCard" data-lesson="network"><b>5. Network intelligence</b><span>Benchmarks and routing become premium intelligence.</span></div>
+  </div>
+  <div class="helpCard" id="lessonExplain" style="margin-top:14px">Proof missions are the first offer because they produce trust, metrics, evidence, and the first reusable skill assets.</div>
+  <div class="badgeRow" id="badges" style="margin-top:14px"></div>
+</section>
+
+<section class="section twoCol">
+  <div class="card"><div class="panelTitle"><div><h2>Proof Mission Builder</h2><p class="muted">Generated from the current objective.</p></div><button class="btn gold" id="copyMissionBtn">Copy</button></div><pre class="code" id="missionCode"></pre></div>
+  <div class="card"><div class="panelTitle"><div><h2>Validated Skill Object</h2><p class="muted">The atomic asset that compounds.</p></div><button class="btn gold" id="copySkillBtn">Copy</button></div><pre class="code" id="skillCode"></pre></div>
+</section>
+
+<section class="section card" id="artifacts">
+  <div class="panelTitle"><div><h2>Artifact Workbench</h2><p class="muted">Export a full dossier: business model, offer ladder, proof mission, skill graph, AGI Job intents, governance gates, and GitHub Action material.</p></div><button class="btn gold" id="exportBtn">Export Dynamic Dossier</button></div>
+  <div class="artifactGrid"><div class="artifactList" id="artifactList"></div><div><h3 id="artifactName">—</h3><pre id="artifactCode" class="code"></pre></div></div>
+</section>
+
+<div class="footer">GoalOS V72 · Proof Mission Factory & Validated Skill Graph Command Center · local-first · no backend · no wallet · no external assets · no investment claims · no production authority without external proof.</div>
+</main>
+
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), TAU=Math.PI*2;
+const nodes=[
+ {id:'Proof Mission',x:.09,y:.50,type:'mission',action:'sell',desc:'The first sellable unit: one buyer objective turned into explicit Proof Debt, evidence, scorecard, and a decision-ready proof package.'},
+ {id:'Job Trace',x:.23,y:.26,type:'trace',action:'record',desc:'Every accepted/rejected output creates traces: inputs, output, expert edits, acceptance, timing, and safety signals.'},
+ {id:'Expert Judgment',x:.23,y:.74,type:'judgment',action:'capture',desc:'The moat begins here: expert corrections and decisions reveal what the agent must learn.'},
+ {id:'Lesson Candidate',x:.40,y:.50,type:'lesson',action:'extract',desc:'Repeated corrections become candidate lessons, but they are not released until tested.'},
+ {id:'Candidate Skill',x:.56,y:.26,type:'candidate',action:'test',desc:'A candidate skill is a governed artifact with scope, permissions, tests, metrics, owner, and rollback.'},
+ {id:'Test Lab',x:.56,y:.74,type:'test',action:'compare',desc:'Candidate skills compete against the current version on held-out jobs and safety checks.'},
+ {id:'Validated Skill',x:.73,y:.50,type:'validated',action:'release',desc:'Only tested skills can enter the registry and improve authorized agents.'},
+ {id:'Skill Registry',x:.88,y:.28,type:'registry',action:'govern',desc:'Private or enterprise registry: versions, owners, permissions, test coverage, approvals, and rollback.'},
+ {id:'Marketplace',x:.88,y:.72,type:'market',action:'route',desc:'Marketplace opens later, after skills have proof, usage history, validator coverage, and failure modes.'},
+ {id:'Network Intelligence',x:.50,y:.50,type:'network',action:'compound',desc:'The premium layer: benchmarks, routing recommendations, quality scores, and privacy-safe best practices.'}
+];
+const products=[
+ {id:'proof',name:'Proof Mission Factory',price:'$10k–$25k pilot',desc:'One workflow, 50–100 real jobs, before/after scorecard, Evidence Docket, first validated skill.',ready:.90,rev:.36},
+ {id:'studio',name:'Skill Capture Studio',price:'$2k–$10k/mo',desc:'Workbench, Trace Store, Learning Inbox, Test Lab, Release Center, Skill Registry.',ready:.78,rev:.24},
+ {id:'trust',name:'AI Trust Room',price:'$5k–$50k setup',desc:'Claims matrix, proof room, audit logs, approval gates, rollback, reviewer workflow.',ready:.72,rev:.18},
+ {id:'enterprise',name:'Enterprise Proof OS',price:'$25k–$250k/yr',desc:'Private registry, governance, compliance export, enterprise permissions, Evidence Dockets.',ready:.58,rev:.16},
+ {id:'market',name:'AGI Jobs Validator Marketplace',price:'10–25% take rate',desc:'Validated skill marketplace, proof-bonded jobs, validator incentives, routing reputation.',ready:.34,rev:.06}
+];
+const lessons={
+ proof:'Sell proof missions first because they create the first trusted proof: real workflow, baseline, expert edits, scorecard, Evidence Docket, and buyer-safe outcome.',
+ capture:'Skill capture converts expert judgment into a durable asset. Jobs become traces; traces become lessons; lessons become candidate skills; tests decide what ships.',
+ governance:'Governance monetizes control: approvals, permissions, audit logs, release gates, rollback, compliance exports, and private registries.',
+ market:'A marketplace should open only after skills have proof. Without validation, a marketplace becomes a prompt bazaar; with validation, it becomes a trust network.',
+ network:'Network intelligence is last because it depends on many validated skills. The premium asset is routing intelligence across a proven skill graph.'
+};
+const stages=['Mission','Trace','Judgment','Lesson','Skill','Test','Registry','Market','Network'];
+let state={stage:0,missions:0,traces:0,candidates:0,validated:0,market:false,network:false,mode:'skill',selected:0,overclaim:false,badges:{},particles:[],artifacts:{},product:'proof'};
+let tick=0;
+function clamp(n,a,b){return Math.max(a,Math.min(b,n))} function pct(v){return Math.round(v*100)+'%'} function money(v){return '$'+Math.round(v).toLocaleString()}
+function controls(){return{pain:+$('pain').value,repeat:+$('repeat').value,expert:+$('expert').value,evidence:+$('evidence').value,governance:+$('governance').value,liquidity:+$('liquidity').value,network:+$('network').value,visual:+$('visual').value,objective:$('objective').value.trim()}}
+function updateLabels(){['pain','repeat','expert','evidence','governance','liquidity','network','visual'].forEach(id=>$(id+'Val').textContent=$(id).value)}
+function recalc(){updateLabels();let c=controls();let graphValue=(state.validated*12000+state.traces*90+state.missions*1500)*(c.pain+c.repeat+c.expert+c.evidence)/320;let stageName=state.network?'Network Intelligence':state.market?'Marketplace':state.validated?'Validated Skills':state.candidates?'Skill Capture':state.missions?'Proof Mission':'Proof Mission';$('stageKpi').textContent=stageName;$('missionsKpi').textContent=state.missions;$('tracesKpi').textContent=state.traces;$('candidateKpi').textContent=state.candidates;$('validatedKpi').textContent=state.validated;$('valueKpi').textContent=money(graphValue||0);$('hudMode').textContent='Mode: '+state.mode[0].toUpperCase()+state.mode.slice(1);$('hudSelected').textContent='Selected: '+nodes[state.selected].id;$('hudGate').textContent='Marketplace: '+(state.market?'CANARY':'HOLD');renderInspector();renderRibbon();renderProducts();renderStudio();renderArtifacts();drawAll();}
+function renderInspector(){let n=nodes[state.selected];let c=controls();let proof=clamp((c.evidence*.32+c.expert*.24+c.repeat*.18+state.validated*8)/100,.05,.98);let risk=clamp((100-c.evidence)*.003+(state.overclaim?.32:0)+(state.market&&!state.validated?.22:0),.02,.96);$('selectedTitle').textContent=n.id;$('nodeState').textContent=n.type;$('nodeProof').textContent=pct(proof);$('nodeRisk').textContent=pct(risk);$('nodeAction').textContent=n.action;$('nodeExplain').textContent=n.desc;$('plateTitle').textContent=n.id;$('plateBody').textContent=n.desc;}
+function renderRibbon(){let n=1;if(state.missions)n=2;if(state.traces)n=3;if(state.candidates)n=5;if(state.validated)n=7;if(state.market)n=8;if(state.network)n=9;$('ribbon').innerHTML=stages.map((s,i)=>`<div class="ribbonStep ${i<n-1?'done':i===n-1?'on':''}">${i+1}. ${s}</div>`).join('')}
+function renderProducts(){const grid=$('productGrid');grid.innerHTML=products.map(p=>`<div class="productCard ${state.product===p.id?'active':''}" data-product="${p.id}"><b>${p.name}</b><span>${p.price}<br><br>${p.desc}</span></div>`).join('');grid.querySelectorAll('[data-product]').forEach(el=>el.onclick=()=>{state.product=el.dataset.product;log('Selected product: '+products.find(p=>p.id===state.product).name+'.','info');earn('Operator');recalc();flash()})}
+function renderStudio(){const rows=[
+ ['Proof Mission','Buyer objective, baseline, outcome metric','Mission Contract + Evidence Docket','First revenue + first trusted data','Human review'],
+ ['Trace Capture','Inputs, outputs, edits, acceptance, time saved','Trace Record','Raw material for skill graph','Privacy boundary'],
+ ['Lesson Mining','Repeated corrections and expert judgment','Lesson Candidate','Transforms work into reusable learning','Pattern threshold'],
+ ['Skill Testing','Held-out jobs, safety detectors, before/after score','Proof Card','Skill can improve future agents','Test pass'],
+ ['Release & Monitor','Canary rollout, rollback, failure modes','Skill Registry entry','Subscription and governance value','Release gate'],
+ ['Marketplace','Usage history, quality score, validator coverage','Marketplace listing','Scale distribution only after proof','Proof coverage']
+];$('studioBody').innerHTML=rows.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><span class="tag ${r[4].includes('pass')||r[4].includes('coverage')?'good':'warn'}">${r[4]}</span></td></tr>`).join('')}
+function log(msg,kind='info'){const c=$('console');c.innerHTML+=`<div><span class="time">${new Date().toLocaleTimeString()}</span> · <span class="${kind}">${msg}</span></div>`;c.scrollTop=c.scrollHeight}
+function flash(){let s=$('stage');s.classList.add('flash');setTimeout(()=>s.classList.remove('flash'),850)}
+function earn(n){state.badges[n]=true;renderBadges()}
+function renderBadges(){const names=['Mission','Trace','Skill','Validator','Trust Room','Marketplace','Network','Boundary'];$('badges').innerHTML=names.map(n=>`<span class="badge ${state.badges[n]?'earned':''}">${state.badges[n]?'✦':'○'} ${n}</span>`).join('')}
+function runMission(){state.missions++;state.traces+=Math.max(8,Math.round(controls().repeat/6));state.stage=Math.max(state.stage,1);state.overclaim=false;spawn('Proof Mission','Job Trace');log('Proof mission sold: buyer objective converted into baseline, scorecard, Evidence Docket, and first trace batch.','ok');earn('Mission');flash();recalc()}
+function capture(){state.traces+=Math.max(12,Math.round((controls().expert+controls().repeat)/8));state.candidates+=1;state.stage=Math.max(state.stage,4);spawn('Job Trace','Expert Judgment');spawn('Expert Judgment','Lesson Candidate');log('Expert judgment captured: repeated edits became candidate lessons and a candidate skill draft.','ok');earn('Trace');flash();recalc()}
+function validateSkill(){if(state.candidates<=0){log('Validation blocked: create a candidate skill first by capturing expert judgment.','bad');return}state.candidates=Math.max(0,state.candidates-1);state.validated+=1;state.stage=Math.max(state.stage,6);spawn('Candidate Skill','Test Lab');spawn('Test Lab','Validated Skill');log('Skill validated: held-out tests passed, rollback exists, and the skill can enter the registry.','ok');earn('Skill');earn('Validator');flash();recalc()}
+function openMarket(){if(state.validated<2){log('Marketplace HOLD: validate at least two skills before distribution. Otherwise it is just a prompt bazaar.','bad');return}state.market=true;state.stage=Math.max(state.stage,8);spawn('Skill Registry','Marketplace');log('Marketplace canary opened: only validated skills with proof cards and failure modes can list.','ok');earn('Marketplace');flash();recalc()}
+function compound(){if(!state.market||state.validated<2){log('Network intelligence HOLD: needs marketplace data and multiple validated skills.','warn');return}state.network=true;state.stage=9;spawn('Marketplace','Network Intelligence');spawn('Network Intelligence','Proof Mission');log('Network intelligence activated: validated skill graph improves routing, benchmarks, and future proof missions.','ok');earn('Network');flash();recalc()}
+function overclaim(){state.overclaim=true;state.market=false;log('Overclaim blocked: no guaranteed ROI, no passive income, no token yield, no empirical SOTA without external Evidence Dockets.','bad');earn('Boundary');flash();recalc()}
+function jobify(){state.candidates+=1;spawn('Proof Mission','Candidate Skill');log('AGI Job created: missing evidence converted into executable skill-capture work.','warn');earn('Mission');flash();recalc()}
+function packageTrust(){spawn('Validated Skill','Skill Registry');log('AI Trust Room packaged: claim matrix, trace samples, proof cards, release gates, rollback, and buyer-safe summary.','ok');earn('Trust Room');flash();recalc()}
+function runStudio(){runMission();capture();validateSkill();log('Studio simulation complete: one workflow produced traces, lessons, a validated skill, and a Trust Room package.','ok');}
+function setMode(m){state.mode=m;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('active',x.dataset.mode===m));log('Mode changed to '+m+'.','info');recalc();flash()}
+function setLesson(k){document.querySelectorAll('[data-lesson]').forEach(x=>x.classList.toggle('active',x.dataset.lesson===k));$('lessonExplain').textContent=lessons[k];log('Masterclass opened: '+k+'.','info');earn('Operator')}
+function selectAt(clientX,clientY){const c=$('skillGraphCanvas'),r=c.getBoundingClientRect();let x=(clientX-r.left)/r.width,y=(clientY-r.top)/r.height,b=0,bd=99;nodes.forEach((n,i)=>{let d=Math.hypot(x-n.x,y-n.y);if(d<bd){bd=d;b=i}});state.selected=b;log('Selected '+nodes[b].id+'.','info');recalc()}
+function resize(c){const dpr=devicePixelRatio||1,rect=c.getBoundingClientRect();c.width=Math.max(2,Math.floor(rect.width*dpr));c.height=Math.max(2,Math.floor(rect.height*dpr));let ctx=c.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return[rect.width,rect.height,ctx]}function clear(ctx,w,h){ctx.clearRect(0,0,w,h)}
+function pos(n,w,h){return{x:n.x*w,y:n.y*h}}
+function spawn(from,to){let A=nodes.find(n=>n.id===from),B=nodes.find(n=>n.id===to);if(!A||!B)return;for(let i=0;i<20;i++)state.particles.push({A,B,t:-i*.035,speed:.012+Math.random()*.014,color:i%2?'#75f1ff':'#ffd76f'})}
+function drawGraph(){const c=$('skillGraphCanvas');if(!c)return;const [w,h,ctx]=resize(c);clear(ctx,w,h);tick+=.016;let bg=ctx.createLinearGradient(0,0,w,h);bg.addColorStop(0,'#06142b');bg.addColorStop(.48,'#090b24');bg.addColorStop(1,'#1a0921');ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);drawGrid(ctx,w,h);drawEdges(ctx,w,h);drawParticles(ctx,w,h);nodes.forEach((n,i)=>drawNode(ctx,w,h,n,i));if(state.overclaim)drawStorm(ctx,w,h);requestAnimationFrame(drawGraph)}
+function drawGrid(ctx,w,h){ctx.strokeStyle='rgba(117,241,255,.055)';ctx.lineWidth=1;for(let i=0;i<11;i++){let y=h*(.08+i*.085);ctx.beginPath();ctx.moveTo(0,y);ctx.bezierCurveTo(w*.3,y+Math.sin(i+tick)*18,w*.7,y-Math.cos(i)*18,w,y);ctx.stroke()}for(let i=0;i<15;i++){let x=w*(.03+i*.071);ctx.beginPath();ctx.moveTo(x,0);ctx.bezierCurveTo(x+Math.sin(i)*24,h*.35,x-Math.cos(i)*24,h*.68,x,h);ctx.stroke()}for(let i=0;i<70;i++){let x=((Math.sin(i*12.9898)*43758.5453)%1+1)%1*w,y=((Math.sin(i*78.233)*12345.678)%1+1)%1*h;ctx.fillStyle=i%7?'rgba(117,241,255,.20)':'rgba(255,215,111,.38)';ctx.beginPath();ctx.arc(x,y,i%7?1:1.6,0,TAU);ctx.fill()}}
+function drawEdges(ctx,w,h){let edges=[['Proof Mission','Job Trace'],['Job Trace','Expert Judgment'],['Expert Judgment','Lesson Candidate'],['Lesson Candidate','Candidate Skill'],['Candidate Skill','Test Lab'],['Test Lab','Validated Skill'],['Validated Skill','Skill Registry'],['Skill Registry','Marketplace'],['Marketplace','Network Intelligence'],['Network Intelligence','Proof Mission']];edges.forEach((e,i)=>{let A=nodes.find(n=>n.id===e[0]),B=nodes.find(n=>n.id===e[1]),a=pos(A,w,h),b=pos(B,w,h);let active=(state.missions&&i<1)||(state.traces&&i<3)||(state.candidates&&i<5)||(state.validated&&i<7)||(state.market&&i<9)||state.network;ctx.strokeStyle=active?'rgba(117,241,255,.45)':'rgba(255,255,255,.10)';if(state.mode==='risk')ctx.strokeStyle=state.overclaim?'rgba(255,121,149,.55)':'rgba(255,215,111,.25)';ctx.lineWidth=active?3:1.5;ctx.setLineDash(active?[]:[7,8]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo((a.x+b.x)/2+Math.sin(i)*38,(a.y+b.y)/2-Math.cos(i)*26,b.x,b.y);ctx.stroke();ctx.setLineDash([])})}
+function drawParticles(ctx,w,h){state.particles=state.particles.filter(p=>p.t<1.05);state.particles.forEach(p=>{p.t+=p.speed;let a=pos(p.A,w,h),b=pos(p.B,w,h),midx=(a.x+b.x)/2+38,midy=(a.y+b.y)/2-38,t=clamp(p.t,0,1);let x=(1-t)*(1-t)*a.x+2*(1-t)*t*midx+t*t*b.x,y=(1-t)*(1-t)*a.y+2*(1-t)*t*midy+t*t*b.y;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(x,y,3,0,TAU);ctx.fill()})}
+function drawNode(ctx,w,h,n,i){let p=pos(n,w,h),sel=i===state.selected;let active=(i===0&&state.missions)||(i<3&&state.traces)||(i===4&&state.candidates)||(i===6&&state.validated)||(i===8&&state.market)||(i===9&&state.network);let base=state.mode==='revenue'?(products.find(p=>p.id===state.product)?.rev||.2):state.mode==='risk'?(state.overclaim?.95:.32):state.mode==='governance'?controls().governance/100:.55;let r=22+base*22+(sel?7:0);let col=active?'#83ffc7':n.type==='candidate'?'#ffb35f':n.type==='debt'?'#ff7895':n.type==='market'?'#ffd76f':'#75f1ff';let g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,r*3.2);g.addColorStop(0,col);g.addColorStop(.45,active?'rgba(132,255,200,.22)':'rgba(167,123,255,.20)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,r*3,0,TAU);ctx.fill();ctx.fillStyle=col;ctx.beginPath();ctx.arc(p.x,p.y,r,0,TAU);ctx.fill();ctx.strokeStyle=sel?'rgba(255,255,255,.95)':active?'rgba(132,255,200,.85)':'rgba(255,255,255,.28)';ctx.lineWidth=sel?3:2;ctx.stroke();ctx.fillStyle='#06142b';ctx.font='900 15px sans-serif';ctx.textAlign='center';ctx.fillText(String(i+1),p.x,p.y+5);ctx.fillStyle='rgba(255,255,255,.88)';ctx.font='900 12px sans-serif';ctx.fillText(n.id,p.x,p.y+r+20);ctx.fillStyle='rgba(255,255,255,.65)';ctx.font='700 10px sans-serif';ctx.fillText(active?'active proof path':n.action,p.x,p.y+r+36);ctx.textAlign='left'}
+function drawStorm(ctx,w,h){ctx.fillStyle='rgba(255,121,149,.06)';ctx.fillRect(0,0,w,h);['Marketplace','Network Intelligence','Validated Skill'].forEach((id,j)=>{let n=nodes.find(x=>x.id===id),p=pos(n,w,h);ctx.strokeStyle='rgba(255,215,111,.60)';ctx.lineWidth=2;for(let k=0;k<3;k++){ctx.beginPath();ctx.moveTo(p.x-28+k*20,p.y-50);ctx.lineTo(p.x-8+k*19,p.y-16);ctx.lineTo(p.x-20+k*19,p.y+12);ctx.stroke()}ctx.fillStyle='rgba(255,121,149,.08)';ctx.beginPath();ctx.arc(p.x,p.y,90+Math.sin(tick*4+j)*9,0,TAU);ctx.fill()})}
+function drawAll(){drawRevenue();drawSkillCurve();drawTrust();drawRadar();drawMarket();drawCompounding()}
+function round(ctx,x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();if(fill)ctx.fill();if(stroke)ctx.stroke()}
+function drawRevenue(){let c=$('revenueCanvas');if(!c)return;let [w,h,ctx]=resize(c);clear(ctx,w,h);let vals=products.map(p=>p.rev*(p.id==='market'&&state.market?2:1)*(p.id==='studio'&&state.validated?1.3:1));let labs=['Missions','Subs','Governance','Enterprise','Marketplace'];vals.forEach((v,i)=>{let x=26+i*(w-52)/5,y=h-42,bh=(h-80)*clamp(v/.48,0,1);let grad=ctx.createLinearGradient(x,y-bh,x,y);grad.addColorStop(0,i===0?'#ffd76f':'#75f1ff');grad.addColorStop(1,'#a77bff');ctx.fillStyle='rgba(255,255,255,.08)';round(ctx,x,y-(h-80),42,h-80,10,true,false);ctx.fillStyle=grad;round(ctx,x,y-bh,42,bh,10,true,false);ctx.fillStyle='rgba(255,255,255,.75)';ctx.font='800 11px sans-serif';ctx.textAlign='center';ctx.fillText(labs[i],x+21,h-15)});ctx.textAlign='left';ctx.fillStyle='rgba(255,255,255,.75)';ctx.font='800 13px sans-serif';ctx.fillText('sell in sequence, not all at once',24,22)}
+function line(ctx,w,h,pts,label,c1,c2){let pad=28;let g=ctx.createLinearGradient(pad,0,w-pad,0);g.addColorStop(0,c1);g.addColorStop(1,c2);ctx.strokeStyle=g;ctx.lineWidth=4;ctx.beginPath();pts.forEach((v,i)=>{let x=pad+(w-pad*2)*i/(pts.length-1),y=h-pad-(h-pad*2)*clamp(v,0,1);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y)});ctx.stroke();ctx.fillStyle='rgba(255,255,255,.72)';ctx.font='800 13px sans-serif';ctx.fillText(label,pad,20)}
+function drawSkillCurve(){let c=$('skillCurveCanvas');if(!c)return;let [w,h,ctx]=resize(c);clear(ctx,w,h);let base=Array.from({length:34},(_,i)=>Math.pow(i/33,1.4)*(.25+state.validated*.1));let graph=Array.from({length:34},(_,i)=>Math.pow(i/33,1.12)*(.34+state.validated*.12+state.network*.25));line(ctx,w,h,base,'prompt library vs validated graph','#ff7895','#ffb35f');line(ctx,w,h,graph,'','#83ffc7','#75f1ff')}
+function drawTrust(){let c=$('trustRoomCanvas');if(!c)return;let [w,h,ctx]=resize(c);clear(ctx,w,h);let labs=['Claim','Trace','Proof','Review','Decision','Reuse'],vals=[1,state.traces?0.86:.35,state.validated?0.78:.32,state.validated?0.7:.28,state.market?0.62:.24,state.network?0.78:.18];labs.forEach((lab,i)=>{let ww=(w-60)*vals[i],x=(w-ww)/2,y=36+i*(h-60)/labs.length;let grad=ctx.createLinearGradient(x,0,x+ww,0);grad.addColorStop(0,'#a77bff');grad.addColorStop(1,i>2?'#83ffc7':'#75f1ff');ctx.fillStyle=grad;round(ctx,x,y,ww,22,11,true,false);ctx.fillStyle='rgba(255,255,255,.78)';ctx.font='800 12px sans-serif';ctx.fillText(lab,22,y+16);ctx.fillText(pct(vals[i]),w-54,y+16)})}
+function drawRadar(){let c=$('radarCanvas');if(!c)return;let [w,h,ctx]=resize(c);clear(ctx,w,h);let labs=['Replay','Baseline','Validator','Boundary','Rollback','Privacy','Canary'],vals=[controls().evidence/100,.65,state.validated?0.78:.28,state.overclaim?.15:.92,.64,.88,state.market?.56:.22];let cx=w/2,cy=h/2,r=Math.min(w,h)*.34;for(let k=1;k<=5;k++){ctx.strokeStyle='rgba(255,255,255,.08)';ctx.beginPath();labs.forEach((lab,i)=>{let a=-Math.PI/2+i*TAU/labs.length,x=cx+Math.cos(a)*r*k/5,y=cy+Math.sin(a)*r*k/5;if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y)});ctx.closePath();ctx.stroke()}ctx.fillStyle='rgba(167,123,255,.23)';ctx.strokeStyle='#75f1ff';ctx.lineWidth=2;ctx.beginPath();vals.forEach((v,i)=>{let a=-Math.PI/2+i*TAU/labs.length,x=cx+Math.cos(a)*r*clamp(v,0,1),y=cy+Math.sin(a)*r*clamp(v,0,1);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y)});ctx.closePath();ctx.fill();ctx.stroke();labs.forEach((lab,i)=>{let a=-Math.PI/2+i*TAU/labs.length,x=cx+Math.cos(a)*(r+28),y=cy+Math.sin(a)*(r+28);ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,.72)';ctx.font='800 11px sans-serif';ctx.fillText(lab,x,y)});ctx.textAlign='left'}
+function drawMarket(){let c=$('marketCanvas');if(!c)return;let [w,h,ctx]=resize(c);clear(ctx,w,h);let pts=Array.from({length:38},(_,i)=>({x:.08+i/42,y:clamp(Math.sin(i*.7)*.15+.28+(state.validated*.07)+(state.market?.25:0),.05,.92)}));pts.forEach((p,i)=>{let x=p.x*w,y=h-28-p.y*(h-64),rad=5+(i%5);let g=ctx.createRadialGradient(x,y,0,x,y,rad*4);g.addColorStop(0,i%4?'rgba(117,241,255,.9)':'rgba(255,215,111,.9)');g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,rad*3,0,TAU);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,rad*.55,0,TAU);ctx.fill()});ctx.fillStyle='rgba(255,255,255,.72)';ctx.font='800 13px sans-serif';ctx.fillText('skill liquidity requires proof quality',24,22)}
+function drawCompounding(){let c=$('compoundingCanvas');if(!c)return;let [w,h,ctx]=resize(c);clear(ctx,w,h);let curves=[0.25+state.missions*.02,0.32+state.validated*.06,0.20+(state.network?.45:0.05)];curves.forEach((s,idx)=>{let pts=Array.from({length:34},(_,i)=>clamp(Math.pow(i/33,1.15+idx*.15)*s+idx*.06,0,1));line(ctx,w,h,pts,idx===0?'proof missions → graph intelligence':'',idx===0?'#ffd76f':idx===1?'#75f1ff':'#ff67d8',idx===0?'#ffb35f':idx===1?'#83ffc7':'#a77bff')})}
+function buildArtifacts(){let c=controls();let proofMission={version:'goalos.v72.proof_mission',workflow:c.objective,offer:'Proof Mission Factory',success_metrics:['time saved','accepted draft rate','edit distance reduction','quality score delta','zero unsafe actions'],outputs:['Evidence Docket','trace schema','skill candidates','proof card','next workflow recommendation'],boundary:'No guaranteed ROI; no external validation without reviewer; no marketplace listing without proof.'};
+let skill={version:'goalos.v72.validated_skill',skill_id:'sales-follow-up-from-call-notes-v1',workflow:'sales follow-up from call notes',inputs:['call_notes','contact_context','deal_stage'],procedure:['extract agreed next step','draft concise email','check commitments','ask human to approve'],permissions:{may_draft:true,may_send:false,requires_human_approval:true},tests:['held-out call notes','hallucinated commitment detector','tone rubric','edit-distance comparison','next-step-first-three-lines check'],metrics:{trace_count:state.traces,candidate_skills:state.candidates,validated_skills:state.validated},release:{status:state.validated?'canary':'hold',rollback:'previous version'},proof:{evidence_docket:'evidence-docket.json',proof_card:'skill-proof-card.json'}};
+let biz={version:'goalos.v72.business_model',sequence:['Proof Mission Factory','Skill Capture Studio','AI Trust Room','Enterprise Proof OS','AGI Jobs Validator Marketplace','Network Intelligence'],thesis:'The compounding asset is the validated skill graph, not prompts.',moat:['expert judgment traces','validated skill history','workflow-specific tests','release history','rollback records','validator network','proof reputation','routing intelligence']};
+let jobs={version:'goalos.v72.agi_job_intents',jobs:[{id:'AGIJOB-SKILL-CAPTURE-001',title:'Capture expert edits from first 50 workflow runs',acceptance_tests:['trace schema complete','privacy boundary applied','edit patterns extracted','candidate lessons proposed'],proofBundleURI:'ipfs://proofbundles/skill-capture-001.json'},{id:'AGIJOB-SKILL-VALIDATE-002',title:'Validate candidate skill against held-out jobs',acceptance_tests:['baseline comparison','safety detector pass','quality lift measured','rollback path present'],proofBundleURI:'ipfs://proofbundles/skill-validate-002.json'}]};
+let trust={version:'goalos.v72.ai_trust_room',contents:['claims matrix','trace samples','skill proof cards','release gates','rollback plan','risk ledger','human review guide','public-safe summary']};
+let gtm={version:'goalos.v72.gtm_plan',phase_1:'Sell 2–4 week proof missions for one workflow.',phase_2:'Convert repeatable proof into Skill Capture Studio subscription.',phase_3:'Add AI Trust Room and Enterprise Proof OS governance.',phase_4:'Open marketplace only for validated skills.',phase_5:'Sell network intelligence after enough validated skill data exists.'};
+state.artifacts={'business-model.json':biz,'proof-mission.json':proofMission,'validated-skill-object.json':skill,'agi-job-intents.json':jobs,'ai-trust-room.json':trust,'go-to-market-plan.json':gtm,'claim-boundary.md':'No guaranteed ROI. No passive income. No investment claim. No empirical SOTA. No external certification without real Evidence Dockets, replay, baselines, validator reports, delayed outcomes, and independent review.'};$('missionCode').textContent=JSON.stringify(proofMission,null,2);$('skillCode').textContent=JSON.stringify(skill,null,2);}
+function renderArtifacts(){buildArtifacts();let names=Object.keys(state.artifacts);let list=$('artifactList');list.innerHTML=names.map((n,i)=>`<button data-artifact="${n}" class="${i===0?'active':''}">${n}</button>`).join('');[...list.querySelectorAll('button')].forEach(btn=>btn.onclick=()=>{[...list.querySelectorAll('button')].forEach(b=>b.classList.remove('active'));btn.classList.add('active');let v=state.artifacts[btn.dataset.artifact];$('artifactName').textContent=btn.dataset.artifact;$('artifactCode').textContent=typeof v==='string'?v:JSON.stringify(v,null,2)});$('artifactName').textContent=names[0];$('artifactCode').textContent=JSON.stringify(state.artifacts[names[0]],null,2)}
+function crc32(str){let table=crc32.table||(crc32.table=Array.from({length:256},(_,n)=>{let c=n;for(let k=0;k<8;k++)c=c&1?0xedb88320^(c>>>1):c>>>1;return c>>>0}));let crc=-1;for(let i=0;i<str.length;i++)crc=(crc>>>8)^table[(crc^str.charCodeAt(i))&255];return(crc^-1)>>>0}
+function u16(n){return String.fromCharCode(n&255,(n>>>8)&255)}function u32(n){return String.fromCharCode(n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255)}
+function makeZip(files){let chunks=[],central=[],offset=0;const enc=new TextEncoder();Object.entries(files).forEach(([name,content])=>{const data=typeof content==='string'?content:JSON.stringify(content,null,2),bytes=enc.encode(data),bin=Array.from(bytes,b=>String.fromCharCode(b)).join(''),crc=crc32(bin),header='PK\x03\x04'+u16(20)+u16(0)+u16(0)+u16(0)+u16(0)+u32(crc)+u32(bytes.length)+u32(bytes.length)+u16(name.length)+u16(0)+name;chunks.push(header,bin);const cent='PK\x01\x02'+u16(20)+u16(20)+u16(0)+u16(0)+u16(0)+u16(0)+u32(crc)+u32(bytes.length)+u32(bytes.length)+u16(name.length)+u16(0)+u16(0)+u16(0)+u16(0)+u32(0)+u32(offset)+name;central.push(cent);offset+=header.length+bytes.length});const centStr=central.join(''),end='PK\x05\x06'+u16(0)+u16(0)+u16(central.length)+u16(central.length)+u32(centStr.length)+u32(offset)+u16(0);return new Blob([...chunks,centStr,end],{type:'application/zip'})}
+function exportDossier(){buildArtifacts();let files={};Object.entries(state.artifacts).forEach(([k,v])=>files[k]=v);files['README.md']='# GoalOS V72 Proof Mission Factory\\n\\nSell proof missions first. Then subscriptions, governance, marketplace, and network intelligence. The compounding asset is the validated skill graph.';let blob=makeZip(files),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='goalos-v72-proof-mission-factory-dossier.zip';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);log('Dynamic dossier exported.','ok')}
+function copyText(id){navigator.clipboard&&navigator.clipboard.writeText($(id).textContent);log('Copied '+id+'.','ok')}
+function drawBg(){const c=$('stars'),ctx=c.getContext('2d'),dpr=devicePixelRatio||1;if(c.width!==innerWidth*dpr||c.height!==innerHeight*dpr){c.width=innerWidth*dpr;c.height=innerHeight*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}ctx.clearRect(0,0,innerWidth,innerHeight);let intensity=controls().visual/100,cx=innerWidth/2,cy=innerHeight*.28;let g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(innerWidth,innerHeight)*.75);g.addColorStop(0,`rgba(167,123,255,${.16*intensity})`);g.addColorStop(.24,`rgba(117,241,255,${.1*intensity})`);g.addColorStop(.55,`rgba(255,100,214,${.07*intensity})`);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(0,0,innerWidth,innerHeight);for(let i=0;i<260;i++){let a=(i*12.83+tick*.25)%360*Math.PI/180,rr=(i%47)*17+78+Math.sin(tick*.011+i)*26,x=cx+Math.cos(a)*rr+Math.sin(i)*innerWidth*.04,y=cy+Math.sin(a*1.29)*rr*.58+(i%19)*innerHeight/19-innerHeight*.18;ctx.fillStyle=i%11===0?`rgba(255,215,111,${.86*intensity})`:i%5===0?`rgba(255,100,214,${.55*intensity})`:`rgba(117,241,255,${.56*intensity})`;ctx.beginPath();ctx.arc((x+innerWidth)%innerWidth,(y+innerHeight)%innerHeight,i%8===0?2.4:1.1,0,TAU);ctx.fill()}requestAnimationFrame(drawBg)}
+function bind(){updateLabels();renderBadges();renderProducts();renderStudio();renderArtifacts();drawGraph();drawBg();recalc();log('Proof Mission Factory ready. Start with “Run Proof Mission,” then capture expert judgment, validate a skill, and only then open the marketplace.','info');$('runMissionBtn').onclick=runMission;$('captureBtn').onclick=capture;$('validateBtn').onclick=validateSkill;$('marketBtn').onclick=openMarket;$('overclaimBtn').onclick=overclaim;$('jobifyBtn').onclick=jobify;$('packageBtn').onclick=packageTrust;$('compoundBtn').onclick=compound;$('runStudioBtn').onclick=runStudio;$('exportBtn').onclick=exportDossier;$('exportTop').onclick=exportDossier;$('copyMissionBtn').onclick=()=>copyText('missionCode');$('copySkillBtn').onclick=()=>copyText('skillCode');$('skillGraphCanvas').addEventListener('click',e=>selectAt(e.clientX,e.clientY));document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));document.querySelectorAll('[data-lesson]').forEach(b=>b.onclick=()=>setLesson(b.dataset.lesson));['objective','pain','repeat','expert','evidence','governance','liquidity','network','visual'].forEach(id=>$(id).addEventListener('input',recalc));window.addEventListener('resize',drawAll)}
+window.addEventListener('DOMContentLoaded',bind);
+})();
+</script>
+</body>
+</html>
