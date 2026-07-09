@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GoalOS V109 — PROOF_LOOPS Grand Masterclass Command Cathedral</title>
+<style>
+:root{
+  --bg:#03040a; --bg2:#070b14; --panel:rgba(14,17,31,.74); --panel2:rgba(9,12,24,.88);
+  --line:rgba(255,220,140,.28); --line2:rgba(119,230,255,.24);
+  --gold:#ffd66e; --gold2:#b8872f; --cyan:#66f2ff; --blue:#8fb8ff; --violet:#b679ff;
+  --green:#70ffb0; --red:#ff6276; --ink:#f7f2e6; --muted:#b7c1d5;
+  --shadow:0 30px 90px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.08);
+  --radius:28px; --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --serif: Georgia, "Times New Roman", serif; --sans: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 50% -20%,rgba(128,74,255,.22),transparent 38%),radial-gradient(circle at 12% 8%,rgba(255,202,91,.13),transparent 33%),radial-gradient(circle at 84% 22%,rgba(71,226,255,.13),transparent 35%),linear-gradient(180deg,#020309 0%,#060713 45%,#020309 100%);color:var(--ink);font-family:var(--sans);overflow-x:hidden}
+canvas#sky{position:fixed;inset:0;z-index:-3;background:#02030a}
+.bg-lattice{position:fixed;inset:-10%;z-index:-2;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at 50% 40%,rgba(255,214,110,.15),transparent 35%);background-size:54px 54px,54px 54px,100% 100%;transform:perspective(700px) rotateX(63deg) translateY(-160px);transform-origin:center top;opacity:.55;animation:lattice 18s linear infinite}
+@keyframes lattice{from{background-position:0 0,0 0,0 0}to{background-position:0 -540px,-540px 0,0 0}}
+a{color:var(--cyan)}
+.wrap{width:min(1500px,94vw);margin:auto}
+.topbar{position:sticky;top:14px;z-index:20;margin:14px auto 0;width:min(1500px,94vw);display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid rgba(255,214,110,.23);background:linear-gradient(135deg,rgba(4,6,15,.88),rgba(20,16,32,.72));backdrop-filter:blur(18px);border-radius:28px;box-shadow:0 12px 45px rgba(0,0,0,.38), inset 0 0 0 1px rgba(255,255,255,.05)}
+.brand{display:flex;align-items:center;gap:13px;font-weight:900}
+.mark{width:42px;height:42px;border-radius:16px;background:conic-gradient(from 210deg,var(--gold),var(--cyan),var(--violet),var(--gold));box-shadow:0 0 28px rgba(255,214,110,.6)}
+.brand small{display:block;color:var(--muted);font-weight:700;font-size:12px;letter-spacing:.04em}
+.nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.nav button,.pill,.primary,.ghost,.danger{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:var(--ink);border-radius:999px;padding:10px 14px;font-weight:850;cursor:pointer;transition:.22s;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+.nav button:hover,.ghost:hover{transform:translateY(-2px);border-color:rgba(255,214,110,.5)}
+.primary{background:linear-gradient(135deg,#ffe386,#68eaff,#b576ff);color:#070713;border:0;box-shadow:0 14px 40px rgba(102,242,255,.18)}
+.danger{background:rgba(255,98,118,.13);border-color:rgba(255,98,118,.38)}
+.hero{min-height:760px;display:grid;grid-template-columns:1.08fr .92fr;gap:28px;align-items:center;padding:86px 0 48px}
+.kicker{display:inline-flex;align-items:center;gap:10px;padding:9px 14px;border-radius:999px;border:1px solid rgba(255,214,110,.35);background:rgba(255,214,110,.06);color:#ffe6a7;letter-spacing:.17em;text-transform:uppercase;font-size:12px;font-weight:950}
+h1{font-family:var(--serif);font-size:clamp(56px,7vw,118px);line-height:.86;margin:25px 0 18px;letter-spacing:-.055em;text-shadow:0 0 36px rgba(255,214,110,.18)}
+.gradient-text{background:linear-gradient(90deg,#fff7d6,#ffd66e,#73efff,#f3e7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(18px,2vw,26px);line-height:1.45;color:#dae3fb;max-width:950px}
+.hero-card{padding:26px;border-radius:var(--radius);background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));border:1px solid rgba(255,214,110,.25);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero-card:before{content:"";position:absolute;inset:-2px;background:radial-gradient(circle at 40% 10%,rgba(255,214,110,.22),transparent 36%),radial-gradient(circle at 80% 80%,rgba(102,242,255,.18),transparent 35%);z-index:-1}
+.loop-rail{display:flex;align-items:stretch;gap:8px;margin:24px 0;overflow-x:auto;padding:6px 2px 16px}
+.step{min-width:128px;flex:1;padding:14px 12px;border-radius:18px;border:1px solid rgba(255,255,255,.13);background:rgba(5,8,18,.7);position:relative;cursor:pointer;transition:.25s}
+.step:after{content:"→";position:absolute;right:-13px;top:42%;color:var(--gold);z-index:2}
+.step:last-child:after{display:none}
+.step b{display:block;color:var(--gold);font-size:13px;letter-spacing:.06em}
+.step span{display:block;font-size:12px;color:var(--muted);margin-top:5px}
+.step.active{background:linear-gradient(135deg,rgba(255,214,110,.25),rgba(102,242,255,.14));border-color:rgba(255,214,110,.75);box-shadow:0 0 34px rgba(255,214,110,.22)}
+.step.done{border-color:rgba(112,255,176,.45)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.metric{padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(3,5,12,.68)}
+.metric strong{display:block;color:var(--cyan);font-size:26px}
+.metric span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.07em}
+.grid{display:grid;gap:20px}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+.panel{border:1px solid rgba(255,214,110,.2);background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.035));border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;position:relative;overflow:hidden}
+.panel.dark{background:linear-gradient(145deg,rgba(10,15,31,.9),rgba(4,5,13,.82))}
+.panel h2{font-size:clamp(28px,4vw,56px);line-height:.96;letter-spacing:-.045em;margin:0 0 12px}
+.panel h3{font-size:24px;margin:0 0 10px;color:#fff2c4}
+.panel p{color:#d5def2;line-height:1.55}
+.section{padding:50px 0}
+textarea,input,select{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.14);color:var(--ink);border-radius:18px;padding:14px 16px;font:inherit;outline:none}
+textarea{min-height:120px;resize:vertical;font-family:var(--mono);font-size:14px}
+input[type=range]{padding:0;accent-color:#ffd66e}
+.label{color:#ffdf85;font-size:12px;font-weight:950;letter-spacing:.11em;text-transform:uppercase;margin:12px 0 8px}
+.button-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.status{font-family:var(--mono);font-size:13px;color:#aef8ff;background:rgba(0,0,0,.35);border:1px solid rgba(102,242,255,.18);border-radius:18px;padding:14px;min-height:56px}
+.orb-wrap{height:520px;position:relative;border-radius:28px;overflow:hidden;border:1px solid rgba(255,214,110,.22);background:radial-gradient(circle at 50% 50%,rgba(255,214,110,.12),transparent 22%),radial-gradient(circle at 50% 50%,rgba(102,242,255,.1),transparent 48%),rgba(0,0,0,.18)}
+#orb,#graph,#radar,#trend,#bottleneck,#rootTree{width:100%;height:100%;display:block}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 18px}
+.tab{padding:9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);cursor:pointer;font-weight:800}
+.tab.active{background:rgba(255,214,110,.18);border-color:rgba(255,214,110,.5);color:#ffe8a8}
+.table{width:100%;border-collapse:separate;border-spacing:0 8px}
+.table th{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#ffdf85;text-align:left;padding:8px}
+.table td{padding:12px 8px;background:rgba(255,255,255,.055);border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);vertical-align:top}
+.table td:first-child{border-left:1px solid rgba(255,255,255,.08);border-radius:14px 0 0 14px}
+.table td:last-child{border-right:1px solid rgba(255,255,255,.08);border-radius:0 14px 14px 0}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;border:1px solid rgba(255,255,255,.17)}
+.good{color:#9bffc4;background:rgba(112,255,176,.12)}
+.hold{color:#ffe08e;background:rgba(255,214,110,.12)}
+.bad{color:#ff9ba8;background:rgba(255,98,118,.12)}
+.code{font-family:var(--mono);font-size:12px;white-space:pre-wrap;line-height:1.5;background:rgba(0,0,0,.36);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;overflow:auto;max-height:420px}
+.lesson{display:none}
+.lesson.active{display:block}
+.lesson-card{display:grid;grid-template-columns:72px 1fr;gap:16px;align-items:start;padding:16px;border:1px solid rgba(255,214,110,.18);background:rgba(255,255,255,.055);border-radius:22px;margin:12px 0}
+.lesson-num{width:56px;height:56px;display:grid;place-items:center;border-radius:20px;background:linear-gradient(135deg,var(--gold),var(--cyan));color:#050510;font-weight:950;font-size:22px}
+.progress{height:9px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--cyan),var(--violet));transition:.4s}
+.footer{padding:48px 0 70px;color:var(--muted);text-align:center}
+.glowline{height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--cyan),transparent);margin:22px 0}
+@media(max-width:1000px){.hero,.cols-2,.cols-3,.cols-4{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.topbar{position:relative;top:0}.nav{justify-content:flex-start}.orb-wrap{height:420px}}
+</style>
+</head>
+<body data-theme="black-gold">
+<!-- black gold sovereign command surface · No canned jobs · No fake graph · No preloaded authority -->
+<canvas id="sky"></canvas><div class="bg-lattice"></div>
+<header class="topbar">
+  <div class="brand"><div class="mark"></div><div>GoalOS V109<small>PROOF_LOOPS Grand Masterclass Command Cathedral</small></div></div>
+  <nav class="nav">
+    <button onclick="jump('mission')">Mission</button>
+    <button onclick="jump('loop')">Loop</button>
+    <button onclick="jump('jobs')">AGI Jobs</button>
+    <button onclick="jump('graph')">Skill Graph</button>
+    <button onclick="jump('masterclass')">Masterclass</button>
+    <button onclick="jump('exports')">Exports</button>
+  </nav>
+</header>
+
+<main class="wrap">
+<section class="hero">
+  <div>
+    <div class="kicker">Objective → Proof Mission → AGI Jobs → Evidence → Chronicle → Skill → Root → Future</div>
+    <h1><span class="gradient-text">PROOF_LOOPS</span><br>Command Cathedral.</h1>
+    <p class="lead">A playable operating room for proof-gated autonomous work. Start with one objective. Watch unsupported claims become Proof Debt, Proof Debt become custom AGI Jobs, Evidence pass through Chronicle, and validated capability compound into the next mission.</p>
+    <div class="button-row">
+      <button class="primary" onclick="runFullLoop()">Run Full Loop</button>
+      <button class="ghost" onclick="startMasterclass()">Start Masterclass</button>
+      <button class="ghost" onclick="resetState()">Reset Clean Boot</button>
+      <button class="danger" onclick="tryContamination()">Try Ungated Memory</button>
+    </div>
+    <div class="metrics">
+      <div class="metric"><strong id="mJobs">0</strong><span>AGI Jobs</span></div>
+      <div class="metric"><strong id="mEvidence">0</strong><span>Evidence items</span></div>
+      <div class="metric"><strong id="mSkills">0</strong><span>Validated skills</span></div>
+      <div class="metric"><strong id="mLift">0%</strong><span>Future mission lift</span></div>
+    </div>
+  </div>
+  <div class="hero-card">
+    <h3>Canonical Loop</h3>
+    <div class="loop-rail" id="rail"></div>
+    <div class="status" id="headlineStatus">Clean boot. No jobs. No graph roots. Chronicle closed. Enter an objective to begin.</div>
+    <div class="glowline"></div>
+    <p><b>Production invariant:</b> the AGI Job Workbench opens empty. No canned jobs. No fake graph. Jobs appear only after the objective creates proof debt.</p>
+  </div>
+</section>
+
+<section class="section grid cols-2" id="mission">
+  <div class="panel dark">
+    <h2>Mission Console</h2>
+    <p>Type an objective. The system will not create jobs until a Proof Mission exists and Proof Debt has been derived.</p>
+    <div class="label">Objective</div>
+    <textarea id="objective">Convert an AI vendor claim into a buyer-ready Evidence Docket, identify blocked claims, and capture any reusable reviewer skill.</textarea>
+    <div class="grid cols-2">
+      <div>
+        <div class="label">Proof Level Necessary: <span id="proofLevelLabel">L3 — External Review</span></div>
+        <input type="range" id="proofLevel" min="1" max="5" value="3" oninput="updateControls()">
+      </div>
+      <div>
+        <div class="label">Worth-Keeping Threshold: <span id="worthLabel">78%</span></div>
+        <input type="range" id="worth" min="45" max="95" value="78" oninput="updateControls()">
+      </div>
+    </div>
+    <div class="grid cols-2">
+      <div>
+        <div class="label">Agent identity</div>
+        <input id="agentName" value="research.agent.agi.eth" oninput="updateAgentGate()">
+      </div>
+      <div>
+        <div class="label">Graph storage mode</div>
+        <select id="storageMode" onchange="renderAll()">
+          <option>Commitment-only</option>
+          <option>Encrypted URI</option>
+          <option>Encrypted on-chain capsule</option>
+          <option>ZK-verified hidden capsule</option>
+        </select>
+      </div>
+    </div>
+    <div class="button-row">
+      <button class="primary" onclick="stepObjective()">Start Objective</button>
+      <button class="ghost" onclick="loadScenario('trust')">AI Trust Room</button>
+      <button class="ghost" onclick="loadScenario('skill')">Capture Expert Skill</button>
+      <button class="ghost" onclick="loadScenario('private')">Private Skill Graph</button>
+      <button class="ghost" onclick="loadScenario('rsi')">RSI Capability Loop</button>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>What happened?</h2>
+    <div id="explain" class="code">Nothing has run yet. Click “Start Objective” or “Run Full Loop.”</div>
+    <div class="button-row">
+      <button class="ghost" onclick="askPreset('What should I click first?')">What should I click first?</button>
+      <button class="ghost" onclick="askPreset('Why does the workbench start empty?')">Why empty?</button>
+      <button class="ghost" onclick="askPreset('What is Chronicle?')">What is Chronicle?</button>
+    </div>
+  </div>
+</section>
+
+<section class="section panel dark" id="loop">
+  <div class="grid cols-2">
+    <div>
+      <h2>Living Proof Loop</h2>
+      <p>Each stage is clickable. The orb visualizes the current state, proof flow, repair paths, Chronicle admission, and future mission lift.</p>
+      <div class="button-row">
+        <button class="primary" onclick="runNext()">Run Next Step</button>
+        <button class="ghost" onclick="runFullLoop()">Autoplay Loop</button>
+        <button class="ghost" onclick="stepGraphRoot()">Prepare Root Packet</button>
+      </div>
+    </div>
+    <div class="status" id="agentGate">Agent authorization pending.</div>
+  </div>
+  <div class="orb-wrap"><canvas id="orb"></canvas></div>
+</section>
+
+<section class="section grid cols-2" id="jobs">
+  <div class="panel dark">
+    <h2>Custom AGI Job Workbench</h2>
+    <p>Empty by design. Jobs are generated only from the current objective, proof level, proof debt, claim boundary, and validator route.</p>
+    <div class="button-row">
+      <button class="primary" onclick="stepJobs()">Generate AGI Jobs</button>
+      <button class="ghost" onclick="stepEvidence()">Return Evidence</button>
+      <button class="danger" onclick="rejectWeakJob()">Reject Weak Job</button>
+    </div>
+    <table class="table">
+      <thead><tr><th>Job</th><th>Why needed</th><th>Worker</th><th>Validator</th><th>Status</th></tr></thead>
+      <tbody id="jobRows"></tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <h2>Evidence Docket</h2>
+    <p>The Docket is the proof room: claims, sources, ProofBundles, validator verdicts, replay path, risk ledger, blocked claims, and decision state.</p>
+    <div class="button-row">
+      <button class="primary" onclick="stepChronicle()">Run Chronicle Gate</button>
+      <button class="ghost" onclick="downloadArtifact('evidence-docket.json')">Download Docket</button>
+    </div>
+    <div class="code" id="docketView">{ "status": "empty" }</div>
+  </div>
+</section>
+
+<section class="section grid cols-2">
+  <div class="panel dark">
+    <h2>Chronicle Gate</h2>
+    <p>Memory is a firewall. A candidate capability enters Chronicle only if support, replay, validation, scope, risk, utility, rollback, and proof level pass.</p>
+    <div class="orb-wrap" style="height:360px"><canvas id="radar"></canvas></div>
+    <div class="button-row">
+      <button class="primary" onclick="stepSkill()">Admit Validated Skill</button>
+      <button class="danger" onclick="tryContamination()">Try Ungated Memory</button>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Future Mission Lift</h2>
+    <p>Future missions improve only from Chronicle-admitted skill. Unsupported output remains visible as Proof Debt but cannot contaminate memory.</p>
+    <div class="orb-wrap" style="height:360px"><canvas id="trend"></canvas></div>
+  </div>
+</section>
+
+<section class="section panel dark" id="graph">
+  <div class="grid cols-2">
+    <div>
+      <h2>Validated Skill Graph</h2>
+      <p>A prompt can be copied. A validated skill carries proof, scope, replay, provenance, risk limits, and Chronicle admission.</p>
+      <div class="tabs" id="graphTabs"></div>
+    </div>
+    <div class="button-row" style="align-content:start;justify-content:flex-end">
+      <button class="primary" onclick="stepSkill()">Admit Skill</button>
+      <button class="ghost" onclick="composeSkill()">Compose Skills</button>
+      <button class="ghost" onclick="retireSkill()">Retire Skill</button>
+    </div>
+  </div>
+  <div class="grid cols-2">
+    <div class="orb-wrap"><canvas id="graph"></canvas></div>
+    <div>
+      <h3>Skill Passport</h3>
+      <div class="code" id="skillPassport">{ "validated_skills": [] }</div>
+      <h3>On-chain Graph Root Packet</h3>
+      <div class="code" id="rootPacket">{ "graph_roots": [] }</div>
+    </div>
+  </div>
+</section>
+
+<section class="section grid cols-2">
+  <div class="panel">
+    <h2>Bottleneck Ladder</h2>
+    <p>The bottleneck moves from generation to proof, validation, replay, Chronicle, root commitment, external review, and governance.</p>
+    <div class="orb-wrap" style="height:340px"><canvas id="bottleneck"></canvas></div>
+  </div>
+  <div class="panel dark">
+    <h2>Graph Root Tree</h2>
+    <p>Local mode prepares graph-root packets. Live transaction signing and settlement remain outside this browser-local boundary.</p>
+    <div class="orb-wrap" style="height:340px"><canvas id="rootTree"></canvas></div>
+  </div>
+</section>
+
+<section class="section grid cols-2" id="masterclass">
+  <div class="panel dark">
+    <h2>Masterclass Mode</h2>
+    <p>Each lesson has a Try button. Press it and watch the operating room change state.</p>
+    <div class="progress"><i id="lessonProgress"></i></div>
+    <div id="lessons"></div>
+    <div class="button-row">
+      <button class="ghost" onclick="prevLesson()">Previous</button>
+      <button class="primary" onclick="tryLesson()">Try this lesson</button>
+      <button class="ghost" onclick="nextLesson()">Next</button>
+    </div>
+  </div>
+  <div class="panel">
+    <h2>Ask GoalOS</h2>
+    <p>Browser-local guide. It explains the loop, blocked claims, proof levels, AGI Jobs, Chronicle, graph roots, and exports.</p>
+    <textarea id="askBox" style="min-height:80px">What does this loop prove?</textarea>
+    <div class="button-row">
+      <button class="primary" onclick="askGoalOS()">Ask</button>
+      <button class="ghost" onclick="askPreset('Create AGI Jobs for the current Proof Debt.')">Create job advice</button>
+      <button class="ghost" onclick="askPreset('What can safely go on-chain?')">On-chain privacy</button>
+    </div>
+    <div class="code" id="askAnswer">Ask anything about the loop.</div>
+  </div>
+</section>
+
+<section class="section panel dark" id="exports">
+  <h2>Artifact Export Center</h2>
+  <p>Export reviewer-ready artifacts from the current machine state. These files are local and generated in your browser.</p>
+  <div class="grid cols-4">
+    <button class="ghost" onclick="downloadArtifact('mission-contract.json')">Mission Contract</button>
+    <button class="ghost" onclick="downloadArtifact('proof-debt-register.json')">Proof Debt</button>
+    <button class="ghost" onclick="downloadArtifact('agi-job-queue.json')">AGI Jobs</button>
+    <button class="ghost" onclick="downloadArtifact('evidence-docket.json')">Evidence Docket</button>
+    <button class="ghost" onclick="downloadArtifact('chronicle-decision.json')">Chronicle Decision</button>
+    <button class="ghost" onclick="downloadArtifact('validated-skill-passport.json')">Skill Passport</button>
+    <button class="ghost" onclick="downloadArtifact('graph-root-packet.json')">Graph Root Packet</button>
+    <button class="primary" onclick="downloadZip()">Complete Proof ZIP</button>
+  </div>
+  <div class="code" id="artifactPreview"></div>
+</section>
+
+<footer class="footer">
+  <div class="glowline"></div>
+  <p>GoalOS V109 · PROOF_LOOPS Grand Masterclass Command Cathedral · Browser-local · No wallet · No live transaction · No backend · Review before deployment.</p>
+</footer>
+</main>
+
+<script>
+"use strict";
+const loopSteps = [
+  ["Objective","Define what decision or claim the work must support."],
+  ["Proof Mission","Set scope, proof level, constraints, success and failure criteria."],
+  ["AGI Jobs","Turn Proof Debt into executable proof contracts."],
+  ["Evidence","Collect ProofBundles, replay, provenance, validator notes."],
+  ["Chronicle","Gate memory by proof, replay, validation, scope, risk, utility, rollback."],
+  ["Validated Skill","Admit only scoped, replayable, evidence-backed capability."],
+  ["Graph Root","Prepare commitment roots, policy hash, ZK receipt, authorized agent."],
+  ["Future Mission","Use admitted skill as bounded prior for better future work."]
+];
+const lessons = [
+  ["Objective","A proof loop begins with a decision to support, not an agent to run.", stepObjective],
+  ["Proof Mission","The objective becomes a Mission Contract with proof level and boundaries.", stepMission],
+  ["Proof Debt","Unsupported claims become visible debt, not hidden uncertainty.", stepMission],
+  ["AGI Jobs","Proof Debt becomes custom proof contracts. The job table starts empty.", stepJobs],
+  ["Evidence","Jobs return ProofBundles that populate an inspectable Evidence Docket.", stepEvidence],
+  ["Chronicle","Chronicle is the memory firewall. Output cannot become memory by sounding useful.", stepChronicle],
+  ["Validated Skill","Only Chronicle-admitted capability may improve future missions.", stepSkill],
+  ["Graph Root","The chain stores roots, commitments, proofs, and agent authority — not plaintext private intelligence.", stepGraphRoot],
+  ["Future Mission","Admitted skills create bounded lift for the next mission.", stepFuture]
+];
+let graphMode = "Proof";
+const modes = ["Proof","Reuse","Risk","Teaching","Market"];
+let lessonIndex = 0;
+let state;
+function cleanState(){
+  return {
+    step:-1, objective:"", proofLevel:3, worth:78, mission:null, debts:[], jobs:[], bundles:[],
+    docket:null, chronicle:null, skills:[], roots:[], futureLift:0, blocked:[], agent:"research.agent.agi.eth",
+    trace:["Clean boot: 0 AGI Jobs, 0 ProofBundles, 0 Validated Skills, 0 Graph Roots, Chronicle closed."],
+    running:false
+  };
+}
+state = cleanState();
+function byId(id){return document.getElementById(id)}
+function jump(id){document.getElementById(id).scrollIntoView({behavior:"smooth",block:"start"})}
+function esc(s){return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]))}
+function pretty(x){return JSON.stringify(x,null,2)}
+function updateControls(){
+  state.proofLevel = +byId("proofLevel").value;
+  state.worth = +byId("worth").value;
+  const labels = ["","L1 — Structural / Demo","L2 — Internal Review","L3 — External Review","L4 — Mainnet Handoff","L5 — Chronicle / Formal"];
+  byId("proofLevelLabel").textContent = labels[state.proofLevel];
+  byId("worthLabel").textContent = state.worth + "%";
+  renderAll();
+}
+function isDirectAgent(name){
+  const parts = String(name).trim().toLowerCase().split(".");
+  return parts.length===4 && parts[1]==="agent" && parts[2]==="agi" && parts[3]==="eth" && /^[a-z0-9-]+$/.test(parts[0]) && parts[0].length>0;
+}
+function updateAgentGate(){
+  state.agent = byId("agentName").value.trim();
+  const ok = isDirectAgent(state.agent);
+  byId("agentGate").innerHTML = ok ? "✅ Direct AGI Agent authorized pattern: <b>"+esc(state.agent)+"</b>" : "⛔ Not a direct *.agent.agi.eth identity. Nested or non-agent names cannot write graph-root packets.";
+  renderAll();
+}
+function hashText(str){
+  let h1=0x811c9dc5, h2=0x9e3779b9;
+  for(let i=0;i<str.length;i++){h1^=str.charCodeAt(i); h1=(h1*16777619)>>>0; h2^=(h1+(h2<<6)+(h2>>2))>>>0}
+  return "0x"+("00000000"+h1.toString(16)).slice(-8)+("00000000"+h2.toString(16)).slice(-8)+("00000000"+(h1^h2).toString(16)).slice(-8)+("00000000"+((h1+h2)>>>0).toString(16)).slice(-8);
+}
+function missionId(){return "mission-"+hashText(state.objective+Date.now()).slice(2,10)}
+function setStep(n,msg){state.step=Math.max(state.step,n); if(msg) state.trace.unshift(msg); renderAll()}
+function stepObjective(){
+  state.objective = byId("objective").value.trim() || "Create a proof mission.";
+  setStep(0,"Objective captured. The Workbench remains empty until Proof Debt exists.");
+}
+function stepMission(){
+  if(!state.objective) stepObjective();
+  state.mission = {
+    mission_id: missionId(),
+    objective: state.objective,
+    decision_to_support: "What can be trusted, what remains blocked, what becomes AGI Jobs, and what may influence the next mission?",
+    proof_level: "L"+state.proofLevel,
+    worth_keeping_threshold: state.worth/100,
+    agent_identity: state.agent,
+    success_criteria:["Mission Contract exists","Proof Debt explicit","AGI Jobs custom-generated only from actual gaps","Evidence Docket inspectable","Chronicle decision recorded"],
+    forbidden_actions:["canned jobs","fake graph","preloaded authority","wallet connection in local mode","plaintext private intelligence on-chain"]
+  };
+  const base = [
+    ["support","Claim support must be linked to evidence and source provenance.","Research Agent","AGI Node Validator"],
+    ["replay","Result must be replayable or reconstructable from manifest.","Replay Agent","Replay Validator"],
+    ["review","Independent reviewer verdict required for Chronicle influence.","Reviewer Agent / Human","AGI Node + Human Review"],
+    ["boundary","Blocked claims, legal/security/ROI/settlement boundaries must be explicit.","Boundary Sentinel","Council Review"]
+  ];
+  if(state.proofLevel>=4) base.push(["mainnet","Mainnet handoff packet must contain roots, policy hash, direct agent, and live_transaction=false.","Graph Root Architect","Mainnet Boundary Reviewer"]);
+  if(state.proofLevel>=5) base.push(["rollback","Durable memory requires rollback condition and multi-validator coverage.","Chronicle Steward","Validator Council"]);
+  state.debts = base.map((d,i)=>({
+    debt_id:"proof-debt-"+String(i+1).padStart(3,"0"), category:d[0], claim:d[1], status:"open",
+    suggested_worker:d[2], suggested_validator:d[3], blocked_until:"ProofBundle returned and Chronicle Gate passes"
+  }));
+  setStep(1,"Proof Mission created. Proof Debt is now visible; AGI Jobs can be generated.");
+}
+function stepJobs(){
+  if(!state.mission) stepMission();
+  state.jobs = state.debts.map((d,i)=>({
+    job_id:"agi-job-"+d.category+"-"+String(i+1).padStart(3,"0"),
+    source_proof_debt:d.debt_id,
+    why_needed:d.claim,
+    worker:d.suggested_worker,
+    validator:d.suggested_validator,
+    sentinel:d.category==="boundary"?"Boundary Sentinel":"Protocol Sentinel",
+    acceptance_tests:[
+      "Claim boundary preserved",
+      "Evidence artifact attached",
+      "Replay or review path documented",
+      "Rollback condition recorded"
+    ],
+    blocked_claims:["certified","guaranteed ROI","production authorized","live settlement complete"],
+    proofbundle_return_path:"proofbundles/agi-job-"+d.category+"-"+String(i+1).padStart(3,"0")+".json",
+    status:"ready-for-execution"
+  }));
+  setStep(2,"Custom AGI Jobs generated from current Proof Debt. No job existed before the mission.");
+}
+function stepEvidence(){
+  if(state.jobs.length===0) stepJobs();
+  state.jobs.forEach(j=>j.status="proofbundle-returned");
+  state.bundles = state.jobs.map((j,i)=>({
+    proofbundle_id:"proofbundle-"+String(i+1).padStart(3,"0"),
+    job_id:j.job_id,
+    artifact_hash:hashText(j.job_id+state.objective),
+    verdict:"supported_with_limits",
+    replay_ready: i%2===0 || state.proofLevel<4,
+    validator_notes:"Evidence sufficient for selected proof level in local simulation."
+  }));
+  state.docket = {
+    evidence_docket_id:"evidence-docket-"+hashText(state.objective).slice(2,8),
+    mission_id: state.mission.mission_id,
+    proof_level:"L"+state.proofLevel,
+    claims_matrix: state.debts.map((d,i)=>({claim:d.claim,status:"supported_with_limits",proofbundle_ref:state.bundles[i].proofbundle_id})),
+    proofbundles: state.bundles,
+    blocked_claims:["legal certification","security certification","investment advice","production authorization","live settlement"],
+    decision_state:"chronicle-candidate",
+    privacy_boundary:"roots, commitments, ciphertext, and proofs; no plaintext private intelligence on-chain"
+  };
+  setStep(3,"Evidence returned. ProofBundles now populate the Evidence Docket.");
+}
+function gateScores(){
+  const l=state.proofLevel, b=state.bundles.length, j=state.jobs.length||1;
+  const base = Math.min(1,b/j);
+  return {
+    support: Math.min(.99,.54 + base*.28 + l*.035),
+    replay: Math.min(.99,.50 + base*.22 + (l>=4?.08:0) + l*.025),
+    validation: Math.min(.99,.48 + base*.25 + l*.045),
+    scope: Math.min(.99,.72 + l*.035),
+    risk: Math.min(.99,.66 + base*.15 + l*.025),
+    utility: Math.min(.99,(state.worth/100) + .07),
+    rollback: Math.min(.99,.52 + (l>=5?.28:.08) + base*.1)
+  }
+}
+function stepChronicle(){
+  if(!state.docket) stepEvidence();
+  const s=gateScores();
+  const thresholds = {support:.58+state.proofLevel*.045,replay:.50+state.proofLevel*.05,validation:.50+state.proofLevel*.055,scope:.70,risk:.62,utility:state.worth/100,rollback:state.proofLevel>=5?.78:.55};
+  const pass = Object.keys(thresholds).every(k=>s[k]>=thresholds[k]);
+  state.chronicle = {decision: pass?"admit":"repair", scores:s, thresholds, missing:Object.keys(thresholds).filter(k=>s[k]<thresholds[k]), proof_level:"L"+state.proofLevel};
+  if(!pass){ state.debts.push({debt_id:"proof-debt-repair-"+state.debts.length, category:"repair", claim:"Repair missing Chronicle criteria: "+state.chronicle.missing.join(", "), status:"open", suggested_worker:"Repair Agent", suggested_validator:"Chronicle Validator", blocked_until:"repair ProofBundle returned"}); }
+  setStep(4, pass ? "Chronicle Gate passed. A Validated Skill may be admitted." : "Chronicle Gate held. Repair jobs are required before memory influence.");
+}
+function stepSkill(){
+  if(!state.chronicle) stepChronicle();
+  if(state.chronicle.decision!=="admit"){ setStep(4,"Cannot admit skill yet. Chronicle decision is repair."); return; }
+  const skill = {
+    skill_id:"skill-"+hashText(state.objective+state.skills.length).slice(2,10),
+    name:"Proof-loop capability from current mission",
+    scope:{objective:state.objective, allowed_use:["mission design","proof debt creation","Evidence Docket scaffolding","reviewer route selection"], blocked_use:["certification","guaranteed ROI","live settlement","legal advice"]},
+    evidence:{docket_hash:hashText(JSON.stringify(state.docket)), proofbundles:state.bundles.map(b=>b.proofbundle_id)},
+    proof_level:"L"+state.proofLevel,
+    worth_keeping_score: Math.round((state.chronicle.scores.utility)*100),
+    rollback:"Retire if reviewer verdict is invalidated, scope drifts, or proof root is challenged.",
+    status:"chronicle-admitted"
+  };
+  if(!state.skills.find(s=>s.skill_id===skill.skill_id)) state.skills.push(skill);
+  setStep(5,"Validated Skill admitted. Future missions may now use this bounded capability.");
+}
+function stepGraphRoot(){
+  if(state.skills.length===0) stepSkill();
+  const authorized = isDirectAgent(state.agent);
+  const root = {
+    packet_id:"graph-root-packet-"+String(state.roots.length+1).padStart(3,"0"),
+    agent_identity: state.agent,
+    direct_agent_authorized: authorized,
+    graph_root: hashText(JSON.stringify(state.skills)+state.roots.length),
+    previous_graph_root: state.roots.length ? state.roots[state.roots.length-1].graph_root : "0x00000000000000000000000000000000",
+    evidence_root: hashText(JSON.stringify(state.docket||{})),
+    proofbundle_root: hashText(JSON.stringify(state.bundles)),
+    policy_hash: hashText("proof-level:"+state.proofLevel+";worth:"+state.worth+";mode:"+byId("storageMode").value),
+    zk_proof_hash: hashText("zk-policy-placeholder:"+JSON.stringify(state.chronicle||{})),
+    storage_mode: byId("storageMode").value,
+    live_transaction:false,
+    note: authorized ? "Ready for external review / live-boundary handoff." : "Blocked: direct *.agent.agi.eth authorization failed."
+  };
+  if(authorized) state.roots.push(root);
+  setStep(6, authorized ? "Graph-root packet prepared. Live transaction remains false in browser-local mode." : "Graph-root commit blocked by agent authorization gate.");
+}
+function stepFuture(){
+  if(state.roots.length===0) stepGraphRoot();
+  if(state.roots.length>0) state.futureLift = Math.min(97, state.futureLift + 18 + state.skills.length*7 + state.proofLevel*3);
+  setStep(7,"Future mission improved from Chronicle-admitted skill only.");
+}
+function runNext(){
+  const next = Math.min(7,state.step+1);
+  [stepObjective,stepMission,stepJobs,stepEvidence,stepChronicle,stepSkill,stepGraphRoot,stepFuture][next]();
+}
+function runFullLoop(){
+  if(state.running) return; state.running=true;
+  let i=0; const funcs=[stepObjective,stepMission,stepJobs,stepEvidence,stepChronicle,stepSkill,stepGraphRoot,stepFuture];
+  const t=setInterval(()=>{ funcs[i++](); if(i>=funcs.length){clearInterval(t); state.running=false;} }, 650);
+}
+function tryContamination(){
+  state.blocked.unshift({attempt:"Ungated memory promotion", result:"blocked", reason:"No Chronicle entry → no future mission influence."});
+  state.trace.unshift("Blocked: unsupported output tried to enter memory. Chronicle refused it.");
+  renderAll();
+}
+function rejectWeakJob(){
+  if(state.jobs.length){state.jobs[state.jobs.length-1].status="rejected-needs-repair"; state.trace.unshift("Weak job rejected. Repair path preserved.");}
+  renderAll();
+}
+function composeSkill(){
+  if(state.skills.length<2){state.trace.unshift("Composition requires two admitted skills. Run another loop or admit one more skill.");}
+  else state.skills.push({skill_id:"skill-composite-"+state.skills.length,name:"Composite Proof Mission Skill",proof_level:"L"+state.proofLevel,status:"candidate-needs-chronicle",scope:{composed_from:state.skills.slice(-2).map(s=>s.skill_id)},evidence:{requires:"new Proof Debt and Chronicle pass"},worth_keeping_score:0});
+  renderAll();
+}
+function retireSkill(){
+  if(state.skills.length){state.skills[state.skills.length-1].status="retired"; state.trace.unshift("Latest skill retired. Provenance preserved; future influence removed.");}
+  renderAll();
+}
+function resetState(){
+  state = cleanState();
+  byId("objective").value = "Convert an AI vendor claim into a buyer-ready Evidence Docket, identify blocked claims, and capture any reusable reviewer skill.";
+  updateControls(); updateAgentGate(); renderAll();
+}
+function loadScenario(k){
+  const v={
+    trust:"Convert an AI vendor claim into a buyer-ready Evidence Docket, identify blocked claims, and capture any reusable reviewer skill.",
+    skill:"Capture an expert workflow for converting vague strategic claims into proof missions and reusable skill nodes.",
+    private:"Create a private on-chain Validated Skill Graph packet using encrypted capsule commitments and a ZK policy receipt.",
+    rsi:"Run an RSI capability loop where one admitted skill improves the next proof mission without contaminating memory."
+  }[k];
+  byId("objective").value = v; stepObjective();
+}
+function renderRail(){
+  const rail=byId("rail"); rail.innerHTML="";
+  loopSteps.forEach((s,i)=>{const d=document.createElement("div");d.className="step "+(state.step===i?"active ":"")+(state.step>i?"done":"");d.onclick=()=>{[stepObjective,stepMission,stepJobs,stepEvidence,stepChronicle,stepSkill,stepGraphRoot,stepFuture][i]()};d.innerHTML="<b>"+(i+1)+". "+s[0]+"</b><span>"+s[1]+"</span>";rail.appendChild(d);});
+}
+function renderJobs(){
+  const rows=byId("jobRows");
+  if(state.jobs.length===0){rows.innerHTML='<tr><td colspan="5"><span class="badge hold">No AGI Jobs yet</span><br><br>Enter an objective and click Create Proof Mission → Generate AGI Jobs. The Workbench starts empty by design.</td></tr>';return;}
+  rows.innerHTML=state.jobs.map(j=>'<tr><td><b>'+esc(j.job_id)+'</b><br><small>'+esc(j.source_proof_debt)+'</small></td><td>'+esc(j.why_needed)+'</td><td>'+esc(j.worker)+'</td><td>'+esc(j.validator)+'</td><td><span class="badge '+(j.status.includes("returned")?"good":j.status.includes("rejected")?"bad":"hold")+'">'+esc(j.status)+'</span></td></tr>').join("");
+}
+function artifact(name){
+  const all = {
+    "mission-contract.json": state.mission || {},
+    "proof-debt-register.json": {proof_debt:state.debts},
+    "agi-job-queue.json": {agi_jobs:state.jobs},
+    "evidence-docket.json": state.docket || {},
+    "chronicle-decision.json": state.chronicle || {},
+    "validated-skill-passport.json": {validated_skills:state.skills},
+    "graph-root-packet.json": {graph_roots:state.roots},
+    "future-mission-brief.json": {future_mission_lift:state.futureLift, admitted_skills:state.skills.filter(s=>s.status==="chronicle-admitted").map(s=>s.skill_id)}
+  };
+  return all[name] || all;
+}
+function downloadArtifact(name){
+  const data=pretty(artifact(name)); const blob=new Blob([data],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); byId("artifactPreview").textContent=data;
+}
+function crc32(str){let table=crc32.table||(crc32.table=Array.from({length:256},(_,n)=>{let c=n;for(let k=0;k<8;k++)c=c&1?0xedb88320^(c>>>1):c>>>1;return c>>>0;}));let crc=-1;for(let i=0;i<str.length;i++)crc=(crc>>>8)^table[(crc^str.charCodeAt(i))&255];return (crc^(-1))>>>0;}
+function dosDateTime(){const d=new Date(); return {time:(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()/2),date:((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate()};}
+function u16(n){return String.fromCharCode(n&255,(n>>>8)&255)} function u32(n){return String.fromCharCode(n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255)}
+function makeZip(files){let local="",central="",offset=0,dt=dosDateTime();Object.entries(files).forEach(([name,data])=>{let crc=crc32(data), size=data.length;let head="PK\\x03\\x04"+u16(20)+u16(0)+u16(0)+u16(dt.time)+u16(dt.date)+u32(crc)+u32(size)+u32(size)+u16(name.length)+u16(0)+name;local+=head+data;central+="PK\\x01\\x02"+u16(20)+u16(20)+u16(0)+u16(0)+u16(dt.time)+u16(dt.date)+u32(crc)+u32(size)+u32(size)+u16(name.length)+u16(0)+u16(0)+u16(0)+u16(0)+u32(0)+u32(offset)+name;offset+=head.length+data.length;});return local+central+"PK\\x05\\x06"+u16(0)+u16(0)+u16(Object.keys(files).length)+u16(Object.keys(files).length)+u32(central.length)+u32(local.length)+u16(0)}
+function downloadZip(){
+  const files={};
+  ["mission-contract.json","proof-debt-register.json","agi-job-queue.json","evidence-docket.json","chronicle-decision.json","validated-skill-passport.json","graph-root-packet.json","future-mission-brief.json"].forEach(n=>files[n]=pretty(artifact(n)));
+  files["run-trace.md"]=state.trace.map((t,i)=>`${i+1}. ${t}`).join("\\n");
+  files["reviewer-room.html"]="<html><body><h1>GoalOS Proof Package</h1><pre>"+esc(pretty({mission:state.mission, jobs:state.jobs, docket:state.docket, chronicle:state.chronicle, skills:state.skills, roots:state.roots}))+"</pre></body></html>";
+  const zip=makeZip(files); const blob=new Blob([zip],{type:"application/zip"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="goalos-v109-proof-package.zip"; a.click(); URL.revokeObjectURL(a.href);
+}
+function renderPanels(){
+  byId("mJobs").textContent=state.jobs.length; byId("mEvidence").textContent=state.bundles.length; byId("mSkills").textContent=state.skills.filter(s=>s.status==="chronicle-admitted").length; byId("mLift").textContent=state.futureLift+"%";
+  byId("headlineStatus").textContent=state.trace[0] || "Ready.";
+  byId("explain").textContent=state.trace.slice(0,8).join("\\n");
+  byId("docketView").textContent=pretty(state.docket || {status:"empty", message:"Return Evidence to populate the Evidence Docket."});
+  byId("skillPassport").textContent=pretty({skills:state.skills});
+  byId("rootPacket").textContent=pretty({graph_roots:state.roots});
+  byId("artifactPreview").textContent=pretty({clean_boot: state.jobs.length===0 && state.bundles.length===0 && state.skills.length===0 && state.roots.length===0, step:state.step, latest_trace:state.trace[0]});
+}
+function renderTabs(){
+  const t=byId("graphTabs");
+  t.innerHTML="";
+  modes.forEach(m=>{
+    const b=document.createElement("button");
+    b.className="tab "+(m===graphMode?"active":"");
+    b.textContent=m;
+    b.onclick=()=>{graphMode=m;renderAll();};
+    t.appendChild(b);
+  });
+}
+function renderLessons(){
+  const box=byId("lessons");
+  box.innerHTML=lessons.map((l,i)=>'<div class="lesson '+(i===lessonIndex?'active':'')+'"><div class="lesson-card"><div class="lesson-num">'+(i+1)+'</div><div><h3>'+l[0]+'</h3><p>'+l[1]+'</p><div class="status">Click “Try this lesson” to operate this stage.</div></div></div></div>').join("");
+  byId("lessonProgress").style.width=((lessonIndex+1)/lessons.length*100)+"%";
+}
+function nextLesson(){lessonIndex=(lessonIndex+1)%lessons.length;renderLessons()} function prevLesson(){lessonIndex=(lessonIndex+lessons.length-1)%lessons.length;renderLessons()} function tryLesson(){lessons[lessonIndex][2]();} function startMasterclass(){jump("masterclass");lessonIndex=0;renderLessons();}
+function askPreset(q){byId("askBox").value=q;askGoalOS()}
+function askGoalOS(){
+  const q=byId("askBox").value.toLowerCase(); let a="";
+  if(q.includes("first")) a="Start with the Objective. GoalOS does not choose agents first; it creates a Proof Mission, then derives Proof Debt, then generates custom AGI Jobs.";
+  else if(q.includes("empty")) a="The Workbench starts empty because preloaded jobs imply preloaded authority. In GoalOS, jobs appear only after the current objective creates Proof Debt.";
+  else if(q.includes("chronicle")) a="Chronicle is the memory firewall. Evidence can be visible before Chronicle, but only Chronicle-admitted skills may influence future missions.";
+  else if(q.includes("chain")||q.includes("private")) a="Safe on-chain mode stores roots, hashes, ciphertext commitments, policy hashes, attestations, and ZK proof receipts. It does not publish private skill intelligence as plaintext.";
+  else if(q.includes("job")) a="An AGI Job is an executable proof contract: claim, worker, validator, sentinel, acceptance tests, blocked claims, and ProofBundle return path.";
+  else a="The loop proves that autonomous output is not enough. Work becomes useful only when it creates evidence, passes Chronicle, becomes a scoped Validated Skill, and improves future missions without contaminating memory.";
+  byId("askAnswer").textContent=a;
+}
+function renderAll(){renderRail();renderJobs();renderPanels();renderTabs();renderLessons();updateAgentGateNoRender();drawAll();}
+function updateAgentGateNoRender(){ const ok=isDirectAgent(state.agent); byId("agentGate").innerHTML = ok ? "✅ Direct AGI Agent authorization pattern passes: <b>"+esc(state.agent)+"</b>" : "⛔ Direct-agent gate failed. Use a single-label name like <b>research.agent.agi.eth</b>."; }
+function drawAll(){drawOrb();drawGraph();drawRadar();drawTrend();drawBottleneck();drawRootTree();}
+function canvasSetup(id){const c=byId(id),r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;const ctx=c.getContext("2d");ctx.setTransform(d,0,0,d,0,0);return [ctx,r.width,r.height];}
+function drawOrb(){
+  const [ctx,w,h]=canvasSetup("orb"); ctx.clearRect(0,0,w,h); const cx=w/2, cy=h/2, R=Math.min(w,h)*.33; ctx.lineWidth=1;
+  for(let r=R*.4;r<R*1.7;r+=34){ctx.strokeStyle="rgba(255,214,110,.10)";ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();}
+  loopSteps.forEach((s,i)=>{const a=-Math.PI/2+i*Math.PI*2/loopSteps.length;const x=cx+Math.cos(a)*R*1.05,y=cy+Math.sin(a)*R*1.05;ctx.beginPath();ctx.arc(x,y,35,0,Math.PI*2);ctx.fillStyle=i<=state.step?"rgba(255,214,110,.18)":"rgba(255,255,255,.06)";ctx.fill();ctx.strokeStyle=i<=state.step?"rgba(255,214,110,.8)":"rgba(255,255,255,.18)";ctx.stroke();ctx.fillStyle="#fff";ctx.font="800 12px sans-serif";ctx.textAlign="center";ctx.fillText((i+1)+" "+s[0],x,y+4); if(i<loopSteps.length){const a2=-Math.PI/2+((i+1)%loopSteps.length)*Math.PI*2/loopSteps.length;ctx.strokeStyle="rgba(102,242,255,.28)";ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(cx+Math.cos(a2)*R*1.05,cy+Math.sin(a2)*R*1.05);ctx.stroke();}});
+  ctx.beginPath();ctx.arc(cx,cy,R*.38,0,Math.PI*2);ctx.fillStyle="rgba(0,0,0,.55)";ctx.fill();ctx.strokeStyle="rgba(255,214,110,.75)";ctx.stroke();ctx.fillStyle="#ffd66e";ctx.font="900 22px Georgia";ctx.textAlign="center";ctx.fillText("PROOF",cx,cy-8);ctx.fillText("LOOP",cx,cy+20);
+}
+function drawGraph(){
+  const [ctx,w,h]=canvasSetup("graph"); ctx.clearRect(0,0,w,h); const cx=w/2,cy=h/2; const skills=state.skills.length?state.skills:[{name:"Candidate",status:"candidate"}]; const n=Math.max(6,skills.length+5); const nodes=[];
+  for(let i=0;i<n;i++){let a=i*Math.PI*2/n-Math.PI/2;let rr=Math.min(w,h)*(.24+(i%3)*.07);nodes.push([cx+Math.cos(a)*rr,cy+Math.sin(a)*rr,a]);}
+  ctx.strokeStyle="rgba(255,214,110,.18)";ctx.lineWidth=1;for(let i=0;i<n;i++){for(let j=i+1;j<n;j++){if((i+j)%3===0){ctx.beginPath();ctx.moveTo(nodes[i][0],nodes[i][1]);ctx.lineTo(nodes[j][0],nodes[j][1]);ctx.stroke();}}}
+  nodes.forEach((p,i)=>{const admitted=i<state.skills.filter(s=>s.status==="chronicle-admitted").length;ctx.beginPath();ctx.arc(p[0],p[1],admitted?17:11,0,Math.PI*2);ctx.fillStyle=admitted?"rgba(112,255,176,.9)":(graphMode==="Risk"?"rgba(255,98,118,.65)":"rgba(102,242,255,.65)");ctx.fill();ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=20;ctx.fill();ctx.shadowBlur=0;});
+  ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="900 24px Georgia";ctx.fillText("Validated Skill Graph",cx,cy);ctx.font="12px sans-serif";ctx.fillStyle="#cbd5ee";ctx.fillText("Mode: "+graphMode+" · admitted skills: "+state.skills.filter(s=>s.status==="chronicle-admitted").length,cx,cy+24);
+}
+function drawRadar(){
+  const [ctx,w,h]=canvasSetup("radar");ctx.clearRect(0,0,w,h);const labels=["support","replay","validation","scope","risk","utility","rollback"];const s=state.chronicle?state.chronicle.scores:gateScores();const cx=w/2,cy=h/2,R=Math.min(w,h)*.34;ctx.strokeStyle="rgba(255,255,255,.14)";for(let k=1;k<=5;k++){ctx.beginPath();labels.forEach((l,i)=>{let a=-Math.PI/2+i*2*Math.PI/labels.length, r=R*k/5, x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r; i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.stroke();}ctx.beginPath();labels.forEach((l,i)=>{let a=-Math.PI/2+i*2*Math.PI/labels.length, r=R*s[l], x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r; i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.closePath();ctx.fillStyle="rgba(102,242,255,.22)";ctx.fill();ctx.strokeStyle="#66f2ff";ctx.lineWidth=3;ctx.stroke();ctx.fillStyle="#fff";ctx.font="12px sans-serif";labels.forEach((l,i)=>{let a=-Math.PI/2+i*2*Math.PI/labels.length, x=cx+Math.cos(a)*(R+45),y=cy+Math.sin(a)*(R+45);ctx.fillText(l,x-20,y);});}
+function drawTrend(){
+  const [ctx,w,h]=canvasSetup("trend");ctx.clearRect(0,0,w,h);ctx.strokeStyle="rgba(255,255,255,.14)";for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(50,40+i*(h-80)/4);ctx.lineTo(w-30,40+i*(h-80)/4);ctx.stroke();}const pts=[0,8,12,18,28,state.futureLift];ctx.beginPath();pts.forEach((v,i)=>{let x=50+i*(w-90)/(pts.length-1),y=h-50-v*(h-100)/100;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.strokeStyle="#ffd66e";ctx.lineWidth=4;ctx.stroke();ctx.fillStyle="#66f2ff";ctx.font="900 24px sans-serif";ctx.fillText("Future mission lift: "+state.futureLift+"%",60,55);}
+function drawBottleneck(){
+  const [ctx,w,h]=canvasSetup("bottleneck");ctx.clearRect(0,0,w,h);const items=["generation","proof","validation","replay","Chronicle","root","review","governance"];items.forEach((it,i)=>{let x=50+i*(w-100)/items.length,bar=(i+1)*18+state.step*5;ctx.fillStyle=i===Math.min(state.step,7)?"#ffd66e":"rgba(102,242,255,.55)";ctx.fillRect(x,h-50-bar,28,bar);ctx.save();ctx.translate(x+16,h-26);ctx.rotate(-.7);ctx.fillStyle="#fff";ctx.font="11px sans-serif";ctx.fillText(it,0,0);ctx.restore();});}
+function drawRootTree(){
+  const [ctx,w,h]=canvasSetup("rootTree");ctx.clearRect(0,0,w,h);const roots=["graphRoot","evidenceRoot","proofBundleRoot","policyHash","zkProofHash","agent"];const cx=w/2;ctx.fillStyle="#ffd66e";ctx.font="900 20px Georgia";ctx.textAlign="center";ctx.fillText("Graph-Root Packet",cx,45);roots.forEach((r,i)=>{let x=70+i*(w-140)/(roots.length-1),y=160+(i%2)*70;ctx.strokeStyle="rgba(255,214,110,.4)";ctx.beginPath();ctx.moveTo(cx,70);ctx.lineTo(x,y);ctx.stroke();ctx.beginPath();ctx.roundRect?ctx.roundRect(x-55,y-22,110,44,12):ctx.rect(x-55,y-22,110,44);ctx.fillStyle="rgba(255,255,255,.08)";ctx.fill();ctx.stroke();ctx.fillStyle="#fff";ctx.font="12px sans-serif";ctx.fillText(r,x,y+4);});ctx.fillStyle="#cbd5ee";ctx.font="13px sans-serif";ctx.fillText(state.roots.length?state.roots[state.roots.length-1].graph_root:"No graph root yet",cx,h-35);}
+function sky(){
+  const c=byId("sky"),ctx=c.getContext("2d");let W,H,particles=[];
+  function resize(){W=c.width=innerWidth*(devicePixelRatio||1);H=c.height=innerHeight*(devicePixelRatio||1);ctx.setTransform(devicePixelRatio||1,0,0,devicePixelRatio||1,0,0);particles=Array.from({length:150},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.8+.4,v:Math.random()*1.2+.25,a:Math.random()*6.28,c:Math.random()<.7?"255,214,110":"102,242,255"}));}
+  function tick(){ctx.clearRect(0,0,innerWidth,innerHeight);for(const p of particles){p.y-=p.v;p.x+=Math.sin(p.a+=.01)*.25;if(p.y<-10){p.y=innerHeight+10;p.x=Math.random()*innerWidth}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.28);ctx.fillStyle="rgba("+p.c+","+(0.25+p.r/3)+")";ctx.fill();}requestAnimationFrame(tick)}
+  addEventListener("resize",resize);resize();tick();
+}
+if(!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this}}
+window.addEventListener("resize",drawAll);
+sky();updateControls();updateAgentGate();resetState();
+</script>
+</body>
+</html>
