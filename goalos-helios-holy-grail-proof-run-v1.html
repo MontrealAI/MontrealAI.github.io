@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="GoalOS HELIOS: a practical, browser-local proof-gated energy-resilience mission that turns autonomous work into verified savings, governed memory, simulated settlement, and a funded harder mission.">
+<title>GoalOS HELIOS — Verified Savings That Fund the Next Mission</title>
+<style>
+:root{
+  --ivory:#f7f2e7;--paper:#fffdf8;--navy:#0b1d33;--navy2:#1c4568;--ink:#14263b;
+  --muted:#66758a;--gold:#bb8628;--gold2:#e2ba62;--blue:#397ebd;--cyan:#4a9fa8;
+  --green:#21845c;--red:#b54555;--amber:#a86e16;--line:#ddd3bf;--soft:#f1eadb;
+  --softblue:#eef5fb;--softgreen:#edf8f1;--softred:#fff1f3;--shadow:0 24px 72px rgba(28,37,48,.11);
+  --radius:24px;--sans:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  --serif:Georgia,"Times New Roman",serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--sans);background:
+linear-gradient(rgba(11,29,51,.028) 1px,transparent 1px),
+linear-gradient(90deg,rgba(11,29,51,.028) 1px,transparent 1px),
+radial-gradient(circle at 8% 8%,rgba(226,186,98,.17),transparent 26%),
+radial-gradient(circle at 92% 4%,rgba(57,126,189,.11),transparent 26%),
+var(--ivory);background-size:54px 54px,54px 54px,auto,auto,auto}
+button,input,textarea,select{font:inherit}button{touch-action:manipulation}
+.topbar{position:sticky;top:12px;z-index:80;width:min(1760px,94vw);margin:12px auto 0;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 12px;border:1px solid rgba(11,29,51,.12);border-radius:999px;background:rgba(255,253,248,.9);backdrop-filter:blur(18px);box-shadow:0 10px 34px rgba(28,37,48,.08)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}.mark{width:50px;height:50px;border-radius:17px;display:grid;place-items:center;background:linear-gradient(145deg,var(--navy),#275c82);color:#fff;font-family:var(--serif);font-size:1.35rem;font-weight:900;box-shadow:inset 0 0 0 2px rgba(226,186,98,.58),0 10px 30px rgba(11,29,51,.16)}
+.brand b{display:block;color:var(--navy);font-weight:950;letter-spacing:-.025em}.brand span{display:block;color:var(--muted);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:760px}
+.status-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:7px 10px;background:#fff;font-size:.73rem;color:var(--muted);font-weight:800}.pill strong{color:var(--navy)}
+.btn{border:1px solid #cfc5b2;background:#fff;color:var(--navy);border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer;transition:.18s}.btn:hover{transform:translateY(-1px);border-color:var(--blue);box-shadow:0 8px 20px rgba(57,126,189,.10)}.btn.primary{border:0;background:linear-gradient(135deg,var(--navy),#285d83);color:#fff}.btn.gold{border:0;background:linear-gradient(135deg,#f1d084,#b67b1f);color:#1f1a12}.btn.good{border-color:#9acbb2;background:var(--softgreen);color:#145d3d}.btn.danger{border-color:#d9a1aa;background:var(--softred);color:#8e3040}.btn.small{padding:8px 11px;font-size:.82rem}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.wrap{width:min(1760px,94vw);margin:0 auto;padding:62px 0 90px}
+.hero{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(540px,.94fr);gap:24px;align-items:center;min-height:660px}
+.eyebrow{display:inline-flex;border:1px solid rgba(187,134,40,.30);background:#fff7e4;color:#8f641a;border-radius:999px;padding:8px 12px;font-size:.75rem;font-weight:950;letter-spacing:.13em;text-transform:uppercase}
+h1{font-family:var(--serif);font-size:clamp(3.2rem,6.7vw,7.5rem);line-height:.88;letter-spacing:-.065em;color:var(--navy);margin:20px 0 18px}.accent{color:var(--gold)}
+.lead{font-size:clamp(1.04rem,1.48vw,1.26rem);line-height:1.65;color:#40536b;max-width:920px}
+.hero-actions,.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.promise{margin-top:20px;border-left:4px solid var(--gold);background:#fff8e8;border-radius:0 18px 18px 0;padding:15px 17px;line-height:1.55;color:#263a52}
+.card{position:relative;border:1px solid rgba(11,29,51,.12);border-radius:var(--radius);background:rgba(255,253,248,.94);box-shadow:var(--shadow);padding:22px;overflow:hidden}.card:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--mx,83%) var(--my,10%),rgba(226,186,98,.12),transparent 34%)}.card>*{position:relative;z-index:1}
+.title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}.title h2,.title h3{margin:0;color:var(--navy);letter-spacing:-.04em}.title h2{font-family:var(--serif);font-size:clamp(1.8rem,2.8vw,2.9rem);line-height:1}.title h3{font-size:1.18rem}.sub{color:var(--muted);line-height:1.55}.small{font-size:.86rem}.tiny{font-size:.75rem}
+.tag{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;font-size:.74rem;font-weight:850;color:#526278}.tag.ok{border-color:#9acbb2;background:var(--softgreen);color:#196342}.tag.warn{border-color:#d9bd7a;background:#fff6dc;color:#8f6318}.tag.bad{border-color:#d9a1aa;background:#fff0f2;color:#913446}
+.holy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:17px}.holy{border:1px solid var(--line);border-radius:17px;background:#fff;padding:12px;min-height:96px}.holy b{display:block;color:var(--navy)}.holy span{display:block;color:var(--muted);font-size:.76rem;line-height:1.35;margin-top:4px}.holy .light{width:10px;height:10px;border-radius:50%;background:#c9c1b2;float:right;margin-top:4px}.holy.ready{border-color:#91c7aa;background:#f3fbf6}.holy.ready .light{background:var(--green);box-shadow:0 0 0 4px rgba(33,132,92,.11)}
+.example{margin-top:13px;border:1px solid #d7bf86;border-radius:18px;background:linear-gradient(145deg,#fffdf8,#fff5de);padding:14px;line-height:1.5}
+.system{margin-top:26px;display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;align-items:start}.sidebar{position:sticky;top:92px}.step-list{display:grid;gap:9px}.step-btn{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;width:100%;border:1px solid var(--line);border-radius:17px;background:#fff;color:var(--ink);padding:11px;text-align:left;cursor:pointer}.step-btn:hover,.step-btn.active{border-color:#7aa5ca;background:var(--softblue)}.step-btn.done{border-color:#92c7ab;background:#f3fbf6}.step-num{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:var(--soft);color:var(--gold);font-weight:950}.step-label b{display:block;color:var(--navy)}.step-label span{display:block;color:var(--muted);font-size:.75rem;margin-top:2px}.step-state{color:var(--green);font-weight:950}
+.progress{height:8px;border-radius:999px;background:#eee7d9;overflow:hidden;margin:15px 0}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--navy),var(--blue),var(--gold));transition:.45s}
+.view{display:none}.view.active{display:block;animation:fade .25s ease}@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.plain{border-left:3px solid var(--gold);background:#fff8e8;border-radius:0 14px 14px 0;padding:12px 14px;line-height:1.55;margin:14px 0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{display:block;color:#526278;font-weight:850;margin:10px 0 7px}.field input,.field textarea,.field select{width:100%;border:1px solid #d8cfbf;border-radius:15px;background:#fff;color:var(--ink);padding:12px 13px;outline:none}.field textarea{min-height:105px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:#6f9fc8;box-shadow:0 0 0 3px rgba(57,126,189,.10)}
+.level-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.level-row input{width:100%;accent-color:var(--navy)}.level-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}.level{border:1px solid var(--line);border-radius:15px;background:#fff;padding:10px;min-height:88px}.level.active{border-color:var(--gold);background:#fff7e4}.level b{display:block;color:var(--navy)}.level span{display:block;color:var(--muted);font-size:.72rem;margin-top:4px}
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.summary-card{border:1px solid var(--line);border-radius:17px;background:#fff;padding:13px}.summary-card h4{margin:3px 0 0;color:var(--navy)}.summary-card p{color:var(--muted);line-height:1.42;font-size:.79rem}.count{font-family:var(--serif);font-size:2.2rem;color:var(--gold);line-height:1}
+.object-list{display:grid;gap:10px}.object{border:1px solid var(--line);border-radius:17px;background:#fff;padding:13px}.object-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.object h4{margin:0;color:var(--navy)}.object p{color:var(--muted);line-height:1.46}.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.slider-card{border:1px solid var(--line);border-radius:17px;background:#fff;padding:13px}.slider-card label{display:flex;justify-content:space-between;gap:12px;color:var(--navy);font-weight:850}.slider-card input{width:100%;accent-color:var(--blue);margin-top:12px}
+.chart{width:100%;height:380px;border:1px solid var(--line);border-radius:20px;background:#fbfdff}
+.data-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.details{margin-top:12px;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}.details summary{cursor:pointer;padding:12px 14px;font-weight:850;color:var(--navy);background:#fbf8f0}.code{white-space:pre-wrap;word-break:break-word;margin:0;padding:14px;max-height:420px;overflow:auto;background:#f7f9fb;color:#18324e;font-family:var(--mono);font-size:.8rem;border-top:1px solid var(--line)}
+.check-list{display:grid;gap:9px}.check{display:grid;grid-template-columns:29px 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:15px;background:#fff;padding:10px}.check.pass{border-color:#93c8ab;background:#f4fbf6}.check.fail{border-color:#d6a1aa;background:#fff4f5}.check i{font-style:normal;width:27px;height:27px;display:grid;place-items:center;border-radius:9px;background:var(--soft);font-weight:950}.check small{display:block;color:var(--muted);margin-top:2px}
+.decision{margin-top:14px;border:1px solid var(--line);border-radius:20px;background:#fff;padding:18px;text-align:center}.decision.pass{border-color:#8bc2a4;background:#eef9f2}.decision.fail{border-color:#d59aa4;background:#fff1f3}.decision b{font-family:var(--serif);font-size:2rem;color:var(--navy)}
+.money-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.money{border:1px solid var(--line);border-radius:16px;background:#fff;padding:12px}.money b{display:block;color:var(--navy);font-size:1.3rem}.money span{color:var(--muted);font-size:.76rem}.thermostat{border:1px solid #d5b774;border-radius:20px;background:linear-gradient(145deg,#fffdf8,#fff5de);padding:16px;margin-top:14px}
+.memory-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.passport{border:1px solid #d9bd7a;border-radius:20px;background:linear-gradient(145deg,#fffdf8,#fff7e5);padding:18px}.passport h3{font-family:var(--serif);font-size:1.65rem;margin:0;color:var(--navy)}.passport dl{display:grid;grid-template-columns:130px 1fr;gap:7px 12px}.passport dt{font-weight:850;color:#6a592f}.passport dd{margin:0;color:#4f6075}
+#merkleCanvas{width:100%;height:390px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#f8fbfd,#f6f1e7)}.proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.proof-box{border:1px solid var(--line);border-radius:15px;background:#fff;padding:11px}.proof-box b{display:block;color:var(--navy)}.proof-box span{display:block;color:var(--muted);font-family:var(--mono);font-size:.74rem;word-break:break-all;margin-top:5px}
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.comparison{border:1px solid var(--line);border-radius:18px;background:#fff;padding:15px}.comparison.after{border-color:#8fc7a8;background:#f2faf5}.big{font-family:var(--serif);font-size:3.2rem;line-height:1;color:var(--gold)}
+.certificate{margin-top:16px;border:1px solid #d0ab5b;border-radius:22px;background:linear-gradient(145deg,#fffdf7,#fff4d7);padding:22px;text-align:center}.seal{width:82px;height:82px;display:grid;place-items:center;margin:12px auto;border-radius:50%;border:1px solid #c99a3f;background:#fff;font-family:var(--serif);font-size:1.2rem;font-weight:850;color:var(--navy)}
+.trace{max-height:240px;overflow:auto;border:1px solid var(--line);border-radius:16px;background:#fff;padding:12px;font-family:var(--mono);font-size:.78rem}.trace div{margin-bottom:5px}.trace .t{color:var(--gold)}.trace .ok{color:var(--green)}.trace .warn{color:#986a17}.trace .bad{color:var(--red)}
+.ask-drawer{position:fixed;right:18px;bottom:18px;z-index:90;width:min(430px,calc(100vw - 36px));border:1px solid rgba(11,29,51,.16);border-radius:22px;background:rgba(255,253,248,.97);box-shadow:0 24px 70px rgba(28,37,48,.18);padding:15px;transform:translateY(calc(100% + 30px));transition:.25s}.ask-drawer.open{transform:none}.ask-row{display:grid;grid-template-columns:1fr auto;gap:8px}.ask-answer{min-height:100px;margin-top:10px;padding:12px;border-radius:14px;background:var(--softblue);color:#354a62;line-height:1.48}.quick{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.quick button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 9px;color:#526278;font-size:.75rem;cursor:pointer}
+.ask-fab{position:fixed;right:18px;bottom:18px;z-index:89;border:0;border-radius:999px;padding:13px 17px;background:var(--navy);color:#fff;font-weight:900;box-shadow:0 16px 44px rgba(11,29,51,.25);cursor:pointer}.toast{position:fixed;left:50%;bottom:24px;z-index:100;transform:translate(-50%,130px);background:var(--navy);color:#fff;border-radius:999px;padding:11px 16px;font-weight:850;box-shadow:0 16px 45px rgba(11,29,51,.25);transition:.25s}.toast.show{transform:translate(-50%,0)}
+.boundary{border:1px solid #d5a0aa;background:#fff4f5;border-radius:18px;padding:13px 15px;color:#77404b;line-height:1.5}.footer{color:#758195;font-size:.87rem;padding:30px 0}
+@media(max-width:1220px){.hero{grid-template-columns:1fr}.system{grid-template-columns:1fr}.sidebar{position:static}.form-grid,.memory-grid,.data-grid{grid-template-columns:1fr}.summary-grid,.money-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.wrap{width:min(100% - 20px,1760px)}.topbar{width:min(100% - 16px,1760px);border-radius:22px}.status-row .pill{display:none}.brand span{max-width:190px}.holy-grid,.level-cards,.summary-grid,.money-grid,.memory-grid,.proof-grid,.before-after{grid-template-columns:1fr}.hero-actions,.actions{display:grid}.btn{width:100%}h1{font-size:3.1rem}.passport dl{grid-template-columns:1fr}.ask-fab{right:10px;bottom:10px}.ask-drawer{right:10px;bottom:10px;width:calc(100vw - 20px)}}
+@media print{body{background:#fff}.topbar,.sidebar,.hero-actions,.actions,.ask-fab,.ask-drawer{display:none!important}.wrap{width:100%;padding:0}.card{box-shadow:none;background:#fff}.view{display:block!important;page-break-after:always}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><div class="mark">H</div><div><b>GoalOS HELIOS</b><span>Verified energy savings → governed capability → simulated settlement → funded harder mission</span></div></div>
+  <div class="status-row">
+    <span class="pill">Jobs <strong id="topJobs">0</strong></span>
+    <span class="pill">Evidence <strong id="topEvidence">0</strong></span>
+    <span class="pill">Chronicle <strong id="topChronicle">HOLD</strong></span>
+    <span class="pill">Settlement <strong id="topSettlement">—</strong></span>
+    <span class="pill">Root <strong id="topRoot">—</strong></span>
+    <button class="btn small" onclick="resetRun()">Reset</button>
+  </div>
+</header>
+
+<main class="wrap">
+<section class="hero">
+  <div>
+    <div class="eyebrow">Proof Run 001 · the Holy Grail candidate in one concrete mission</div>
+    <h1>Verified savings that <span class="accent">fund the next mission.</span></h1>
+    <p class="lead">Can autonomous agents reduce a public school’s energy use without violating comfort constraints, prove the result, earn settlement, preserve the method as reusable capability, and reinvest into a harder second site?</p>
+    <div class="promise"><b>Why this use case is optimal:</b> the work is open-ended, the outcome is measurable, safety constraints are explicit, the evidence can be replayed, the reward can be tied to verified savings, and the accepted method can improve the next mission.</div>
+    <div class="hero-actions">
+      <button class="btn primary" onclick="runGuidedDemo()">Run the complete Holy Grail loop</button>
+      <button class="btn gold" onclick="startOwnData()">Use my building data</button>
+      <button class="btn" onclick="openAsk('Why is this a Holy Grail candidate?')">Explain the thesis</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="title"><div><h2>Six layers must all work</h2><p class="sub">A chatbot can draft. This mission must compute, prove, govern, remember, settle, and reinvest.</p></div><span class="tag warn">simulation + user-data mode</span></div>
+    <div class="holy-grid" id="holyGrid"></div>
+    <div class="example"><b>Guided objective:</b> Reduce electricity use at École du Parc by at least 10% over a 30-day pilot while maintaining a 95% comfort-pass rate. Release a simulated $AGIALPHA reward only after proof passes, commit the skill to a Merkle root, and reinvest the treasury share into a harder community-centre mission.</div>
+  </div>
+</section>
+
+<section id="system" class="system">
+  <aside class="card sidebar">
+    <div class="title"><div><h3>Mission navigator</h3><p class="sub small">Green means the authority-bearing artifact exists.</p></div><span class="tag" id="runTag">ready</span></div>
+    <div class="progress"><span id="progressBar"></span></div>
+    <div class="step-list" id="stepList"></div>
+    <div class="plain small" id="sidebarHelp"><b>Start:</b> define the building, target, constraints, and proof level.</div>
+    <div class="actions"><button class="btn small" onclick="saveRun()">Save</button><button class="btn small" onclick="downloadProofPack()">Download pack</button></div>
+  </aside>
+
+  <section>
+    <div class="view active" data-view="0">
+      <div class="card">
+        <div class="title"><div><h2>1 · Define the proof mission</h2><p class="sub">One measurable objective, one immutable proof level, one explicit safety boundary.</p></div><span class="tag">clean boot</span></div>
+        <div class="plain"><b>Plain English:</b> Tell GoalOS which facility you are evaluating, what result matters, and what must not be sacrificed to obtain it.</div>
+        <div class="form-grid">
+          <div class="field"><label>Facility name</label><input id="facilityName" value="École du Parc"></div>
+          <div class="field"><label>Facility type</label><select id="facilityType"><option>Public school</option><option>Library</option><option>Community centre</option><option>Office</option><option>Small commercial building</option></select></div>
+          <div class="field"><label>Baseline monthly electricity</label><input id="baselineKwh" type="number" min="1" value="120000"></div>
+          <div class="field"><label>Electricity cost per kWh</label><input id="rate" type="number" step=".001" min="0" value=".12"></div>
+          <div class="field"><label>Target savings (%)</label><input id="targetSavings" type="number" min="1" max="50" value="10"></div>
+          <div class="field"><label>Minimum comfort-pass rate (%)</label><input id="comfortTarget" type="number" min="50" max="100" value="95"></div>
+          <div class="field"><label>Mission budget — simulated $AGIALPHA</label><input id="budget" type="number" min="1" value="1000"></div>
+          <div class="field"><label>Evidence mode</label><select id="mode"><option value="guided">Guided simulation</option><option value="user">My measured CSV data</option></select></div>
+        </div>
+        <div class="field">
+          <label>Proof level: <span class="tag warn" id="proofLevelTag">L3 External Review</span></label>
+          <div class="level-row"><input id="proofLevel" type="range" min="1" max="5" value="3" oninput="renderProofLevel()"><b id="proofLevelNumber">3</b></div>
+          <div class="level-cards" id="levelCards"></div>
+        </div>
+        <div class="field"><label>Scope boundary</label><textarea id="scopeBoundary">Browser-local energy-resilience proof mission. No automatic building control, no live utility action, no professional engineering certification, no wallet activity, and no live token settlement.</textarea></div>
+        <div class="actions"><button class="btn primary" onclick="createMission()">Create mission and custom AGI Jobs</button><button class="btn gold" onclick="loadGuidedExample()">Restore guided example</button></div>
+      </div>
+    </div>
+
+    <div class="view" data-view="1">
+      <div class="card">
+        <div class="title"><div><h2>2 · Let the mission create the work</h2><p class="sub">The workbench began empty. Proof Debt now determines the minimum custom job queue.</p></div><span class="tag warn" id="jobsTag">0 jobs</span></div>
+        <div class="plain"><b>Plain English:</b> GoalOS is not choosing a canned workflow. It is generating only the work required to prove this specific savings claim under this proof level.</div>
+        <div class="summary-grid">
+          <div class="summary-card"><div class="count" id="debtCount">0</div><h4>Proof obligations</h4><p>What must be proven before authority expands.</p></div>
+          <div class="summary-card"><div class="count" id="jobCount">0</div><h4>Custom AGI Jobs</h4><p>Worker, validator, deliverable, and acceptance test.</p></div>
+          <div class="summary-card"><div class="count" id="expectedSavings">0%</div><h4>Expected savings</h4><p>Calculated from the intervention controls.</p></div>
+          <div class="summary-card"><div class="count" id="riskScore">Low</div><h4>Operational risk</h4><p>Higher changes require stricter review.</p></div>
+        </div>
+        <h3 style="margin-top:20px;color:var(--navy)">Intervention controls</h3>
+        <div class="form-grid">
+          <div class="slider-card"><label><span>HVAC schedule reduction</span><b id="hvacValue">2.0 h/day</b></label><input id="hvacHours" type="range" min="0" max="4" step=".5" value="2" oninput="interventionChanged()"></div>
+          <div class="slider-card"><label><span>Temperature setpoint shift</span><b id="setpointValue">1.2 °C</b></label><input id="setpointShift" type="range" min="0" max="3" step=".1" value="1.2" oninput="interventionChanged()"></div>
+          <div class="slider-card"><label><span>Lighting schedule reduction</span><b id="lightingValue">1.5 h/day</b></label><input id="lightingHours" type="range" min="0" max="4" step=".5" value="1.5" oninput="interventionChanged()"></div>
+          <div class="slider-card"><label><span>Standby-load reduction</span><b id="standbyValue">8%</b></label><input id="standbyPct" type="range" min="0" max="25" step="1" value="8" oninput="interventionChanged()"></div>
+        </div>
+        <div class="object-list" id="jobsList" style="margin-top:14px"></div>
+        <div class="actions"><button class="btn primary" onclick="approveWorkPlan()">Approve work plan and open trial</button></div>
+        <details class="details"><summary>Inspect Proof Debt and AGI Job contracts</summary><pre class="code" id="jobsCode"></pre></details>
+      </div>
+    </div>
+
+    <div class="view" data-view="2">
+      <div class="card">
+        <div class="title"><div><h2>3 · Produce and inspect evidence</h2><p class="sub">Run the guided 30-day trial or load measured baseline/treatment data from a CSV.</p></div><span class="tag" id="trialTag">waiting</span></div>
+        <div class="plain"><b>Plain English:</b> The savings claim must survive real numbers, comfort constraints, a replay path, and a reviewer decision. A persuasive plan is not enough.</div>
+        <div class="data-grid">
+          <div><canvas id="trialChart" class="chart"></canvas></div>
+          <div>
+            <div class="summary-grid" style="grid-template-columns:1fr 1fr">
+              <div class="summary-card"><div class="count" id="observedSavings">—</div><h4>Observed savings</h4></div>
+              <div class="summary-card"><div class="count" id="comfortPass">—</div><h4>Comfort pass</h4></div>
+              <div class="summary-card"><div class="count" id="costSaved">—</div><h4>30-day cost saved</h4></div>
+              <div class="summary-card"><div class="count" id="dataHashShort">—</div><h4>Dataset hash</h4></div>
+            </div>
+            <div class="actions"><button class="btn primary" id="simulateButton" onclick="runGuidedTrial()">Run guided 30-day trial</button><button class="btn" onclick="downloadSampleCsv()">Download CSV template</button></div>
+          </div>
+        </div>
+        <div id="userDataBox" style="margin-top:15px">
+          <div class="field"><label>Paste CSV: day, baseline_kwh, treatment_kwh, comfort_ok</label><textarea id="csvText" placeholder="day,baseline_kwh,treatment_kwh,comfort_ok&#10;1,4050,3520,true&#10;2,3990,3485,true"></textarea></div>
+          <div class="field"><label>Or select a local CSV file</label><input id="csvFile" type="file" accept=".csv,text/csv"></div>
+          <div class="actions"><button class="btn good" onclick="loadCsvEvidence()">Load and hash measured data</button></div>
+        </div>
+        <h3 style="margin-top:20px;color:var(--navy)">Reviewer and replay record</h3>
+        <div class="form-grid">
+          <div class="field"><label>Reviewer name or role</label><input id="reviewer" placeholder="Independent energy reviewer / facilities lead"></div>
+          <div class="field"><label>Number of validators</label><input id="validatorCount" type="number" min="0" value="1"></div>
+          <div class="field"><label>Replay / reconstruction instructions</label><textarea id="replay" placeholder="How can another reviewer reconstruct the trial and calculations?"></textarea></div>
+          <div class="field"><label>Risk, comfort, and rollback notes</label><textarea id="riskNotes" placeholder="What could be wrong? When must the intervention be reversed?"></textarea></div>
+          <div class="field"><label>Baseline comparison</label><textarea id="baselineNotes" placeholder="What was the prior operating schedule or control process?"></textarea></div>
+          <div class="field"><label>Public-safe evidence note</label><textarea id="evidenceNote" placeholder="Summarize what the trial supports and what remains unproven."></textarea></div>
+        </div>
+        <label style="display:flex;gap:10px;align-items:flex-start;margin-top:12px"><input id="reviewDecision" type="checkbox" style="margin-top:4px"><span><b>Reviewer decision recorded.</b><br><span class="sub small">Guided mode uses a clearly marked simulated reviewer. User mode records the role you provide; it does not independently verify reviewer identity.</span></span></label>
+        <div class="actions"><button class="btn good" onclick="assembleDocket()">Assemble Evidence Docket</button></div>
+        <details class="details"><summary>Inspect trial and Evidence Docket</summary><pre class="code" id="trialCode"></pre></details>
+      </div>
+    </div>
+
+    <div class="view" data-view="3">
+      <div class="card">
+        <div class="title"><div><h2>4 · Let Chronicle decide what earns memory</h2><p class="sub">Outcome, evidence, reviewer, replay, risk, and proof-level requirements are evaluated separately.</p></div><span class="tag warn" id="chronicleTag">HOLD</span></div>
+        <div class="plain"><b>Plain English:</b> If the trial misses the target, Chronicle may preserve the evidence but refuse the capability claim. If proof is missing, it creates repair work. Only a passing, bounded result earns future influence.</div>
+        <div class="check-list" id="gateList"></div>
+        <div class="actions"><button class="btn primary" onclick="runChronicle()">Run Chronicle Gate</button><button class="btn danger" onclick="generateRepairPlan()">Generate repair plan</button></div>
+        <div class="decision" id="chronicleDecision"><b>HOLD</b><p class="sub">Close the Evidence Docket, then run the gate.</p></div>
+        <details class="details"><summary>Inspect the Chronicle decision</summary><pre class="code" id="chronicleCode"></pre></details>
+      </div>
+    </div>
+
+    <div class="view" data-view="4">
+      <div class="card">
+        <div class="title"><div><h2>5 · Make proof economically consequential</h2><p class="sub">A simulated $AGIALPHA escrow settles only when the evidence and challenge state pass.</p></div><span class="tag" id="settlementTag">not ready</span></div>
+        <div class="plain"><b>Plain English:</b> The token is not the intelligence. It is the control rail around verified work. No valid proof means no payout and no treasury reinvestment.</div>
+        <div class="form-grid">
+          <div class="field"><label>Challenge status</label><select id="challengeStatus" onchange="settlementChanged()"><option value="closed">Challenge window closed — no open dispute</option><option value="open">Challenge open — hold settlement</option><option value="failed">Replay failed — reject settlement</option></select></div>
+          <div class="field"><label>Proof bond</label><input id="proofBond" type="number" min="0" value="100"></div>
+        </div>
+        <div class="money-grid" style="margin-top:14px">
+          <div class="money"><b id="escrowAmount">—</b><span>mission escrow</span></div>
+          <div class="money"><b id="workerAmount">—</b><span>worker reward</span></div>
+          <div class="money"><b id="validatorAmount">—</b><span>validator reward</span></div>
+          <div class="money"><b id="treasuryAmount">—</b><span>treasury reinvestment</span></div>
+          <div class="money"><b id="awuAmount">—</b><span>simulated α‑Work Units</span></div>
+        </div>
+        <div class="thermostat" id="thermostat"><b>Proof thermostat:</b> waiting for Chronicle and challenge status.</div>
+        <div class="actions"><button class="btn primary" onclick="settleMission()">Simulate proof-gated settlement</button></div>
+        <details class="details"><summary>Inspect the settlement receipt</summary><pre class="code" id="settlementCode"></pre></details>
+      </div>
+    </div>
+
+    <div class="view" data-view="5">
+      <div class="card">
+        <div class="title"><div><h2>6 · Turn verified experience into reusable capability</h2><p class="sub">Chronicle-admitted work becomes a scoped skill; the complete state is committed by a Merkle root.</p></div><span class="tag" id="memoryTag">waiting</span></div>
+        <div class="plain"><b>Plain English:</b> The durable object is not “save energy.” It is the exact, bounded method that worked, with its evidence, scope, validators, replay, risk, settlement, and rollback.</div>
+        <div class="actions"><button class="btn primary" onclick="createMemory()">Create Validated Skill and graph root</button><button class="btn danger" onclick="runTamperTest()">Tamper with the skill leaf</button></div>
+        <div class="memory-grid" style="margin-top:14px">
+          <div class="passport" id="skillPassport"><h3>No validated skill yet</h3><p class="sub">Chronicle and settlement must pass first.</p></div>
+          <div>
+            <canvas id="merkleCanvas"></canvas>
+            <div class="proof-grid">
+              <div class="proof-box"><b>Graph root</b><span id="rootValue">—</span></div>
+              <div class="proof-box"><b>Skill inclusion proof</b><span id="proofValue">—</span></div>
+            </div>
+          </div>
+        </div>
+        <details class="details"><summary>Inspect the skill and Merkle packet</summary><pre class="code" id="memoryCode"></pre></details>
+      </div>
+    </div>
+
+    <div class="view" data-view="6">
+      <div class="card">
+        <div class="title"><div><h2>7 · Reinvest into a harder mission</h2><p class="sub">The treasury share funds the next site; the validated skill reduces cold-start work without bypassing proof.</p></div><span class="tag" id="futureTag">waiting</span></div>
+        <div class="plain"><b>Plain English:</b> This is the compounding step. The next mission inherits a governed capability package—not an unverified prompt—and must still recheck scope, freshness, reviewer coverage, and risk.</div>
+        <div class="form-grid">
+          <div class="field"><label>Next facility</label><input id="nextFacility" value="Centre communautaire du Fleuve"></div>
+          <div class="field"><label>Difficulty</label><select id="nextDifficulty"><option value="1">1 · Similar building</option><option value="2" selected>2 · Larger / more variable</option><option value="3">3 · Multi-zone facility</option><option value="4">4 · Portfolio pilot</option><option value="5">5 · High-assurance program</option></select></div>
+        </div>
+        <div class="actions"><button class="btn primary" onclick="fundNextMission()">Create and fund the harder mission</button><button class="btn good" onclick="runSecondMission()">Run the simulated second proof cycle</button></div>
+        <div class="before-after">
+          <div class="comparison"><span class="tag warn">Before · cold start</span><div class="big" id="coldUnits">—</div><p class="sub">proof-design units</p><div id="coldText"></div></div>
+          <div class="comparison after"><span class="tag ok">After · validated prior</span><div class="big" id="reuseUnits">—</div><p class="sub">proof-design units</p><div id="reuseText"></div></div>
+        </div>
+        <canvas id="compoundChart" class="chart" style="height:300px;margin-top:14px"></canvas>
+        <div class="certificate" id="certificate" style="display:none">
+          <div class="eyebrow">GoalOS HELIOS · Proof Run 001</div>
+          <div class="seal">2×</div>
+          <h2 style="font-family:var(--serif);font-size:clamp(2rem,4vw,4rem);margin:5px 0;color:var(--navy)">Verified experience compounded.</h2>
+          <p class="sub">Mission 1 produced proof, a Chronicle-admitted skill, a verified graph root, a simulated settlement receipt, treasury reinvestment, and a harder second mission completed with fewer cold-start proof-design units.</p>
+          <div class="actions" style="justify-content:center"><button class="btn gold" onclick="downloadProofPack()">Download complete proof pack</button><button class="btn" onclick="downloadReport()">Download human report</button><button class="btn" onclick="window.print()">Print</button></div>
+        </div>
+        <details class="details"><summary>Inspect the future mission and cycle-two result</summary><pre class="code" id="futureCode"></pre></details>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <div class="title"><div><h3>Run trace</h3><p class="sub small">Every authority-changing action is recorded locally.</p></div><span class="tag">append-only demo trace</span></div>
+      <div class="trace" id="trace"></div>
+    </div>
+    <div class="boundary" style="margin-top:18px"><b>Claim boundary:</b> Guided mode is a transparent simulation. User-data mode hashes and analyzes local CSV evidence, but this application does not independently verify metering quality, reviewer identity, engineering safety, legal compliance, live building control, token value, wallet activity, smart-contract execution, or real settlement. Real deployment requires qualified facilities and engineering review, independent validation, audited contracts, and explicit user authorization.</div>
+  </section>
+</section>
+<div class="footer">GoalOS HELIOS v1.0 · Browser-local proof-gated energy-resilience mission · No backend, wallet, building-control connection, or live settlement.</div>
+</main>
+
+<button class="ask-fab" onclick="toggleAsk()">Ask GoalOS</button>
+<div class="ask-drawer" id="askDrawer">
+  <div class="title"><div><h3>Ask GoalOS</h3><p class="sub tiny">Contextual help. It explains the proof state; it cannot bypass gates.</p></div><button class="btn small" onclick="toggleAsk()">Close</button></div>
+  <div class="ask-row"><input id="askInput" placeholder="Why is settlement blocked?"><button class="btn primary small" onclick="askGoalOS()">Ask</button></div>
+  <div class="quick"><button onclick="openAsk('What should I do next?')">What next?</button><button onclick="openAsk('Why is Chronicle blocked?')">Why blocked?</button><button onclick="openAsk('Why is this a Holy Grail candidate?')">Holy Grail?</button><button onclick="openAsk('What does the Merkle root prove?')">Merkle?</button><button onclick="openAsk('What does settlement mean here?')">Settlement?</button></div>
+  <div class="ask-answer" id="askAnswer">Ask a question about the current proof run.</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const steps=[
+  ['Mission','Objective + immutable proof level'],
+  ['Work','Proof Debt + custom AGI Jobs'],
+  ['Evidence','Trial data + reviewer + replay'],
+  ['Chronicle','Governed memory decision'],
+  ['Settlement','Proof-gated economic consequence'],
+  ['Memory','Validated Skill + Merkle root'],
+  ['Reinvestment','Harder mission + cycle two']
+];
+const policies={
+  1:{name:'Structural',desc:'Demonstrate the loop; no durable memory or settlement.',evidenceRows:0,review:false,replay:false,baseline:false,validators:0,durable:false,settle:false},
+  2:{name:'Internal Review',desc:'Internal review and bounded analysis; no durable settlement.',evidenceRows:7,review:true,replay:false,baseline:false,validators:1,durable:false,settle:false},
+  3:{name:'External Review',desc:'Reviewer, replay, scoped reusable skill, and simulated settlement.',evidenceRows:14,review:true,replay:true,baseline:false,validators:1,durable:true,settle:true},
+  4:{name:'Handoff',desc:'Full trial, baseline, stronger validator coverage, and handoff-ready artifacts.',evidenceRows:21,review:true,replay:true,baseline:true,validators:2,durable:true,settle:true},
+  5:{name:'Chronicle / Formal',desc:'Full trial, baseline, multiple validators, rollback, challenge closure, durable memory.',evidenceRows:30,review:true,replay:true,baseline:true,validators:3,durable:true,settle:true}
+};
+const blankState=()=>({
+  schema:'goalos.helios.proofRun.v1',runId:null,mode:'guided',step:0,proofLevel:3,startedAt:null,completedAt:null,
+  inputs:{},mission:null,debt:[],jobs:[],intervention:null,trial:null,docket:null,chronicle:null,
+  settlement:null,skill:null,merkle:null,future:null,trace:[],demoRunning:false
+});
+let state=blankState(),toastTimer=null;
+
+function now(){return new Date().toISOString()}
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function canonicalize(v){if(v===null||typeof v!=='object')return JSON.stringify(v);if(Array.isArray(v))return'['+v.map(canonicalize).join(',')+']';return'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonicalize(v[k])).join(',')+'}'}
+function rightRotate(value,amount){return(value>>>amount)|(value<<(32-amount))}
+function sha256Fallback(bytes){
+  const maxWord=Math.pow(2,32),words=[],ascii=Array.from(bytes,b=>String.fromCharCode(b)).join(''),bitLength=ascii.length*8;
+  const hash=sha256Fallback.h=sha256Fallback.h||[],k=sha256Fallback.k=sha256Fallback.k||[];let primeCounter=k.length;const composite={};
+  for(let candidate=2;primeCounter<64;candidate++){if(!composite[candidate]){for(let i=0;i<313;i+=candidate)composite[i]=candidate;hash[primeCounter]=(Math.sqrt(candidate)*maxWord)|0;k[primeCounter++]=(Math.cbrt(candidate)*maxWord)|0}}
+  let data=ascii+'\x80';while(data.length%64-56)data+='\x00';for(let i=0;i<data.length;i++)words[i>>2]|=data.charCodeAt(i)<<((3-i)%4)*8;words[words.length]=(bitLength/maxWord)|0;words[words.length]=bitLength;
+  for(let j=0;j<words.length;){const w=words.slice(j,j+=16),old=hash.slice(0);let work=hash.slice(0,8);for(let i=0;i<64;i++){const w15=w[i-15],w2=w[i-2],a=work[0],e=work[4];const t1=work[7]+(rightRotate(e,6)^rightRotate(e,11)^rightRotate(e,25))+((e&work[5])^((~e)&work[6]))+k[i]+(w[i]=i<16?w[i]:(w[i-16]+(rightRotate(w15,7)^rightRotate(w15,18)^(w15>>>3))+w[i-7]+(rightRotate(w2,17)^rightRotate(w2,19)^(w2>>>10)))|0);const t2=(rightRotate(a,2)^rightRotate(a,13)^rightRotate(a,22))+((a&work[1])^(a&work[2])^(work[1]&work[2]));work=[(t1+t2)|0,a,work[1],work[2],(work[3]+t1)|0,work[4],work[5],work[6]]}for(let i=0;i<8;i++)hash[i]=(work[i]+old[i])|0}
+  let out='';for(let i=0;i<8;i++)for(let j=3;j+1;j--)out+=((hash[i]>>(j*8))&255).toString(16).padStart(2,'0');return'0x'+out
+}
+async function sha256Hex(input){
+  const bytes=typeof input==='string'?new TextEncoder().encode(input):input instanceof Uint8Array?input:new Uint8Array(input);
+  if(globalThis.crypto&&crypto.subtle){const out=await crypto.subtle.digest('SHA-256',bytes);return'0x'+Array.from(new Uint8Array(out),b=>b.toString(16).padStart(2,'0')).join('')}
+  return sha256Fallback(bytes)
+}
+async function leafHash(domain,value){const objectHash=await sha256Hex(canonicalize(value));return{domain,objectHash,leafHash:await sha256Hex('GoalOSLeafV1|'+domain+'|'+objectHash)}}
+async function parentHash(a,b){const[lo,hi]=BigInt(a)<BigInt(b)?[a,b]:[b,a];return sha256Hex('GoalOSNodeV1|'+lo+'|'+hi)}
+function seeded(seed){let x=seed>>>0;return()=>{x=(x*1664525+1013904223)>>>0;return x/4294967296}}
+function showToast(message){clearTimeout(toastTimer);$('toast').textContent=message;$('toast').classList.add('show');toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2600)}
+function log(message,type='info'){state.trace.push({at:now(),type,message});if(state.trace.length>200)state.trace=state.trace.slice(-200);renderTrace();persist(false)}
+function renderTrace(){$('trace').innerHTML=(state.trace.length?state.trace:[{at:now(),type:'info',message:'GoalOS HELIOS is ready.'}]).map(x=>`<div><span class="t">${new Date(x.at).toLocaleTimeString()}</span> · <span class="${x.type}">${esc(x.message)}</span></div>`).join('');$('trace').scrollTop=$('trace').scrollHeight}
+function stepDone(i){return[!!state.mission,!!state.intervention,!!state.docket?.closed,!!state.chronicle?.decision,!!state.settlement?.status,!!state.merkle?.verified,!!state.future?.cycleTwo?.verified][i]}
+function setStep(i,scroll=true){state.step=Math.max(0,Math.min(6,i));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',Number(v.dataset.view)===state.step));const tips=[
+  '<b>Define:</b> measurable target, comfort constraint, budget, proof level.',
+  '<b>Work:</b> inspect the mission-specific proof obligations and custom jobs.',
+  '<b>Evidence:</b> run the transparent simulation or load measured CSV data.',
+  '<b>Chronicle:</b> separate missing proof from failed outcomes.',
+  '<b>Settlement:</b> make verified work economically consequential.',
+  '<b>Memory:</b> commit a scoped capability, not a generic prompt.',
+  '<b>Reinvestment:</b> use treasury plus validated skill on a harder mission.'
+];$('sidebarHelp').innerHTML=tips[state.step];renderStepper();persist(false);if(scroll)window.scrollTo({top:$('system').offsetTop-78,behavior:'smooth'})}
+function renderStepper(){$('stepList').innerHTML=steps.map((s,i)=>`<button class="step-btn ${state.step===i?'active':''} ${stepDone(i)?'done':''}" onclick="setStep(${i})"><span class="step-num">${i+1}</span><span class="step-label"><b>${s[0]}</b><span>${s[1]}</span></span><span class="step-state">${stepDone(i)?'✓':'—'}</span></button>`).join('');$('progressBar').style.width=(steps.filter((_,i)=>stepDone(i)).length/7*100)+'%'}
+function renderProofLevel(){const n=Number($('proofLevel').value);if(!state.mission)state.proofLevel=n;$('proofLevelNumber').textContent=n;$('proofLevelTag').textContent='L'+n+' '+policies[n].name;$('levelCards').innerHTML=Object.entries(policies).map(([k,p])=>`<div class="level ${Number(k)===n?'active':''}"><b>L${k} ${esc(p.name)}</b><span>${esc(p.desc)}</span></div>`).join('');persist(false)}
+function renderHoly(){
+  const items=[
+    ['Computation',!!state.trial,'Custom jobs execute against a measurable mission.'],
+    ['Proof',!!state.docket?.closed,'Evidence, replay, risks, and reviewer state are inspectable.'],
+    ['Governance',state.chronicle?.decision==='ADMIT_WITH_SCOPE','Chronicle decides whether the result earns authority.'],
+    ['Memory',!!state.merkle?.verified,'A scoped skill is committed and selectively verifiable.'],
+    ['Settlement',state.settlement?.status==='SETTLED','Verified work releases a simulated economic consequence.'],
+    ['Reinvestment',!!state.future?.cycleTwo?.verified,'Treasury plus skill fund a harder verified mission.']
+  ];
+  $('holyGrid').innerHTML=items.map(x=>`<div class="holy ${x[1]?'ready':''}"><span class="light"></span><b>${x[0]}</b><span>${x[2]}</span></div>`).join('')
+}
+function renderTop(){$('topJobs').textContent=state.jobs.length;$('topEvidence').textContent=state.docket?.evidence?.length||0;$('topChronicle').textContent=state.chronicle?.decision||'HOLD';$('topSettlement').textContent=state.settlement?.status||'—';$('topRoot').textContent=state.merkle?.root?state.merkle.root.slice(0,8)+'…':'—';$('runTag').textContent=state.runId?(state.mode==='guided'?'guided simulation':'user evidence'):'ready'}
+function loadGuidedExample(){$('facilityName').value='École du Parc';$('facilityType').value='Public school';$('baselineKwh').value='120000';$('rate').value='.12';$('targetSavings').value='10';$('comfortTarget').value='95';$('budget').value='1000';$('mode').value='guided';$('proofLevel').value='3';$('scopeBoundary').value='Browser-local energy-resilience proof mission. No automatic building control, no live utility action, no professional engineering certification, no wallet activity, and no live token settlement.';renderProofLevel();showToast('Guided mission restored.')}
+function startOwnData(){window.scrollTo({top:$('system').offsetTop-78,behavior:'smooth'});$('mode').value='user';$('facilityName').focus()}
+function lockMissionInputs(locked){['facilityName','facilityType','baselineKwh','rate','targetSavings','comfortTarget','budget','mode','proofLevel','scopeBoundary'].forEach(id=>$(id).disabled=locked)}
+function createMission(){
+  const inputs={
+    facilityName:$('facilityName').value.trim(),facilityType:$('facilityType').value,
+    baselineMonthlyKwh:Number($('baselineKwh').value),rate:Number($('rate').value),
+    targetSavingsPct:Number($('targetSavings').value),comfortTargetPct:Number($('comfortTarget').value),
+    budget:Number($('budget').value),scopeBoundary:$('scopeBoundary').value.trim()
+  };
+  if(!inputs.facilityName||!inputs.baselineMonthlyKwh||!inputs.targetSavingsPct){alert('Enter the facility, baseline electricity, and target savings.');return}
+  const mode=$('mode').value,level=Number($('proofLevel').value);state=blankState();state.runId='helios-'+new Date().toISOString().replace(/\D/g,'').slice(0,14);state.mode=mode;state.proofLevel=level;state.inputs=inputs;state.startedAt=now();
+  state.mission={
+    schema:'goalos.energyMission.v1',missionId:state.runId,objective:`Reduce electricity use at ${inputs.facilityName} by at least ${inputs.targetSavingsPct}% while preserving at least ${inputs.comfortTargetPct}% comfort compliance.`,
+    decisionToSupport:'Should the institution admit this intervention as a reusable energy-resilience capability and release the simulated mission reward?',
+    facility:{name:inputs.facilityName,type:inputs.facilityType,baselineMonthlyKwh:inputs.baselineMonthlyKwh,rate:inputs.rate},
+    proofLevel:`L${level} ${policies[level].name}`,successCriteria:[`Observed savings ≥ ${inputs.targetSavingsPct}%`,`Comfort pass ≥ ${inputs.comfortTargetPct}%`,'Evidence Docket is reviewable','Replay and rollback requirements pass for the selected proof level'],
+    failureCriteria:['Savings target not met','Comfort threshold violated','Evidence or reviewer requirement missing','Challenge or replay failure'],
+    blockedClaims:['professional engineering certification','guaranteed savings beyond the trial','automatic building control','live $AGIALPHA settlement'],
+    budget:{amount:inputs.budget,unit:'simulated $AGIALPHA'},scopeBoundary:inputs.scopeBoundary,
+    rollback:'Revert schedules and setpoints if comfort, safety, replay, or measured performance fails.',createdAt:now()
+  };
+  const p=policies[level],debt=[
+    {debtId:'debt-001',type:'baseline',need:'Establish a baseline electricity series for the pilot period.'},
+    {debtId:'debt-002',type:'treatment',need:'Measure treatment-period electricity under the proposed intervention.'},
+    {debtId:'debt-003',type:'comfort',need:'Verify the comfort threshold is maintained.'},
+    ...(p.review?[{debtId:'debt-004',type:'review',need:`Record at least ${p.validators} validator/reviewer decision(s).`}]:[]),
+    ...(p.replay?[{debtId:'debt-005',type:'replay',need:'Provide a reconstruction path and dataset hash.'}]:[]),
+    ...(p.baseline?[{debtId:'debt-006',type:'comparison',need:'Record the prior operating baseline and comparator assumptions.'}]:[]),
+    {debtId:'debt-007',type:'boundary',need:'Preserve risks, blocked claims, rollback, and local/live boundary.'},
+    ...(p.settle?[{debtId:'debt-008',type:'settlement',need:'Close the challenge window before releasing simulated settlement.'}]:[])
+  ];
+  state.debt=debt;state.jobs=debt.map((d,i)=>({
+    jobId:'agi-job-'+String(i+1).padStart(3,'0'),proofDebtId:d.debtId,
+    name:{baseline:'Build baseline model',treatment:'Run bounded intervention trial',comfort:'Audit comfort constraint',review:'Obtain validator verdict',replay:'Create replay manifest',comparison:'Compare against prior operation',boundary:'Audit scope and rollback',settlement:'Prepare proof-gated settlement receipt'}[d.type],
+    worker:{baseline:'Data / Evaluation Agent',treatment:'Facilities Optimization Agent',comfort:'Comfort Sentinel',review:'Human Reviewer or Reviewer Agent',replay:'Verifier Agent',comparison:'Benchmark Agent',boundary:'Boundary Sentinel',settlement:'Settlement Preflight Agent'}[d.type],
+    validator:level>=3?'Human reviewer + AGI Node validator':'Operator review',
+    deliverable:d.need,acceptanceTests:['Artifact tied to mission ID','Claim boundary preserved','Result is inspectable and hashable'],status:'created'
+  }));
+  lockMissionInputs(true);log(`Mission created at L${level}. Clean boot produced ${state.jobs.length} custom AGI Job(s) from actual Proof Debt.`,'ok');renderAll();setStep(1)
+}
+function interventionValues(){return{hvacHours:Number($('hvacHours').value),setpointShift:Number($('setpointShift').value),lightingHours:Number($('lightingHours').value),standbyPct:Number($('standbyPct').value)}}
+function computeIntervention(v){
+  const gross=v.hvacHours*2.45+v.setpointShift*3.15+v.lightingHours*1.35+v.standbyPct*.23;
+  const riskPenalty=Math.max(0,v.setpointShift-1.8)*2.6+Math.max(0,v.hvacHours-3)*1.8;
+  return{expectedSavingsPct:Math.max(0,Math.min(34,gross-riskPenalty)),riskScore:riskPenalty>3?'High':riskPenalty>1?'Medium':'Low',riskPenalty}
+}
+function interventionChanged(){
+  const v=interventionValues(),c=computeIntervention(v);$('hvacValue').textContent=v.hvacHours.toFixed(1)+' h/day';$('setpointValue').textContent=v.setpointShift.toFixed(1)+' °C';$('lightingValue').textContent=v.lightingHours.toFixed(1)+' h/day';$('standbyValue').textContent=v.standbyPct.toFixed(0)+'%';$('expectedSavings').textContent=c.expectedSavingsPct.toFixed(1)+'%';$('riskScore').textContent=c.riskScore;
+  if(state.intervention){state.intervention=null;state.trial=null;state.docket=null;state.chronicle=null;state.settlement=null;state.skill=null;state.merkle=null;state.future=null;log('Intervention changed. Downstream proof state invalidated.','warn');renderAll()}
+}
+function approveWorkPlan(){
+  if(!state.mission){alert('Create the mission first.');return}
+  const controls=interventionValues(),calc=computeIntervention(controls);state.intervention={schema:'goalos.energyIntervention.v1',controls,...calc,approved:true,approvedAt:now(),guardrails:{comfortTargetPct:state.inputs.comfortTargetPct,rollback:state.mission.rollback}};
+  log(`Work plan approved. Expected savings ${calc.expectedSavingsPct.toFixed(1)}%; risk ${calc.riskScore}.`,'ok');renderAll();setStep(2)
+}
+function renderJobs(){
+  const calc=computeIntervention(interventionValues());$('jobsTag').textContent=state.jobs.length+' jobs';$('jobsTag').className='tag '+(state.jobs.length?'ok':'warn');$('debtCount').textContent=state.debt.length;$('jobCount').textContent=state.jobs.length;$('expectedSavings').textContent=calc.expectedSavingsPct.toFixed(1)+'%';$('riskScore').textContent=calc.riskScore;
+  $('jobsList').innerHTML=state.jobs.length?state.jobs.map(j=>`<div class="object"><div class="object-head"><h4>${esc(j.jobId)} · ${esc(j.name)}</h4><span class="tag ${j.status==='completed'?'ok':'warn'}">${esc(j.status)}</span></div><p>${esc(j.deliverable)}</p><div class="meta"><span class="tag">${esc(j.worker)}</span><span class="tag">${esc(j.validator)}</span></div></div>`).join(''):'<p class="sub">The workbench is empty until the mission creates Proof Debt.</p>';
+  $('jobsCode').textContent=JSON.stringify({proofDebt:state.debt,customAGIJobs:state.jobs,intervention:state.intervention},null,2)
+}
+function runGuidedTrial(){
+  if(!state.intervention){alert('Approve the work plan first.');return}
+  if(state.mode!=='guided'){alert('Guided trial is available in Guided Simulation mode. Load measured CSV data for User Evidence mode.');return}
+  const days=30,rand=seeded(20260710),dailyBase=state.inputs.baselineMonthlyKwh/30,expected=state.intervention.expectedSavingsPct,rows=[];
+  for(let d=1;d<=days;d++){
+    const weather=1+.075*Math.sin(d/4.2)+(rand()-.5)*.035;
+    const baseline=dailyBase*weather;
+    const realization=(expected+(rand()-.5)*1.4)/100;
+    const treatment=baseline*(1-realization);
+    const comfortRisk=Math.max(0,state.intervention.controls.setpointShift-1.8)*.08+Math.max(0,state.intervention.controls.hvacHours-3)*.07;
+    const comfortOk=rand()>comfortRisk;
+    rows.push({day:d,baseline_kwh:+baseline.toFixed(2),treatment_kwh:+treatment.toFixed(2),comfort_ok:comfortOk})
+  }
+  finalizeTrial(rows,'guided simulation',true)
+}
+async function finalizeTrial(rows,source,simulated,rawText=''){
+  const baseline=rows.reduce((a,r)=>a+r.baseline_kwh,0),treatment=rows.reduce((a,r)=>a+r.treatment_kwh,0),savings=baseline?100*(baseline-treatment)/baseline:0,comfort=rows.length?100*rows.filter(r=>r.comfort_ok).length/rows.length:0,cost=(baseline-treatment)*state.inputs.rate;
+  const datasetHash=await sha256Hex(rawText||canonicalize(rows));
+  state.trial={schema:'goalos.energyTrial.v1',source,simulated,rows,metrics:{baselineKwh:+baseline.toFixed(2),treatmentKwh:+treatment.toFixed(2),observedSavingsPct:+savings.toFixed(2),comfortPassPct:+comfort.toFixed(2),costSaved:+cost.toFixed(2)},datasetHash,createdAt:now()};
+  state.jobs.forEach(j=>{if(['baseline','treatment','comfort'].some(t=>state.debt.find(d=>d.debtId===j.proofDebtId)?.type===t))j.status='completed'});
+  if(simulated){$('reviewer').value='Simulated independent energy reviewer';$('validatorCount').value=Math.max(1,policies[state.proofLevel].validators);$('replay').value='Re-run the 30-day deterministic simulation with the same mission inputs, intervention controls, seed, SHA-256 hash suite, and tree policy; compare the exported dataset hash and metrics.';$('riskNotes').value='Simulation only. Real deployment requires facilities, engineering, metering, safety, and human review. Revert schedules or setpoints if comfort, safety, or measured performance fails.';$('baselineNotes').value='Compare treatment-period electricity with the simulated prior operating schedule under the same weather-shaped baseline.';$('evidenceNote').value='The simulated trial supports a bounded claim that the selected intervention can exceed the target under the declared model while preserving the comfort threshold. It does not prove real-world savings.';$('reviewDecision').checked=true}
+  log(`${simulated?'Simulated':'Measured'} trial loaded: ${savings.toFixed(2)}% savings, ${comfort.toFixed(1)}% comfort pass, dataset ${datasetHash.slice(0,14)}…`,'ok');renderAll()
+}
+function parseBool(v){return['true','1','yes','y','pass'].includes(String(v).trim().toLowerCase())}
+function parseCsv(text){
+  const lines=text.trim().split(/\r?\n/).filter(Boolean);if(lines.length<2)throw new Error('CSV needs a header and at least one row.');
+  const header=lines[0].split(',').map(x=>x.trim().toLowerCase()),ix={day:header.indexOf('day'),base:header.indexOf('baseline_kwh'),treat:header.indexOf('treatment_kwh'),comfort:header.indexOf('comfort_ok')};
+  if(ix.base<0||ix.treat<0||ix.comfort<0)throw new Error('Required headers: day,baseline_kwh,treatment_kwh,comfort_ok');
+  return lines.slice(1).map((line,i)=>{const c=line.split(',');const b=Number(c[ix.base]),t=Number(c[ix.treat]);if(!Number.isFinite(b)||!Number.isFinite(t))throw new Error('Invalid numeric value on row '+(i+2));return{day:ix.day>=0?(c[ix.day]||i+1):i+1,baseline_kwh:b,treatment_kwh:t,comfort_ok:parseBool(c[ix.comfort])}})
+}
+async function loadCsvEvidence(){
+  if(!state.intervention){alert('Approve the work plan first.');return}
+  let text=$('csvText').value.trim(),file=$('csvFile').files[0];if(file)text=await file.text();if(!text){alert('Paste CSV data or select a local CSV file.');return}
+  try{const rows=parseCsv(text);await finalizeTrial(rows,file?'local CSV file':'pasted CSV',false,text)}catch(e){alert(e.message)}
+}
+function downloadSampleCsv(){
+  const rows=['day,baseline_kwh,treatment_kwh,comfort_ok'];for(let i=1;i<=30;i++){const b=4000+Math.round(240*Math.sin(i/4));const t=Math.round(b*.875);rows.push(`${i},${b},${t},true`)}downloadFile('goalos-helios-energy-template.csv',rows.join('\n'),'text/csv')
+}
+async function assembleDocket(){
+  if(!state.trial){alert('Run the guided trial or load measured CSV evidence first.');return}
+  const reviewer=$('reviewer').value.trim(),validators=Number($('validatorCount').value),replay=$('replay').value.trim(),risk=$('riskNotes').value.trim(),baseline=$('baselineNotes').value.trim(),note=$('evidenceNote').value.trim(),decision=$('reviewDecision').checked;
+  const evidence=[
+    {evidenceId:'evidence-baseline',type:'dataset',claim:'Baseline and treatment electricity are available.',hash:state.trial.datasetHash,simulated:state.trial.simulated},
+    {evidenceId:'evidence-outcome',type:'metric',claim:`Observed savings are ${state.trial.metrics.observedSavingsPct}%.`,hash:await sha256Hex(canonicalize(state.trial.metrics)),simulated:state.trial.simulated},
+    {evidenceId:'evidence-boundary',type:'review-note',claim:note||'No public-safe evidence note supplied.',hash:await sha256Hex(note||'missing'),simulated:state.trial.simulated}
+  ];
+  state.docket={schema:'goalos.energyEvidenceDocket.v1',docketId:'docket-'+state.runId,missionId:state.runId,proofDebt:clone(state.debt),jobs:clone(state.jobs),trial:clone(state.trial),evidence,reviewer:{nameOrRole:reviewer,validatorCount:validators,decisionRecorded:decision,identityIndependenceNotVerified:true},replay,riskAndRollback:risk,baselineComparison:baseline,publicSafeNote:note,blockedClaims:clone(state.mission.blockedClaims),closed:true,closedAt:now()};
+  state.jobs.forEach(j=>j.status='completed');log('Evidence Docket assembled. Chronicle can now evaluate outcome, proof, and boundaries separately.','ok');renderAll();setStep(3)
+}
+function gateChecks(){
+  const p=policies[state.proofLevel],m=state.trial?.metrics||{},d=state.docket;
+  return[
+    ['Mission and immutable proof level',!!state.mission,'Objective, target, constraints, and proof burden are frozen.','proof'],
+    ['Custom AGI Jobs completed',state.jobs.length>0&&state.jobs.every(j=>j.status==='completed'),'Every proof obligation has a returned artifact or recorded result.','proof'],
+    ['Evidence Docket closed',!!d?.closed,'The proof room must be inspectable.','proof'],
+    ['Minimum trial rows',(state.trial?.rows?.length||0)>=p.evidenceRows,`L${state.proofLevel} requires at least ${p.evidenceRows} trial rows.`,'proof'],
+    ['Savings target met',Number(m.observedSavingsPct)>=state.inputs.targetSavingsPct,`Observed savings must be ≥ ${state.inputs.targetSavingsPct}%.`,'outcome'],
+    ['Comfort threshold met',Number(m.comfortPassPct)>=state.inputs.comfortTargetPct,`Comfort pass must be ≥ ${state.inputs.comfortTargetPct}%.`,'outcome'],
+    ['Reviewer route',!p.review||!!d?.reviewer?.nameOrRole,'This proof level requires a named reviewer role.','proof'],
+    ['Validator coverage',!p.review||(d?.reviewer?.validatorCount||0)>=p.validators,`L${state.proofLevel} requires at least ${p.validators} validator(s).`,'proof'],
+    ['Reviewer decision',!p.review||!!d?.reviewer?.decisionRecorded,'A decision must be recorded.','proof'],
+    ['Replay path',!p.replay||!!d?.replay,'Another reviewer must be able to reconstruct the trial.','proof'],
+    ['Baseline comparison',!p.baseline||!!d?.baselineComparison,'This proof level requires a comparator.','proof'],
+    ['Risk, scope, and rollback',!!d?.riskAndRollback&&!!state.mission?.rollback,'Limitations and withdrawal conditions must remain visible.','boundary']
+  ]
+}
+function runChronicle(){
+  if(!state.docket?.closed){alert('Assemble the Evidence Docket first.');return}
+  const checks=gateChecks(),missing=checks.filter(x=>!x[1]&&x[3]!=='outcome'),outcomeFail=checks.filter(x=>!x[1]&&x[3]==='outcome'),p=policies[state.proofLevel];
+  let decision;if(missing.length)decision='REPAIR';else if(outcomeFail.length)decision='REJECT_OUTCOME_PRESERVE_EVIDENCE';else decision=p.durable?'ADMIT_WITH_SCOPE':'PASS_NO_DURABLE_MEMORY';
+  state.chronicle={schema:'goalos.energyChronicleDecision.v1',decision,proofLevel:`L${state.proofLevel} ${p.name}`,checks:checks.map(x=>({requirement:x[0],pass:x[1],explanation:x[2],class:x[3]})),futureInfluence:decision==='ADMIT_WITH_SCOPE',settlementEligible:decision==='ADMIT_WITH_SCOPE'&&p.settle,reason:decision==='REPAIR'?'Required proof is missing. Create repair work.':decision==='REJECT_OUTCOME_PRESERVE_EVIDENCE'?'Evidence is sufficient to conclude that the outcome claim failed. Preserve the negative result; do not settle or promote the capability.':decision==='PASS_NO_DURABLE_MEMORY'?'The structure passes, but the chosen proof level grants no durable authority.':'Outcome and proof pass within scope. The capability may proceed to settlement and governed memory.',decidedAt:now()};
+  state.settlement=null;state.skill=null;state.merkle=null;state.future=null;log('Chronicle decision: '+decision,decision==='ADMIT_WITH_SCOPE'?'ok':decision==='REPAIR'?'bad':'warn');renderAll();if(decision==='ADMIT_WITH_SCOPE')setStep(4)
+}
+function generateRepairPlan(){
+  const failed=gateChecks().filter(x=>!x[1]);if(!failed.length){showToast('No failed gate checks.');return}
+  failed.forEach((f,i)=>state.jobs.push({jobId:'repair-job-'+String(state.jobs.length+1).padStart(3,'0'),proofDebtId:'repair-'+i,name:'Repair: '+f[0],worker:'Repair Agent / Operator',validator:'Boundary Reviewer',deliverable:f[2],acceptanceTests:['Failed Chronicle requirement becomes true'],status:'created'}));
+  state.docket=null;state.chronicle=null;state.settlement=null;state.skill=null;state.merkle=null;state.future=null;log(failed.length+' repair job(s) generated. Downstream authority revoked until the docket is rebuilt.','warn');renderAll();setStep(1)
+}
+function settlementChanged(){if(state.settlement){state.settlement=null;state.skill=null;state.merkle=null;state.future=null;log('Challenge state changed. Settlement and downstream memory were invalidated.','warn');renderAll()}}
+function settleMission(){
+  if(state.chronicle?.decision!=='ADMIT_WITH_SCOPE'){alert('Chronicle must return ADMIT_WITH_SCOPE.');return}
+  const challenge=$('challengeStatus').value,budget=state.inputs.budget,bond=Number($('proofBond').value),quality=Math.min(1,(state.trial.metrics.observedSavingsPct/state.inputs.targetSavingsPct)*.7+(state.trial.metrics.comfortPassPct/100)*.3);
+  if(challenge!=='closed'){
+    state.settlement={schema:'goalos.simulatedSettlementReceipt.v1',status:challenge==='open'?'HELD_CHALLENGE_OPEN':'REJECTED_REPLAY_FAILED',live:false,token:'$AGIALPHA — simulation only',escrow:budget,proofBond:bond,workerReward:0,validatorReward:0,treasuryReinvestment:0,reserve:0,alphaWorkUnits:0,reason:challenge==='open'?'Challenge window remains open.':'Replay failed. No settlement, no treasury reinvestment.',createdAt:now()}
+  }else{
+    const worker=budget*.60,validator=budget*.18,treasury=budget*.17,reserve=budget*.05,awu=Math.round(state.jobs.length*10*quality*(1+.1*state.proofLevel));
+    state.settlement={schema:'goalos.simulatedSettlementReceipt.v1',status:'SETTLED',live:false,token:'$AGIALPHA — simulation only',escrow:budget,proofBond:bond,workerReward:+worker.toFixed(2),validatorReward:+validator.toFixed(2),treasuryReinvestment:+treasury.toFixed(2),reserve:+reserve.toFixed(2),alphaWorkUnits:awu,verifiedSavingsKwh:+(state.trial.metrics.baselineKwh-state.trial.metrics.treatmentKwh).toFixed(2),challengeStatus:'closed',createdAt:now()}
+  }
+  state.skill=null;state.merkle=null;state.future=null;log('Settlement simulation: '+state.settlement.status,state.settlement.status==='SETTLED'?'ok':'bad');renderAll();if(state.settlement.status==='SETTLED')setStep(5)
+}
+function renderSettlement(){
+  const s=state.settlement,b=state.inputs.budget||Number($('budget').value)||0;$('escrowAmount').textContent=s?s.escrow.toFixed(0):b?b.toFixed(0):'—';$('workerAmount').textContent=s?s.workerReward.toFixed(0):'—';$('validatorAmount').textContent=s?s.validatorReward.toFixed(0):'—';$('treasuryAmount').textContent=s?s.treasuryReinvestment.toFixed(0):'—';$('awuAmount').textContent=s?s.alphaWorkUnits:'—';
+  $('settlementTag').textContent=s?.status||'not ready';$('settlementTag').className='tag '+(s?.status==='SETTLED'?'ok':s?'bad':'warn');
+  $('thermostat').innerHTML=s?.status==='SETTLED'?'<b>Proof thermostat:</b> validation cleared, replay remained intact, and the challenge window closed. Budget flowed to workers, validators, treasury, and reserve.':s?'<b>Proof thermostat:</b> '+esc(s.reason):'<b>Proof thermostat:</b> waiting for Chronicle and challenge status.';
+  $('settlementCode').textContent=JSON.stringify(s,null,2)
+}
+async function buildMerkle(entries){
+  const leaves=[];for(const e of entries)leaves.push({...e,...await leafHash(e.domain,e.value)});leaves.sort((a,b)=>BigInt(a.leafHash)<BigInt(b.leafHash)?-1:1);const layers=[leaves.map(x=>x.leafHash)];let level=layers[0];
+  while(level.length>1){const next=[];for(let i=0;i<level.length;i+=2)next.push(i+1<level.length?await parentHash(level[i],level[i+1]):level[i]);layers.push(next);level=next}
+  leaves.forEach((leaf,index)=>{let i=index,proof=[];for(let l=0;l<layers.length-1;l++){const s=i%2===0?i+1:i-1;if(s<layers[l].length)proof.push(layers[l][s]);i=Math.floor(i/2)}leaf.proof=proof;leaf.sortedIndex=index});return{leaves,layers,root:level[0]}
+}
+async function verifyMerkle(leaf,proof,root){let computed=leaf;for(const sibling of proof)computed=await parentHash(computed,sibling);return{ok:computed===root,computedRoot:computed,expectedRoot:root}}
+async function createMemory(){
+  if(state.settlement?.status!=='SETTLED'){alert('The simulated settlement must be SETTLED first.');return}
+  state.skill={
+    schema:'goalos.validatedSkill.energy.v1',skillId:'skill-'+state.runId,
+    name:`Design, verify, and govern a bounded energy-savings pilot for ${state.inputs.facilityType.toLowerCase()}`,
+    type:'Energy Resilience / Vision-to-Proof',
+    scope:{facilityType:state.inputs.facilityType,allowed:['baseline construction','bounded schedule optimization','comfort-aware trial design','Evidence Docket construction','proof-gated settlement preparation'],excluded:clone(state.mission.blockedClaims)},
+    method:{intervention:clone(state.intervention.controls),trialDays:state.trial.rows.length,calculation:'Savings = (baseline kWh - treatment kWh) / baseline kWh; comfort pass from row-level constraint flags.'},
+    evidence:{docketId:state.docket.docketId,datasetHash:state.trial.datasetHash,metrics:clone(state.trial.metrics),simulated:state.trial.simulated},
+    validators:clone(state.docket.reviewer),replay:state.docket.replay,riskAndRollback:state.docket.riskAndRollback,
+    proofLevel:state.chronicle.proofLevel,chronicleDecision:state.chronicle.decision,settlementReceiptStatus:state.settlement.status,
+    version:1,rollback:state.mission.rollback,chronicleAdmitted:true,finalizedAt:now()
+  };
+  const entries=[
+    {domain:'GoalOSMissionEnergyV1',label:'Mission Contract',value:state.mission},
+    {domain:'GoalOSProofDebtEnergyV1',label:'Proof Debt',value:state.debt},
+    {domain:'GoalOSJobsEnergyV1',label:'AGI Jobs',value:state.jobs},
+    {domain:'GoalOSEvidenceEnergyV1',label:'Evidence Docket',value:state.docket},
+    {domain:'GoalOSChronicleEnergyV1',label:'Chronicle Decision',value:state.chronicle},
+    {domain:'GoalOSSettlementEnergyV1',label:'Settlement Receipt',value:state.settlement},
+    {domain:'GoalOSSkillEnergyV1',label:'Validated Skill',value:state.skill},
+    {domain:'GoalOSPolicyEnergyV1',label:'Proof Policy',value:{proofLevel:state.proofLevel,hashSuite:'SHA-256',treePolicy:'SORTED_PAIR_PROMOTE_LAST_V1',scopeBoundary:state.inputs.scopeBoundary}}
+  ];
+  const tree=await buildMerkle(entries),skillLeaf=tree.leaves.find(x=>x.label==='Validated Skill'),verification=await verifyMerkle(skillLeaf.leafHash,skillLeaf.proof,tree.root);
+  state.merkle={schema:'goalos.energyGraphRootPacket.v1',hashSuite:'SHA-256',treePolicy:'SORTED_PAIR_PROMOTE_LAST_V1',root:tree.root,leaves:tree.leaves,layers:tree.layers,skillProof:{leafHash:skillLeaf.leafHash,objectHash:skillLeaf.objectHash,proof:skillLeaf.proof},verification,verified:verification.ok,tamperTest:null,builtAt:now(),claimBoundary:'The root proves inclusion and integrity. Chronicle, evidence, review, and policy grant authority.'};
+  log('Validated Skill admitted and Merkle inclusion proof verified.','ok');renderAll();setStep(6)
+}
+async function runTamperTest(){
+  if(!state.merkle?.skillProof){alert('Create the Validated Skill and root first.');return}
+  const altered=clone(state.skill);altered.method.intervention.setpointShift+=.5;const changed=await leafHash('GoalOSSkillEnergyV1',altered),result=await verifyMerkle(changed.leafHash,state.merkle.skillProof.proof,state.merkle.root);
+  state.merkle.tamperTest={changedField:'method.intervention.setpointShift',changedLeafHash:changed.leafHash,verificationPassed:result.ok,tamperDetected:!result.ok,at:now()};
+  log(result.ok?'Unexpected tamper-test pass.':'Tamper detected: the modified skill no longer verifies against the committed root.',result.ok?'bad':'ok');renderAll()
+}
+function renderMemory(){
+  const s=state.skill,m=state.merkle;$('memoryTag').textContent=m?.verified?'root verified':s?'root pending':'waiting';$('memoryTag').className='tag '+(m?.verified?'ok':'warn');
+  $('skillPassport').innerHTML=s?`<h3>${esc(s.name)}</h3><p class="sub">${esc(s.type)}</p><dl><dt>Status</dt><dd>Chronicle admitted with scope</dd><dt>Proof level</dt><dd>${esc(s.proofLevel)}</dd><dt>Savings</dt><dd>${s.evidence.metrics.observedSavingsPct}%</dd><dt>Comfort pass</dt><dd>${s.evidence.metrics.comfortPassPct}%</dd><dt>Dataset</dt><dd>${esc(s.evidence.datasetHash.slice(0,18))}…</dd><dt>Allowed</dt><dd>${s.scope.allowed.map(esc).join('; ')}</dd><dt>Excluded</dt><dd>${s.scope.excluded.map(esc).join('; ')}</dd><dt>Rollback</dt><dd>${esc(s.rollback)}</dd></dl>`:'<h3>No validated skill yet</h3><p class="sub">Chronicle and settlement must pass first.</p>';
+  $('rootValue').textContent=m?.root||'—';$('proofValue').textContent=m?(m.verification.ok?'VERIFIED · skill belongs to committed state':'FAILED'):'—';$('memoryCode').textContent=JSON.stringify({validatedSkill:s,merkleGraphRoot:m},null,2);drawMerkle()
+}
+function drawMerkle(){
+  const can=$('merkleCanvas');if(!can)return;const rect=can.getBoundingClientRect(),dpr=devicePixelRatio||1;can.width=Math.max(2,rect.width*dpr);can.height=Math.max(2,rect.height*dpr);const ctx=can.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);const w=rect.width,h=rect.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#f8fbfd';ctx.fillRect(0,0,w,h);
+  if(!state.merkle){ctx.fillStyle='#718095';ctx.font='700 14px sans-serif';ctx.textAlign='center';ctx.fillText('Chronicle admission and settlement are required before the graph root is built.',w/2,h/2);return}
+  const layers=state.merkle.layers,yGap=(h-62)/Math.max(1,layers.length-1);
+  for(let l=layers.length-1;l>=0;l--){const nodes=layers[l],y=32+(layers.length-1-l)*yGap;nodes.forEach((hash,i)=>{const x=(i+1)*w/(nodes.length+1);if(l>0){const children=layers[l-1];[i*2,i*2+1].forEach(ci=>{if(ci<children.length){const cx=(ci+1)*w/(children.length+1),cy=32+(layers.length-l)*yGap;ctx.strokeStyle='rgba(187,134,40,.48)';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(x,y+15);ctx.lineTo(cx,cy-15);ctx.stroke()}})}ctx.fillStyle=l===layers.length-1?'#e9eef5':l===0?'#ecf7f0':'#eef5fb';ctx.strokeStyle=l===layers.length-1?'#bb8628':'#7ba1c4';round(ctx,x-47,y-15,94,30,11);ctx.fill();ctx.stroke();ctx.fillStyle='#0b1d33';ctx.textAlign='center';ctx.font=l===0?'700 7px monospace':'800 9px sans-serif';const label=l===0?(state.merkle.leaves[i]?.label||'leaf'):(l===layers.length-1?'Graph Root':'Node');ctx.fillText(label,x,y-1);ctx.fillStyle='#748195';ctx.font='700 7px monospace';ctx.fillText(hash.slice(0,7)+'…',x,y+9)})}
+}
+function round(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function fundNextMission(){
+  if(!state.merkle?.verified||state.settlement?.status!=='SETTLED'){alert('Verified memory and settled proof are required.');return}
+  const difficulty=Number($('nextDifficulty').value),facility=$('nextFacility').value.trim()||'Next facility',coldUnits=state.debt.length+state.jobs.length+difficulty*2,reuseUnits=Math.max(4,Math.round(coldUnits*(.48+.04*difficulty))),requiredBudget=Math.round(state.inputs.budget*(.45+.10*difficulty)),treasury=state.settlement.treasuryReinvestment;
+  state.future={schema:'goalos.energyFutureMission.v1',futureMissionId:'future-'+state.runId,facility,difficulty,objective:`Apply the Chronicle-admitted energy-resilience skill to ${facility}, with difficulty ${difficulty}, under the same or stronger proof policy.`,seededBy:{skillId:state.skill.skillId,graphRoot:state.merkle.root,chronicleDecision:state.chronicle.decision},reusedArtifacts:['Mission Contract template','Proof Debt taxonomy','Custom AGI Job schemas','Evidence Docket schema','Comfort sentinel rules','Rollback boundary'],requiredRechecks:['Scope match','Metering freshness','Reviewer route','Comfort and safety threshold','Challenge window'],economics:{treasuryAvailable:treasury,requiredBudget,treasuryCoveragePct:+Math.min(100,100*treasury/requiredBudget).toFixed(1)},comparison:{coldProofDesignUnits:coldUnits,reuseProofDesignUnits:reuseUnits,estimatedReductionPct:+(100*(coldUnits-reuseUnits)/coldUnits).toFixed(1)},briefCreatedAt:now(),cycleTwo:null};
+  log(`Harder mission created for ${facility}. Treasury covers ${state.future.economics.treasuryCoveragePct}% of the estimated budget; validated skill reduces proof-design units by ${state.future.comparison.estimatedReductionPct}%.`,'ok');renderAll()
+}
+function runSecondMission(){
+  if(!state.future){alert('Create and fund the harder mission first.');return}
+  const difficulty=state.future.difficulty,first=state.trial.metrics,bonus=2.2,observed=Math.max(state.inputs.targetSavingsPct,first.observedSavingsPct+bonus-difficulty*.55),comfort=Math.max(state.inputs.comfortTargetPct,Math.min(100,first.comfortPassPct-.25*difficulty+1)),jobs=Math.max(3,state.jobs.length-3),verified=observed>=state.inputs.targetSavingsPct&&comfort>=state.inputs.comfortTargetPct;
+  state.future.cycleTwo={simulated:true,observedSavingsPct:+observed.toFixed(2),comfortPassPct:+comfort.toFixed(2),jobs,verified,chronicleDecision:verified?'ADMIT_WITH_SCOPE':'REPAIR',newVerifiedExperience:{skillVersionCandidate:verified?2:1,additionalEvidenceDocket:true},completedAt:now()};
+  log(`Cycle two ${verified?'verified':'requires repair'}: ${observed.toFixed(2)}% savings, ${comfort.toFixed(1)}% comfort, ${jobs} jobs.` ,verified?'ok':'bad');renderAll()
+}
+function renderFuture(){
+  const f=state.future,c=f?.cycleTwo;$('futureTag').textContent=c?.verified?'cycle two verified':f?'mission funded':'waiting';$('futureTag').className='tag '+(c?.verified?'ok':f?'warn':'');
+  $('coldUnits').textContent=f?f.comparison.coldProofDesignUnits:'—';$('reuseUnits').textContent=f?f.comparison.reuseProofDesignUnits:'—';$('coldText').innerHTML=f?`<p><b>${state.debt.length}</b> proof obligations<br><b>${state.jobs.length}</b> job contracts<br><b>0</b> validated priors</p>`:'<p class="sub">Create the harder mission after verified memory exists.</p>';$('reuseText').innerHTML=f?`<p><b>${f.reusedArtifacts.length}</b> governed artifacts reused<br><b>${f.comparison.estimatedReductionPct}%</b> estimated proof-design reduction<br><b>${f.economics.treasuryCoveragePct}%</b> estimated budget covered by treasury</p>`:'<p class="sub">No reinvestment brief yet.</p>';
+  $('certificate').style.display=c?.verified?'block':'none';$('futureCode').textContent=JSON.stringify(f,null,2);drawCompound()
+}
+function drawCompound(){
+  const can=$('compoundChart');if(!can)return;const rect=can.getBoundingClientRect(),dpr=devicePixelRatio||1;can.width=Math.max(2,rect.width*dpr);can.height=Math.max(2,rect.height*dpr);const ctx=can.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);const w=rect.width,h=rect.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#fbfdff';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#ddd3bf';ctx.strokeRect(.5,.5,w-1,h-1);
+  if(!state.future){ctx.fillStyle='#718095';ctx.font='700 14px sans-serif';ctx.textAlign='center';ctx.fillText('Create the harder mission to see compounding.',w/2,h/2);return}
+  const f=state.future,c=f.cycleTwo,vals=[{label:'Mission 1 jobs',v:state.jobs.length,color:'#397ebd'},{label:'Mission 2 jobs',v:c?.jobs||f.comparison.reuseProofDesignUnits/2,color:'#21845c'},{label:'M1 savings',v:state.trial.metrics.observedSavingsPct,color:'#bb8628'},{label:'M2 savings',v:c?.observedSavingsPct||state.trial.metrics.observedSavingsPct+1,color:'#1c4568'}],max=Math.max(...vals.map(x=>x.v))*1.2,barW=Math.min(100,w/(vals.length*1.8)),gap=w/(vals.length+1);
+  vals.forEach((x,i)=>{const x0=gap*(i+1)-barW/2,barH=(h-80)*x.v/max,y=h-45-barH;ctx.fillStyle=x.color;ctx.fillRect(x0,y,barW,barH);ctx.fillStyle='#0b1d33';ctx.font='800 12px sans-serif';ctx.textAlign='center';ctx.fillText(x.v.toFixed?x.v.toFixed(1):x.v,x0+barW/2,y-8);ctx.fillStyle='#66758a';ctx.font='700 10px sans-serif';ctx.fillText(x.label,x0+barW/2,h-24)})
+}
+function renderTrial(){
+  const t=state.trial;$('trialTag').textContent=t?(t.simulated?'simulated trial loaded':'measured data loaded'):'waiting';$('trialTag').className='tag '+(t?'ok':'warn');$('observedSavings').textContent=t?t.metrics.observedSavingsPct.toFixed(1)+'%':'—';$('comfortPass').textContent=t?t.metrics.comfortPassPct.toFixed(1)+'%':'—';$('costSaved').textContent=t?'$'+t.metrics.costSaved.toFixed(0):'—';$('dataHashShort').textContent=t?t.datasetHash.slice(2,10)+'…':'—';$('simulateButton').style.display=state.mode==='guided'?'inline-flex':'none';$('userDataBox').style.display=state.mode==='user'?'block':'none';$('trialCode').textContent=JSON.stringify({trial:t,evidenceDocket:state.docket},null,2);drawTrial()
+}
+function drawTrial(){
+  const can=$('trialChart');if(!can)return;const rect=can.getBoundingClientRect(),dpr=devicePixelRatio||1;can.width=Math.max(2,rect.width*dpr);can.height=Math.max(2,rect.height*dpr);const ctx=can.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);const w=rect.width,h=rect.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#fbfdff';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#ddd3bf';ctx.strokeRect(.5,.5,w-1,h-1);
+  const rows=state.trial?.rows||[];if(!rows.length){ctx.fillStyle='#718095';ctx.font='700 14px sans-serif';ctx.textAlign='center';ctx.fillText('Run the guided trial or load CSV data to see baseline versus treatment.',w/2,h/2);return}
+  const pad=42,min=Math.min(...rows.flatMap(r=>[r.baseline_kwh,r.treatment_kwh]))*.96,max=Math.max(...rows.flatMap(r=>[r.baseline_kwh,r.treatment_kwh]))*1.04;
+  ctx.strokeStyle='#e4ded1';ctx.lineWidth=1;for(let i=0;i<5;i++){const y=pad+(h-2*pad)*i/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke()}
+  function line(key,color){ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.beginPath();rows.forEach((r,i)=>{const x=pad+(w-2*pad)*i/Math.max(1,rows.length-1),y=h-pad-(h-2*pad)*(r[key]-min)/(max-min||1);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}
+  line('baseline_kwh','#397ebd');line('treatment_kwh','#21845c');ctx.fillStyle='#397ebd';ctx.fillRect(pad,15,18,3);ctx.fillStyle='#0b1d33';ctx.font='700 11px sans-serif';ctx.fillText('Baseline',pad+24,20);ctx.fillStyle='#21845c';ctx.fillRect(pad+105,15,18,3);ctx.fillStyle='#0b1d33';ctx.fillText('Treatment',pad+129,20);ctx.fillStyle='#66758a';ctx.textAlign='center';ctx.fillText('Day',w/2,h-10)
+}
+function renderChronicle(){
+  const checks=gateChecks();$('gateList').innerHTML=checks.map(c=>`<div class="check ${c[1]?'pass':'fail'}"><i>${c[1]?'✓':'!'}</i><span><b>${esc(c[0])}</b><small>${esc(c[2])}</small></span><span class="tag ${c[1]?'ok':'bad'}">${c[1]?'PASS':'MISSING'}</span></div>`).join('');
+  const d=state.chronicle?.decision||'HOLD';$('chronicleTag').textContent=d;$('chronicleTag').className='tag '+(d==='ADMIT_WITH_SCOPE'?'ok':d==='HOLD'?'warn':'bad');$('chronicleDecision').className='decision '+(d==='ADMIT_WITH_SCOPE'?'pass':d==='HOLD'?'':'fail');$('chronicleDecision').innerHTML=`<b>${esc(d)}</b><p class="sub">${esc(state.chronicle?.reason||'Close the Evidence Docket, then run the gate.')}</p>`;$('chronicleCode').textContent=JSON.stringify(state.chronicle,null,2)
+}
+function renderAll(){renderProofLevel();renderHoly();renderTop();renderStepper();renderJobs();renderTrial();renderChronicle();renderSettlement();renderMemory();renderFuture();renderTrace()}
+async function runGuidedDemo(){
+  if(state.demoRunning)return;resetRun(false);state.demoRunning=true;loadGuidedExample();showToast('Running the full proof-gated loop…');await sleep(450);createMission();await sleep(500);approveWorkPlan();await sleep(550);await runGuidedTrial();await sleep(600);await assembleDocket();await sleep(600);runChronicle();await sleep(600);settleMission();await sleep(600);await createMemory();await sleep(600);fundNextMission();await sleep(550);runSecondMission();state.demoRunning=false;showToast('Two proof cycles complete. Try the tamper test or break a gate.')
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function downloadFile(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function proofPack(){return{schema:'goalos.helios.proofPack.v1',exportedAt:now(),claimBoundary:'Guided mode is simulated. User-data mode is local analysis, not independent validation. No live building control, professional certification, wallet activity, token value, smart-contract execution, or live settlement is represented.',run:state,summary:{runId:state.runId,mode:state.mode,proofLevel:state.proofLevel,chronicleDecision:state.chronicle?.decision,settlementStatus:state.settlement?.status,validatedSkillId:state.skill?.skillId,graphRoot:state.merkle?.root,skillProofVerified:state.merkle?.verification?.ok,cycleTwoVerified:state.future?.cycleTwo?.verified}}}
+function downloadProofPack(){downloadFile((state.runId||'goalos-helios')+'-proof-pack.json',JSON.stringify(proofPack(),null,2),'application/json')}
+function humanReport(){return`# GoalOS HELIOS Proof Run
+
+## Summary
+- Run: ${state.runId||'not started'}
+- Facility: ${state.inputs.facilityName||'not entered'}
+- Mode: ${state.mode}
+- Proof level: L${state.proofLevel} ${policies[state.proofLevel].name}
+- Observed savings: ${state.trial?.metrics?.observedSavingsPct??'—'}%
+- Comfort pass: ${state.trial?.metrics?.comfortPassPct??'—'}%
+- Chronicle: ${state.chronicle?.decision||'HOLD'}
+- Settlement: ${state.settlement?.status||'—'}
+- Validated skill: ${state.skill?.skillId||'—'}
+- Graph root: ${state.merkle?.root||'—'}
+- Skill proof verified: ${state.merkle?.verification?.ok||false}
+- Cycle two verified: ${state.future?.cycleTwo?.verified||false}
+
+## Canonical chain
+Mission → Work → Proof → Validation → Verified Experience → Chronicle → Reusable Capability → Settlement → Treasury Reinvestment → Harder Mission → More Verified Experience
+
+## Claim boundary
+Guided mode is a transparent simulation. User-data mode analyzes local evidence but does not independently verify metering quality, reviewer identity, engineering safety, legal compliance, live controls, wallet activity, smart contracts, or real settlement.
+`}
+function downloadReport(){downloadFile((state.runId||'goalos-helios')+'-report.md',humanReport(),'text/markdown')}
+function persist(show=true){try{localStorage.setItem('goalosHeliosHolyGrailV1',JSON.stringify(state));if(show)showToast('Run saved in this browser.')}catch(e){if(show)alert('Could not save locally: '+e.message)}}
+function saveRun(){persist(true)}
+function restore(){try{const raw=localStorage.getItem('goalosHeliosHolyGrailV1');if(raw){state=JSON.parse(raw);hydrate();log('Saved HELIOS run restored.','ok')}}catch(e){}}
+function hydrate(){
+  if(state.inputs.facilityName){$('facilityName').value=state.inputs.facilityName;$('facilityType').value=state.inputs.facilityType;$('baselineKwh').value=state.inputs.baselineMonthlyKwh;$('rate').value=state.inputs.rate;$('targetSavings').value=state.inputs.targetSavingsPct;$('comfortTarget').value=state.inputs.comfortTargetPct;$('budget').value=state.inputs.budget;$('scopeBoundary').value=state.inputs.scopeBoundary;$('mode').value=state.mode;$('proofLevel').value=state.proofLevel;lockMissionInputs(true)}
+  if(state.docket){$('reviewer').value=state.docket.reviewer?.nameOrRole||'';$('validatorCount').value=state.docket.reviewer?.validatorCount||0;$('reviewDecision').checked=!!state.docket.reviewer?.decisionRecorded;$('replay').value=state.docket.replay||'';$('riskNotes').value=state.docket.riskAndRollback||'';$('baselineNotes').value=state.docket.baselineComparison||'';$('evidenceNote').value=state.docket.publicSafeNote||''}
+  setStep(state.step||0,false)
+}
+function resetRun(confirmReset=true){
+  if(confirmReset&&state.runId&&!confirm('Reset the current HELIOS proof run?'))return;localStorage.removeItem('goalosHeliosHolyGrailV1');state=blankState();lockMissionInputs(false);loadGuidedExample();['reviewer','replay','riskNotes','baselineNotes','evidenceNote','csvText'].forEach(id=>$(id).value='');$('validatorCount').value='1';$('reviewDecision').checked=false;$('challengeStatus').value='closed';$('proofBond').value='100';$('nextFacility').value='Centre communautaire du Fleuve';$('nextDifficulty').value='2';setStep(0,false);renderAll();log('Clean boot restored: 0 jobs, 0 evidence, Chronicle HOLD, no settlement, no memory.','warn')
+}
+function toggleAsk(){$('askDrawer').classList.toggle('open')}
+function openAsk(q){$('askDrawer').classList.add('open');$('askInput').value=q;askGoalOS()}
+function askGoalOS(){
+  const q=$('askInput').value.toLowerCase();let answer='';
+  if(q.includes('holy grail'))answer='Because this mission connects all six scarce layers: open-ended work, gradeable evidence, policy-gated authority, reusable memory, proof-conditioned settlement, and reinvestment into a harder mission. The architecture is the candidate; repeated real Evidence Dockets and independent replay are what would earn the stronger claim.';
+  else if(q.includes('next'))answer=!state.mission?'Create the mission.':!state.intervention?'Approve the intervention work plan.':!state.trial?'Run the guided trial or load measured CSV data.':!state.docket?'Record reviewer, replay, risk, and assemble the Evidence Docket.':!state.chronicle?'Run Chronicle.':state.chronicle.decision!=='ADMIT_WITH_SCOPE'?'Repair the failed proof or outcome requirements.':!state.settlement?'Close the challenge window and simulate settlement.':!state.merkle?'Create the Validated Skill and graph root.':!state.future?'Fund the harder mission.':!state.future.cycleTwo?'Run cycle two.':'The full loop is complete. Download the proof pack or run the tamper test.';
+  else if(q.includes('chronicle')||q.includes('blocked')){const missing=gateChecks().filter(x=>!x[1]).map(x=>x[0]);answer=missing.length?'Chronicle is blocked by: '+missing.join(', ')+'. Missing proof creates repair work; failed outcome evidence is preserved but does not settle.':'Current gate checks pass. Run Chronicle to record the decision.'}
+  else if(q.includes('merkle')||q.includes('root'))answer='The Merkle root proves that an exact canonical set of mission, evidence, decision, settlement, and skill artifacts was committed. The inclusion proof shows the skill belongs to that state. The root does not prove truth, safety, legality, or quality by itself.';
+  else if(q.includes('settlement'))answer='Settlement is simulated here. It demonstrates the rule that verified work can release a reward, validator payment, and treasury allocation only after Chronicle and the challenge state pass. It is not a live token transaction or investment claim.';
+  else answer='GoalOS HELIOS turns one measurable objective into proof-bearing work, a governed decision, a reusable capability, a cryptographic commitment, and a funded harder mission. Ask what to do next, why Chronicle is blocked, what the Merkle root proves, or why this is a Holy Grail candidate.';
+  $('askAnswer').textContent=answer
+}
+function cardGlow(e){const c=e.currentTarget,r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%')}
+function init(){document.querySelectorAll('.card').forEach(c=>c.addEventListener('pointermove',cardGlow));loadGuidedExample();interventionChanged();restore();renderAll();if(!state.trace.length)log('GoalOS HELIOS ready. Run the guided loop or load your own measured data.','ok');addEventListener('resize',()=>{drawTrial();drawMerkle();drawCompound()})}
+window.setStep=setStep;window.renderProofLevel=renderProofLevel;window.loadGuidedExample=loadGuidedExample;window.startOwnData=startOwnData;window.createMission=createMission;window.interventionChanged=interventionChanged;window.approveWorkPlan=approveWorkPlan;window.runGuidedTrial=runGuidedTrial;window.loadCsvEvidence=loadCsvEvidence;window.downloadSampleCsv=downloadSampleCsv;window.assembleDocket=assembleDocket;window.runChronicle=runChronicle;window.generateRepairPlan=generateRepairPlan;window.settlementChanged=settlementChanged;window.settleMission=settleMission;window.createMemory=createMemory;window.runTamperTest=runTamperTest;window.fundNextMission=fundNextMission;window.runSecondMission=runSecondMission;window.runGuidedDemo=runGuidedDemo;window.downloadProofPack=downloadProofPack;window.downloadReport=downloadReport;window.saveRun=saveRun;window.resetRun=resetRun;window.toggleAsk=toggleAsk;window.openAsk=openAsk;window.askGoalOS=askGoalOS;
+addEventListener('DOMContentLoaded',init);
+})();
+</script>
+</body>
+</html>
