@@ -1,0 +1,54 @@
+name: GoalOS REAL-001 — independent operator replay
+
+on:
+  workflow_dispatch:
+    inputs:
+      proof_pack_url:
+        description: HTTPS URL to the public proof-pack.json
+        required: true
+      expected_sha256:
+        description: Expected lowercase SHA-256 hex, without 0x
+        required: true
+      operator_id:
+        description: Public operator identifier; use an organization or direct AGI Node identity
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+  artifact-metadata: write
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check -e .
+      - name: Download and verify the public Proof Pack
+        env:
+          URL: ${{ inputs.proof_pack_url }}
+          EXPECTED: ${{ inputs.expected_sha256 }}
+        run: |
+          mkdir -p replay-input replay-output
+          curl --fail --location --proto '=https' --tlsv1.2 "$URL" -o replay-input/proof-pack.json
+          ACTUAL=$(sha256sum replay-input/proof-pack.json | awk '{print $1}')
+          test "$ACTUAL" = "$EXPECTED"
+      - name: Reconstruct every deterministic result and root
+        run: |
+          goalos-real replay \
+            --proof-pack replay-input/proof-pack.json \
+            --operator "${{ inputs.operator_id }}" \
+            --output replay-output/replay-receipt.json
+      - uses: actions/attest@v4
+        with:
+          subject-path: replay-output/replay-receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: goalos-real-001-independent-replay-${{ github.run_id }}
+          path: replay-output/
+          if-no-files-found: error
+          retention-days: 90

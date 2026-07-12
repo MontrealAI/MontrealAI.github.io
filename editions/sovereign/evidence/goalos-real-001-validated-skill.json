@@ -1,0 +1,104 @@
+{
+  "schema": "goalos.validatedSkill.v1",
+  "skillId": "dependency-stability-v1",
+  "name": "Evidence-Gated Dependency and CI Reliability",
+  "version": 1,
+  "sourceMission": {
+    "repository": "MontrealAI/goalos-agialpha-ascension",
+    "pullRequest": 10,
+    "mergeCommit": "4b1f8aa9d264898b8d3b3aae5e95d3e29baf8286",
+    "sourceUrl": "https://github.com/MontrealAI/goalos-agialpha-ascension/pull/10"
+  },
+  "scope": {
+    "allowed": [
+      "Dependency upgrade triage",
+      "CI and release-gate preservation",
+      "Controlled migration planning",
+      "Evidence Docket generation"
+    ],
+    "excluded": [
+      "Automatic merge of incompatible major upgrades",
+      "Mainnet deployment",
+      "Secret-bearing workflows",
+      "Unreviewed production changes"
+    ]
+  },
+  "method": {
+    "baselineDependencies": {
+      "@openzeppelin/contracts": "4.9.6",
+      "solc": "0.8.28",
+      "@nomicfoundation/hardhat-ledger": "1.2.2",
+      "@nomicfoundation/hardhat-toolbox": "5.0.0",
+      "hardhat": "2.28.6",
+      "ts-node": "10.9.2",
+      "typescript": "5.9.3"
+    },
+    "protectedDependencies": [
+      "hardhat",
+      "@nomicfoundation/hardhat-toolbox",
+      "@nomicfoundation/hardhat-ledger",
+      "@openzeppelin/contracts",
+      "typescript",
+      "solc"
+    ],
+    "freezeCoreMajors": true,
+    "decisionRules": [
+      "If a protected dependency changes major version, route to an isolated controlled migration.",
+      "If a plugin requires a different Hardhat major than the repository baseline, block direct merge.",
+      "Preserve read-only authorization gates and do not introduce secrets into public CI.",
+      "Record environment-blocked security tools as blockers, never silent passes."
+    ],
+    "requiredEvidence": [
+      "proposed dependency delta",
+      "repository baseline manifest",
+      "peer or compatibility requirement",
+      "repository migration policy",
+      "validation command set"
+    ],
+    "validationCommands": [
+      "npm ci",
+      "npm run compile:ci",
+      "npm run test:ci",
+      "npm run test:all",
+      "npm run repo:all",
+      "npm run static-check"
+    ],
+    "outputTemplate": [
+      "machine-readable decision",
+      "controlled migration plan",
+      "risk and rollback notes",
+      "public-safe Evidence Docket"
+    ]
+  },
+  "evidence": [
+    {
+      "type": "github-pr",
+      "url": "https://github.com/MontrealAI/goalos-agialpha-ascension/pull/10",
+      "status": "merged"
+    },
+    {
+      "type": "repository-baseline",
+      "path": "package.json",
+      "sha": "538048b302b2e0077604e148bc46aa94af3cfb85"
+    }
+  ],
+  "validators": [
+    {
+      "id": "maintainer-review",
+      "type": "MERGE_DECISION",
+      "verdict": "ACCEPTED"
+    }
+  ],
+  "proofLevel": "L3_EXTERNAL_REVIEW_READY",
+  "chronicleDecision": "ADMIT_WITH_SCOPE",
+  "freshness": {
+    "status": "CURRENT_FOR_REPOSITORY_BASELINE",
+    "revalidateOn": [
+      "core-stack change",
+      "policy change"
+    ]
+  },
+  "rollback": "Revoke or supersede if baseline, peer dependencies, or repository policy changes.",
+  "claimBoundary": "This skill supports repository maintenance decisions. It does not authorize deployment, merging, custody, or token operations.",
+  "skillCommitment": "0xaa58753212cc8a6b83de98b7ab220399450f1f80f9934fd9548c1af08a4f0fa7"
+}

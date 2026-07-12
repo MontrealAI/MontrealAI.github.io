@@ -1,0 +1,38 @@
+name: GoalOS REAL-001 — Chronicle skill admission gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      proof_pack_path:
+        description: Repository path to proof-pack.json
+        required: true
+      replay_receipt_a:
+        description: Repository path to replay receipt A
+        required: true
+      replay_receipt_b:
+        description: Repository path to replay receipt B
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  chronicle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify the Proof Pack and two distinct replay operators
+        run: |
+          python -m pip install --disable-pip-version-check -e .
+          goalos-real verify --proof-pack "${{ inputs.proof_pack_path }}"
+          python scripts/aggregate_replays.py \
+            --proof-pack "${{ inputs.proof_pack_path }}" \
+            --receipts "${{ inputs.replay_receipt_a }}" "${{ inputs.replay_receipt_b }}" \
+            --output external-replay-certificate.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: goalos-real-001-chronicle-certificate
+          path: external-replay-certificate.json

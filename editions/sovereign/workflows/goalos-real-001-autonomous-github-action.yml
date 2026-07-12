@@ -1,0 +1,113 @@
+name: GoalOS REAL-001 — autonomous live repository transfer
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_pr:
+        description: Merged Mission 1 PR that produced the capability
+        required: true
+        default: "10"
+      target_pr:
+        description: Fresh Mission 2 PR; leave 0 to select the newest protected Dependabot PR
+        required: true
+        default: "0"
+      create_evidence_pr:
+        description: Open a human-review Evidence Docket PR; never auto-merge
+        required: true
+        type: boolean
+        default: false
+  schedule:
+    - cron: "17 8 * * 1"
+
+concurrency:
+  group: goalos-real-001-${{ github.repository }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    outputs:
+      target_pr: ${{ steps.resolve.outputs.target_pr }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - id: resolve
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          INPUT_TARGET: ${{ inputs.target_pr || '0' }}
+          INPUT_SOURCE: ${{ inputs.source_pr || '10' }}
+        run: |
+          if [ "$INPUT_TARGET" != "0" ]; then
+            echo "target_pr=$INPUT_TARGET" >> "$GITHUB_OUTPUT"
+          else
+            python scripts/select_fresh_pr.py --repo "$GITHUB_REPOSITORY" --exclude "$INPUT_SOURCE" --output selected-pr.json
+            TARGET=$(python -c 'import json; print(json.load(open("selected-pr.json"))["selected"]["number"])')
+            echo "target_pr=$TARGET" >> "$GITHUB_OUTPUT"
+          fi
+
+  prove:
+    needs: select
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run tests before producing authority artifacts
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Run the real-task transfer action
+        uses: ./.github/actions/goalos-real-task
+        with:
+          repository: ${{ github.repository }}
+          source-pr: ${{ inputs.source_pr || '10' }}
+          target-pr: ${{ needs.select.outputs.target_pr }}
+          output-directory: goalos-real-output
+          max-steps: "8"
+      - name: First-party reconstruction receipt (not independent)
+        run: |
+          goalos-real replay \
+            --proof-pack goalos-real-output/proof/proof-pack.json \
+            --operator "github:${GITHUB_REPOSITORY}:primary" \
+            --output goalos-real-output/proof/first-party-replay-receipt.json
+      - uses: actions/attest@v4
+        with:
+          subject-path: goalos-real-output/proof/proof-pack.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: goalos-real-001-proof-pack
+          path: goalos-real-output/
+          if-no-files-found: error
+          retention-days: 90
+
+  propose-evidence:
+    needs: [select, prove]
+    if: ${{ inputs.create_evidence_pr == true }}
+    runs-on: ubuntu-latest
+    environment: goalos-chronicle-human-review
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: goalos-real-001-proof-pack
+          path: downloaded-proof
+      - name: Open an Evidence Docket PR without merging the dependency update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/create_evidence_pr.sh downloaded-proof/proof GOALOS-REAL-001
