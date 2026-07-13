@@ -1,0 +1,1617 @@
+{
+  "release": "GOS-CONTRACT-DEMO-2026.07-v1.0",
+  "purpose": "Exact ABI/function selector subset used or exposed by the standalone use case. Function types and selectors are canonical; event indexed flags are not guessed and must be read from bundled source.",
+  "contracts": [
+    {
+      "contract": "ERC20 $AGIALPHA",
+      "address": "0xa61a3b3a130a9c20768eebf97e21515a6046a1fa",
+      "deploymentStatus": "mainnet address from official console",
+      "source": "IERC20",
+      "abi": [
+        {
+          "type": "function",
+          "name": "approve",
+          "inputs": [
+            {
+              "name": "spender",
+              "type": "address"
+            },
+            {
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "signature": "approve(address,uint256)",
+          "selector": "0x095ea7b3",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Approve exact escrow/bond amount"
+        },
+        {
+          "type": "function",
+          "name": "transferFrom",
+          "inputs": [
+            {
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "signature": "transferFrom(address,address,uint256)",
+          "selector": "0x23b872dd",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Internal pull by contracts"
+        },
+        {
+          "type": "function",
+          "name": "transfer",
+          "inputs": [
+            {
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "signature": "transfer(address,uint256)",
+          "selector": "0xa9059cbb",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Settlement transfer"
+        },
+        {
+          "type": "function",
+          "name": "balanceOf",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "signature": "balanceOf(address)",
+          "selector": "0x70a08231",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Balance read"
+        },
+        {
+          "type": "function",
+          "name": "allowance",
+          "inputs": [
+            {
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "name": "spender",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "signature": "allowance(address,address)",
+          "selector": "0xdd62ed3e",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Allowance read"
+        }
+      ]
+    },
+    {
+      "contract": "AGIJobManager",
+      "address": "0xb3aaeb69b630f0299791679c063d68d6687481d1",
+      "deploymentStatus": "verified mainnet address; current official repository/source semantics",
+      "source": "AGIJobManager.sol",
+      "abi": [
+        {
+          "type": "function",
+          "name": "createJob",
+          "inputs": [
+            {
+              "name": "_jobSpecURI",
+              "type": "string"
+            },
+            {
+              "name": "_payout",
+              "type": "uint256"
+            },
+            {
+              "name": "_duration",
+              "type": "uint256"
+            },
+            {
+              "name": "_details",
+              "type": "string"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "createJob(string,uint256,uint256,string)",
+          "selector": "0xff54133e",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Escrow payout and create Job 0"
+        },
+        {
+          "type": "function",
+          "name": "applyForJob",
+          "inputs": [
+            {
+              "name": "_jobId",
+              "type": "uint256"
+            },
+            {
+              "name": "subdomain",
+              "type": "string"
+            },
+            {
+              "name": "proof",
+              "type": "bytes32[]"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "applyForJob(uint256,string,bytes32[])",
+          "selector": "0x327c1255",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Authorize agent, snapshot payout, lock agent bond"
+        },
+        {
+          "type": "function",
+          "name": "requestJobCompletion",
+          "inputs": [
+            {
+              "name": "_jobId",
+              "type": "uint256"
+            },
+            {
+              "name": "_jobCompletionURI",
+              "type": "string"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "requestJobCompletion(uint256,string)",
+          "selector": "0x8d1bc00f",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Submit completion URI"
+        },
+        {
+          "type": "function",
+          "name": "validateJob",
+          "inputs": [
+            {
+              "name": "_jobId",
+              "type": "uint256"
+            },
+            {
+              "name": "subdomain",
+              "type": "string"
+            },
+            {
+              "name": "proof",
+              "type": "bytes32[]"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "validateJob(uint256,string,bytes32[])",
+          "selector": "0x4a63f630",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Approve and lock validator bond"
+        },
+        {
+          "type": "function",
+          "name": "disapproveJob",
+          "inputs": [
+            {
+              "name": "_jobId",
+              "type": "uint256"
+            },
+            {
+              "name": "subdomain",
+              "type": "string"
+            },
+            {
+              "name": "proof",
+              "type": "bytes32[]"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "disapproveJob(uint256,string,bytes32[])",
+          "selector": "0xd48884f5",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Disapprove and lock validator bond"
+        },
+        {
+          "type": "function",
+          "name": "finalizeJob",
+          "inputs": [
+            {
+              "name": "_jobId",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "finalizeJob(uint256)",
+          "selector": "0x832a153d",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Settle after challenge/review window"
+        },
+        {
+          "type": "function",
+          "name": "lockJobENS",
+          "inputs": [
+            {
+              "name": "jobId",
+              "type": "uint256"
+            },
+            {
+              "name": "burnFuses",
+              "type": "bool"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "lockJobENS(uint256,bool)",
+          "selector": "0xb1fe444b",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Best-effort terminal ENS lock"
+        },
+        {
+          "type": "function",
+          "name": "getJobCore",
+          "inputs": [
+            {
+              "name": "jobId",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "employer",
+              "type": "address"
+            },
+            {
+              "name": "assignedAgent",
+              "type": "address"
+            },
+            {
+              "name": "payout",
+              "type": "uint256"
+            },
+            {
+              "name": "duration",
+              "type": "uint256"
+            },
+            {
+              "name": "assignedAt",
+              "type": "uint256"
+            },
+            {
+              "name": "completed",
+              "type": "bool"
+            },
+            {
+              "name": "disputed",
+              "type": "bool"
+            },
+            {
+              "name": "expired",
+              "type": "bool"
+            },
+            {
+              "name": "agentPayoutPct",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "view",
+          "signature": "getJobCore(uint256)",
+          "selector": "0xc6b44fe7",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Read core Job state"
+        },
+        {
+          "type": "function",
+          "name": "getJobValidation",
+          "inputs": [
+            {
+              "name": "jobId",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "completionRequested",
+              "type": "bool"
+            },
+            {
+              "name": "validatorApprovals",
+              "type": "uint256"
+            },
+            {
+              "name": "validatorDisapprovals",
+              "type": "uint256"
+            },
+            {
+              "name": "completionRequestedAt",
+              "type": "uint256"
+            },
+            {
+              "name": "disputedAt",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "signature": "getJobValidation(uint256)",
+          "selector": "0x4997b468",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Read validation state"
+        },
+        {
+          "type": "function",
+          "name": "tokenURI",
+          "inputs": [
+            {
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "signature": "tokenURI(uint256)",
+          "selector": "0xc87b56dd",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Read completion NFT URI"
+        }
+      ]
+    },
+    {
+      "contract": "ENSJobPages",
+      "address": "0x06188e77c1c38d392b16d9d9fb24673363ce1da0",
+      "deploymentStatus": "official console fallback address; best-effort hook target",
+      "source": "ENSJobPages.sol",
+      "abi": [
+        {
+          "type": "function",
+          "name": "handleHook",
+          "inputs": [
+            {
+              "name": "hook",
+              "type": "uint8"
+            },
+            {
+              "name": "jobId",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "handleHook(uint8,uint256)",
+          "selector": "0x1f76f7a2",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": true,
+          "description": "Called internally by AGIJobManager"
+        },
+        {
+          "type": "function",
+          "name": "jobEnsName",
+          "inputs": [
+            {
+              "name": "jobId",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "signature": "jobEnsName(uint256)",
+          "selector": "0x164db96f",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Read deterministic job name"
+        },
+        {
+          "type": "function",
+          "name": "jobEnsURI",
+          "inputs": [
+            {
+              "name": "jobId",
+              "type": "uint256"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "signature": "jobEnsURI(uint256)",
+          "selector": "0x751809b4",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Read ENS metadata URI"
+        }
+      ]
+    },
+    {
+      "contract": "UserResponsibilityReceiptRegistryV4",
+      "address": "0x9000000000000000000000000000000000000001",
+      "deploymentStatus": "deterministic reference fixture; not a claimed live deployment",
+      "source": "UserResponsibilityReceiptRegistryV4.sol",
+      "abi": [
+        {
+          "type": "function",
+          "name": "commit",
+          "inputs": [
+            {
+              "name": "termsHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "policyHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "roleHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "receiptHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "expiresAt",
+              "type": "uint64"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "commit(bytes32,bytes32,bytes32,bytes32,uint64)",
+          "selector": "0x852e70d6",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Commit versioned participation evidence"
+        },
+        {
+          "type": "function",
+          "name": "valid",
+          "inputs": [
+            {
+              "name": "account",
+              "type": "address"
+            },
+            {
+              "name": "termsHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "policyHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "roleHash",
+              "type": "bytes32"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "signature": "valid(address,bytes32,bytes32,bytes32)",
+          "selector": "0xa5d028c1",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Check current receipt"
+        }
+      ]
+    },
+    {
+      "contract": "AGINodeRegistry",
+      "address": "0x9000000000000000000000000000000000000002",
+      "deploymentStatus": "deterministic reference fixture; source says unaudited",
+      "source": "AGINodeRegistry.sol",
+      "abi": [
+        {
+          "type": "function",
+          "name": "registerDirectNode",
+          "inputs": [
+            {
+              "name": "labelhash",
+              "type": "bytes32"
+            },
+            {
+              "name": "publicKeyHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "regionHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "capabilitiesHash",
+              "type": "bytes32"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "node",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "signature": "registerDirectNode(bytes32,bytes32,bytes32,bytes32)",
+          "selector": "0x435acaf5",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Register effective owner of direct node.agi.eth child"
+        },
+        {
+          "type": "function",
+          "name": "isActiveOperator",
+          "inputs": [
+            {
+              "name": "operator",
+              "type": "address"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "signature": "isActiveOperator(address)",
+          "selector": "0x3367cca5",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": true,
+          "description": "Validator-accuracy bond gate"
+        },
+        {
+          "type": "function",
+          "name": "updateReputation",
+          "inputs": [
+            {
+              "name": "node",
+              "type": "bytes32"
+            },
+            {
+              "name": "reputationPpm",
+              "type": "uint32"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "updateReputation(bytes32,uint32)",
+          "selector": "0xadeed014",
+          "usedAsTopLevelTransaction": false,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Resolver reputation update"
+        }
+      ]
+    },
+    {
+      "contract": "BondedAuthorityKernel",
+      "address": "0x9000000000000000000000000000000000000003",
+      "deploymentStatus": "deterministic reference fixture; source says unaudited/no live value",
+      "source": "BondedAuthorityKernel.sol",
+      "abi": [
+        {
+          "type": "function",
+          "name": "lockBond",
+          "inputs": [
+            {
+              "name": "bondId",
+              "type": "bytes32"
+            },
+            {
+              "name": "missionId",
+              "type": "bytes32"
+            },
+            {
+              "name": "kind",
+              "type": "uint8"
+            },
+            {
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "name": "proofRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "policyHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "expiry",
+              "type": "uint64"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "lockBond(bytes32,bytes32,uint8,uint256,bytes32,bytes32,uint64)",
+          "selector": "0x5013e7b3",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Lock authority-transition bond"
+        },
+        {
+          "type": "function",
+          "name": "bindProofRoot",
+          "inputs": [
+            {
+              "name": "bondId",
+              "type": "bytes32"
+            },
+            {
+              "name": "proofRoot",
+              "type": "bytes32"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "bindProofRoot(bytes32,bytes32)",
+          "selector": "0x6d78ad43",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Bind final proof root"
+        },
+        {
+          "type": "function",
+          "name": "grantTransition",
+          "inputs": [
+            {
+              "name": "missionId",
+              "type": "bytes32"
+            },
+            {
+              "name": "transition",
+              "type": "uint8"
+            },
+            {
+              "name": "proofRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "policyHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "bondIds",
+              "type": "bytes32[]"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "grantTransition(bytes32,uint8,bytes32,bytes32,bytes32[])",
+          "selector": "0x72a67114",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Grant paid/trusted/challenge-safe/reusable transition"
+        },
+        {
+          "type": "function",
+          "name": "resolveBond",
+          "inputs": [
+            {
+              "name": "bondId",
+              "type": "bytes32"
+            },
+            {
+              "name": "slashBps",
+              "type": "uint16"
+            },
+            {
+              "name": "slashRecipient",
+              "type": "address"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "resolveBond(bytes32,uint16,address)",
+          "selector": "0xd4693be6",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Return/slash authority bond"
+        }
+      ]
+    },
+    {
+      "contract": "RealityEvidenceRegistry",
+      "address": "0x9000000000000000000000000000000000000004",
+      "deploymentStatus": "deterministic reference fixture; commitment-only",
+      "source": "RealityEvidenceRegistry.sol",
+      "abi": [
+        {
+          "type": "function",
+          "name": "commitEpoch",
+          "inputs": [
+            {
+              "name": "campaignId",
+              "type": "bytes32"
+            },
+            {
+              "name": "epoch",
+              "type": "uint64"
+            },
+            {
+              "name": "previousRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "preregistrationHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "evidenceRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "institutionalProofRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "chronicleRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "skillRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "graphRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "status",
+              "type": "uint8"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "commitEpoch(bytes32,uint64,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,uint8)",
+          "selector": "0xd469463b",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Commit Evidence Docket/Chronicle epoch"
+        },
+        {
+          "type": "function",
+          "name": "attest",
+          "inputs": [
+            {
+              "name": "campaignId",
+              "type": "bytes32"
+            },
+            {
+              "name": "attestationHash",
+              "type": "bytes32"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "attest(bytes32,bytes32)",
+          "selector": "0x8acbf78e",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Institution attestation"
+        }
+      ]
+    },
+    {
+      "contract": "PlanetaryCheckpointRegistry",
+      "address": "0x9000000000000000000000000000000000000005",
+      "deploymentStatus": "deterministic reference fixture; compact commitments",
+      "source": "PlanetaryCheckpointRegistry.sol",
+      "abi": [
+        {
+          "type": "function",
+          "name": "submitCheckpoint",
+          "inputs": [
+            {
+              "name": "epoch",
+              "type": "uint64"
+            },
+            {
+              "name": "previousRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "zonesRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "topologyHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "policyHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "planetaryRoot",
+              "type": "bytes32"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "submitCheckpoint(uint64,bytes32,bytes32,bytes32,bytes32,bytes32)",
+          "selector": "0x09e70c33",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Submit sequential checkpoint"
+        }
+      ]
+    },
+    {
+      "contract": "ConstitutionalUpgradeRegistry",
+      "address": "0x9000000000000000000000000000000000000006",
+      "deploymentStatus": "deterministic reference fixture; canary-only RSI epilogue",
+      "source": "ConstitutionalUpgradeRegistry.sol",
+      "abi": [
+        {
+          "type": "function",
+          "name": "recordUpgrade",
+          "inputs": [
+            {
+              "name": "epoch",
+              "type": "uint64"
+            },
+            {
+              "name": "previousEpochRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "proposalHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "candidateArtifactRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "invariantReportRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "councilRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "canaryRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "delayedOutcomeRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "rollbackRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "bondPlanHash",
+              "type": "bytes32"
+            },
+            {
+              "name": "constitutionalEpochRoot",
+              "type": "bytes32"
+            },
+            {
+              "name": "decision",
+              "type": "uint8"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "signature": "recordUpgrade(uint64,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,uint8)",
+          "selector": "0x96314d4d",
+          "usedAsTopLevelTransaction": true,
+          "usedAsSimulatedInternalCall": false,
+          "description": "Record constitutionally gated candidate"
+        }
+      ]
+    }
+  ],
+  "eventSignatureRegistry": [
+    {
+      "name": "ResponsibilityReceiptCommitted",
+      "signature": "ResponsibilityReceiptCommitted(address,bytes32,bytes32,bytes32,bytes32,uint64,uint64)",
+      "topic0": "0x4a31090ca8fbba71e63197eff8334f8a47215ee0957f2d63f2d4de5af25c2a1c",
+      "inputs": [
+        {
+          "name": "account",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "termsHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "roleHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "policyHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "receiptHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "expiresAt",
+          "type": "uint64",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "arg6",
+          "type": "uint64",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-001",
+        "TX-002",
+        "TX-003",
+        "TX-004",
+        "TX-005",
+        "TX-006"
+      ]
+    },
+    {
+      "name": "NodeRegistered",
+      "signature": "NodeRegistered(bytes32,bytes32,address,bytes32,bytes32,bool)",
+      "topic0": "0xb2f7dd2dea85897bf0203e130d60962f468cf25320c6f245cb441d7b82439d79",
+      "inputs": [
+        {
+          "name": "node",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "labelhash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "operator",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "wrapped",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "arg4",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "arg5",
+          "type": "bool",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-007",
+        "TX-008",
+        "TX-009",
+        "TX-010"
+      ]
+    },
+    {
+      "name": "Approval",
+      "signature": "Approval(address,address,uint256)",
+      "topic0": "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925",
+      "inputs": [
+        {
+          "name": "owner",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "spender",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-011"
+      ]
+    },
+    {
+      "name": "JobCreated",
+      "signature": "JobCreated(uint256,string,uint256,uint256,string)",
+      "topic0": "0x2fb10ebe19759be9194a8c8adaa5a5c6599dcfedffb4172097939f4aa5b593ff",
+      "inputs": [
+        {
+          "name": "jobId",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "jobSpecURI",
+          "type": "string",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "payout",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "duration",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "details",
+          "type": "string",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-012"
+      ]
+    },
+    {
+      "name": "EnsHookAttempted",
+      "signature": "EnsHookAttempted(uint8,uint256,address,bool)",
+      "topic0": "0x5facf68a0da012a643d00b4fafdccea7a6a8d45c4d36943c6a525f55ed53458e",
+      "inputs": [
+        {
+          "name": "hook",
+          "type": "uint8",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "jobId",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "target",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "success",
+          "type": "bool",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-012",
+        "TX-014",
+        "TX-023",
+        "TX-033",
+        "TX-034"
+      ]
+    },
+    {
+      "name": "JobApplied",
+      "signature": "JobApplied(uint256,address)",
+      "topic0": "0xffa837d183240a5f25cbd643a8eade702c0c9c3e186c59c7d929e4f1a3438d86",
+      "inputs": [
+        {
+          "name": "jobId",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "agent",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-014"
+      ]
+    },
+    {
+      "name": "BondLocked",
+      "signature": "BondLocked(bytes32,bytes32,uint8,address,uint256,bytes32,bytes32)",
+      "topic0": "0x599f18a67f8901af31ec8cb67b5b1c794154e380ea72e7c3a3e1b5a208dc91f8",
+      "inputs": [
+        {
+          "name": "bondId",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "missionId",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "kind",
+          "type": "uint8",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "actor",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "proofRoot",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "policyHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-016",
+        "TX-018",
+        "TX-020",
+        "TX-022"
+      ]
+    },
+    {
+      "name": "JobCompletionRequested",
+      "signature": "JobCompletionRequested(uint256,address,string)",
+      "topic0": "0xb36a567aa0271fd8eb190aa32dd1ed772d17734707f4e8b585a593f3fed31f03",
+      "inputs": [
+        {
+          "name": "jobId",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "agent",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "jobCompletionURI",
+          "type": "string",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-023"
+      ]
+    },
+    {
+      "name": "JobValidated",
+      "signature": "JobValidated(uint256,address)",
+      "topic0": "0xd35288599f316272f4e87c5a053664f1529adc92bb2196f32a619c1d6581bc8a",
+      "inputs": [
+        {
+          "name": "jobId",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "validator",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-026",
+        "TX-028",
+        "TX-030"
+      ]
+    },
+    {
+      "name": "JobDisapproved",
+      "signature": "JobDisapproved(uint256,address)",
+      "topic0": "0x04c356fd9aea5c16b5773af14ed45489db72d155d3b2da30979810d4db7787b3",
+      "inputs": [
+        {
+          "name": "jobId",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "validator",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-032"
+      ]
+    },
+    {
+      "name": "PlatformRevenueAccrued",
+      "signature": "PlatformRevenueAccrued(uint256,uint256)",
+      "topic0": "0x2724711038962961a164e9faa2d0a1e30586fe72c16cb492af82d8f10d3e407f",
+      "inputs": [
+        {
+          "name": "jobId",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-033"
+      ]
+    },
+    {
+      "name": "ReputationUpdated",
+      "signature": "ReputationUpdated(address,uint256)",
+      "topic0": "0xfc577563f1b9a0461e24abef1e1fcc0d33d3d881f20b5df6dda59de4aae2c821",
+      "inputs": [
+        {
+          "name": "user",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "newReputation",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-033"
+      ]
+    },
+    {
+      "name": "NFTIssued",
+      "signature": "NFTIssued(uint256,address,string)",
+      "topic0": "0x178c42dae469a178936faf64c9788e7b86671857ec38f2d53c463f6e4d2163ba",
+      "inputs": [
+        {
+          "name": "tokenId",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "employer",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "tokenURI",
+          "type": "string",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-033"
+      ]
+    },
+    {
+      "name": "JobCompleted",
+      "signature": "JobCompleted(uint256,address,uint256)",
+      "topic0": "0x4dbba472101e9f148a3a5ecbe793f0ee16a7efe4bf3f8cbfab5330e1642ef955",
+      "inputs": [
+        {
+          "name": "jobId",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "agent",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "reputationPoints",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-033"
+      ]
+    },
+    {
+      "name": "TransitionGranted",
+      "signature": "TransitionGranted(bytes32,uint8,bytes32,bytes32)",
+      "topic0": "0x4af5453b69ca7ce0d2ada6669c6ea5e7c91099bbec4978088d1b17908263f237",
+      "inputs": [
+        {
+          "name": "missionId",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "transition",
+          "type": "uint8",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "proofRoot",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "policyHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-035",
+        "TX-036",
+        "TX-037",
+        "TX-038"
+      ]
+    },
+    {
+      "name": "BondResolved",
+      "signature": "BondResolved(bytes32,uint8,uint256,uint256,address)",
+      "topic0": "0x1cf9dc5e78bd7862ad096043102947a9ba5ab4f74f6106038cca4de28adf322e",
+      "inputs": [
+        {
+          "name": "bondId",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "status",
+          "type": "uint8",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "returnedAmount",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "slashedAmount",
+          "type": "uint256",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "slashRecipient",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-039",
+        "TX-040",
+        "TX-041",
+        "TX-042"
+      ]
+    },
+    {
+      "name": "RealityEpochCommitted",
+      "signature": "RealityEpochCommitted(bytes32,uint64,bytes32,uint8)",
+      "topic0": "0x7f3494d266281940537f31ec14d0899c825c969982e9c6f62ae42ae45e8f371b",
+      "inputs": [
+        {
+          "name": "campaignId",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "epoch",
+          "type": "uint64",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "graphRoot",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "status",
+          "type": "uint8",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-043"
+      ]
+    },
+    {
+      "name": "InstitutionAttested",
+      "signature": "InstitutionAttested(bytes32,address,bytes32)",
+      "topic0": "0xcf410ec74b1bd47715b776362ce1d3cda44c45ea233889d95f819be2c6c1d1b2",
+      "inputs": [
+        {
+          "name": "campaignId",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "institution",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "attestationHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-044"
+      ]
+    },
+    {
+      "name": "PlanetaryCheckpointSubmitted",
+      "signature": "PlanetaryCheckpointSubmitted(uint64,bytes32,bytes32,bytes32,bytes32,bytes32,address)",
+      "topic0": "0xd6ef12d4139e91077d1520213c918b590e828e736742831b5a2a5b333fd91e61",
+      "inputs": [
+        {
+          "name": "epoch",
+          "type": "uint64",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "planetaryRoot",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "previousRoot",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "zonesRoot",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "topologyHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "policyHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "submitter",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-045"
+      ]
+    },
+    {
+      "name": "UpgradeRecorded",
+      "signature": "UpgradeRecorded(uint64,bytes32,bytes32,uint8,bytes32,address)",
+      "topic0": "0x4d32917c2008d1d968e24a72271a6ffd96cb438edc93eec4bc1ee425c0a2e032",
+      "inputs": [
+        {
+          "name": "epoch",
+          "type": "uint64",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "constitutionalEpochRoot",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "previousEpochRoot",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "decision",
+          "type": "uint8",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "proposalHash",
+          "type": "bytes32",
+          "indexed": "source-dependent; inspect bundled source"
+        },
+        {
+          "name": "submitter",
+          "type": "address",
+          "indexed": "source-dependent; inspect bundled source"
+        }
+      ],
+      "observedInTransactions": [
+        "TX-046"
+      ]
+    }
+  ],
+  "counts": {
+    "contracts": 9,
+    "functions": 31,
+    "topLevelFunctionSignatures": 18,
+    "eventSignatures": 20
+  }
+}

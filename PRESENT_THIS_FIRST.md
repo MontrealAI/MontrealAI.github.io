@@ -1,61 +1,37 @@
 # Present This First
 
-## The 12-minute partner sequence
+## Opening
 
-### 0:00–1:30 — Establish the category
+> AI can produce an answer in seconds. The harder institutional question is what must be proven before that answer may become work, payment, memory, reuse or future authority.
 
-Open `presentation/GoalOS_Partner_MASTERCLASS_MASTERPIECE_Executive_Deck.pdf`.
+Open `GoalOS_Contract_Exact_Autonomous_Demo.html` and press **Run autonomously**.
 
-Say:
+## What to narrate
 
-> AI output is abundant. Institutional authority is scarce. GoalOS is the operating layer that determines what autonomous work must prove before an institution may trust it, act on it, pay for it, remember it or reuse it.
+### During Create the Job
 
-### 1:30–3:00 — Define the product
+> The employer approves an exact amount and `createJob` pulls the full payout into escrow. Fee-on-transfer behavior is deliberately rejected by the source-defined exact-transfer wrapper.
 
-> GoalOS converts one consequential objective into a Governed Decision State: claims, evidence, contradictions, risk, action, validation, memory and rollback travel together.
+### During Assign the Agent
 
-Show the proof-to-capability loop. Do not begin with token mechanics or planetary-scale claims.
+> `applyForJob` verifies authorization, snapshots the configured AGI-NFT payout percentage and computes a duration-weighted agent performance bond.
 
-### 3:00–7:30 — Run the mission
+### During Execute and Prove
 
-Open `editions/showcase/GoalOS_Partner_Demonstrator.html` through the Masterpiece launcher.
+> Completion is not a prose claim. The agent submits a content-addressed ProofBundle URI. The separate authority rail binds the final proof root to the mission.
 
-Select **Strategic Partnership Diligence** and run the mission. Narrate:
+### During Validation
 
-> We freeze the decision before autonomous work begins. Unsupported claims become Proof Debt. Mission-specific AGI Jobs produce ProofBundles. The Evidence Docket makes the result inspectable. Independent review determines what passes, requires repair or remains blocked. Chronicle determines what may become reusable capability.
+> Four validators post the same source-defined bond. Three approve and one dissents. The dissent remains visible and economically consequential.
 
-### 7:30–9:30 — Inspect the Docket
+### During Settlement
 
-Focus the room on:
+> After the one-day challenge window, anyone may call `finalizeJob`. The code returns the agent bond, pays the snapshotted agent share, distributes the validator budget plus slashed incorrect-side bond to correct validators, mints the completion NFT and leaves the intentional retained remainder in the manager.
 
-- one blocked production claim;
-- open Proof Debt;
-- contradiction handling;
-- reviewer independence;
-- closing conditions;
-- replay and rollback.
+### During Chronicle and Mission 2
 
-### 9:30–10:45 — Prove that memory is gated
+> Accepted proof may become scoped memory. It does not automatically become a universal prior. Mission 2 receives a canary-only constitutional record pending fresh transfer and delayed-outcome evidence.
 
-Open `evidence/goalos-real-001-standalone.html` or the Sovereign Evidence edition.
+## Close
 
-Say:
-
-> The real compounding question is not whether Mission 1 looked good. It is whether an admitted capability makes a fresh Mission 2 measurably better under equal constraints.
-
-State the boundary: REAL-001 is first-party and scoped; independent operator replay remains open Proof Debt.
-
-### 10:45–12:00 — Close on one mission
-
-> Give GoalOS one consequential but reversible objective, one executive sponsor, one independent reviewer and one decision deadline. Let the evidence determine what authority the result earns.
-
-Ask the room to nominate the objective before the meeting ends.
-
-## Which artifact to use next
-
-- **90 seconds:** APEX interactive theatre
-- **12 minutes:** Masterpiece deck + Production Showcase
-- **45 minutes:** Masterpiece deck + live Docket + REAL-001 + Deal Architect
-- **90 minutes:** Masterpiece launcher + selected Grand/Sovereign laboratories
-- **Three hours:** full Mission Contract, Evidence Docket, AI Council, RSI and partner-design workshop
-- **One day:** complete institution-design lab with Fieldbook, Diligence Dossier and Partner Charter
+> This is the point of GoalOS: not more autonomous output, but a controlled path from objective to proof, from proof to bounded authority, and from bounded authority to reusable capability.

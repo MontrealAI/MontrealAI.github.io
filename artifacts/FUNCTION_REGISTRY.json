@@ -1,0 +1,411 @@
+{
+  "ERC20 $AGIALPHA": {
+    "address": "0xa61a3b3a130a9c20768eebf97e21515a6046a1fa",
+    "status": "mainnet address from official console",
+    "source": "IERC20",
+    "functions": [
+      {
+        "signature": "approve(address,uint256)",
+        "selector": "0x095ea7b3",
+        "inputs": [
+          "address",
+          "uint256"
+        ],
+        "mutability": "nonpayable",
+        "description": "Approve exact escrow/bond amount"
+      },
+      {
+        "signature": "transferFrom(address,address,uint256)",
+        "selector": "0x23b872dd",
+        "inputs": [
+          "address",
+          "address",
+          "uint256"
+        ],
+        "mutability": "nonpayable",
+        "description": "Internal pull by contracts"
+      },
+      {
+        "signature": "transfer(address,uint256)",
+        "selector": "0xa9059cbb",
+        "inputs": [
+          "address",
+          "uint256"
+        ],
+        "mutability": "nonpayable",
+        "description": "Settlement transfer"
+      },
+      {
+        "signature": "balanceOf(address)",
+        "selector": "0x70a08231",
+        "inputs": [
+          "address"
+        ],
+        "mutability": "view",
+        "description": "Balance read"
+      },
+      {
+        "signature": "allowance(address,address)",
+        "selector": "0xdd62ed3e",
+        "inputs": [
+          "address",
+          "address"
+        ],
+        "mutability": "view",
+        "description": "Allowance read"
+      }
+    ]
+  },
+  "AGIJobManager": {
+    "address": "0xb3aaeb69b630f0299791679c063d68d6687481d1",
+    "status": "verified mainnet address; current official repository/source semantics",
+    "source": "AGIJobManager.sol",
+    "functions": [
+      {
+        "signature": "createJob(string,uint256,uint256,string)",
+        "selector": "0xff54133e",
+        "inputs": [
+          "string",
+          "uint256",
+          "uint256",
+          "string"
+        ],
+        "mutability": "nonpayable",
+        "description": "Escrow payout and create Job 0"
+      },
+      {
+        "signature": "applyForJob(uint256,string,bytes32[])",
+        "selector": "0x327c1255",
+        "inputs": [
+          "uint256",
+          "string",
+          "bytes32[]"
+        ],
+        "mutability": "nonpayable",
+        "description": "Authorize agent, snapshot payout, lock agent bond"
+      },
+      {
+        "signature": "requestJobCompletion(uint256,string)",
+        "selector": "0x8d1bc00f",
+        "inputs": [
+          "uint256",
+          "string"
+        ],
+        "mutability": "nonpayable",
+        "description": "Submit completion URI"
+      },
+      {
+        "signature": "validateJob(uint256,string,bytes32[])",
+        "selector": "0x4a63f630",
+        "inputs": [
+          "uint256",
+          "string",
+          "bytes32[]"
+        ],
+        "mutability": "nonpayable",
+        "description": "Approve and lock validator bond"
+      },
+      {
+        "signature": "disapproveJob(uint256,string,bytes32[])",
+        "selector": "0xd48884f5",
+        "inputs": [
+          "uint256",
+          "string",
+          "bytes32[]"
+        ],
+        "mutability": "nonpayable",
+        "description": "Disapprove and lock validator bond"
+      },
+      {
+        "signature": "finalizeJob(uint256)",
+        "selector": "0x832a153d",
+        "inputs": [
+          "uint256"
+        ],
+        "mutability": "nonpayable",
+        "description": "Settle after challenge/review window"
+      },
+      {
+        "signature": "lockJobENS(uint256,bool)",
+        "selector": "0xb1fe444b",
+        "inputs": [
+          "uint256",
+          "bool"
+        ],
+        "mutability": "nonpayable",
+        "description": "Best-effort terminal ENS lock"
+      },
+      {
+        "signature": "getJobCore(uint256)",
+        "selector": "0xc6b44fe7",
+        "inputs": [
+          "uint256"
+        ],
+        "mutability": "view",
+        "description": "Read core Job state"
+      },
+      {
+        "signature": "getJobValidation(uint256)",
+        "selector": "0x4997b468",
+        "inputs": [
+          "uint256"
+        ],
+        "mutability": "view",
+        "description": "Read validation state"
+      },
+      {
+        "signature": "tokenURI(uint256)",
+        "selector": "0xc87b56dd",
+        "inputs": [
+          "uint256"
+        ],
+        "mutability": "view",
+        "description": "Read completion NFT URI"
+      }
+    ]
+  },
+  "ENSJobPages": {
+    "address": "0x06188e77c1c38d392b16d9d9fb24673363ce1da0",
+    "status": "official console fallback address; best-effort hook target",
+    "source": "ENSJobPages.sol",
+    "functions": [
+      {
+        "signature": "handleHook(uint8,uint256)",
+        "selector": "0x1f76f7a2",
+        "inputs": [
+          "uint8",
+          "uint256"
+        ],
+        "mutability": "nonpayable",
+        "description": "Called internally by AGIJobManager"
+      },
+      {
+        "signature": "jobEnsName(uint256)",
+        "selector": "0x164db96f",
+        "inputs": [
+          "uint256"
+        ],
+        "mutability": "view",
+        "description": "Read deterministic job name"
+      },
+      {
+        "signature": "jobEnsURI(uint256)",
+        "selector": "0x751809b4",
+        "inputs": [
+          "uint256"
+        ],
+        "mutability": "view",
+        "description": "Read ENS metadata URI"
+      }
+    ]
+  },
+  "UserResponsibilityReceiptRegistryV4": {
+    "address": "0x9000000000000000000000000000000000000001",
+    "status": "deterministic reference fixture; not a claimed live deployment",
+    "source": "UserResponsibilityReceiptRegistryV4.sol",
+    "functions": [
+      {
+        "signature": "commit(bytes32,bytes32,bytes32,bytes32,uint64)",
+        "selector": "0x852e70d6",
+        "inputs": [
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "uint64"
+        ],
+        "mutability": "nonpayable",
+        "description": "Commit versioned participation evidence"
+      },
+      {
+        "signature": "valid(address,bytes32,bytes32,bytes32)",
+        "selector": "0xa5d028c1",
+        "inputs": [
+          "address",
+          "bytes32",
+          "bytes32",
+          "bytes32"
+        ],
+        "mutability": "view",
+        "description": "Check current receipt"
+      }
+    ]
+  },
+  "AGINodeRegistry": {
+    "address": "0x9000000000000000000000000000000000000002",
+    "status": "deterministic reference fixture; source says unaudited",
+    "source": "AGINodeRegistry.sol",
+    "functions": [
+      {
+        "signature": "registerDirectNode(bytes32,bytes32,bytes32,bytes32)",
+        "selector": "0x435acaf5",
+        "inputs": [
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32"
+        ],
+        "mutability": "nonpayable",
+        "description": "Register effective owner of direct node.agi.eth child"
+      },
+      {
+        "signature": "isActiveOperator(address)",
+        "selector": "0x3367cca5",
+        "inputs": [
+          "address"
+        ],
+        "mutability": "view",
+        "description": "Validator-accuracy bond gate"
+      },
+      {
+        "signature": "updateReputation(bytes32,uint32)",
+        "selector": "0xadeed014",
+        "inputs": [
+          "bytes32",
+          "uint32"
+        ],
+        "mutability": "nonpayable",
+        "description": "Resolver reputation update"
+      }
+    ]
+  },
+  "BondedAuthorityKernel": {
+    "address": "0x9000000000000000000000000000000000000003",
+    "status": "deterministic reference fixture; source says unaudited/no live value",
+    "source": "BondedAuthorityKernel.sol",
+    "functions": [
+      {
+        "signature": "lockBond(bytes32,bytes32,uint8,uint256,bytes32,bytes32,uint64)",
+        "selector": "0x5013e7b3",
+        "inputs": [
+          "bytes32",
+          "bytes32",
+          "uint8",
+          "uint256",
+          "bytes32",
+          "bytes32",
+          "uint64"
+        ],
+        "mutability": "nonpayable",
+        "description": "Lock authority-transition bond"
+      },
+      {
+        "signature": "bindProofRoot(bytes32,bytes32)",
+        "selector": "0x6d78ad43",
+        "inputs": [
+          "bytes32",
+          "bytes32"
+        ],
+        "mutability": "nonpayable",
+        "description": "Bind final proof root"
+      },
+      {
+        "signature": "grantTransition(bytes32,uint8,bytes32,bytes32,bytes32[])",
+        "selector": "0x72a67114",
+        "inputs": [
+          "bytes32",
+          "uint8",
+          "bytes32",
+          "bytes32",
+          "bytes32[]"
+        ],
+        "mutability": "nonpayable",
+        "description": "Grant paid/trusted/challenge-safe/reusable transition"
+      },
+      {
+        "signature": "resolveBond(bytes32,uint16,address)",
+        "selector": "0xd4693be6",
+        "inputs": [
+          "bytes32",
+          "uint16",
+          "address"
+        ],
+        "mutability": "nonpayable",
+        "description": "Return/slash authority bond"
+      }
+    ]
+  },
+  "RealityEvidenceRegistry": {
+    "address": "0x9000000000000000000000000000000000000004",
+    "status": "deterministic reference fixture; commitment-only",
+    "source": "RealityEvidenceRegistry.sol",
+    "functions": [
+      {
+        "signature": "commitEpoch(bytes32,uint64,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,uint8)",
+        "selector": "0xd469463b",
+        "inputs": [
+          "bytes32",
+          "uint64",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "uint8"
+        ],
+        "mutability": "nonpayable",
+        "description": "Commit Evidence Docket/Chronicle epoch"
+      },
+      {
+        "signature": "attest(bytes32,bytes32)",
+        "selector": "0x8acbf78e",
+        "inputs": [
+          "bytes32",
+          "bytes32"
+        ],
+        "mutability": "nonpayable",
+        "description": "Institution attestation"
+      }
+    ]
+  },
+  "PlanetaryCheckpointRegistry": {
+    "address": "0x9000000000000000000000000000000000000005",
+    "status": "deterministic reference fixture; compact commitments",
+    "source": "PlanetaryCheckpointRegistry.sol",
+    "functions": [
+      {
+        "signature": "submitCheckpoint(uint64,bytes32,bytes32,bytes32,bytes32,bytes32)",
+        "selector": "0x09e70c33",
+        "inputs": [
+          "uint64",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32"
+        ],
+        "mutability": "nonpayable",
+        "description": "Submit sequential checkpoint"
+      }
+    ]
+  },
+  "ConstitutionalUpgradeRegistry": {
+    "address": "0x9000000000000000000000000000000000000006",
+    "status": "deterministic reference fixture; canary-only RSI epilogue",
+    "source": "ConstitutionalUpgradeRegistry.sol",
+    "functions": [
+      {
+        "signature": "recordUpgrade(uint64,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,bytes32,uint8)",
+        "selector": "0x96314d4d",
+        "inputs": [
+          "uint64",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "bytes32",
+          "uint8"
+        ],
+        "mutability": "nonpayable",
+        "description": "Record constitutionally gated candidate"
+      }
+    ]
+  }
+}
