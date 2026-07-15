@@ -1,0 +1,1 @@
+const C='goalos-public-p4';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['./','./index.html','./assets/Public_Institutional_Edition_Cover_P4.png']))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
