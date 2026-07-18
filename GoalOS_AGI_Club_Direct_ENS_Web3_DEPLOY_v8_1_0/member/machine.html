@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html class="goalos-guarded" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="#06101d" name="theme-color"/>
+<meta content="GoalOS Autonomous Money Machine Ω — a standalone proof-to-revenue operating system that turns one commercial objective into an offer, pipeline, sales assets, delivery system, governed proof, recurring revenue, and a compounding growth plan." name="description"/>
+<title>GoalOS Autonomous Money Machine Ω</title>
+<link href="../assets/machine-app.css" rel="stylesheet"/>
+<meta content="default-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src 'self'; worker-src 'self'; manifest-src 'self'; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self' mailto:; upgrade-insecure-requests" http-equiv="Content-Security-Policy"/>
+<script src="../vendor/ethers.umd.min.js"></script>
+<script src="../assets/membership.js"></script>
+<script defer="" src="../assets/member-guard.js"></script>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<header class="topbar">
+<div class="wrap">
+<div class="brand"><div class="seal">α</div><div><b>GoalOS Autonomous Money Machine Ω</b><span>Proof → Revenue → Capability → Repeat</span></div></div>
+<div class="top-actions">
+<div class="status-chip" id="engineStatus"><i></i><span>Offline Sovereign Planner ready</span></div>
+<button aria-label="Settings" class="icon-btn" id="settingsBtn">⚙</button>
+<button aria-label="Download page" class="icon-btn" id="downloadPageBtn">⇩</button>
+<button class="btn small" id="restartBtn">New machine</button>
+</div>
+</div>
+</header>
+<main>
+<section class="screen active" id="welcome">
+<div class="wrap hero">
+<div class="hero-copy">
+<div class="eyebrow">GoalOS α‑AGI Ascension · Commercial Operating System</div>
+<h1><span>THE AUTONOMOUS</span><span class="gold">MONEY MACHINE</span></h1>
+<p class="lead">Tell GoalOS what you sell. It forms the revenue institution: the offer, target buyer, pricing, pipeline math, sales assets, delivery system, proof flywheel, recurring revenue, and the exact human approvals that keep the machine trustworthy.</p>
+<div class="law"><b>Not “make money by magic.”</b> A governed system for turning real customer problems into paid, evidence-backed outcomes—and turning verified outcomes into faster, safer, more profitable future work.</div>
+<div class="composer">
+<textarea aria-label="Describe what you sell" id="needInput" placeholder="Example: I sell a proof-backed AI deployment decision to enterprises. The buyer needs to know whether the system is safe, valuable, compliant, and worth deploying.">I sell GoalOS Proof Mission Sprints to enterprises making consequential AI decisions. The buyer needs a faster, evidence-backed go/no-go decision with a complete audit trail, risk ledger, action plan, and reusable capability.</textarea>
+<div class="composer-bottom">
+<span class="composer-hint">One sentence is enough. GoalOS will infer the rest and let you edit everything.</span>
+<button class="btn gold" id="buildBtn">Build my revenue institution →</button>
+</div>
+</div>
+<div class="preset-row">
+<button class="preset" data-preset="proof">GoalOS Proof Mission Sprint</button>
+<button class="preset" data-preset="buyer">AI Buyer Proof Room</button>
+<button class="preset" data-preset="deployment">AI Deployment Decision</button>
+<button class="preset" data-preset="strategy">Strategic Proof Mission</button>
+<button class="preset" data-preset="custom">Custom consulting / SaaS</button>
+</div>
+<p class="fineprint">Browser-local planning and simulation. GoalOS does not guarantee revenue, send outreach, charge customers, move funds, or make financial decisions without explicit human authorization.</p>
+</div>
+<div aria-hidden="true" class="hero-art">
+<div class="art-title"><b>Proof‑Compounding Revenue</b><span>One objective · One institution · One flywheel</span></div>
+<div class="city"></div>
+<div class="orbit"><span class="node" style="left:8%;top:57%"></span><span class="node" style="left:79%;top:17%"></span><span class="node" style="left:91%;top:65%"></span></div>
+<div class="orbit o2"><span class="node" style="left:17%;top:24%"></span><span class="node" style="left:78%;top:76%"></span></div>
+<div class="orbit o3"><span class="node" style="left:45%;top:3%"></span><span class="node" style="left:54%;top:94%"></span></div>
+<div class="portal"><div class="portal-alpha">α</div></div>
+<div class="art-stats"><div class="art-stat"><b>1</b><span>Flagship offer</span></div><div class="art-stat"><b>7</b><span>Revenue stages</span></div><div class="art-stat"><b>12</b><span>Month forecast</span></div><div class="art-stat"><b>∞</b><span>Proof flywheel</span></div></div>
+</div>
+</div>
+</section>
+<section class="screen" id="confirm">
+<div class="confirm-wrap">
+<div class="confirm-card">
+<div class="eyebrow" style="color:#8b5c12">Chief-of-Staff Confirmation</div>
+<h2>Here is the business GoalOS understood.</h2>
+<p class="sub">Change anything that matters. The revenue institution will be generated from these assumptions—not hidden guesses.</p>
+<div class="brief-grid" id="briefGrid"></div>
+<div class="edit-grid">
+<div class="field"><label>Flagship offer name</label><input id="offerNameInput"/></div>
+<div class="field"><label>Ideal buyer</label><input id="buyerInput"/></div>
+<div class="field"><label>Core offer price</label><input id="priceInput" min="100" step="500" type="number"/></div>
+<div class="field"><label>Monthly revenue target</label><input id="targetInput" min="1000" step="5000" type="number"/></div>
+<div class="field"><label>Delivery capacity / month</label><input id="capacityInput" max="100" min="1" type="number"/></div>
+<div class="field"><label>Recurring offer / month</label><input id="retainerInput" min="0" step="500" type="number"/></div>
+</div>
+<div class="confirm-actions">
+<button class="btn primary" id="activateBtn">Activate the money machine</button>
+<button class="btn" id="backBtn">Change the objective</button>
+<button class="btn" id="advancedConfirmBtn">Show advanced assumptions</button>
+</div>
+<div class="hidden" id="advancedConfirm" style="margin-top:16px">
+<div class="edit-grid">
+<div class="field"><label>Lead → call rate (%)</label><input id="leadCallInput" max="100" min="1" type="number"/></div>
+<div class="field"><label>Call → proposal rate (%)</label><input id="callProposalInput" max="100" min="1" type="number"/></div>
+<div class="field"><label>Proposal → close rate (%)</label><input id="proposalCloseInput" max="100" min="1" type="number"/></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="screen" id="app">
+<div class="app-shell">
+<aside class="sidebar">
+<div class="side-head"><div class="eyebrow">Revenue Institution</div><h3 id="sideOfferName">Proof Mission Sprint</h3><p id="sideSummary">A proof-backed enterprise decision product.</p><div class="progress"><i id="navProgress"></i></div></div>
+<nav class="nav" id="nav"></nav>
+<div class="side-actions"><button class="btn small primary" id="runCycleSide">Run autonomous cycle</button><button class="btn small" id="exportPlanSide">Export the plan</button><button class="btn small" id="printPlanBtn">Print / PDF</button></div>
+</aside>
+<div class="content">
+<div class="mobile-nav" id="mobileNav"></div>
+<section class="section active" data-section="overview">
+<div class="section-head"><div><div class="eyebrow">Command Center</div><h2>Your money machine</h2></div><p>Everything is derived from one commercial objective. Change the economics and the whole system recomputes instantly.</p></div>
+<div class="kpis" id="overviewKpis"></div>
+<div class="card" style="margin-top:13px"><div class="title-row"><div><h3>The proof-to-revenue loop</h3><p>Customer value creates proof. Proof improves sales, delivery, margin, and recurring revenue.</p></div><span class="tag ok">Human-approved autonomy</span></div><div class="divider"></div><div class="flow" id="revenueFlow"></div></div>
+<div class="grid2" style="margin-top:13px">
+<div class="card light"><div class="title-row"><div><h3>What to do next</h3><p>The shortest credible path to first revenue.</p></div></div><div class="divider"></div><div class="stack" id="nextActions"></div></div>
+<div class="card"><div class="title-row"><div><h3>Autonomy boundary</h3><p>GoalOS prepares and improves the system. Irreversible actions remain human-approved.</p></div></div><div class="divider"></div><div class="approval-grid" id="approvalOverview"></div></div>
+</div>
+</section>
+<section class="section" data-section="offer">
+<div class="section-head"><div><div class="eyebrow">1 · Offer Architecture</div><h2>Sell an outcome, not “AI”</h2></div><p>A four-level value ladder turns one high-value mission into an entry product, core engagement, recurring revenue, and enterprise expansion.</p></div>
+<div class="offer-grid" id="offerGrid"></div>
+<div class="grid2" style="margin-top:13px"><div class="card"><div class="title-row"><div><h3>Why the buyer says yes</h3><p>The commercial argument in plain language.</p></div></div><div class="divider"></div><div class="stack" id="buyerReasons"></div></div><div class="card"><div class="title-row"><div><h3>Acceptance criteria</h3><p>The offer is valuable because “done” is inspectable.</p></div></div><div class="divider"></div><div class="stack" id="acceptanceCriteria"></div></div></div>
+</section>
+<section class="section" data-section="pipeline">
+<div class="section-head"><div><div class="eyebrow">2 · Pipeline Mathematics</div><h2>The exact numbers required</h2></div><p>No vague growth plan. GoalOS calculates how many leads, calls, proposals, and closes are required for the target.</p></div>
+<div class="card"><div class="range-grid" id="pipelineControls"></div><div class="divider"></div><div class="funnel" id="funnel"></div></div>
+<div class="grid2" style="margin-top:13px"><div class="card"><div class="title-row"><div><h3>Capacity check</h3><p>Revenue is only real if delivery can absorb it.</p></div></div><div class="divider"></div><div class="kpis" id="capacityKpis" style="grid-template-columns:repeat(3,1fr)"></div></div><div class="card"><div class="title-row"><div><h3>Pipeline doctrine</h3><p>What the autonomous system may and may not optimize.</p></div></div><div class="divider"></div><div class="stack" id="pipelineDoctrine"></div></div></div>
+</section>
+<section class="section" data-section="sales">
+<div class="section-head"><div><div class="eyebrow">3 · Sales Assets</div><h2>Ready-to-use commercial language</h2></div><p>Copy, edit, and send only after human approval. GoalOS does not fabricate personalization or customer proof.</p></div>
+<div class="asset-grid" id="assetGrid"></div>
+</section>
+<section class="section" data-section="delivery">
+<div class="section-head"><div><div class="eyebrow">4 · Delivery Institution</div><h2>Turn each sale into proof</h2></div><p>The delivery system converts the customer’s objective into a governed decision state and reusable capability—not a disposable report.</p></div>
+<div class="mission-grid" id="missionGrid"></div>
+<div class="grid2" style="margin-top:13px"><div class="card"><div class="title-row"><div><h3>Delivery economics</h3><p>Price, work units, margin, and capacity are explicitly linked.</p></div></div><div class="divider"></div><div class="range-grid" id="deliveryControls"></div></div><div class="card"><div class="title-row"><div><h3>Customer handoff</h3><p>What the buyer receives at the end.</p></div></div><div class="divider"></div><div class="stack" id="handoffList"></div></div></div>
+</section>
+<section class="section" data-section="proof">
+<div class="section-head"><div><div class="eyebrow">5 · Proof Flywheel</div><h2>Every success makes the machine better</h2></div><p>Verified customer outcomes become scoped proof assets, safer delivery methods, better conversion, and higher margins—never unverified hype.</p></div>
+<div class="card"><div class="flywheel" id="flywheel"><svg preserveAspectRatio="none" viewBox="0 0 1000 600"><defs><marker id="arrow" markerHeight="7" markerWidth="7" orient="auto" refX="6" refY="3.5"><path d="M0,0 L7,3.5 L0,7 Z" fill="#e5c97b"></path></marker></defs><path d="M500 105 C760 100 840 210 845 300" fill="none" marker-end="url(#arrow)" stroke="#e5c97b" stroke-opacity=".35" stroke-width="2"></path><path d="M845 300 C840 480 710 520 520 525" fill="none" marker-end="url(#arrow)" stroke="#e5c97b" stroke-opacity=".35" stroke-width="2"></path><path d="M500 525 C255 525 155 455 150 325" fill="none" marker-end="url(#arrow)" stroke="#e5c97b" stroke-opacity=".35" stroke-width="2"></path><path d="M150 300 C160 160 300 105 470 105" fill="none" marker-end="url(#arrow)" stroke="#e5c97b" stroke-opacity=".35" stroke-width="2"></path></svg><div class="fly-center"><div><b>Chronicle</b><span>Only validated capability compounds</span></div></div><div class="fly-node n1"><b>Paid Mission</b><span>A real buyer pays for a consequential outcome.</span></div><div class="fly-node n2"><b>Evidence Docket</b><span>The result, method, risk, and outcome become inspectable.</span></div><div class="fly-node n3"><b>Proof Asset</b><span>A scoped case study, benchmark, and sales proof are produced.</span></div><div class="fly-node n4"><b>Validated Skill</b><span>The delivery method is admitted with scope and rollback.</span></div><div class="fly-node n5"><b>Faster Delivery</b><span>Future missions require less time, cost, and review.</span></div><div class="fly-node n6"><b>Better Economics</b><span>Conversion, margin, recurring revenue, and capacity improve.</span></div></div></div>
+<div class="grid3" id="proofMetrics" style="margin-top:13px"></div>
+</section>
+<section class="section" data-section="forecast">
+<div class="section-head"><div><div class="eyebrow">6 · 12‑Month Forecast</div><h2>See the compounding economics</h2></div><p>Editable assumptions, transparent formulas, and synthetic projections. No guaranteed returns.</p></div>
+<div class="card"><div class="range-grid" id="forecastControls"></div><div class="divider"></div><div class="chart-wrap"><canvas id="forecastChart"></canvas></div><div class="divider"></div><div class="table-wrap"><table class="tbl" id="forecastTable"></table></div></div>
+</section>
+<section class="section" data-section="leads">
+<div class="section-head"><div><div class="eyebrow">7 · Local Lead Lab</div><h2>Prioritize real opportunities</h2></div><p>Import a CSV locally or use the sample list. GoalOS scores fit and proof urgency without uploading the file or auto-contacting anyone.</p></div>
+<div class="card"><div class="lead-toolbar"><input accept=".csv,text/csv" id="leadFile" type="file"/><button class="btn small" id="sampleLeadsBtn">Load sample leads</button><button class="btn small" id="exportLeadsBtn">Export prioritized CSV</button><span class="tag">Recommended columns: company, role, industry, trigger, fit, urgency</span></div><div class="divider"></div><div class="lead-list" id="leadList"></div></div>
+</section>
+<section class="section" data-section="automation">
+<div class="section-head"><div><div class="eyebrow">8 · Autonomous Cycle</div><h2>Run the machine—with gates</h2></div><p>GoalOS can research, draft, score, prepare, simulate, learn, and propose. Sending, charging, signing, deploying, and claiming results remain explicitly authorized.</p></div>
+<div class="grid2"><div class="card"><div class="title-row"><div><h3>Autonomy Theatre</h3><p>Watch one complete commercial cycle.</p></div><div><button class="btn small primary" id="runCycleBtn">Run cycle</button> <button class="btn small" id="resetCycleBtn">Reset</button></div></div><div class="divider"></div><div class="console" id="cycleConsole"></div></div><div class="card"><div class="title-row"><div><h3>Human approval gates</h3><p>The institution cannot silently bypass these limits.</p></div></div><div class="divider"></div><div class="approval-grid" id="approvalGrid"></div></div></div>
+</section>
+<section class="section" data-section="audit">
+<div class="section-head"><div><div class="eyebrow">9 · Audit Room</div><h2>Inspect everything underneath</h2></div><p>Commercial logic, formulas, assumptions, proof boundaries, event history, and exported artifacts remain visible and challengeable.</p></div>
+<div class="grid2"><div class="card"><div class="title-row"><div><h3>Revenue constitution</h3><p>Rules the autonomous system may not rewrite.</p></div></div><div class="divider"></div><div class="stack" id="auditLaws"></div></div><div class="card"><div class="title-row"><div><h3>Current plan commitments</h3><p>A deterministic snapshot of the commercial state.</p></div></div><div class="divider"></div><pre class="mono" id="planJson" style="white-space:pre-wrap;word-break:break-word;color:#dce7f4;font-size:.71rem;line-height:1.5;max-height:580px;overflow:auto;margin:0"></pre></div></div>
+<div class="card" style="margin-top:13px"><div class="title-row"><div><h3>Event ledger</h3><p>Every material change is recorded locally.</p></div></div><div class="divider"></div><div class="event-log" id="eventLog"></div></div>
+</section>
+</div>
+</div>
+</section>
+</main>
+<div class="loading" id="loading"><div><div class="loading-ring"></div><div class="eyebrow">Forming the revenue institution</div><h2 id="loadingTitle">Understanding the offer…</h2><p id="loadingText">GoalOS is identifying the buyer, outcome, proof burden, economics, and safe automation boundaries.</p></div></div>
+<div class="modal" id="settingsModal"><div class="modal-card"><div class="title-row"><div><h2>Intelligence settings</h2><p>Use the browser’s local language model where available. The offline planner always remains operational.</p></div><button class="icon-btn" id="closeSettings">×</button></div><div class="divider"></div><div class="field"><label><input checked="" id="useBrowserAI" type="checkbox"/> Use native in-browser language model when available</label></div><div class="field"><label>Commercial plan mode</label><select id="planMode"><option value="conservative">Conservative</option><option selected="" value="balanced">Balanced</option><option value="ambitious">Ambitious</option></select></div><div class="field"><label><input checked="" id="autosaveToggle" type="checkbox"/> Autosave locally on this device</label></div><div class="fineprint">No API key is required. If Chrome’s on-device LanguageModel API is unavailable, GoalOS uses the deterministic Offline Sovereign Planner.</div></div></div>
+<div class="toast" id="toast"></div>
+<script src="../assets/machine-app.js"></script>
+<div style="position:fixed;left:12px;bottom:12px;z-index:9998;background:rgba(5,11,21,.9);color:#9fb0c5;border:1px solid rgba(245,217,143,.18);padding:7px 10px;border-radius:999px;font:700 11px system-ui"><a href="../legal/LEGAL_INDEX.html" rel="noopener" style="color:#efcf83;text-decoration:none" target="_blank">Legal &amp; governance</a> · Browser-local planning · No revenue guarantee</div>
+</body>
+</html>
