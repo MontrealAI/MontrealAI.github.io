@@ -1,0 +1,7 @@
+'use strict';
+const CACHE='goalos-agi-club-v8-1-public-shell';
+const CORE=['./','./index.html','./assets/site.css','./assets/gate.js','./assets/membership.js','./assets/register-sw.js','./vendor/ethers.umd.min.js','./legal/LEGAL_INDEX.html'];
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
+function cacheable(url,response){return url.origin===self.location.origin&&response&&response.ok&&!url.pathname.includes('/member/')&&!url.pathname.includes('/config/')&&!url.pathname.includes('/operator/')&&!url.pathname.includes('/legal/');}
+self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;const url=new URL(event.request.url);event.respondWith(fetch(event.request,{cache:'no-store'}).then(response=>{if(cacheable(url,response)){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)));}return response;}).catch(async()=>{const cached=await caches.match(event.request);if(cached)return cached;if(event.request.mode==='navigate'&&!url.pathname.includes('/member/'))return caches.match('./index.html');return new Response('Offline. Reconnect to Ethereum Mainnet and reload.',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}});}));});
