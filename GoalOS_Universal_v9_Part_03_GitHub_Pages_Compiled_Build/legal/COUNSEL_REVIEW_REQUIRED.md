@@ -1,0 +1,3 @@
+# Counsel Review Required
+
+This release is a legal-hardened production candidate, not a legal opinion or a guarantee of immunity. Before public deployment, obtain jurisdiction-appropriate review of the actual operator, entity names, Québec/French-language obligations, consumer contracting, privacy, electronic signatures, intellectual property, accessibility, sanctions/export controls, tax, token/digital-asset communications, securities/derivatives/payments laws, dispute terms, limitation clauses, insurance, and the facts of control and commercial operation. Mandatory law, regulators, non-signatories, and actual conduct are not displaced by website terms.
