@@ -1,0 +1,56 @@
+{
+  "schema": "goalos/agi-club-live-acceptance-cases/v1",
+  "release": "9.0.0",
+  "instructions": "Replace every placeholder with controlled labels and wallet addresses. Do not commit private keys, seed phrases, or secrets.",
+  "cases": [
+    {
+      "id": "direct-unwrapped-owner",
+      "label": "REPLACE_UNWRAPPED_LABEL",
+      "wallet": "0xREPLACE_OWNER_WALLET",
+      "expected": "allow",
+      "notes": "Direct unwrapped *.club.agi.eth currently owned in ENS Registry by this wallet."
+    },
+    {
+      "id": "official-wrapper-owner",
+      "label": "REPLACE_CURRENT_WRAPPER_LABEL",
+      "wallet": "0xREPLACE_OWNER_WALLET",
+      "expected": "allow",
+      "notes": "Direct name controlled through the official ENS Ethereum Mainnet Name Wrapper with future expiry."
+    },
+    {
+      "id": "legacy-or-custom-mainnet-wrapper-owner",
+      "label": "REPLACE_OPTIONAL_MAINNET_WRAPPER_LABEL",
+      "wallet": "0xREPLACE_OWNER_WALLET",
+      "expected": "allow-or-na",
+      "notes": "Optional: use only an independently verified additional Ethereum Mainnet wrapper deliberately added to config.json. Otherwise record N/A. Never use the Sepolia wrapper."
+    },
+    {
+      "id": "expired-wrapper",
+      "label": "REPLACE_EXPIRED_LABEL",
+      "wallet": "0xREPLACE_FORMER_OR_RECORDED_WALLET",
+      "expected": "deny",
+      "notes": "Wrapped expiry is in the past."
+    },
+    {
+      "id": "transferred-former-owner",
+      "label": "REPLACE_TRANSFERRED_LABEL",
+      "wallet": "0xREPLACE_FORMER_OWNER_WALLET",
+      "expected": "deny",
+      "notes": "The direct membership was transferred away from this wallet."
+    },
+    {
+      "id": "wrong-account",
+      "label": "REPLACE_VALID_LABEL",
+      "wallet": "0xREPLACE_NON_OWNER_WALLET",
+      "expected": "deny",
+      "notes": "Valid direct membership, deliberately tested from a different MetaMask account."
+    },
+    {
+      "id": "nested-name",
+      "label": "x.REPLACE_VALID_LABEL.club.agi.eth",
+      "wallet": "0xREPLACE_ANY_CONTROLLED_WALLET",
+      "expected": "reject-input",
+      "notes": "Nested input must be rejected before any chain read or signature request."
+    }
+  ]
+}
