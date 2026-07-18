@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AGI Club GoalOS Access Manifest",
+  "type": "object",
+  "required": [
+    "schema",
+    "name",
+    "tier",
+    "status"
+  ],
+  "properties": {
+    "schema": {
+      "const": "goalos.agiClubAccess.v1"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[^.]+\\.club\\.agi\\.eth$"
+    },
+    "tier": {
+      "enum": [
+        "pioneer",
+        "business",
+        "sovereign",
+        "agent",
+        "node"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "disabled"
+      ]
+    },
+    "expiresAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
