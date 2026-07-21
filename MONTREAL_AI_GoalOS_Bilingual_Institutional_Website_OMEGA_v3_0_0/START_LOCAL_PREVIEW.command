@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 cd "$(dirname "$0")"
-python3 start_local_preview.py
+python3 -m http.server 8000
