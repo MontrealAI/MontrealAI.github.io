@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goalos.example/schemas/global_launch_plan_v1.schema.json",
+  "title": "GoalOS Global Launch Plan Ω",
+  "type": "object",
+  "required": [
+    "schema",
+    "generatedAt",
+    "mission",
+    "selectedArchitecture",
+    "functionAllocation",
+    "capitalStack",
+    "missionPortfolio",
+    "monitoringConstitution",
+    "authorityBoundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "goalos-global-launch-plan/1.0"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mission": {
+      "type": "object",
+      "required": [
+        "name",
+        "launchType",
+        "objective"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "launchType": {
+          "enum": [
+            "company",
+            "nonprofit",
+            "research",
+            "fund",
+            "expansion",
+            "infrastructure",
+            "industrial",
+            "economic"
+          ]
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planningCurrency": {
+          "type": "string"
+        },
+        "horizonYears": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "selectedArchitecture": {
+      "type": "object",
+      "required": [
+        "name",
+        "decision",
+        "thesis"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "thesis": {
+          "type": "string"
+        },
+        "robustScore": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "evidenceConfidence": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "regulatorySurface": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "functionAllocation": {
+      "type": "object",
+      "required": [
+        "root",
+        "sell",
+        "hire",
+        "rd",
+        "ip",
+        "capital",
+        "support",
+        "infrastructure",
+        "value"
+      ],
+      "additionalProperties": {
+        "type": [
+          "string",
+          "object",
+          "null"
+        ]
+      }
+    },
+    "capitalStack": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "missionPortfolio": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "proofDebt": {
+      "type": "array",
+      "items": {}
+    },
+    "switchConditions": {
+      "type": "array",
+      "items": {}
+    },
+    "monitoringConstitution": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "authorityBoundary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "integrity": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

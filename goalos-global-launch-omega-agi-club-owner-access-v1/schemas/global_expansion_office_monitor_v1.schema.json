@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goalos.example/schemas/global_expansion_office_monitor_v1.schema.json",
+  "title": "GoalOS Global Expansion Office Monitor",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "subject",
+    "cadence",
+    "owner",
+    "evidenceSources",
+    "triggerConditions",
+    "status"
+  ],
+  "properties": {
+    "schema": {
+      "const": "goalos-global-expansion-monitor/1.0"
+    },
+    "id": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "cadence": {
+      "enum": [
+        "continuous",
+        "weekly",
+        "monthly",
+        "quarterly",
+        "annual",
+        "event"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "evidenceSources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "triggerConditions": {
+      "type": "array",
+      "items": {}
+    },
+    "nextReview": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "due",
+        "triggered",
+        "blocked",
+        "retired"
+      ]
+    },
+    "successorMission": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
