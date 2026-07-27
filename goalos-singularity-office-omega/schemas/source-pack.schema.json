@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montreal.ai/schemas/goalos-source-pack-v1.json",
+  "title": "GoalOS Signed Frontier Source Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "packId",
+    "product",
+    "release",
+    "publisher",
+    "issuedAt",
+    "expiresAt",
+    "sources",
+    "notice",
+    "signature",
+    "signatureAlgorithm",
+    "publicKeyId"
+  ],
+  "properties": {
+    "schema": {
+      "const": "goalos.source-pack.v1"
+    },
+    "packId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "product": {
+      "const": "GoalOS Singularity Office Ω"
+    },
+    "release": {
+      "const": "v2.0.0-SO2"
+    },
+    "publisher": {
+      "type": "string",
+      "minLength": 1
+    },
+    "issuedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "authority",
+          "url",
+          "verified",
+          "categories",
+          "summary",
+          "implication"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authority": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "verified": {
+            "type": "string",
+            "format": "date"
+          },
+          "categories": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "implication": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "notice": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 16
+    },
+    "signatureAlgorithm": {
+      "const": "ECDSA-P256-SHA256"
+    },
+    "publicKeyId": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

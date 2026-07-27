@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montreal.ai/schemas/goalos-license-v1.json",
+  "title": "GoalOS Institution Licence",
+  "type": "object",
+  "required": [
+    "schema",
+    "product",
+    "releaseMajor",
+    "licenseId",
+    "licensee",
+    "tier",
+    "notBefore",
+    "expiresAt",
+    "origins",
+    "signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "goalos.license.v1"
+    },
+    "product": {
+      "const": "GoalOS Singularity Office Ω"
+    },
+    "releaseMajor": {
+      "const": 1
+    },
+    "licenseId": {
+      "type": "string"
+    },
+    "licensee": {
+      "type": "string"
+    },
+    "tier": {
+      "enum": [
+        "Professional",
+        "Practitioner",
+        "Team",
+        "Institution",
+        "Protected Deployment",
+        "Sovereign"
+      ]
+    },
+    "seats": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "notBefore": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "origins": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "signature": {
+      "type": "string"
+    }
+  }
+}

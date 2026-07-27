@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="fr-CA" data-theme="cosmic" data-force-lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050811">
+<meta name="description" content="GoalOS Singularity Office Ω — the recurring institutional control plane for monitoring frontier change, governing missions, proving outcomes and compounding verified capability.">
+<meta name="application-name" content="GoalOS Singularity Office Ω">
+<meta name="goalos-release" content="v2.0.0-SO2">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; object-src 'none'; frame-src 'self'; base-uri 'none'; form-action 'none'; worker-src 'self' blob:">
+<title>GoalOS Singularity Office Ω</title>
+<link rel="manifest" href="app.webmanifest">
+<link rel="icon" href="assets/icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="access-locked">
+<canvas id="cosmos" aria-hidden="true"></canvas><div class="grain" aria-hidden="true"></div>
+
+<div id="accessGate" class="access-gate" role="dialog" aria-modal="true" aria-labelledby="accessTitle">
+  <div class="gate-shell">
+    <section class="gate-preview">
+      <div class="gate-brand"><span class="omega">Ω</span><div><b>MONTREAL.AI</b><small data-i18n="brand_sub"></small></div></div>
+      <div class="gate-copy">
+        <div class="eyebrow" data-i18n="gate_eyebrow"></div>
+        <h1>GoalOS <span data-i18n="office_name"></span> Ω</h1>
+        <h2 data-i18n="office_descriptor"></h2>
+        <p class="lead" data-i18n="gate_manifesto"></p>
+        <div class="gate-pillars">
+          <article><b data-i18n="observe"></b><span data-i18n="observe_desc"></span></article>
+          <article><b data-i18n="govern"></b><span data-i18n="govern_desc"></span></article>
+          <article><b data-i18n="compound"></b><span data-i18n="compound_desc"></span></article>
+        </div>
+      </div>
+      <div class="gate-statline"><span><b>12</b><small data-i18n="architectures"></small></span><span><b>12</b><small data-i18n="agents"></small></span><span><b>21</b><small>AGI Jobs</small></span><span><b>15</b><small data-i18n="receipts"></small></span></div>
+    </section>
+    <aside class="gate-access">
+      <div class="language-panel" aria-label="Language / Langue">
+        <span data-i18n="language"></span>
+        <div class="language-switch"><button type="button" data-lang="fr">Français</button><button type="button" data-lang="en">English</button></div>
+      </div>
+      <div class="gate-head"><div class="eyebrow" data-i18n="access_eyebrow"></div><h2 id="accessTitle" data-i18n="access_title"></h2><p data-i18n="access_intro"></p></div>
+      <div class="access-tabs" role="tablist"><button class="active" data-access-tab="agi" data-i18n="access_agi"></button><button data-access-tab="license" data-i18n="access_license"></button><button data-access-tab="preview" data-i18n="access_preview"></button></div>
+
+      <div class="access-pane active" data-access-pane="agi">
+        <label class="field-label" for="agiLabel" data-i18n="agi_label"></label>
+        <div class="ens-box"><input id="agiLabel" autocomplete="off" maxlength="63" placeholder="founder"><span>.club.agi.eth</span></div>
+        <label class="check"><input type="checkbox" id="agiOwner"><span data-i18n="agi_confirm_owner"></span></label>
+        <label class="check"><input type="checkbox" id="agiTerms"><span data-i18n="agi_confirm_terms"></span></label>
+        <label class="check"><input type="checkbox" id="agiBoundary"><span data-i18n="agi_confirm_boundary"></span></label>
+        <button class="btn primary wide" id="agiVerify" disabled data-i18n="agi_verify"></button>
+        <button class="btn subtle wide" id="agiRestore" data-i18n="restore_session"></button>
+      </div>
+
+      <div class="access-pane" data-access-pane="license">
+        <div class="dropzone" id="licenseDrop"><b data-i18n="license_drop_title"></b><span data-i18n="license_drop_desc"></span><input type="file" id="licenseFile" accept=".json,.goalos-license.json,application/json"></div>
+        <div class="proof-grid" id="licenseProof"><div><span data-i18n="licensee"></span><b id="licenseeProof">—</b></div><div><span data-i18n="tier"></span><b id="tierProof">—</b></div><div><span data-i18n="expiry"></span><b id="expiryProof">—</b></div><div><span data-i18n="status"></span><b id="licenseStatusProof">—</b></div></div>
+        <label class="check"><input type="checkbox" id="licenseTerms"><span data-i18n="license_confirm_terms"></span></label>
+        <button class="btn primary wide" id="licenseUnlock" disabled data-i18n="license_unlock"></button>
+      </div>
+
+      <div class="access-pane" data-access-pane="preview">
+        <div class="notice warning"><b data-i18n="preview_title"></b><span data-i18n="preview_desc"></span></div>
+        <button class="btn primary wide" id="previewUnlock" data-i18n="preview_enter"></button>
+      </div>
+
+      <div class="gate-status" id="gateStatus" data-state="warn" data-i18n="gate_locked"></div>
+      <div class="gate-links"><a href="governance/LEGAL_INDEX.html" target="_blank" rel="noopener" data-i18n="legal_center"></a><a href="research/GoalOS_Singularity_Navigator_Omega_MasterClass_v3_2_0_SN5_BI1.pdf" target="_blank" rel="noopener">MasterClass</a><a href="research/GoalOS_Singularity_Navigation_Omega_Tools_to_Ride_the_Singularity_v2_0_0.pdf" target="_blank" rel="noopener" data-i18n="founding_paper"></a></div>
+    </aside>
+  </div>
+</div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#office" data-route="office"><span class="brandmark">Ω</span><span><b>GoalOS Singularity Office Ω</b><small data-i18n="office_descriptor"></small></span></a>
+    <nav id="nav" aria-label="Primary navigation"></nav>
+    <div class="top-actions">
+      <button class="iconbtn mobile-only" id="mobileNavBtn" aria-label="Menu">☰</button>
+      <button class="iconbtn" id="languageBtn" aria-label="Language">FR</button>
+      <button class="iconbtn" id="themeBtn" aria-label="Theme">◐</button>
+      <button class="iconbtn" id="paletteBtn" aria-label="Command palette">⌕</button>
+      <button class="access-chip" id="accessChip" data-state="locked">Locked</button>
+    </div>
+  </div>
+</header>
+
+<main class="app">
+  <div class="ai-disclosure"><b data-i18n="algorithmic_label"></b><span data-i18n="algorithmic_notice"></span></div>
+
+  <section class="view active" id="view-office">
+    <div class="hero">
+      <div class="hero-image"></div>
+      <div class="hero-content">
+        <div class="eyebrow">MONTREAL.AI · SOVEREIGN INTELLIGENCE</div>
+        <h1>GoalOS <span data-i18n="office_name"></span> Ω</h1>
+        <h2 data-i18n="office_descriptor"></h2>
+        <p data-i18n="office_promise"></p>
+        <div class="hero-actions"><button class="btn primary" id="constituteOffice" data-i18n="constitute_office"></button><button class="btn" id="loadDemo" data-i18n="load_demo"></button><button class="btn" data-route="board" data-i18n="open_board"></button></div>
+      </div>
+      <div class="hero-metrics" id="heroMetrics"></div>
+    </div>
+
+    <div class="section-head"><div><span class="kicker" data-i18n="office_pulse"></span><h2 data-i18n="what_matters_now"></h2></div><p data-i18n="pulse_desc"></p></div>
+    <div class="kpi-grid" id="pulseGrid"></div>
+    <div class="grid two">
+      <article class="card apex"><div class="card-head"><div><span class="kicker" data-i18n="recommendation"></span><h3 id="championName">—</h3></div><span class="verdict" id="officeVerdict">—</span></div><p id="championReason">—</p><div class="decision-triad" id="portfolioTriad"></div><div class="button-row"><button class="btn primary" data-route="auction" data-i18n="inspect_auction"></button><button class="btn" data-route="proof" data-i18n="inspect_proof"></button></div></article>
+      <article class="card"><div class="card-head"><div><span class="kicker" data-i18n="next_actions"></span><h3 data-i18n="command_sequence"></h3></div></div><div class="timeline" id="commandSequence"></div></article>
+    </div>
+    <div class="grid three">
+      <article class="card"><div class="card-head"><h3 data-i18n="frontier_changes"></h3><span class="badge" id="radarCount">0</span></div><div id="frontierMini" class="list"></div><button class="btn subtle wide" data-route="radar" data-i18n="open_radar"></button></article>
+      <article class="card"><div class="card-head"><h3 data-i18n="mission_health"></h3><span class="badge" id="missionCount">0</span></div><div id="missionMini" class="list"></div><button class="btn subtle wide" data-route="missions" data-i18n="open_missions"></button></article>
+      <article class="card"><div class="card-head"><h3 data-i18n="proof_debt"></h3><span class="badge" id="debtCount">0</span></div><div id="proofMini" class="list"></div><button class="btn subtle wide" data-route="proof" data-i18n="retire_proof_debt"></button></article>
+    </div>
+  </section>
+
+  <section class="view" id="view-constitution">
+    <div class="section-head"><div><span class="kicker" data-i18n="constitute"></span><h2 data-i18n="office_constitution"></h2></div><p data-i18n="constitution_desc"></p></div>
+    <form class="card form-card" id="constitutionForm">
+      <div class="form-grid">
+        <label><span data-i18n="institution_name"></span><input id="institutionName" required></label>
+        <label><span data-i18n="institution_type"></span><select id="institutionType"></select></label>
+        <label class="span-2"><span data-i18n="consequential_objective"></span><textarea id="objective" required></textarea></label>
+        <label class="span-2"><span data-i18n="must_remain_true"></span><textarea id="preserve"></textarea></label>
+        <label><span data-i18n="horizon"></span><select id="horizon"><option value="30">30 days</option><option value="90">90 days</option><option value="365" selected>365 days</option><option value="1000">1,000 days</option></select></label>
+        <label><span data-i18n="capital_band"></span><select id="capitalBand"><option value="1">&lt; US$100K</option><option value="2">US$100K–1M</option><option value="3" selected>US$1M–10M</option><option value="4">US$10M–100M</option><option value="5">US$100M+</option></select></label>
+        <label><span data-i18n="decision_stakes"></span><select id="stakes"><option value="35" data-i18n-option="exploratory"></option><option value="60" selected data-i18n-option="material"></option><option value="82" data-i18n-option="consequential"></option><option value="96" data-i18n-option="systemic"></option></select></label>
+        <label><span data-i18n="data_sensitivity"></span><select id="sensitivity"><option value="20" data-i18n-option="public_synthetic"></option><option value="48" selected data-i18n-option="internal"></option><option value="72" data-i18n-option="confidential"></option><option value="94" data-i18n-option="regulated"></option></select></label>
+      </div>
+      <div class="slider-grid" id="weightSliders"></div>
+      <div class="button-row"><button class="btn primary" type="submit" data-i18n="generate_office"></button><button class="btn" type="button" id="saveWorkspace" data-i18n="save_workspace"></button><button class="btn danger" type="button" id="deleteWorkspace" data-i18n="delete_workspace"></button></div>
+    </form>
+    <div class="card"><div class="card-head"><h3 data-i18n="workspace_portfolio"></h3><button class="btn small" id="newWorkspace" data-i18n="new_workspace"></button></div><div id="workspaceList" class="workspace-list"></div></div>
+  </section>
+
+  <section class="view" id="view-radar">
+    <div class="section-head"><div><span class="kicker">GoalOS Frontier Radar Ω</span><h2 data-i18n="frontier_radar"></h2></div><p data-i18n="radar_desc"></p></div>
+    <div class="toolbar"><button class="btn primary" id="refreshSources" data-i18n="refresh_source_pack"></button><button class="btn" id="importSourcePack" data-i18n="import_source_pack"></button><input type="file" id="sourcePackFile" accept="application/json,.json" hidden><span id="sourcePackStatus" class="status-text">—</span></div>
+    <div class="grid two"><article class="card"><div class="card-head"><h3 data-i18n="priority_signals"></h3><span class="badge" id="radarPriorityCount">0</span></div><div id="radarList" class="signal-list"></div></article><article class="card"><div class="card-head"><h3 data-i18n="impact_map"></h3></div><div id="radarImpactMap" class="radar-map"></div></article></div>
+    <div class="card"><div class="card-head"><h3 data-i18n="source_register"></h3><button class="btn small" id="exportSources" data-i18n="export"></button></div><div class="table-wrap"><table><thead><tr><th data-i18n="authority"></th><th data-i18n="source"></th><th data-i18n="verified"></th><th data-i18n="implication"></th></tr></thead><tbody id="sourceTable"></tbody></table></div></div>
+  </section>
+
+  <section class="view" id="view-missions">
+    <div class="section-head"><div><span class="kicker">GoalOS Mission Portfolio Ω</span><h2 data-i18n="mission_portfolio"></h2></div><p data-i18n="missions_desc"></p></div>
+    <div class="toolbar"><button class="btn primary" id="generateMissions" data-i18n="compile_missions"></button><button class="btn" id="runMissions" data-i18n="run_ready"></button><button class="btn" id="addMission" data-i18n="add_mission"></button><span id="missionPortfolioStatus" class="status-text">—</span></div>
+    <div id="missionBoard" class="kanban"></div>
+  </section>
+
+  <section class="view" id="view-twin">
+    <div class="section-head"><div><span class="kicker">Institutional Capability Twin Ω</span><h2 data-i18n="capability_twin"></h2></div><p data-i18n="twin_desc"></p></div>
+    <div class="grid two"><article class="card"><div class="card-head"><h3 data-i18n="current_target"></h3></div><div id="twinChart" class="twin-chart"></div></article><article class="card"><div class="card-head"><h3 data-i18n="capability_disposition"></h3></div><div id="dispositionList" class="list"></div></article></div>
+    <div class="card"><div class="card-head"><h3 data-i18n="edit_twin"></h3><button class="btn small" id="rebalanceTwin" data-i18n="optimize"></button></div><div id="twinEditor" class="slider-grid"></div></div>
+  </section>
+
+  <section class="view" id="view-auction">
+    <div class="section-head"><div><span class="kicker">Architecture Auction Ω</span><h2 data-i18n="architecture_auction"></h2></div><p data-i18n="auction_desc"></p></div>
+    <div class="toolbar"><label class="inline-field"><span data-i18n="deliberation"></span><select id="worldBudget"><option value="0" data-i18n-option="adaptive"></option><option value="1024">1,024</option><option value="4096">4,096</option><option value="16384">16,384</option></select></label><button class="btn primary" id="runAuction" data-i18n="run_auction"></button><button class="btn" id="runLiveCouncil" data-i18n="run_council"></button><span id="auctionStatus" class="status-text">—</span></div>
+    <div class="scenario-grid" id="scenarioGrid"></div>
+    <div class="grid two"><article class="card"><div class="card-head"><h3 data-i18n="council_deliberation"></h3></div><div id="councilLog" class="council-log"></div></article><article class="card"><div class="card-head"><h3 data-i18n="switch_conditions"></h3></div><div id="switchConditions" class="list"></div></article></div>
+  </section>
+
+  <section class="view" id="view-proof">
+    <div class="section-head"><div><span class="kicker">GoalOS Proof & Authority Ω</span><h2 data-i18n="proof_authority"></h2></div><p data-i18n="proof_desc"></p></div>
+    <div class="grid two"><article class="card"><div class="card-head"><h3 data-i18n="proof_debt_queue"></h3><span class="badge" id="proofDebtTotal">0</span></div><div id="proofDebtList" class="proof-list"></div></article><article class="card"><div class="card-head"><h3 data-i18n="authority_register"></h3><button class="btn small" id="addAuthority" data-i18n="add"></button></div><div id="authorityList" class="list"></div></article></div>
+    <div class="card"><div class="card-head"><h3 data-i18n="receipt_matrix"></h3></div><div id="receiptMatrix" class="receipt-grid"></div></div>
+  </section>
+
+  <section class="view" id="view-vault">
+    <div class="section-head"><div><span class="kicker">Evidence Vault Ω</span><h2 data-i18n="evidence_vault"></h2></div><p data-i18n="vault_desc"></p></div>
+    <div class="grid two"><article class="card"><div class="card-head"><h3 data-i18n="proof_bundles"></h3><button class="btn small" id="createBundle" data-i18n="create_bundle"></button></div><div id="bundleList" class="list"></div></article><article class="card"><div class="card-head"><h3 data-i18n="encrypted_preservation"></h3></div><label><span data-i18n="passphrase"></span><input type="password" id="vaultPassphrase" autocomplete="new-password"></label><div class="button-row"><button class="btn primary" id="exportEncrypted" data-i18n="export_encrypted"></button><button class="btn" id="importEncrypted" data-i18n="restore_encrypted"></button><input type="file" id="encryptedFile" hidden><button class="btn danger" id="purgeVault" data-i18n="purge"></button></div><div class="notice" id="vaultStatus">—</div></article></div>
+    <div class="card"><div class="card-head"><h3 data-i18n="decision_ledger"></h3></div><div class="table-wrap"><table><thead><tr><th data-i18n="time"></th><th data-i18n="event"></th><th data-i18n="actor"></th><th data-i18n="hash"></th></tr></thead><tbody id="ledgerTable"></tbody></table></div></div>
+  </section>
+
+  <section class="view" id="view-chronicle">
+    <div class="section-head"><div><span class="kicker">Chronicle + Verified Outcome Graph</span><h2 data-i18n="chronicle_successors"></h2></div><p data-i18n="chronicle_desc"></p></div>
+    <div class="grid two"><article class="card"><div class="card-head"><h3 data-i18n="chronicle_entries"></h3></div><div id="chronicleList" class="list"></div></article><article class="card"><div class="card-head"><h3 data-i18n="successor_lab"></h3></div><div id="successorPanel"></div></article></div>
+    <div class="card"><div class="card-head"><h3 data-i18n="outcome_graph"></h3><button class="btn small" id="rebuildGraph" data-i18n="rebuild"></button></div><svg id="outcomeGraph" viewBox="0 0 1200 520" role="img" aria-label="Verified outcome graph"></svg></div>
+  </section>
+
+  <section class="view" id="view-value">
+    <div class="section-head"><div><span class="kicker">Verified Value Ledger Ω</span><h2 data-i18n="value_ledger"></h2></div><p data-i18n="value_desc"></p></div>
+    <div class="kpi-grid" id="valueKpis"></div>
+    <div class="grid two"><article class="card"><div class="card-head"><h3 data-i18n="value_entries"></h3><button class="btn small" id="addValueEntry" data-i18n="add"></button></div><div id="valueEntries" class="list"></div></article><article class="card"><div class="card-head"><h3 data-i18n="capital_to_capacity"></h3></div><div id="capitalAllocation" class="allocation"></div><button class="btn primary wide" id="optimizeCapital" data-i18n="optimize_allocation"></button></article></div>
+  </section>
+
+  <section class="view" id="view-resilience">
+    <div class="section-head"><div><span class="kicker">Singularity Resilience Engine Ω</span><h2 data-i18n="resilience"></h2></div><p data-i18n="resilience_desc"></p></div>
+    <div class="grid two"><article class="card"><div class="card-head"><h3 data-i18n="dependency_map"></h3></div><div id="dependencyMap" class="dependency-map"></div></article><article class="card"><div class="card-head"><h3 data-i18n="incident_register"></h3><button class="btn small" id="addIncident" data-i18n="add"></button></div><div id="incidentList" class="list"></div></article></div>
+    <div class="card"><div class="card-head"><h3 data-i18n="six_domain_monitoring"></h3></div><div id="monitoringDomains" class="monitor-grid"></div></div>
+  </section>
+
+  <section class="view" id="view-cadence">
+    <div class="section-head"><div><span class="kicker">Office Cadence Ω</span><h2 data-i18n="operating_cadence"></h2></div><p data-i18n="cadence_desc"></p></div>
+    <div id="cadenceBoard" class="cadence-board"></div>
+  </section>
+
+  <section class="view" id="view-board">
+    <div class="section-head"><div><span class="kicker">Apex Board Room Ω</span><h2 data-i18n="board_room"></h2></div><p data-i18n="board_desc"></p></div>
+    <div class="toolbar"><button class="btn primary" id="generateBoardBrief" data-i18n="generate_brief"></button><button class="btn" id="downloadBoardHtml" data-i18n="download_html"></button><button class="btn" id="downloadWeeklyMd" data-i18n="download_weekly"></button><button class="btn" id="printBoard" data-i18n="print_pdf"></button></div>
+    <div id="boardBrief" class="board-paper"></div>
+  </section>
+
+  <section class="view" id="view-integrations">
+    <div class="section-head"><div><span class="kicker">Institutional Integration Surface</span><h2 data-i18n="integrations"></h2></div><p data-i18n="integrations_desc"></p></div>
+    <div class="grid two"><article class="card"><div class="card-head"><h3 data-i18n="protected_runtime"></h3></div><label><span data-i18n="runtime_endpoint"></span><input id="runtimeEndpoint" placeholder="https://office-runtime.example.com"></label><label><span data-i18n="runtime_token"></span><input type="password" id="runtimeToken" autocomplete="off"></label><div class="button-row"><button class="btn primary" id="testRuntime" data-i18n="test_connection"></button><button class="btn" id="clearRuntime" data-i18n="clear"></button></div><div class="notice" id="runtimeStatus">—</div></article><article class="card"><div class="card-head"><h3 data-i18n="state_portability"></h3></div><div class="button-row"><button class="btn primary" id="exportState" data-i18n="export_state"></button><button class="btn" id="importState" data-i18n="import_state"></button><input type="file" id="stateFile" hidden><button class="btn danger" id="resetState" data-i18n="reset"></button></div><div class="notice" data-i18n="portability_notice"></div></article></div>
+    <div class="card"><div class="card-head"><h3 data-i18n="licence_and_access"></h3></div><div id="accessDetails" class="proof-grid"></div></div>
+  </section>
+
+  <section class="view" id="view-legal">
+    <div class="section-head"><div><span class="kicker">Legal & Governance Center</span><h2 data-i18n="legal_center"></h2></div><p data-i18n="legal_desc"></p></div>
+    <div class="legal-grid" id="legalSummary"></div>
+    <div class="button-row"><a class="btn primary" href="governance/LEGAL_INDEX.html" target="_blank" rel="noopener" data-i18n="open_full_legal"></a><a class="btn" href="research/GoalOS_Singularity_Navigator_Omega_MasterClass_v3_2_0_SN5_BI1.pdf" target="_blank" rel="noopener">MasterClass</a><a class="btn" href="research/GoalOS_Singularity_Navigation_Omega_Tools_to_Ride_the_Singularity_v2_0_0.pdf" target="_blank" rel="noopener" data-i18n="founding_paper"></a></div>
+  </section>
+</main>
+
+<div id="mobileNav" class="mobile-nav" hidden></div>
+<div id="palette" class="palette" hidden><div class="palette-box"><input id="paletteInput" data-i18n-placeholder="palette_placeholder"><div id="paletteResults"></div></div></div>
+<div id="toast" class="toast" hidden><b></b><span></span></div>
+
+<dialog id="accessDialog"><div class="dialog-head"><b data-i18n="access_center"></b><button data-close>×</button></div><div class="dialog-body"><div id="accessDialogBody"></div><div class="button-row"><button class="btn" id="revalidateAccess" data-i18n="revalidate"></button><button class="btn" id="exportAccessReceipt" data-i18n="export_receipt"></button><button class="btn danger" id="lockOffice" data-i18n="lock"></button></div></div></dialog>
+<dialog id="modal"><div class="dialog-head"><b id="modalTitle">—</b><button data-close>×</button></div><div class="dialog-body" id="modalBody"></div><div class="dialog-foot"><button class="btn" data-close data-i18n="close"></button></div></dialog>
+
+<script src="i18n.js"></script>
+<script src="engine.js"></script>
+<script src="access.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
