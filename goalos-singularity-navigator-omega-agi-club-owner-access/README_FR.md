@@ -3,7 +3,3 @@
 ## Français
 Institution AGI Club entièrement bilingue. L’utilisateur choisit le français ou l’anglais avant l’accès et peut changer de langue à tout moment sans perdre l’état local.
 
-## English
-Fully bilingual AGI Club institution. The user chooses French or English before access and may switch languages at any time without losing browser-local state.
-
-Open `START_HERE.html`. / Ouvrez `START_HERE.html`.
