@@ -1,7 +1,7 @@
 # AGI Club Live-Wallet Acceptance Matrix
 
 **Product:** GoalOS Singularity Navigator Ω  
-**Edition:** AGI Club GitHub Pages Institution — v3.0.0-SN5  
+**Edition:** AGI Club GitHub Pages Institution — v3.1.0-SN5-LR1  
 **Static-release revision:** 2026-07-26-DSR1  
 **Canonical deployment:** `https://montrealai.github.io/goalos-singularity-navigator-omega-agi-club-owner-access/`  
 **Ethereum network:** Mainnet (`0x1`)  
@@ -61,7 +61,7 @@ The following matrix is complete as a release instrument. Its **Live result** ce
 | LW-17 | Mobile current-owner entry | Mobile screenshot; no overflow; successful unlock | Unlock / responsive | TO BE EXECUTED |
 | LW-18 | Standalone HTML current-owner entry | File URL or local origin evidence; wallet behavior and boundary note | Unlock subject to wallet/provider support | TO BE EXECUTED |
 | LW-19 | Offline/PWA reopening after prior asset cache | Offline screenshot; source-boundary note | Public assets load; fresh ownership verification still requires provider | TO BE EXECUTED |
-| LW-20 | Current MasterClass link | Opened PDF metadata showing 204 pages and v3.0.0-SN5 | Open canonical MasterClass | TO BE EXECUTED |
+| LW-20 | Current MasterClass link | Opened PDF metadata showing 204 pages and v3.1.0-SN5-LR1 | Open canonical MasterClass | TO BE EXECUTED |
 
 ## Activation gate
 

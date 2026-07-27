@@ -1,6 +1,6 @@
 # Definitive Static Release — Surgical Actions
 
-**Release:** v3.0.0-SN5  
+**Release:** v3.1.0-SN5-LR1  
 **Revision:** 2026-07-26-DSR1
 
 ## Action 1 — Canonical MasterClass replacement

@@ -1,6 +1,6 @@
 # GoalOS Singularity Navigator Ω — Definitive Static Release QA Report
 
-**Release:** v3.0.0-SN5  
+**Release:** v3.1.0-SN5-LR1  
 **Revision:** 2026-07-26-DSR1  
 **Static/content controls:** 39/39 passed  
 **Deterministic browser assertions:** 43/43 passed
