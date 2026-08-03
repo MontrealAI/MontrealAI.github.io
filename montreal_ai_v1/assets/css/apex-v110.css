@@ -1,0 +1,271 @@
+/* MONTREAL.AI APEX v110 — media integrity, responsive institutional diagrams and progressive enhancement */
+:root{
+  --apex-night:#03101d;
+  --apex-night-2:#071d31;
+  --apex-night-3:#0b2c49;
+  --apex-gold:#c99c4a;
+  --apex-gold-2:#e7c979;
+  --apex-paper:#fbf7ee;
+  --apex-line:#d8cdbb;
+  --apex-shadow:0 34px 90px rgba(2,9,20,.18);
+}
+
+/* The media-integrity correction. HTML width/height attributes preserve layout, while
+   rendered media always scales proportionally. More-specific crop treatments remain intact. */
+img{height:auto}
+.media-frame,
+.architecture-plate,
+.stack-visual{
+  position:relative;
+  display:grid;
+  place-items:center;
+  width:100%;
+  min-width:0;
+  overflow:hidden;
+  border:1px solid rgba(138,99,38,.30);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 50% 8%,rgba(229,199,119,.16),transparent 35%),
+    linear-gradient(145deg,#fffdf8,#f5eddf);
+  box-shadow:var(--apex-shadow);
+}
+.media-frame img,
+.architecture-plate img,
+.stack-visual img{
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  min-width:0!important;
+  max-width:100%!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  aspect-ratio:auto!important;
+  margin:auto;
+}
+.media-frame-wide{padding:clamp(12px,2vw,28px)}
+.media-frame-wide img{max-width:100%!important}
+.media-frame-portrait{padding:clamp(18px,3vw,42px);min-height:580px}
+.media-frame-portrait img{max-height:min(82vh,1180px)!important;max-width:min(100%,880px)!important}
+.architecture-plate{padding:clamp(14px,2.5vw,34px)}
+.stack-visual{padding:clamp(14px,2vw,28px)}
+.media-frame[data-expandable],.architecture-plate[data-expandable],.stack-visual[data-expandable]{cursor:zoom-in}
+
+.apex-feature-section{
+  position:relative;
+  padding:clamp(74px,8vw,124px) 0;
+  background:
+    radial-gradient(circle at 78% 18%,rgba(201,156,74,.09),transparent 32%),
+    linear-gradient(180deg,#fbf7ee,#f4ecdf);
+  overflow:hidden;
+}
+.apex-feature-section:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent 0 49.9%,rgba(11,32,52,.035) 50%,transparent 50.1% 100%);
+}
+.apex-feature-grid{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,.84fr) minmax(560px,1.16fr);
+  gap:clamp(42px,6vw,88px);
+  align-items:center;
+}
+.apex-feature-copy{min-width:0}
+.apex-feature-copy .section-title{max-width:760px}
+.apex-feature-copy .lead{max-width:760px;color:var(--ink-2)}
+.apex-status-line{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.apex-status-line span{
+  display:inline-flex;
+  min-height:32px;
+  align-items:center;
+  border:1px solid rgba(138,99,38,.36);
+  border-radius:999px;
+  padding:6px 11px;
+  color:inherit;
+  font-size:.64rem;
+  font-weight:800;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  background:rgba(255,255,255,.035);
+}
+.apex-feature-copy .apex-status-line span{background:rgba(255,255,255,.55);color:#425466}
+.apex-mini-law{
+  margin:26px 0 0;
+  border-left:3px solid var(--apex-gold);
+  padding:12px 16px;
+  border-radius:0 10px 10px 0;
+  background:rgba(201,156,74,.08);
+  color:#596a78;
+  font-size:.83rem;
+  line-height:1.55;
+}
+.apex-mini-law strong{color:#142c42}
+
+.apex-stage{
+  position:relative;
+  min-height:640px;
+  border:1px solid rgba(229,199,119,.46);
+  border-radius:24px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(229,199,119,.14),transparent 27%),
+    radial-gradient(circle at 50% 50%,transparent 0 39%,rgba(229,199,119,.08) 39.2% 39.5%,transparent 39.7%),
+    radial-gradient(circle at 50% 50%,transparent 0 49%,rgba(229,199,119,.055) 49.2% 49.5%,transparent 49.7%),
+    linear-gradient(145deg,#020b16,#062039 62%,#03101d);
+  box-shadow:0 35px 90px rgba(2,9,20,.25);
+  isolation:isolate;
+}
+.apex-stage:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.34;
+  background-image:
+    radial-gradient(circle at 14% 17%,#e5c777 0 1px,transparent 1.4px),
+    radial-gradient(circle at 82% 22%,#89b7d5 0 1px,transparent 1.4px),
+    radial-gradient(circle at 71% 73%,#e5c777 0 1px,transparent 1.4px),
+    radial-gradient(circle at 25% 78%,#89b7d5 0 1px,transparent 1.4px);
+  background-size:83px 71px,109px 97px,137px 123px,167px 149px;
+}
+.apex-connections{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.apex-connections line{stroke:rgba(229,199,119,.42);stroke-width:1.15;stroke-dasharray:5 7}
+.apex-center{
+  position:absolute;
+  left:50%;top:50%;
+  z-index:4;
+  transform:translate(-50%,-50%);
+  width:188px;height:188px;
+  display:grid;place-items:center;
+  border:1px solid rgba(229,199,119,.72);
+  border-radius:50%;
+  color:#fff;
+  text-align:center;
+  background:radial-gradient(circle,#0c3153 0 45%,#03101d 72%);
+  box-shadow:0 0 0 18px rgba(229,199,119,.035),0 0 0 40px rgba(229,199,119,.025),0 22px 60px rgba(0,0,0,.35);
+}
+.apex-center .mark{font-family:var(--serif);font-size:58px;line-height:.9;color:var(--apex-gold-2)}
+.apex-center b{display:block;font-family:var(--serif);font-size:22px;color:#fff2cf;margin-top:9px}
+.apex-center span{display:block;margin-top:4px;color:#aebdc8;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase}
+.apex-node{
+  position:absolute;
+  z-index:5;
+  width:218px;
+  min-height:128px;
+  padding:16px;
+  border:1px solid rgba(229,199,119,.42);
+  border-radius:14px;
+  color:#dce6eb;
+  text-align:left;
+  background:rgba(2,13,24,.86);
+  backdrop-filter:blur(12px);
+  box-shadow:0 14px 32px rgba(0,0,0,.20);
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+.apex-node:hover,.apex-node:focus-visible,.apex-node.active{transform:translateY(-3px);border-color:#e5c777;background:rgba(11,44,73,.94)}
+.apex-node .n{display:block;color:#e5c777;font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;font-weight:900}
+.apex-node b{display:block;font-family:var(--serif);font-size:1.28rem;color:#fff3d0;margin:6px 0 4px}
+.apex-node small{display:block;color:#aebdc7;font-size:.69rem;line-height:1.42}
+.apex-node.n1{left:4.5%;top:6%}.apex-node.n2{left:50%;top:4%;transform:translateX(-50%)}.apex-node.n2:hover,.apex-node.n2:focus-visible,.apex-node.n2.active{transform:translateX(-50%) translateY(-3px)}
+.apex-node.n3{right:4.5%;top:6%}.apex-node.n4{right:4.5%;bottom:17%}.apex-node.n5{left:50%;bottom:14%;transform:translateX(-50%)}.apex-node.n5:hover,.apex-node.n5:focus-visible,.apex-node.n5.active{transform:translateX(-50%) translateY(-3px)}
+.apex-node.n6{left:4.5%;bottom:17%}
+.apex-detail{
+  position:absolute;
+  z-index:7;
+  left:50%;bottom:18px;
+  width:min(560px,82%);
+  transform:translateX(-50%);
+  padding:13px 17px;
+  border:1px solid rgba(229,199,119,.34);
+  border-radius:12px;
+  background:rgba(2,12,22,.86);
+  color:white;
+  text-align:center;
+  backdrop-filter:blur(14px);
+}
+.apex-detail span{display:block;color:#e5c777;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase}
+.apex-detail b{display:block;font-family:var(--serif);font-size:1.25rem;color:#fff1c9;margin:3px 0}
+.apex-detail p{margin:0;color:#b9c6ce;font-size:.72rem;line-height:1.45}
+
+/* Navigator compass */
+.compass-stage{min-height:650px}
+.compass-axis{position:absolute;left:50%;top:7%;bottom:14%;width:1px;background:rgba(229,199,119,.30);transform:translateX(-50%)}
+.compass-axis:after{content:"";position:absolute;top:50%;left:-260px;width:520px;height:1px;background:rgba(229,199,119,.24)}
+.compass-ring{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);border:1px solid rgba(229,199,119,.28);border-radius:50%}
+.compass-ring.r1{width:230px;height:230px}.compass-ring.r2{width:360px;height:360px}.compass-ring.r3{width:500px;height:500px}
+.compass-card{
+  position:absolute;z-index:5;width:215px;padding:16px;border:1px solid rgba(229,199,119,.44);border-radius:14px;background:rgba(2,13,24,.88);color:white;box-shadow:0 14px 32px rgba(0,0,0,.20)
+}
+.compass-card b{display:block;font-family:var(--serif);font-size:1.15rem;color:#f0d283}.compass-card p{margin:5px 0 0;color:#aebdc7;font-size:.7rem;line-height:1.42}
+.compass-card.c1{left:5%;top:8%}.compass-card.c2{right:5%;top:8%}.compass-card.c3{right:5%;bottom:17%}.compass-card.c4{left:5%;bottom:17%}
+
+/* Office cycle */
+.office-stage{min-height:720px}
+.office-cycle-ring{position:absolute;left:50%;top:42%;width:440px;height:440px;transform:translate(-50%,-50%);border:1px solid rgba(229,199,119,.35);border-radius:50%;box-shadow:0 0 0 45px rgba(229,199,119,.025),0 0 0 90px rgba(229,199,119,.018)}
+.office-cycle-ring:before,.office-cycle-ring:after{content:"";position:absolute;inset:50%;width:600px;height:1px;background:rgba(229,199,119,.20);transform-origin:left}
+.office-cycle-ring:before{transform:rotate(36deg)}.office-cycle-ring:after{transform:rotate(-36deg)}
+.office-cycle-node{position:absolute;z-index:5;width:190px;text-align:center;color:white}
+.office-cycle-node b{display:block;font-family:var(--serif);font-size:1.22rem;color:#f0d283}.office-cycle-node span{display:block;color:#aebdc7;font-size:.68rem;line-height:1.4;margin-top:3px}
+.office-cycle-node.o1{left:50%;top:5%;transform:translateX(-50%)}
+.office-cycle-node.o2{right:3%;top:28%}.office-cycle-node.o3{right:8%;top:58%}.office-cycle-node.o4{left:8%;top:58%}.office-cycle-node.o5{left:3%;top:28%}
+.office-stage .apex-center{top:42%}
+.office-verify{position:absolute;z-index:6;left:5%;right:5%;bottom:18px;display:grid;grid-template-columns:repeat(4,1fr);border:1px solid rgba(229,199,119,.32);border-radius:12px;overflow:hidden;background:rgba(2,12,22,.86)}
+.office-verify div{padding:11px 12px;border-right:1px solid rgba(229,199,119,.19)}.office-verify div:last-child{border-right:0}
+.office-verify span{display:block;color:#aebdc7;font-size:.58rem;text-transform:uppercase;letter-spacing:.1em}.office-verify b{display:block;color:#b7e5d2;font-size:.7rem;margin-top:3px}
+
+/* Global Launch */
+.launch-stage{min-height:690px;padding:28px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.launch-layer{position:relative;z-index:3;border:1px solid rgba(229,199,119,.38);border-radius:13px;padding:14px;text-align:center;color:#fff;background:rgba(3,17,31,.82)}
+.launch-layer.parent{background:linear-gradient(135deg,rgba(201,156,74,.18),rgba(3,17,31,.86))}
+.launch-layer b{display:block;font-family:var(--serif);font-size:1.25rem;color:#f0d283}.launch-layer span{display:block;color:#aebdc7;font-size:.68rem;line-height:1.4;margin-top:4px}
+.launch-arrow{position:relative;z-index:3;text-align:center;color:#e5c777;font-size:1.25rem;line-height:1}
+.launch-grid{position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.launch-module{border:1px solid rgba(255,255,255,.12);border-radius:11px;padding:12px;background:rgba(255,255,255,.035);text-align:center;color:white}
+.launch-module b{display:block;font-family:var(--serif);color:#f0d283}.launch-module span{display:block;color:#aebdc7;font-size:.63rem;line-height:1.35;margin-top:3px}
+.launch-loop{position:relative;z-index:3;display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-top:5px}
+.launch-loop span{border:1px solid rgba(229,199,119,.28);border-radius:999px;padding:5px 8px;color:#dce6eb;font-size:.57rem;letter-spacing:.06em;text-transform:uppercase}
+
+.architecture-plate-section{padding:clamp(74px,8vw,120px) 0;background:linear-gradient(180deg,#f2eadc,#fbf7ee)}
+.architecture-plate-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.55fr);gap:42px;align-items:end;margin-bottom:28px}
+.architecture-plate-head h2{font-size:clamp(2.5rem,4.8vw,4.8rem);line-height:.96;margin:8px 0 0}
+.architecture-plate-head>p{color:var(--muted);font-size:.92rem;line-height:1.6;margin:0}
+
+/* Full-screen media viewer */
+.apex-media-viewer{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;padding:28px;background:rgba(1,6,13,.92);backdrop-filter:blur(10px)}
+.apex-media-viewer.open{display:flex}
+.apex-media-viewer img{display:block;max-width:calc(100vw - 80px)!important;max-height:calc(100vh - 80px)!important;width:auto!important;height:auto!important;object-fit:contain!important}
+.apex-media-viewer button{position:absolute;right:22px;top:18px;width:44px;height:44px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(0,0,0,.3);color:white;font-size:1.4rem}
+.apex-media-viewer .viewer-caption{position:absolute;left:24px;right:80px;bottom:14px;color:#dce6eb;font-size:.75rem}
+
+@media(max-width:1220px){
+  .apex-feature-grid{grid-template-columns:1fr;gap:42px}
+  .apex-stage{width:min(100%,900px);margin-inline:auto}
+}
+@media(max-width:820px){
+  .apex-feature-section{padding:70px 0}
+  .apex-stage,.compass-stage,.office-stage,.launch-stage{min-height:auto;display:grid;grid-template-columns:1fr;gap:10px;padding:18px}
+  .apex-stage:before{opacity:.18}
+  .apex-connections,.compass-axis,.compass-ring,.office-cycle-ring{display:none}
+  .apex-center,.apex-node,.compass-card,.office-cycle-node,.office-stage .apex-center,.apex-detail,.office-verify{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;width:100%!important;height:auto!important;margin:0!important
+  }
+  .apex-center{min-height:150px;border-radius:18px;box-shadow:none}
+  .apex-node,.compass-card,.office-cycle-node{text-align:left;padding:14px;min-height:auto}
+  .apex-node:hover,.apex-node:focus-visible,.apex-node.active,.apex-node.n2:hover,.apex-node.n2:focus-visible,.apex-node.n2.active,.apex-node.n5:hover,.apex-node.n5:focus-visible,.apex-node.n5.active{transform:none}
+  .apex-detail{text-align:left}
+  .office-verify{display:grid!important;grid-template-columns:1fr 1fr!important;overflow:hidden}
+  .office-verify div{border-right:0;border-bottom:1px solid rgba(229,199,119,.19)}
+  .launch-grid{grid-template-columns:1fr 1fr}
+  .architecture-plate-head{grid-template-columns:1fr;gap:12px}
+  .media-frame-portrait{min-height:auto}
+}
+@media(max-width:520px){
+  .office-verify,.launch-grid{grid-template-columns:1fr!important}
+  .apex-status-line span{font-size:.58rem;padding:5px 8px}
+  .architecture-plate,.media-frame,.stack-visual{border-radius:12px}
+  .apex-media-viewer{padding:12px}.apex-media-viewer img{max-width:calc(100vw - 24px)!important;max-height:calc(100vh - 70px)!important}
+}
+@media(prefers-reduced-motion:reduce){.apex-node,.compass-card{transition:none}}
