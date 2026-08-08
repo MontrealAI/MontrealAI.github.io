@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montrealai.github.io/goalos-singularity-navigator-omega-agi-club-owner-access/schemas/live-wallet-acceptance-record.schema.json",
+  "title": "GoalOS SN5 Live Wallet Acceptance Record",
+  "type": "object",
+  "required": [
+    "schema",
+    "product",
+    "version",
+    "releaseRevision",
+    "canonicalOrigin",
+    "createdAt",
+    "tests"
+  ],
+  "properties": {
+    "schema": {
+      "const": "goalos-live-wallet-acceptance/1.0"
+    },
+    "product": {
+      "const": "GoalOS Singularity Navigator Ω"
+    },
+    "version": {
+      "const": "v3.1.0-SN5-LR1"
+    },
+    "releaseRevision": {
+      "const": "2026-07-26-DSR1"
+    },
+    "canonicalOrigin": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tester": {
+      "type": "string"
+    },
+    "wallet": {
+      "type": "string"
+    },
+    "qualifyingName": {
+      "type": "string"
+    },
+    "chainId": {
+      "type": "string"
+    },
+    "releaseSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{{64}}$"
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "not-run",
+              "pass",
+              "fail",
+              "not-applicable"
+            ]
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "recordSha256": {
+      "type": "string"
+    },
+    "signatureMode": {
+      "type": "string"
+    },
+    "signature": {
+      "type": "string"
+    }
+  }
+}
