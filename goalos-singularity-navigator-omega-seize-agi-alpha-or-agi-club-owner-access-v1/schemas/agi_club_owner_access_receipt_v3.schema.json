@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montrealai.github.io/goalos-singularity-navigator-omega-agi-club-owner-access/schemas/agi_club_owner_access_receipt_v3.schema.json",
+  "title": "GoalOS AGI Club Direct Owner Access Receipt v3",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "version",
+    "product",
+    "name",
+    "address",
+    "node",
+    "mode",
+    "issuedAt",
+    "expiresAt",
+    "verificationBlock",
+    "signature",
+    "signatureMode",
+    "protectionBoundary"
+  ],
+  "properties": {
+    "schema": {
+      "const": "goalos-agi-club-owner-access/3.0"
+    },
+    "version": {
+      "const": "v3.1.0-SN5-LR1"
+    },
+    "product": {
+      "const": "GoalOS Singularity Navigator Ω"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.club\\.agi\\.eth$"
+    },
+    "address": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{40}$"
+    },
+    "node": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{64}$"
+    },
+    "mode": {
+      "enum": [
+        "ENS Registry direct owner",
+        "ENS Name Wrapper ERC-1155 direct owner"
+      ]
+    },
+    "issuedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "verificationBlock": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]+$"
+    },
+    "signatureMode": {
+      "enum": [
+        "eip712-v4",
+        "personal_sign-domain-bound"
+      ]
+    },
+    "protectionBoundary": {
+      "type": "string",
+      "minLength": 20
+    }
+  }
+}

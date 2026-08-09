@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montrealai.github.io/goalos-singularity-navigator-omega-agi-club-owner-access/schemas/live-wallet-acceptance-record.schema.json",
+  "title": "GoalOS + SEIZE Live Production Acceptance Record",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema",
+    "product",
+    "release",
+    "releaseRevision",
+    "canonicalOrigin",
+    "createdAt",
+    "tests"
+  ],
+  "properties": {
+    "schema": {
+      "const": "goalos-live-production-acceptance/2.0"
+    },
+    "product": {
+      "const": "GoalOS Singularity Navigator Ω + SEIZE"
+    },
+    "release": {
+      "const": "v3.4.0-SN5-BI2-VS1"
+    },
+    "releaseRevision": {
+      "const": "2026-08-08-VS1"
+    },
+    "canonicalOrigin": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tester": {
+      "type": "string"
+    },
+    "wallet": {
+      "type": "string"
+    },
+    "accessRoute": {
+      "enum": [
+        "AGI_CLUB_DIRECT_OWNER",
+        "AGIALPHA_BALANCE_QUALIFIED",
+        "MULTI_ROUTE",
+        "NOT_SELECTED"
+      ]
+    },
+    "qualifyingName": {
+      "type": "string"
+    },
+    "observedTokenBalance": {
+      "type": "string"
+    },
+    "chainId": {
+      "type": "string"
+    },
+    "releaseSha256": {
+      "type": "string"
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "not-run",
+              "pass",
+              "fail",
+              "not-applicable"
+            ]
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "recordSha256": {
+      "type": "string"
+    },
+    "signatureMode": {
+      "type": "string"
+    },
+    "signature": {
+      "type": "string"
+    }
+  }
+}
