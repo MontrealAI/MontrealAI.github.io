@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montreal.ai/schemas/goalos-verified-succession-vs1-v340.json",
+  "title": "GoalOS Verified Succession Records",
+  "type": "object",
+  "required": ["release", "succession_event", "successor_book", "constitution", "promotion"],
+  "properties": {
+    "release": {"type": "string", "const": "v3.4.0-SN5-BI2-VS1"},
+    "succession_event": {"$ref": "#/$defs/SuccessionEventRecord"},
+    "successor_book": {"$ref": "#/$defs/SuccessorBook"},
+    "constitution": {"$ref": "#/$defs/SuccessionConstitution"},
+    "promotion": {"$ref": "#/$defs/PromotionRequest"},
+    "chronicle": {"$ref": "#/$defs/ChronicleSuccessorRecord"}
+  },
+  "$defs": {
+    "EvidenceRef": {
+      "type": "object",
+      "required": ["id", "kind", "uri", "sha256"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "enum": ["source", "run", "receipt", "contract", "evaluation", "release", "incident"]},
+        "uri": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "created_at": {"type": "string", "format": "date-time"},
+        "owner": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "SuccessionEventRecord": {
+      "type": "object",
+      "required": ["event_id", "detected_at", "event_class", "incumbent_id", "affected_assumptions", "owner", "status"],
+      "properties": {
+        "event_id": {"type": "string", "pattern": "^SE-[A-Z0-9-]+$"},
+        "detected_at": {"type": "string", "format": "date-time"},
+        "event_class": {"type": "string", "enum": ["capability", "cost", "market", "law", "security", "rights", "provider", "infrastructure", "incident"]},
+        "incumbent_id": {"type": "string"},
+        "affected_assumptions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "newly_feasible_missions": {"type": "array", "items": {"type": "string"}},
+        "cost_of_waiting": {"type": "number"},
+        "cost_of_premature_action": {"type": "number"},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/EvidenceRef"}},
+        "owner": {"type": "string"},
+        "review_deadline": {"type": "string", "format": "date-time"},
+        "status": {"type": "string", "enum": ["detected", "screened", "underwritten", "held", "invalidated", "closed"]}
+      },
+      "additionalProperties": false
+    },
+    "SuccessorPosition": {
+      "type": "object",
+      "required": ["candidate_id", "position", "architecture_class", "status", "owner"],
+      "properties": {
+        "candidate_id": {"type": "string"},
+        "position": {"type": "string", "enum": ["incumbent", "immediate", "challenger", "reserve", "hedge", "retirement"]},
+        "architecture_class": {"type": "string", "enum": ["retain", "repair", "external", "owned", "executable", "specialist_organization", "human_machine", "partner", "acquire", "reserve", "hedge", "retire"]},
+        "thesis": {"type": "string"},
+        "anti_recommendation": {"type": "string"},
+        "next_catalyst": {"type": "string"},
+        "proof_capital_limit": {"type": "number", "minimum": 0},
+        "status": {"type": "string", "enum": ["proposed", "underwritten", "frozen", "testing", "verified", "rejected", "admitted", "impaired", "revoked", "retired"]},
+        "owner": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "SuccessorBook": {
+      "type": "object",
+      "required": ["book_id", "mission_id", "as_of", "positions"],
+      "properties": {
+        "book_id": {"type": "string"},
+        "mission_id": {"type": "string"},
+        "as_of": {"type": "string", "format": "date-time"},
+        "positions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/SuccessorPosition"}},
+        "next_review": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "AuthorityEnvelope": {
+      "type": "object",
+      "required": ["level", "principal", "permitted_actions", "prohibited_actions", "expires_at"],
+      "properties": {
+        "level": {"type": "string", "enum": ["A0", "A1", "A2", "A3", "A4"]},
+        "principal": {"type": "string"},
+        "permitted_actions": {"type": "array", "items": {"type": "string"}},
+        "prohibited_actions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "budget_limit": {"type": "number", "minimum": 0},
+        "stop_conditions": {"type": "array", "items": {"type": "string"}},
+        "rollback_target": {"type": "string"},
+        "expires_at": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "SuccessionConstitution": {
+      "type": "object",
+      "required": ["constitution_id", "mission_id", "incumbent_id", "beneficiary", "quality_floor", "unacceptable_failure", "authority", "principals", "frozen_at"],
+      "properties": {
+        "constitution_id": {"type": "string"},
+        "mission_id": {"type": "string"},
+        "incumbent_id": {"type": "string"},
+        "beneficiary": {"type": "string"},
+        "quality_floor": {"type": "number"},
+        "unacceptable_failure": {"type": "string"},
+        "proof_capital_limit": {"type": "number", "minimum": 0},
+        "formation_capital_limit": {"type": "number", "minimum": 0},
+        "stop_loss": {"type": "string"},
+        "authority": {"$ref": "#/$defs/AuthorityEnvelope"},
+        "principals": {
+          "type": "object",
+          "required": ["underwrite", "execute", "accept", "admit", "allocate"],
+          "properties": {
+            "underwrite": {"type": "string"},
+            "execute": {"type": "string"},
+            "accept": {"type": "string"},
+            "admit": {"type": "string"},
+            "allocate": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "frozen_at": {"type": "string", "format": "date-time"},
+        "expires_at": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "FreshSuccessorScorecard": {
+      "type": "object",
+      "required": ["candidate_id", "incumbent_id", "mission_id", "successor_gain", "gate_pass", "independent_evaluator", "evaluated_at"],
+      "properties": {
+        "candidate_id": {"type": "string"},
+        "incumbent_id": {"type": "string"},
+        "mission_id": {"type": "string"},
+        "quality_gain": {"type": "number"},
+        "verified_value_gain": {"type": "number"},
+        "time_gain": {"type": "number"},
+        "complete_cost_gain": {"type": "number"},
+        "sovereignty_gain": {"type": "number"},
+        "capacity_gain": {"type": "number"},
+        "residual_risk_delta": {"type": "number"},
+        "human_burden_delta": {"type": "number"},
+        "proof_debt_delta": {"type": "number"},
+        "unwind_burden_delta": {"type": "number"},
+        "successor_gain": {"type": "number"},
+        "gate_pass": {"type": "boolean"},
+        "governance_regression": {"type": "boolean"},
+        "independent_evaluator": {"type": "string"},
+        "evaluated_at": {"type": "string", "format": "date-time"},
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/EvidenceRef"}}
+      },
+      "additionalProperties": false
+    },
+    "PromotionRequest": {
+      "type": "object",
+      "required": ["promotion_id", "candidate_id", "constitution_id", "requested_by", "status", "production_release_enabled"],
+      "properties": {
+        "promotion_id": {"type": "string"},
+        "candidate_id": {"type": "string"},
+        "constitution_id": {"type": "string"},
+        "scorecard": {"$ref": "#/$defs/FreshSuccessorScorecard"},
+        "requested_by": {"type": "string"},
+        "requested_at": {"type": "string", "format": "date-time"},
+        "status": {"type": "string", "enum": ["draft", "submitted", "human_review", "accepted", "rejected", "repair", "expired"]},
+        "production_release_enabled": {"type": "boolean", "const": false}
+      },
+      "additionalProperties": false
+    },
+    "ChronicleSuccessorRecord": {
+      "type": "object",
+      "required": ["record_id", "candidate_id", "mission_id", "disposition", "scope", "version", "expires_at"],
+      "properties": {
+        "record_id": {"type": "string"},
+        "candidate_id": {"type": "string"},
+        "mission_id": {"type": "string"},
+        "disposition": {"type": "string", "enum": ["admit", "admit_with_limits", "repair", "reject", "expire", "revoke", "retire"]},
+        "scope": {"type": "array", "items": {"type": "string"}},
+        "known_failures": {"type": "array", "items": {"type": "string"}},
+        "rights": {"type": "array", "items": {"type": "string"}},
+        "version": {"type": "string"},
+        "proof_adjusted_nav": {"type": "number"},
+        "realized_value": {"type": "number"},
+        "rollback_target": {"type": "string"},
+        "expires_at": {"type": "string", "format": "date-time"},
+        "next_review": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
