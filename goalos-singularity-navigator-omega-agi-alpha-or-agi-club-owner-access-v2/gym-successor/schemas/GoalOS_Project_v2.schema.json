@@ -1,0 +1,17 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://montreal.ai/schemas/goalos-project-v2.schema.json",
+  "title":"GoalOS Gym × Successor Project v2",
+  "type":"object",
+  "required":["meta","mission","gym","candidates","seize","jobs","formation","recursive","proof","authority","chronicle"],
+  "properties":{
+    "meta":{"type":"object","required":["projectId","release"],"properties":{"projectId":{"type":"string"},"release":{"const":"2.0.0"}}},
+    "mission":{"type":"object","required":["name","objective","incumbent","alternatives","criticalFailures","constraints","authorityCeiling"]},
+    "gym":{"type":"object","required":["version","formationSeed","proofSeed","transferSeed","spec"]},
+    "candidates":{"type":"array","minItems":3,"items":{"$ref":"#/$defs/candidate"}},
+    "jobs":{"type":"array","minItems":21},
+    "recursive":{"type":"object","required":["generation","lineage","archive","history","negativeCapability"]},
+    "proof":{"type":"object"},"authority":{"type":"object"},"chronicle":{"type":"array"},"seize":{"type":"object"},"formation":{"type":"object"}
+  },
+  "$defs":{"candidate":{"type":"object","required":["id","name","kind","generation","params","burden"],"properties":{"id":{"type":"string"},"name":{"type":"string"},"kind":{"type":"string"},"generation":{"type":"integer","minimum":0},"params":{"type":"object"},"burden":{"type":"object"}}}}
+}

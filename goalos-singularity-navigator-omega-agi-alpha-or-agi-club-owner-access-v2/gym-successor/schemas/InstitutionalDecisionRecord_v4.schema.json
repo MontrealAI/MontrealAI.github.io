@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montreal.ai/schemas/GoalOS_Institutional_Decision_Record_v4.schema.json",
+  "title": "GoalOS Institutional Decision Record v4",
+  "description": "",
+  "type": "object",
+  "required": [
+    "schema",
+    "decision",
+    "status",
+    "owner"
+  ],
+  "properties": {
+    "schema": {
+      "const": "GoalOS.InstitutionalDecisionRecord.v4"
+    },
+    "decision": {
+      "enum": [
+        "underwrite",
+        "execute",
+        "accept",
+        "admit",
+        "allocate"
+      ]
+    },
+    "status": {
+      "enum": [
+        "unsigned",
+        "signed",
+        "revoked"
+      ]
+    },
+    "owner": {
+      "type": "string"
+    },
+    "signedBy": {
+      "type": "string"
+    },
+    "signedAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scope": {
+      "type": "string"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "receipt": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montreal.ai/schemas/GoalOS_Authority_Lattice_v4.schema.json",
+  "title": "GoalOS Authority Lattice v4",
+  "description": "Authority is a bounded multidimensional action space, not a scalar permission.",
+  "type": "object",
+  "required": [
+    "schema",
+    "authorityLevel",
+    "dimensions"
+  ],
+  "properties": {
+    "schema": {
+      "const": "GoalOS.AuthorityLattice.v4"
+    },
+    "authorityLevel": {
+      "enum": [
+        "A0",
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ]
+    },
+    "dimensions": {
+      "type": "object",
+      "required": [
+        "identity",
+        "missionScope",
+        "systems",
+        "data",
+        "actionClass",
+        "amountLimit",
+        "time",
+        "reversibility",
+        "evidenceFreshness",
+        "professionalAuthority",
+        "dualControl",
+        "incidentCapacity"
+      ],
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+      }
+    },
+    "actionReceipts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "lastEvaluatedAt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
