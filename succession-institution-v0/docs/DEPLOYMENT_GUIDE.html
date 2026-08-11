@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>DEPLOYMENT_GUIDE</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">DEPLOYMENT_GUIDE</h1>
+</header>
+<h1 id="deployment-guide">Deployment guide</h1>
+<h2 id="a.-deploy-the-strict-github-pages-edition">A. Deploy the strict
+GitHub Pages edition</h2>
+<h3 id="no-build-github-actions-route">No-build GitHub Actions
+route</h3>
+<ol type="1">
+<li>Create a new GitHub repository.</li>
+<li>Unzip <code>GoalOS_UVSI2_v7_GitHub_Pages.zip</code>.</li>
+<li>Upload <strong>all</strong> extracted contents to the repository
+root, including <code>.github</code> and <code>.nojekyll</code>.</li>
+<li>Commit to the <code>main</code> branch.</li>
+<li>Open <strong>Settings → Pages</strong>.</li>
+<li>Set <strong>Source</strong> to <strong>GitHub Actions</strong>.</li>
+<li>Open the <strong>Actions</strong> tab and wait for
+<code>Deploy GoalOS UVSI2 to GitHub Pages</code> to finish.</li>
+<li>Open the deployment URL shown by GitHub.</li>
+</ol>
+<p>No npm install, build command or database is required.</p>
+<h3 id="branch-route">Branch route</h3>
+<p>You can alternatively choose <strong>Deploy from a branch</strong>,
+select <code>main</code> and <code>/ (root)</code>. The site is already
+static.</p>
+<h2 id="b.-confirm-the-access-gate">B. Confirm the access gate</h2>
+<ol type="1">
+<li>Open the deployed page in a browser with an injected EIP-1193
+Ethereum wallet.</li>
+<li>Verify that the wallet is on Ethereum Mainnet.</li>
+<li>Test one route:
+<ul>
+<li>enter the one label before <code>.club.agi.eth</code>; or</li>
+<li>verify the direct AGIALPHA balance.</li>
+</ul></li>
+<li>Confirm that the wallet asks only for connection and a personal
+signature—never token approval or a transaction.</li>
+<li>Confirm that changing the account or network relocks the
+application.</li>
+</ol>
+<h2 id="c.-configure-secure-ai">C. Configure secure AI</h2>
+<p>The GitHub Pages frontend must never contain an OpenAI API key.</p>
+<h3 id="cloudflare-worker">Cloudflare Worker</h3>
+<ol type="1">
+<li>Unzip <code>GoalOS_UVSI2_v7_Secure_AI_Backend.zip</code>.</li>
+<li>Install Node.js.</li>
+<li>Run <code>npm install</code>.</li>
+<li>Run <code>npx wrangler login</code>.</li>
+<li>Store the key as a secret:
+<code>npx wrangler secret put OPENAI_API_KEY</code>.</li>
+<li>In <code>wrangler.toml</code>, set <code>ALLOWED_ORIGINS</code> to
+the exact GitHub Pages origin.</li>
+<li>Run <code>npm run deploy</code>.</li>
+<li>Copy the Worker URL.</li>
+<li>In the GoalOS app, open <strong>AI Studio</strong>, paste the Worker
+URL and click <strong>Save endpoint</strong>.</li>
+<li>Click <strong>Test</strong>.</li>
+</ol>
+<p>The Worker calls the Responses API with <code>store: false</code> and
+strict structured output. It also verifies the domain-bound wallet
+signature and rechecks current direct AGI Club ownership or current
+direct AGIALPHA balance before each AI request.</p>
+<h3 id="local-secure-route">Local secure route</h3>
+<ol type="1">
+<li>Unzip <code>GoalOS_UVSI2_v7_Local_Secure.zip</code>.</li>
+<li>Double-click the launcher for macOS or Windows, or run the Linux
+launcher.</li>
+<li>Enter the API key in the hidden terminal prompt.</li>
+<li>Open <code>http://127.0.0.1:8788/</code>.</li>
+<li>Set the AI Studio endpoint to
+<code>http://127.0.0.1:8788</code>.</li>
+</ol>
+<p>The key remains only in the Python process and is discarded when the
+server closes. This local server binds only to <code>127.0.0.1</code>;
+the browser gate remains the local access boundary.</p>
+<h2 id="d.-customize-safely">D. Customize safely</h2>
+<p>Edit only <code>config.js</code> for public configuration:</p>
+<ul>
+<li>AI endpoint;</li>
+<li>session length;</li>
+<li>revalidation cadence;</li>
+<li>official links.</li>
+</ul>
+<p>Do not change the qualifying token contract or threshold unless the
+access constitution itself changes. Never put secrets in
+<code>config.js</code>.</p>
+<h2 id="e.-custom-domain">E. Custom domain</h2>
+<p>After the Pages deployment works:</p>
+<ol type="1">
+<li>Add the custom domain under <strong>Settings → Pages</strong>.</li>
+<li>Configure DNS as instructed by GitHub.</li>
+<li>Enable HTTPS.</li>
+<li>Reverify the wallet signature flow because the receipt is
+domain-bound.</li>
+<li>Add the custom origin to the secure AI backend’s
+<code>ALLOWED_ORIGINS</code>.</li>
+</ol>
+<h2 id="f.-production-hardening-for-confidential-missions">F. Production
+hardening for confidential missions</h2>
+<p>GitHub Pages is public-static infrastructure. For protected customer
+data or consequential operations, add:</p>
+<ul>
+<li>authenticated server sessions;</li>
+<li>organizational identity and role-based access;</li>
+<li>encrypted evidence storage;</li>
+<li>independent proof custody;</li>
+<li>server-side release signing;</li>
+<li>secrets management;</li>
+<li>audit logging;</li>
+<li>incident response;</li>
+<li>tested rollback and continuity;</li>
+<li>legal, privacy, security and professional review.</li>
+</ul>
+</body>
+</html>
