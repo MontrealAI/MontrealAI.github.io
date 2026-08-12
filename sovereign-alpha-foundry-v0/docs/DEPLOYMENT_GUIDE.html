@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>DEPLOYMENT_GUIDE</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">DEPLOYMENT_GUIDE</h1>
+</header>
+<h1 id="deployment-guide">Deployment guide</h1>
+<h2 id="a.-github-pages-no-terminal">A. GitHub Pages — no terminal</h2>
+<ol type="1">
+<li>Download <code>GoalOS_UVSI3_v8_GitHub_Pages.zip</code>.</li>
+<li>Unzip it.</li>
+<li>Create a GitHub repository.</li>
+<li>Upload every extracted item to the repository root, including
+<code>.github</code>, <code>.nojekyll</code>, <code>index.html</code>,
+scripts, styles and folders.</li>
+<li>Commit to <code>main</code>.</li>
+<li>Open <strong>Settings → Pages</strong>.</li>
+<li>Under <strong>Build and deployment</strong>, select <strong>GitHub
+Actions</strong>.</li>
+<li>Open <strong>Actions</strong> and wait for
+<code>Deploy GoalOS UVSI3 to GitHub Pages</code> to finish.</li>
+<li>Open the published URL with a wallet-enabled browser.</li>
+</ol>
+<p>The public deployment supports the complete browser experience and
+deterministic Alpha portfolio simulator. It does not execute GPU or
+confidential training.</p>
+<h2 id="b.-local-executable-foundry-no-package-installation">B. Local
+executable Foundry — no package installation</h2>
+<ol type="1">
+<li>Download <code>GoalOS_UVSI3_v8_Local_Foundry.zip</code>.</li>
+<li>Unzip it.</li>
+<li>Double-click the launcher for your operating system.</li>
+<li>Open <code>http://127.0.0.1:8788</code> if it does not open
+automatically.</li>
+<li>Run the executable backend tournament.</li>
+</ol>
+<p>Python 3.10+ is required. The core has no mandatory third-party
+dependency.</p>
+<h2 id="c.-docker-protected-backend">C. Docker protected backend</h2>
+<ol type="1">
+<li>Copy <code>Dockerfile</code>, <code>docker-compose.yml</code>,
+<code>alpha-foundry/</code> and <code>site/</code> to a private
+server.</li>
+<li>Replace <code>CHANGE_ME_TO_A_LONG_RANDOM_SECRET</code>.</li>
+<li>Set the exact allowed GitHub Pages origin.</li>
+<li>Run <code>docker compose up -d --build</code>.</li>
+<li>Put the service behind HTTPS and a private network or firewall.</li>
+<li>Do not expose the training service directly to the public Internet
+when it contains confidential mission data.</li>
+</ol>
+<h2 id="d.-wallet-gated-production-gateway">D. Wallet-gated production
+gateway</h2>
+<ol type="1">
+<li>Download
+<code>GoalOS_UVSI3_v8_Alpha_Foundry_Gateway.zip</code>.</li>
+<li>Configure <code>ALLOWED_ORIGINS</code> and
+<code>FOUNDRY_ORIGIN</code>.</li>
+<li>Set Worker secrets <code>GATEWAY_SECRET</code> and
+<code>ETHEREUM_RPC_URL</code>.</li>
+<li>Set the same <code>GOALOS_GATEWAY_SECRET</code> on the private
+backend.</li>
+<li>Deploy the Worker.</li>
+<li>Paste the Worker URL into <strong>Alpha Foundry Ω → Protected
+training endpoint</strong>.</li>
+</ol>
+<h2 id="e.-production-hardening-checklist">E. Production hardening
+checklist</h2>
+<ul>
+<li>organizational identity and role-based access;</li>
+<li>encrypted evidence storage;</li>
+<li>separate development and proof custodians;</li>
+<li>immutable run receipts;</li>
+<li>exact release signing;</li>
+<li>compute and proof-capital quotas;</li>
+<li>model/data/tool rights records;</li>
+<li>incident response and kill switches;</li>
+<li>canary and rollback drills;</li>
+<li>independent calculation of realized Alpha;</li>
+<li>periodic requalification.</li>
+</ul>
+<h2 id="f.-optional-secure-ai-studio-backend">F. Optional secure AI
+Studio backend</h2>
+<p>The Alpha Foundry training backend and the OpenAI-powered AI Studio
+are separate services. The default product works without an OpenAI key.
+To enable AI Studio:</p>
+<ul>
+<li>deploy <code>GoalOS_UVSI3_v8_Secure_AI_Backend.zip</code> as a
+Cloudflare Worker, keep <code>OPENAI_API_KEY</code> in Worker secrets,
+set the exact allowed origin, then paste the Worker URL into <strong>AI
+Studio</strong>; or</li>
+<li>unzip <code>GoalOS_UVSI3_v8_Local_Secure_AI.zip</code>, run the
+operating-system launcher, enter the key in the hidden terminal prompt,
+and use <code>http://127.0.0.1:8790</code> as the AI Studio
+endpoint.</li>
+</ul>
+<p>The browser never stores the OpenAI key. The secure Worker
+revalidates current wallet eligibility before each AI request.</p>
+</body>
+</html>

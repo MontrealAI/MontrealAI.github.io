@@ -1,0 +1,290 @@
+{
+  "schema": "GoalOS.CompiledMissionGym.v1",
+  "mission_id": "compiled_evidence_mission",
+  "name": "Compiled Evidence Decision",
+  "description": "Small example showing how a finite mission constitution becomes an executable Gym.",
+  "actions": [
+    "inspect",
+    "accept",
+    "escalate"
+  ],
+  "states": [
+    "clean_hidden",
+    "risk_hidden",
+    "clean_seen",
+    "risk_seen",
+    "accepted",
+    "escalated",
+    "failure"
+  ],
+  "observations": {
+    "clean_hidden": [
+      0,
+      0
+    ],
+    "risk_hidden": [
+      0,
+      0
+    ],
+    "clean_seen": [
+      1,
+      0
+    ],
+    "risk_seen": [
+      1,
+      1
+    ],
+    "accepted": [
+      2,
+      0
+    ],
+    "escalated": [
+      2,
+      1
+    ],
+    "failure": [
+      2,
+      2
+    ]
+  },
+  "initial_states": [
+    {
+      "state": "clean_hidden",
+      "weight": 0.65
+    },
+    {
+      "state": "risk_hidden",
+      "weight": 0.35
+    }
+  ],
+  "transitions": {
+    "clean_hidden": {
+      "inspect": [
+        {
+          "next": "clean_seen",
+          "prob": 1.0,
+          "rewards": {
+            "evidence": 0.7,
+            "speed": -0.05
+          },
+          "constraints": {},
+          "cost": 0.1,
+          "human_burden": 0.0,
+          "correct": false,
+          "accepted": false,
+          "decision": "inspect",
+          "truth": "clean_seen"
+        }
+      ],
+      "accept": [
+        {
+          "next": "accepted",
+          "prob": 1.0,
+          "rewards": {
+            "quality": 2.0,
+            "value": 2.0,
+            "reliability": 1.0
+          },
+          "constraints": {},
+          "cost": 0.0,
+          "human_burden": 0.0,
+          "correct": true,
+          "accepted": true,
+          "decision": "accept",
+          "truth": "accepted"
+        }
+      ],
+      "escalate": [
+        {
+          "next": "escalated",
+          "prob": 1.0,
+          "rewards": {
+            "quality": 0.4,
+            "value": -0.3,
+            "reliability": 0.8
+          },
+          "constraints": {},
+          "cost": 0.0,
+          "human_burden": 0.6,
+          "correct": true,
+          "accepted": true,
+          "decision": "escalate",
+          "truth": "escalated"
+        }
+      ]
+    },
+    "risk_hidden": {
+      "inspect": [
+        {
+          "next": "risk_seen",
+          "prob": 1.0,
+          "rewards": {
+            "evidence": 0.7,
+            "speed": -0.05
+          },
+          "constraints": {},
+          "cost": 0.1,
+          "human_burden": 0.0,
+          "correct": false,
+          "accepted": false,
+          "decision": "inspect",
+          "truth": "risk_seen"
+        }
+      ],
+      "accept": [
+        {
+          "next": "failure",
+          "prob": 1.0,
+          "rewards": {
+            "quality": -3.0,
+            "value": -3.0,
+            "reliability": -2.0
+          },
+          "constraints": {
+            "critical_miss": 1
+          },
+          "cost": 0.0,
+          "human_burden": 0.0,
+          "correct": false,
+          "accepted": false,
+          "decision": "accept",
+          "truth": "failure"
+        }
+      ],
+      "escalate": [
+        {
+          "next": "escalated",
+          "prob": 1.0,
+          "rewards": {
+            "quality": 1.4,
+            "value": 1.0,
+            "reliability": 1.0
+          },
+          "constraints": {},
+          "cost": 0.0,
+          "human_burden": 0.6,
+          "correct": true,
+          "accepted": true,
+          "decision": "escalate",
+          "truth": "escalated"
+        }
+      ]
+    },
+    "clean_seen": {
+      "accept": [
+        {
+          "next": "accepted",
+          "prob": 1.0,
+          "rewards": {
+            "quality": 2.0,
+            "value": 2.0,
+            "reliability": 1.0,
+            "evidence": 0.5
+          },
+          "constraints": {},
+          "cost": 0.0,
+          "human_burden": 0.0,
+          "correct": true,
+          "accepted": true,
+          "decision": "accept",
+          "truth": "accepted"
+        }
+      ],
+      "escalate": [
+        {
+          "next": "escalated",
+          "prob": 1.0,
+          "rewards": {
+            "quality": 0.4,
+            "value": -0.3,
+            "reliability": 0.8
+          },
+          "constraints": {},
+          "cost": 0.0,
+          "human_burden": 0.6,
+          "correct": true,
+          "accepted": true,
+          "decision": "escalate",
+          "truth": "escalated"
+        }
+      ]
+    },
+    "risk_seen": {
+      "accept": [
+        {
+          "next": "failure",
+          "prob": 1.0,
+          "rewards": {
+            "quality": -3.0,
+            "value": -3.0,
+            "reliability": -2.0
+          },
+          "constraints": {
+            "critical_miss": 1
+          },
+          "cost": 0.0,
+          "human_burden": 0.0,
+          "correct": false,
+          "accepted": false,
+          "decision": "accept",
+          "truth": "failure"
+        }
+      ],
+      "escalate": [
+        {
+          "next": "escalated",
+          "prob": 1.0,
+          "rewards": {
+            "quality": 2.0,
+            "value": 1.7,
+            "reliability": 1.0,
+            "evidence": 0.5
+          },
+          "constraints": {},
+          "cost": 0.0,
+          "human_burden": 0.5,
+          "correct": true,
+          "accepted": true,
+          "decision": "escalate",
+          "truth": "escalated"
+        }
+      ]
+    }
+  },
+  "terminal_states": [
+    "accepted",
+    "escalated",
+    "failure"
+  ],
+  "expert_policy": {
+    "clean_hidden": "inspect",
+    "risk_hidden": "inspect",
+    "clean_seen": "accept",
+    "risk_seen": "escalate"
+  },
+  "rule_policy": {
+    "clean_hidden": "inspect",
+    "risk_hidden": "inspect",
+    "clean_seen": "accept",
+    "risk_seen": "escalate"
+  },
+  "features": {
+    "state_type": "discrete",
+    "action_type": "discrete",
+    "partial_observability": 0.5,
+    "delayed_rewards": 0.5,
+    "historical_data": 0.7,
+    "simulator_fidelity": 0.8,
+    "feedback_speed": 0.7,
+    "safety_criticality": 0.8,
+    "multiagent_need": 0.3,
+    "formal_rules": 0.85,
+    "transfer_difficulty": 0.5,
+    "max_steps": 8,
+    "formation_episodes": 180,
+    "fresh_cases": 100,
+    "transfer_cases": 50
+  },
+  "claim_boundary": "Compiled transition logic is a mission model. It remains subject to Gym-to-reality basis risk and independent fresh proof.",
+  "spec_sha256": "a4406a66b5d0fb54c4f1378c72990cd2a62c9bb24bc15f07af151298a250da28"
+}

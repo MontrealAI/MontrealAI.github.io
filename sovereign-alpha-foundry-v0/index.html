@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="GoalOS v8 UVSI3 — a Sovereign Alpha Foundry implementation of GoalOS Singularity Navigator Ω + SEIZE: Gym, Specialist ASI and Mission-Sovereign Successor Ω.">
+  <meta name="author" content="Vincent Boucher, President, MONTREAL.AI & QUEBEC.AI">
+  <meta name="theme-color" content="#07172d">
+  <meta name="color-scheme" content="light">
+  <title>GoalOS v8 · Sovereign Alpha Foundry Ω</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="access-locked">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div id="accessGate" class="access-gate" role="dialog" aria-modal="true" aria-labelledby="accessTitle">
+    <div class="access-shell">
+      <div class="access-crest" aria-hidden="true">Ω</div>
+      <div class="access-heading">
+        <div class="eyebrow">GoalOS · Unified Verified Succession Institution</div>
+        <h1 id="accessTitle">Enter the Successor Institution</h1>
+        <p>Access is granted to the connected wallet when it is either the <strong>current direct owner of one exact AGI Club name</strong> or the <strong>current direct holder of at least 1,000,000 official AGIALPHA on Ethereum Mainnet</strong>.</p>
+      </div>
+      <div class="access-doctrine">
+        <strong>Eligibility unlocks the institution. It creates no mission authority.</strong>
+        <span>No token approval, transfer, staking, locking, payment or custody is requested.</span>
+      </div>
+      <div class="access-grid">
+        <section class="access-card" aria-labelledby="clubRouteTitle">
+          <div class="access-route-icon">AGI</div>
+          <h2 id="clubRouteTitle">AGI Club Owner Access</h2>
+          <p>Verify current direct ownership of exactly one single-label name:</p>
+          <label for="clubLabel">Your AGI Club label</label>
+          <div class="suffix-input"><input id="clubLabel" autocomplete="off" inputmode="text" maxlength="63" placeholder="example"><span>.club.agi.eth</span></div>
+          <button class="button navy access-action" id="verifyClubButton" type="button">Connect wallet and verify ownership</button>
+          <small>Direct registry or NameWrapper ownership only. Resolver control, delegation, approvals, former ownership and beneficial claims do not qualify.</small>
+        </section>
+        <section class="access-card" aria-labelledby="tokenRouteTitle">
+          <div class="access-route-icon">α</div>
+          <h2 id="tokenRouteTitle">AGIALPHA Balance-Qualified Access</h2>
+          <p>Verify the connected wallet’s current direct balance:</p>
+          <div class="access-threshold"><strong>≥ 1,000,000 AGIALPHA</strong><span>Ethereum Mainnet · direct balance only</span></div>
+          <button class="button access-action" id="verifyTokenButton" type="button">Connect wallet and verify balance</button>
+          <small>Contract: <code>0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA</code>. Balances are not aggregated across wallets.</small>
+        </section>
+      </div>
+      <div class="access-status" id="accessStatus" role="status" aria-live="polite">
+        <span class="access-status-dot"></span><span>Connect an Ethereum wallet to begin.</span>
+      </div>
+      <div class="access-footer">
+        <button id="accessDetailsButton" class="link-button" type="button">How verification works</button>
+        <a href="research/GoalOS_Navigator_SEIZE_Gym_Successor_Omega_v6_Web.pdf" target="_blank" rel="noopener">Read the implementation paper</a>
+        <button id="localDemoButton" class="link-button hidden" type="button">Open local QA demo</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <button class="icon-button mobile-only" id="menuButton" aria-label="Open navigation">☰</button>
+    <div class="brand-lockup" role="banner">
+      <div class="omega-mark" aria-hidden="true">Ω</div>
+      <div>
+        <div class="brand-title">GoalOS Singularity Navigator Ω + SEIZE</div>
+        <div class="brand-subtitle" id="editionText">Sovereign Alpha Foundry Ω · v8.0.0</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="status-chip" id="accessChip">Access locked</span>
+      <span class="status-chip neutral" id="aiChip">Offline intelligence</span>
+      <span class="status-chip" id="projectChip">UVSI3</span>
+      <span class="status-chip neutral" id="systemStatusChip">Candidate System</span>
+      <button class="top-button" id="languageButton" aria-label="Switch language">FR</button>
+      <button class="top-button" id="guideButton">Guide</button>
+      <button class="top-button danger-ghost" id="resetButton">Reset</button>
+    </div>
+  </header>
+
+  <div class="app-shell" aria-hidden="true" id="applicationShell">
+    <aside class="sidebar" id="sidebar" aria-label="Workflow navigation">
+      <div class="side-intro"><strong id="workflowTitle">Verified succession workflow</strong><small id="workflowSubtitle">Detect → Underwrite → Constitute → Prove → Admit → Renew</small></div>
+      <nav id="nav">
+        <button class="nav-item active" data-section="command"><span>00</span><b>Command Center</b><small>Orient</small></button>
+        <button class="nav-item" data-section="navigator"><span>01</span><b>Navigator Ω</b><small>Detect</small></button>
+        <button class="nav-item" data-section="book"><span>02</span><b>Successor Book</b><small>Position</small></button>
+        <button class="nav-item" data-section="mission"><span>03</span><b data-i18n="navMission">Mission</b><small data-i18n="navMissionHint">Constitute</small></button>
+        <button class="nav-item" data-section="manifold"><span>04</span><b data-i18n="navManifold">Successor Manifold</b><small data-i18n="navManifoldHint">Map</small></button>
+        <button class="nav-item" data-section="gradient"><span>05</span><b data-i18n="navGradient">Advantage Gradient</b><small data-i18n="navGradientHint">Navigate</small></button>
+        <button class="nav-item" data-section="seize"><span>06</span><b data-i18n="navSeize">SEIZE Underwriting</b><small data-i18n="navSeizeHint">Underwrite</small></button>
+        <button class="nav-item" data-section="jobs"><span>07</span><b data-i18n="navJobs">Bounded AGI Jobs</b><small data-i18n="navJobsHint">Compile</small></button>
+        <button class="nav-item" data-section="formation"><span>08</span><b data-i18n="navFormation">Formation Gym</b><small data-i18n="navFormationHint">Compete</small></button>
+        <button class="nav-item" data-section="algorithm-router"><span>09</span><b>Algorithm Router</b><small>Route</small></button>
+        <button class="nav-item" data-section="alpha-foundry"><span>10</span><b>Alpha Foundry Ω</b><small>Train</small></button>
+        <button class="nav-item" data-section="recursive"><span>11</span><b data-i18n="navRecursive">Recursive Foundry</b><small data-i18n="navRecursiveHint">Improve</small></button>
+        <button class="nav-item" data-section="proof"><span>12</span><b data-i18n="navProof">Fresh Proof</b><small data-i18n="navProofHint">Prove</small></button>
+        <button class="nav-item" data-section="specialist"><span>13</span><b>Specialist ASI</b><small>Earn</small></button>
+        <button class="nav-item" data-section="authority"><span>14</span><b data-i18n="navAuthority">Authority</b><small data-i18n="navAuthorityHint">Bound</small></button>
+        <button class="nav-item" data-section="chronicle"><span>15</span><b data-i18n="navChronicle">Chronicle</b><small data-i18n="navChronicleHint">Compound</small></button>
+        <button class="nav-item" data-section="requalify"><span>16</span><b data-i18n="navRequalify">Requalification</b><small data-i18n="navRequalifyHint">Renew</small></button>
+        <button class="nav-item" data-section="ai"><span>17</span><b>AI Studio</b><small>Execute</small></button>
+        <button class="nav-item" data-section="board"><span>18</span><b>Board & Metrics</b><small>Govern</small></button>
+        <button class="nav-item" data-section="evidence"><span>19</span><b>Evidence Room</b><small>Ground</small></button>
+        <button class="nav-item" data-section="export"><span>20</span><b data-i18n="navExport">Export</b><small data-i18n="navExportHint">Package</small></button>
+      </nav>
+      <div class="side-rule"><b id="governingRuleTitle">Governing rule</b><p id="governingRuleText">Specialist ASI is proven—not declared. Authority never exceeds fresh proof.</p></div>
+    </aside>
+
+    <main id="main" tabindex="-1">
+      <section id="section-command" class="view active"></section>
+      <section id="section-navigator" class="view"></section>
+      <section id="section-book" class="view"></section>
+      <section id="section-welcome" class="view"></section>
+      <section id="section-mission" class="view"></section>
+      <section id="section-manifold" class="view"></section>
+      <section id="section-gradient" class="view"></section>
+      <section id="section-seize" class="view"></section>
+      <section id="section-jobs" class="view"></section>
+      <section id="section-formation" class="view"></section>
+      <section id="section-algorithm-router" class="view"></section>
+      <section id="section-alpha-foundry" class="view"></section>
+      <section id="section-recursive" class="view"></section>
+      <section id="section-proof" class="view"></section>
+      <section id="section-specialist" class="view"></section>
+      <section id="section-authority" class="view"></section>
+      <section id="section-chronicle" class="view"></section>
+      <section id="section-requalify" class="view"></section>
+      <section id="section-ai" class="view"></section>
+      <section id="section-board" class="view"></section>
+      <section id="section-evidence" class="view"></section>
+      <section id="section-export" class="view"></section>
+    </main>
+  </div>
+
+  <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card"><div class="modal-head"><h2 id="modalTitle"></h2><button id="modalClose" class="icon-button" aria-label="Close">×</button></div><div id="modalBody" class="modal-body"></div></div>
+  </div>
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  <input id="importFile" type="file" accept="application/json,.json" hidden>
+  <input id="evidenceFileInput" type="file" accept=".txt,.md,.csv,.json,text/plain,text/csv,application/json" multiple hidden>
+
+  <script src="config.js"></script>
+  <script src="keccak.js"></script>
+  <script src="core-app.js"></script>
+  <script src="platform.js"></script>
+  <script src="alpha-foundry.js"></script>
+</body>
+</html>

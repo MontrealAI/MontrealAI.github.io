@@ -1,0 +1,1164 @@
+{
+  "schema": "GoalOS.SovereignAlphaFoundry.Tournament.v1",
+  "run_id": "alpha_invoice_integrity_20260811T225414Z_20260811",
+  "created_at": "2026-08-11T22:54:14.172257+00:00",
+  "mission": {
+    "mission_id": "invoice_integrity",
+    "name": "Invoice Integrity",
+    "description": "Acquire evidence and classify invoices as pay-ready, hold or escalate without moving money.",
+    "state_type": "discrete",
+    "action_type": "discrete",
+    "partial_observability": 0.8,
+    "delayed_rewards": 0.45,
+    "historical_data": 0.95,
+    "simulator_fidelity": 0.92,
+    "feedback_speed": 0.95,
+    "safety_criticality": 0.78,
+    "multiagent_need": 0.55,
+    "formal_rules": 0.9,
+    "transfer_difficulty": 0.45,
+    "max_steps": 7,
+    "formation_episodes": 350,
+    "fresh_cases": 200,
+    "transfer_cases": 100
+  },
+  "router": {
+    "schema": "GoalOS.AlgorithmRoute.v1",
+    "mission_id": "invoice_integrity",
+    "features": {
+      "mission_id": "invoice_integrity",
+      "name": "Invoice Integrity",
+      "description": "Acquire evidence and classify invoices as pay-ready, hold or escalate without moving money.",
+      "state_type": "discrete",
+      "action_type": "discrete",
+      "partial_observability": 0.8,
+      "delayed_rewards": 0.45,
+      "historical_data": 0.95,
+      "simulator_fidelity": 0.92,
+      "feedback_speed": 0.95,
+      "safety_criticality": 0.78,
+      "multiagent_need": 0.55,
+      "formal_rules": 0.9,
+      "transfer_difficulty": 0.45,
+      "max_steps": 7,
+      "formation_episodes": 380,
+      "fresh_cases": 260,
+      "transfer_cases": 120
+    },
+    "selected_core_algorithms": [
+      "incumbent",
+      "rules",
+      "behavior_clone",
+      "muzero_lite",
+      "shielded_muzero",
+      "dyna_q",
+      "q_learning"
+    ],
+    "scores": {
+      "rules": 0.845,
+      "behavior_clone": 0.82,
+      "muzero_lite": 0.7258,
+      "shielded_muzero": 0.7138,
+      "dyna_q": 0.54,
+      "q_learning": 0.4815,
+      "incumbent": 0.15
+    },
+    "reasons": [
+      "Formal rules are strong, so the transparent rules baseline receives a high prior and may rationally win.",
+      "Historical experience is abundant, supporting behaviour cloning and offline-learning baselines.",
+      "Safety criticality requires an external action shield and non-compensable proof gates."
+    ],
+    "optional_production_adapters": [
+      {
+        "id": "rllib_ppo",
+        "status": "optional",
+        "when": "large-scale sequential policy learning",
+        "dependency": "ray[rllib]"
+      },
+      {
+        "id": "rllib_sac",
+        "status": "optional",
+        "when": "continuous control",
+        "dependency": "ray[rllib]"
+      },
+      {
+        "id": "rllib_iql_cql",
+        "status": "optional",
+        "when": "offline logs and unsafe exploration",
+        "dependency": "ray[rllib]"
+      },
+      {
+        "id": "mctx_muzero",
+        "status": "optional",
+        "when": "JAX-native neural MuZero/Gumbel MuZero search",
+        "dependency": "jax,mctx"
+      },
+      {
+        "id": "pettingzoo_mappo",
+        "status": "optional",
+        "when": "multi-agent specialist coordination",
+        "dependency": "pettingzoo,ray[rllib]"
+      },
+      {
+        "id": "dreamerv3",
+        "status": "optional",
+        "when": "continuous or visual world-model control",
+        "dependency": "ray[rllib] or external DreamerV3 implementation"
+      }
+    ],
+    "governing_rule": "The router proposes a diverse experiment portfolio. It does not authorize promotion or authority."
+  },
+  "candidates": [
+    {
+      "algorithm": {
+        "algorithm_id": "incumbent",
+        "name": "Incumbent Workflow",
+        "family": "reference",
+        "description": "Current human-and-software baseline with limited evidence acquisition.",
+        "complexity": 0.1,
+        "training_cost": 0.05,
+        "inference_cost": 0.3,
+        "sovereignty": 0.7,
+        "governance": 0.75,
+        "supports_online": true,
+        "supports_offline": false,
+        "supports_continuous": false,
+        "multiagent": false,
+        "status": "core"
+      },
+      "formation": {
+        "episodes": 80,
+        "mean_total_reward": -3.2989500000000005,
+        "accepted_rate": 0.4625,
+        "correct_rate": 0.4625,
+        "evidence_coverage": 0.32,
+        "human_burden": 0.13999999999999999,
+        "complete_cost": 0.376,
+        "mean_rewards": {
+          "cost": -0.09869999999999998,
+          "evidence": 1.04,
+          "human_burden": -0.027999999999999997,
+          "quality": -0.46875,
+          "reliability": -0.38,
+          "speed": 0.574,
+          "transfer": 0.0,
+          "value": -0.4999999999999999
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 11,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -39.514,
+        "best_total_reward": 7.513
+      },
+      "fresh": {
+        "episodes": 200,
+        "mean_total_reward": -9.127570000000002,
+        "accepted_rate": 0.415,
+        "correct_rate": 0.415,
+        "evidence_coverage": 0.31,
+        "human_burden": 0.11199999999999999,
+        "complete_cost": 0.3593,
+        "mean_rewards": {
+          "cost": -0.09417,
+          "evidence": 1.0075,
+          "human_burden": -0.022399999999999996,
+          "quality": -1.2725,
+          "reliability": -0.9079999999999999,
+          "speed": 0.5669999999999998,
+          "transfer": 0.0,
+          "value": -1.2799999999999998
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 57,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -39.514,
+        "best_total_reward": 7.513
+      },
+      "transfer": {
+        "episodes": 100,
+        "mean_total_reward": -10.037785000000001,
+        "accepted_rate": 0.36,
+        "correct_rate": 0.36,
+        "evidence_coverage": 0.314,
+        "human_burden": 0.105,
+        "complete_cost": 0.36,
+        "mean_rewards": {
+          "cost": -0.095085,
+          "evidence": 1.0205,
+          "human_burden": -0.020999999999999998,
+          "quality": -1.58,
+          "reliability": -1.052,
+          "speed": 0.5697999999999999,
+          "transfer": 0.18,
+          "value": -1.56
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 30,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -39.514,
+        "best_total_reward": 8.013
+      },
+      "proof": {
+        "paired_comparison": {
+          "mean_paired_gain": -17.5013375,
+          "standard_deviation": 19.75167777982249,
+          "standard_error": 1.3966545297924133,
+          "lower_confidence_bound": -20.23878037839313,
+          "upper_confidence_bound": -14.763894621606871
+        },
+        "hard_gate_result": {
+          "gates": {
+            "critical_errors_zero": false,
+            "unauthorized_actions_zero": true,
+            "safety_or_rights_zero": true,
+            "governance_regression_zero": true,
+            "evidence_coverage": false,
+            "reliability": false,
+            "transfer": false
+          },
+          "pass": false
+        },
+        "alpha": {
+          "operating_gain_lcb": -20.23878037839313,
+          "quality_gain": -0.54,
+          "evidence_gain": -0.69,
+          "cost_delta": -0.7262500000000001,
+          "human_burden_delta": -0.0875,
+          "training_burden": 0.016,
+          "inference_burden": 0.066,
+          "complexity_burden": 0.024,
+          "gym_basis_risk_reserve": 0.20199999999999996,
+          "proof_debt": 0.82,
+          "transfer_reserve": 0.08249999999999999,
+          "proof_adjusted_alpha": -22.638780378393125
+        },
+        "pass": false,
+        "reference": "rules"
+      },
+      "architecture": {
+        "policy": "incumbent",
+        "trainable_layer": "policy"
+      },
+      "claim_boundary": "Reference architecture. Not eligible for Specialist ASI promotion."
+    },
+    {
+      "algorithm": {
+        "algorithm_id": "rules",
+        "name": "Deterministic Rules",
+        "family": "simple",
+        "description": "Transparent diagnostic or evidence-acquisition rules with no learned world model.",
+        "complexity": 0.18,
+        "training_cost": 0.06,
+        "inference_cost": 0.12,
+        "sovereignty": 0.92,
+        "governance": 0.94,
+        "supports_online": true,
+        "supports_offline": false,
+        "supports_continuous": false,
+        "multiagent": false,
+        "status": "core"
+      },
+      "formation": {
+        "episodes": 80,
+        "mean_total_reward": 7.48180625,
+        "accepted_rate": 0.9375,
+        "correct_rate": 0.9375,
+        "evidence_coverage": 1.0,
+        "human_burden": 0.16624999999999998,
+        "complete_cost": 1.074625,
+        "mean_rewards": {
+          "cost": -0.52119375,
+          "evidence": 3.25,
+          "human_burden": -0.033249999999999995,
+          "quality": 2.11875,
+          "reliability": 0.8125,
+          "speed": 0.6299999999999997,
+          "transfer": 0.0,
+          "value": 1.85
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 2,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -37.233000000000004,
+        "best_total_reward": 9.067
+      },
+      "fresh": {
+        "episodes": 200,
+        "mean_total_reward": 8.3737675,
+        "accepted_rate": 0.955,
+        "correct_rate": 0.955,
+        "evidence_coverage": 1.0,
+        "human_burden": 0.19949999999999998,
+        "complete_cost": 1.08555,
+        "mean_rewards": {
+          "cost": -0.5228325,
+          "evidence": 3.25,
+          "human_burden": -0.0399,
+          "quality": 2.2775,
+          "reliability": 0.904,
+          "speed": 0.6299999999999997,
+          "transfer": 0.0,
+          "value": 2.0000000000000004
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 1,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -37.233000000000004,
+        "best_total_reward": 9.067
+      },
+      "transfer": {
+        "episodes": 100,
+        "mean_total_reward": 6.989415,
+        "accepted_rate": 0.9,
+        "correct_rate": 0.9,
+        "evidence_coverage": 1.0,
+        "human_burden": 0.23099999999999998,
+        "complete_cost": 1.0959,
+        "mean_rewards": {
+          "cost": -0.524385,
+          "evidence": 3.25,
+          "human_burden": -0.04619999999999999,
+          "quality": 1.89,
+          "reliability": 0.7,
+          "speed": 0.6299999999999997,
+          "transfer": 0.45,
+          "value": 1.6400000000000003
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 4,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -37.233000000000004,
+        "best_total_reward": 9.567
+      },
+      "proof": {
+        "paired_comparison": {
+          "mean_paired_gain": 0.0,
+          "standard_deviation": 0.0,
+          "standard_error": 0.0,
+          "lower_confidence_bound": 0.0,
+          "upper_confidence_bound": 0.0
+        },
+        "hard_gate_result": {
+          "gates": {
+            "critical_errors_zero": false,
+            "unauthorized_actions_zero": true,
+            "safety_or_rights_zero": true,
+            "governance_regression_zero": true,
+            "evidence_coverage": true,
+            "reliability": true,
+            "transfer": true
+          },
+          "pass": false
+        },
+        "alpha": {
+          "operating_gain_lcb": 0.0,
+          "quality_gain": 0.0,
+          "evidence_gain": 0.0,
+          "cost_delta": 0.0,
+          "human_burden_delta": 0.0,
+          "training_burden": 0.0192,
+          "inference_burden": 0.0264,
+          "complexity_burden": 0.043199999999999995,
+          "gym_basis_risk_reserve": 0.21159999999999995,
+          "proof_debt": 0.0,
+          "transfer_reserve": 0.0824999999999999,
+          "proof_adjusted_alpha": -0.38289999999999985
+        },
+        "pass": false,
+        "reference": "rules"
+      },
+      "architecture": {
+        "policy": "rules",
+        "trainable_layer": "policy"
+      },
+      "claim_boundary": "Reference architecture. Not eligible for Specialist ASI promotion."
+    },
+    {
+      "algorithm": {
+        "algorithm_id": "behavior_clone",
+        "name": "Behaviour Cloning",
+        "family": "supervised",
+        "description": "Learns the majority expert action for observed mission states.",
+        "complexity": 0.28,
+        "training_cost": 0.2,
+        "inference_cost": 0.15,
+        "sovereignty": 0.84,
+        "governance": 0.84,
+        "supports_online": true,
+        "supports_offline": true,
+        "supports_continuous": false,
+        "multiagent": false,
+        "status": "core"
+      },
+      "formation": {
+        "episodes": 350,
+        "mean_total_reward": 8.666878571428573,
+        "accepted_rate": 0.9742857142857143,
+        "correct_rate": 0.9742857142857143,
+        "evidence_coverage": 1.0,
+        "human_burden": 0.13,
+        "complete_cost": 1.0627142857142857,
+        "mean_rewards": {
+          "cost": -0.5194071428571428,
+          "evidence": 3.25,
+          "human_burden": -0.026,
+          "quality": 2.3728571428571428,
+          "reliability": 0.9451428571428572,
+          "speed": 0.6299999999999997,
+          "transfer": 0.0,
+          "value": 2.085714285714286
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 1,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -37.233000000000004,
+        "best_total_reward": 9.067
+      },
+      "fresh": {
+        "episodes": 200,
+        "mean_total_reward": 8.3772575,
+        "accepted_rate": 0.955,
+        "correct_rate": 0.955,
+        "evidence_coverage": 1.0,
+        "human_burden": 0.18549999999999997,
+        "complete_cost": 1.08095,
+        "mean_rewards": {
+          "cost": -0.5221425,
+          "evidence": 3.25,
+          "human_burden": -0.037099999999999994,
+          "quality": 2.2775,
+          "reliability": 0.904,
+          "speed": 0.6299999999999997,
+          "transfer": 0.0,
+          "value": 2.0000000000000004
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 1,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -37.233000000000004,
+        "best_total_reward": 9.067
+      },
+      "transfer": {
+        "episodes": 100,
+        "mean_total_reward": 6.8866499999999995,
+        "accepted_rate": 0.89,
+        "correct_rate": 0.89,
+        "evidence_coverage": 1.0,
+        "human_burden": 0.21,
+        "complete_cost": 1.089,
+        "mean_rewards": {
+          "cost": -0.52335,
+          "evidence": 3.25,
+          "human_burden": -0.041999999999999996,
+          "quality": 1.845,
+          "reliability": 0.682,
+          "speed": 0.6299999999999997,
+          "transfer": 0.445,
+          "value": 1.6000000000000003
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 4,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -37.233000000000004,
+        "best_total_reward": 9.567
+      },
+      "proof": {
+        "paired_comparison": {
+          "mean_paired_gain": 0.0034900000000000018,
+          "standard_deviation": 1.4605006455246399,
+          "standard_error": 0.10327299103778029,
+          "lower_confidence_bound": -0.19892506243404937,
+          "upper_confidence_bound": 0.20590506243404935
+        },
+        "hard_gate_result": {
+          "gates": {
+            "critical_errors_zero": false,
+            "unauthorized_actions_zero": true,
+            "safety_or_rights_zero": true,
+            "governance_regression_zero": true,
+            "evidence_coverage": true,
+            "reliability": true,
+            "transfer": true
+          },
+          "pass": false
+        },
+        "alpha": {
+          "operating_gain_lcb": -0.19892506243404937,
+          "quality_gain": 0.0,
+          "evidence_gain": 0.0,
+          "cost_delta": -0.0045999999999999375,
+          "human_burden_delta": -0.014000000000000012,
+          "training_burden": 0.064,
+          "inference_burden": 0.033,
+          "complexity_burden": 0.06720000000000001,
+          "gym_basis_risk_reserve": 0.22359999999999997,
+          "proof_debt": 0.0,
+          "transfer_reserve": 0.09749999999999992,
+          "proof_adjusted_alpha": -0.6842250624340493
+        },
+        "pass": false,
+        "reference": "rules"
+      },
+      "architecture": {
+        "policy": "behaviour_cloning",
+        "data": "expert demonstrations",
+        "fallback": "transparent rules"
+      },
+      "claim_boundary": "Core dependency-free training candidate. Specialist ASI remains an earned external state requiring independent protected work."
+    },
+    {
+      "algorithm": {
+        "algorithm_id": "muzero_lite",
+        "name": "MuZero-Lite",
+        "family": "world model + MCTS",
+        "description": "A dependency-free, tabular latent-model and tree-search reference inspired by MuZero; not a DeepMind-scale neural reproduction.",
+        "complexity": 0.82,
+        "training_cost": 0.92,
+        "inference_cost": 0.55,
+        "sovereignty": 0.77,
+        "governance": 0.78,
+        "supports_online": true,
+        "supports_offline": false,
+        "supports_continuous": false,
+        "multiagent": false,
+        "status": "core"
+      },
+      "formation": {
+        "episodes": 350,
+        "mean_total_reward": -3.6637257142857145,
+        "accepted_rate": 0.4942857142857143,
+        "correct_rate": 0.4942857142857143,
+        "evidence_coverage": 0.5697142857142857,
+        "human_burden": 0.11199999999999999,
+        "complete_cost": 0.6918857142857143,
+        "mean_rewards": {
+          "cost": -0.30409714285714284,
+          "evidence": 2.0707142857142857,
+          "human_burden": -0.022399999999999996,
+          "quality": -0.21457142857142855,
+          "reliability": -0.27885714285714286,
+          "speed": 0.5671999999999998,
+          "transfer": 0.0,
+          "value": -0.1959999999999999
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 12,
+          "governance_regression": 31,
+          "rights_violation": 0,
+          "unauthorized_action": 31
+        },
+        "worst_total_reward": -65.32300000000001,
+        "best_total_reward": 9.2315
+      },
+      "fresh": {
+        "episodes": 200,
+        "mean_total_reward": 0.39999999999999986,
+        "accepted_rate": 0.46,
+        "correct_rate": 0.46,
+        "evidence_coverage": 0.0,
+        "human_burden": 0.0,
+        "complete_cost": 0.12,
+        "mean_rewards": {
+          "cost": -0.018,
+          "evidence": 0.0,
+          "human_burden": 0.0,
+          "quality": 0.07,
+          "reliability": 0.027999999999999976,
+          "speed": 0.27999999999999997,
+          "transfer": 0.0,
+          "value": 0.040000000000000056
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 0,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -4.338,
+        "best_total_reward": 5.962
+      },
+      "transfer": {
+        "episodes": 100,
+        "mean_total_reward": 0.8459999999999998,
+        "accepted_rate": 0.48,
+        "correct_rate": 0.48,
+        "evidence_coverage": 0.0,
+        "human_burden": 0.0,
+        "complete_cost": 0.12,
+        "mean_rewards": {
+          "cost": -0.018,
+          "evidence": 0.0,
+          "human_burden": 0.0,
+          "quality": 0.16,
+          "reliability": 0.06399999999999997,
+          "speed": 0.27999999999999997,
+          "transfer": 0.24,
+          "value": 0.12000000000000006
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 0,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -4.338,
+        "best_total_reward": 6.462
+      },
+      "proof": {
+        "paired_comparison": {
+          "mean_paired_gain": -7.9737675,
+          "standard_deviation": 6.142888960096391,
+          "standard_error": 0.4343678439760137,
+          "lower_confidence_bound": -8.825128474192987,
+          "upper_confidence_bound": -7.122406525807014
+        },
+        "hard_gate_result": {
+          "gates": {
+            "critical_errors_zero": true,
+            "unauthorized_actions_zero": true,
+            "safety_or_rights_zero": true,
+            "governance_regression_zero": true,
+            "evidence_coverage": false,
+            "reliability": false,
+            "transfer": false
+          },
+          "pass": false
+        },
+        "alpha": {
+          "operating_gain_lcb": -8.825128474192987,
+          "quality_gain": -0.49499999999999994,
+          "evidence_gain": -1.0,
+          "cost_delta": -0.96555,
+          "human_burden_delta": -0.19949999999999998,
+          "training_burden": 0.2944,
+          "inference_burden": 0.12100000000000001,
+          "complexity_burden": 0.19679999999999997,
+          "gym_basis_risk_reserve": 0.28839999999999993,
+          "proof_debt": 1.44,
+          "transfer_reserve": 0.0,
+          "proof_adjusted_alpha": -12.458228474192985
+        },
+        "pass": false,
+        "reference": "rules"
+      },
+      "architecture": {
+        "policy": "muzero_lite",
+        "representation": "discrete latent state",
+        "dynamics_records": 253,
+        "prediction_states": 158,
+        "tree_search": {
+          "simulations": 10,
+          "depth": 3
+        },
+        "claim_boundary": "MuZero-inspired educational reference; not a neural MuZero reproduction."
+      },
+      "claim_boundary": "A dependency-free, tabular latent-model and tree-search reference inspired by MuZero; not a DeepMind-scale neural reproduction. Fresh-proof results remain synthetic and unaudited."
+    },
+    {
+      "algorithm": {
+        "algorithm_id": "shielded_muzero",
+        "name": "Shielded MuZero-Lite",
+        "family": "world model + MCTS + constraints",
+        "description": "MuZero-Lite planning wrapped by an external constitutional action shield.",
+        "complexity": 0.92,
+        "training_cost": 1.0,
+        "inference_cost": 0.62,
+        "sovereignty": 0.88,
+        "governance": 0.94,
+        "supports_online": true,
+        "supports_offline": false,
+        "supports_continuous": false,
+        "multiagent": false,
+        "status": "core"
+      },
+      "formation": {
+        "episodes": 350,
+        "mean_total_reward": 1.4431171428571428,
+        "accepted_rate": 0.5285714285714286,
+        "correct_rate": 0.5285714285714286,
+        "evidence_coverage": 0.6765714285714286,
+        "human_burden": 0.286,
+        "complete_cost": 0.8352285714285714,
+        "mean_rewards": {
+          "cost": -0.3604542857142857,
+          "evidence": 2.380857142857143,
+          "human_burden": -0.0572,
+          "quality": 0.17971428571428572,
+          "reliability": -0.020000000000000007,
+          "speed": 0.5961999999999998,
+          "transfer": 0.0,
+          "value": 0.15257142857142866
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 20,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -40.338,
+        "best_total_reward": 9.227
+      },
+      "fresh": {
+        "episodes": 200,
+        "mean_total_reward": 8.22687,
+        "accepted_rate": 0.92,
+        "correct_rate": 0.92,
+        "evidence_coverage": 0.985,
+        "human_burden": 0.19949999999999998,
+        "complete_cost": 1.0765500000000001,
+        "mean_rewards": {
+          "cost": -0.51813,
+          "evidence": 3.2402499999999996,
+          "human_burden": -0.0399,
+          "quality": 2.1519999999999997,
+          "reliability": 0.856,
+          "speed": 0.6296499999999997,
+          "transfer": 0.0,
+          "value": 1.9070000000000003
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 0,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -2.3360000000000003,
+        "best_total_reward": 9.227
+      },
+      "transfer": {
+        "episodes": 100,
+        "mean_total_reward": 5.83932,
+        "accepted_rate": 0.78,
+        "correct_rate": 0.78,
+        "evidence_coverage": 0.9640000000000001,
+        "human_burden": 0.20299999999999996,
+        "complete_cost": 1.0737999999999999,
+        "mean_rewards": {
+          "cost": -0.52008,
+          "evidence": 3.263,
+          "human_burden": -0.0406,
+          "quality": 1.39,
+          "reliability": 0.484,
+          "speed": 0.6229999999999997,
+          "transfer": 0.39,
+          "value": 1.2500000000000002
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 4,
+          "governance_regression": 0,
+          "rights_violation": 0,
+          "unauthorized_action": 0
+        },
+        "worst_total_reward": -37.628499999999995,
+        "best_total_reward": 9.879
+      },
+      "proof": {
+        "paired_comparison": {
+          "mean_paired_gain": -0.14689749999999996,
+          "standard_deviation": 3.7825785408677133,
+          "standard_error": 0.26746869366182763,
+          "lower_confidence_bound": -0.671136139577182,
+          "upper_confidence_bound": 0.3773411395771821
+        },
+        "hard_gate_result": {
+          "gates": {
+            "critical_errors_zero": true,
+            "unauthorized_actions_zero": true,
+            "safety_or_rights_zero": true,
+            "governance_regression_zero": true,
+            "evidence_coverage": true,
+            "reliability": true,
+            "transfer": true
+          },
+          "pass": true
+        },
+        "alpha": {
+          "operating_gain_lcb": -0.671136139577182,
+          "quality_gain": -0.03499999999999992,
+          "evidence_gain": -0.015000000000000013,
+          "cost_delta": -0.008999999999999897,
+          "human_burden_delta": 0.0,
+          "training_burden": 0.32,
+          "inference_burden": 0.1364,
+          "complexity_burden": 0.2208,
+          "gym_basis_risk_reserve": 0.30039999999999994,
+          "proof_debt": 0.0,
+          "transfer_reserve": 0.21000000000000002,
+          "proof_adjusted_alpha": -1.919486139577182
+        },
+        "pass": false,
+        "reference": "rules"
+      },
+      "architecture": {
+        "policy": "shielded_muzero_lite",
+        "base": {
+          "policy": "muzero_lite",
+          "representation": "discrete latent state",
+          "dynamics_records": 265,
+          "prediction_states": 177,
+          "tree_search": {
+            "simulations": 10,
+            "depth": 3
+          },
+          "claim_boundary": "MuZero-inspired educational reference; not a neural MuZero reproduction."
+        },
+        "external_action_shield": true,
+        "authority_boundary": "deterministic"
+      },
+      "claim_boundary": "MuZero-Lite planning wrapped by an external constitutional action shield. Fresh-proof results remain synthetic and unaudited."
+    },
+    {
+      "algorithm": {
+        "algorithm_id": "dyna_q",
+        "name": "Dyna-Q",
+        "family": "model-based RL",
+        "description": "Combines real episodes with learned-model replay.",
+        "complexity": 0.55,
+        "training_cost": 0.58,
+        "inference_cost": 0.24,
+        "sovereignty": 0.8,
+        "governance": 0.81,
+        "supports_online": true,
+        "supports_offline": false,
+        "supports_continuous": false,
+        "multiagent": false,
+        "status": "core"
+      },
+      "formation": {
+        "episodes": 350,
+        "mean_total_reward": -9.738574285714286,
+        "accepted_rate": 0.4342857142857143,
+        "correct_rate": 0.4342857142857143,
+        "evidence_coverage": 0.6120000000000001,
+        "human_burden": 0.13799999999999998,
+        "complete_cost": 0.7597428571428572,
+        "mean_rewards": {
+          "cost": -0.3536314285714286,
+          "evidence": 2.3882857142857143,
+          "human_burden": -0.027599999999999996,
+          "quality": -0.9074285714285715,
+          "reliability": -0.704,
+          "speed": 0.5817999999999998,
+          "transfer": 0.0,
+          "value": -0.8588571428571428
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 22,
+          "governance_regression": 58,
+          "rights_violation": 0,
+          "unauthorized_action": 58
+        },
+        "worst_total_reward": -65.32300000000001,
+        "best_total_reward": 9.504999999999999
+      },
+      "fresh": {
+        "episodes": 200,
+        "mean_total_reward": 7.04202,
+        "accepted_rate": 0.85,
+        "correct_rate": 0.85,
+        "evidence_coverage": 0.877,
+        "human_burden": 0.19949999999999998,
+        "complete_cost": 1.09585,
+        "mean_rewards": {
+          "cost": -0.5596800000000001,
+          "evidence": 3.4515,
+          "human_burden": -0.0399,
+          "quality": 1.801,
+          "reliability": 0.685,
+          "speed": 0.5830999999999996,
+          "transfer": 0.0,
+          "value": 1.6210000000000002
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 2,
+          "governance_regression": 1,
+          "rights_violation": 0,
+          "unauthorized_action": 1
+        },
+        "worst_total_reward": -61.90599999999999,
+        "best_total_reward": 9.469
+      },
+      "transfer": {
+        "episodes": 100,
+        "mean_total_reward": 4.352985,
+        "accepted_rate": 0.73,
+        "correct_rate": 0.73,
+        "evidence_coverage": 0.828,
+        "human_burden": 0.23099999999999998,
+        "complete_cost": 1.0992,
+        "mean_rewards": {
+          "cost": -0.567315,
+          "evidence": 3.4385000000000003,
+          "human_burden": -0.04619999999999999,
+          "quality": 1.157,
+          "reliability": 0.364,
+          "speed": 0.5599999999999996,
+          "transfer": 0.365,
+          "value": 1.082
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 2,
+          "governance_regression": 3,
+          "rights_violation": 0,
+          "unauthorized_action": 3
+        },
+        "worst_total_reward": -62.21799999999999,
+        "best_total_reward": 9.897
+      },
+      "proof": {
+        "paired_comparison": {
+          "mean_paired_gain": -1.3317475,
+          "standard_deviation": 7.79219344494288,
+          "standard_error": 0.5509912825236475,
+          "lower_confidence_bound": -2.4116904137463493,
+          "upper_confidence_bound": -0.2518045862536511
+        },
+        "hard_gate_result": {
+          "gates": {
+            "critical_errors_zero": false,
+            "unauthorized_actions_zero": false,
+            "safety_or_rights_zero": true,
+            "governance_regression_zero": false,
+            "evidence_coverage": true,
+            "reliability": true,
+            "transfer": true
+          },
+          "pass": false
+        },
+        "alpha": {
+          "operating_gain_lcb": -2.4116904137463493,
+          "quality_gain": -0.10499999999999998,
+          "evidence_gain": -0.123,
+          "cost_delta": 0.010299999999999976,
+          "human_burden_delta": 0.0,
+          "training_burden": 0.1856,
+          "inference_burden": 0.0528,
+          "complexity_burden": 0.132,
+          "gym_basis_risk_reserve": 0.25599999999999995,
+          "proof_debt": 0.0,
+          "transfer_reserve": 0.18,
+          "proof_adjusted_alpha": -3.445300413746349
+        },
+        "pass": false,
+        "reference": "rules"
+      },
+      "architecture": {
+        "policy": "dyna_q",
+        "learned_transition_records": 410,
+        "planning_steps": 8
+      },
+      "claim_boundary": "Core dependency-free training candidate. Specialist ASI remains an earned external state requiring independent protected work."
+    },
+    {
+      "algorithm": {
+        "algorithm_id": "q_learning",
+        "name": "Tabular Q-Learning",
+        "family": "model-free RL",
+        "description": "Learns sequential decisions from reward and constraint signals.",
+        "complexity": 0.42,
+        "training_cost": 0.42,
+        "inference_cost": 0.2,
+        "sovereignty": 0.8,
+        "governance": 0.8,
+        "supports_online": true,
+        "supports_offline": false,
+        "supports_continuous": false,
+        "multiagent": false,
+        "status": "core"
+      },
+      "formation": {
+        "episodes": 350,
+        "mean_total_reward": -10.632978571428572,
+        "accepted_rate": 0.34285714285714286,
+        "correct_rate": 0.34285714285714286,
+        "evidence_coverage": 0.6120000000000001,
+        "human_burden": 0.164,
+        "complete_cost": 0.7694857142857142,
+        "mean_rewards": {
+          "cost": -0.3620357142857143,
+          "evidence": 2.4012857142857142,
+          "human_burden": -0.032799999999999996,
+          "quality": -1.2731428571428571,
+          "reliability": -0.8514285714285714,
+          "speed": 0.5639999999999997,
+          "transfer": 0.0,
+          "value": -1.1502857142857141
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 17,
+          "governance_regression": 61,
+          "rights_violation": 0,
+          "unauthorized_action": 61
+        },
+        "worst_total_reward": -65.32300000000001,
+        "best_total_reward": 9.451
+      },
+      "fresh": {
+        "episodes": 200,
+        "mean_total_reward": 6.8687700000000005,
+        "accepted_rate": 0.91,
+        "correct_rate": 0.91,
+        "evidence_coverage": 0.986,
+        "human_burden": 0.18549999999999997,
+        "complete_cost": 1.07645,
+        "mean_rewards": {
+          "cost": -0.52203,
+          "evidence": 3.263,
+          "human_burden": -0.037099999999999994,
+          "quality": 2.0069999999999997,
+          "reliability": 0.763,
+          "speed": 0.6278999999999997,
+          "transfer": 0.0,
+          "value": 1.7670000000000001
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 2,
+          "governance_regression": 3,
+          "rights_violation": 0,
+          "unauthorized_action": 3
+        },
+        "worst_total_reward": -62.626999999999995,
+        "best_total_reward": 9.2315
+      },
+      "transfer": {
+        "episodes": 100,
+        "mean_total_reward": 6.1051649999999995,
+        "accepted_rate": 0.78,
+        "correct_rate": 0.78,
+        "evidence_coverage": 0.97,
+        "human_burden": 0.23099999999999998,
+        "complete_cost": 1.1207,
+        "mean_rewards": {
+          "cost": -0.560235,
+          "evidence": 3.4385000000000003,
+          "human_burden": -0.04619999999999999,
+          "quality": 1.446,
+          "reliability": 0.514,
+          "speed": 0.5970999999999996,
+          "transfer": 0.39,
+          "value": 1.3260000000000003
+        },
+        "constraint_totals": {
+          "budget_breach": 0,
+          "critical_miss": 2,
+          "governance_regression": 1,
+          "rights_violation": 0,
+          "unauthorized_action": 1
+        },
+        "worst_total_reward": -61.861000000000004,
+        "best_total_reward": 10.004999999999999
+      },
+      "proof": {
+        "paired_comparison": {
+          "mean_paired_gain": -1.5049975,
+          "standard_deviation": 8.76915611797113,
+          "standard_error": 0.6200729756300887,
+          "lower_confidence_bound": -2.7203405322349736,
+          "upper_confidence_bound": -0.2896544677650261
+        },
+        "hard_gate_result": {
+          "gates": {
+            "critical_errors_zero": false,
+            "unauthorized_actions_zero": false,
+            "safety_or_rights_zero": true,
+            "governance_regression_zero": false,
+            "evidence_coverage": true,
+            "reliability": true,
+            "transfer": true
+          },
+          "pass": false
+        },
+        "alpha": {
+          "operating_gain_lcb": -2.7203405322349736,
+          "quality_gain": -0.04499999999999993,
+          "evidence_gain": -0.014000000000000012,
+          "cost_delta": -0.009100000000000108,
+          "human_burden_delta": -0.014000000000000012,
+          "training_burden": 0.1344,
+          "inference_burden": 0.044000000000000004,
+          "complexity_burden": 0.10079999999999999,
+          "gym_basis_risk_reserve": 0.24039999999999995,
+          "proof_debt": 0.0,
+          "transfer_reserve": 0.195,
+          "proof_adjusted_alpha": -3.510140532234973
+        },
+        "pass": false,
+        "reference": "rules"
+      },
+      "architecture": {
+        "policy": "tabular_q_learning",
+        "state_count": 225,
+        "external_constraints": true
+      },
+      "claim_boundary": "Core dependency-free training candidate. Specialist ASI remains an earned external state requiring independent protected work."
+    }
+  ],
+  "references": [
+    "incumbent",
+    "rules"
+  ],
+  "best_reference_id": "rules",
+  "champion_id": "rules",
+  "verdict": "RETAIN_OR_REPAIR_REFERENCE",
+  "governing_reason": "No candidate produced positive proof-adjusted Alpha after hard gates, complete burden and Gym-to-reality reserve. The Foundry therefore selected a simpler reference architecture rather than rewarding algorithmic complexity.",
+  "fresh_proof": {
+    "case_count": 200,
+    "transfer_case_count": 100,
+    "protected_seed_commitment": "b152afd43261525248df97b88f0ccb63b99a67f06bc792fff0f3e822ef380c9d",
+    "elapsed_seconds": 1.961
+  },
+  "authority_recommendation": {
+    "maximum_recommended_level": "A0_OBSERVE",
+    "created": false,
+    "requires_accountable_admission": true,
+    "rule": "Capability does not automatically create authority. Authority never exceeds fresh proof."
+  },
+  "manifest_sha256": "318ac0c487b17a87b39d82472898d8e8c6ed0d042e4c6ce0e61e57a6c4e0f3c8"
+}

@@ -1,0 +1,17 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"GoalOS.UVSI3.MissionGymSpec.v1",
+  "title":"GoalOS Finite Mission Gym Specification",
+  "type":"object",
+  "required":["mission_id","name","description","actions","states","observations","initial_states","transitions","terminal_states"],
+  "properties":{
+    "mission_id":{"type":"string","pattern":"^[A-Za-z0-9_]+$"},"name":{"type":"string"},"description":{"type":"string"},
+    "actions":{"type":"array","minItems":2,"items":{"type":"string"},"uniqueItems":true},
+    "states":{"type":"array","minItems":2,"items":{"type":"string"},"uniqueItems":true},
+    "observations":{"type":"object","additionalProperties":{"type":"array","items":{"type":"integer"}}},
+    "initial_states":{"type":"array","items":{"type":"object","required":["state"],"properties":{"state":{"type":"string"},"weight":{"type":"number","exclusiveMinimum":0}}}},
+    "transitions":{"type":"object"},"terminal_states":{"type":"array","items":{"type":"string"}},
+    "expert_policy":{"type":"object","additionalProperties":{"type":"string"}},"rule_policy":{"type":"object","additionalProperties":{"type":"string"}},
+    "features":{"type":"object"}
+  },"additionalProperties":true
+}
