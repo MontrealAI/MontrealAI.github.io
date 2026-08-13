@@ -1,0 +1,18 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://montreal.ai/schemas/goalos/MissionCompilerAssuranceReport.v1.json",
+  "title":"GoalOS Mission Compiler Assurance Report",
+  "type":"object",
+  "required":["schema","version","mission_id","issues","assurance_score","ready_for_formation","ready_for_fresh_proof","report_sha256"],
+  "properties":{
+    "schema":{"const":"GoalOS.MissionCompilerAssuranceReport.v1"},
+    "version":{"const":"8.8.0-UVSI3"},
+    "mission_id":{"type":"string","minLength":1},
+    "issues":{"type":"array","items":{"type":"object","required":["severity","code","message"],"properties":{"severity":{"enum":["BLOCK","WARN","INFO"]},"code":{"type":"string"},"message":{"type":"string"}}}},
+    "assurance_score":{"type":"number","minimum":0,"maximum":100},
+    "ready_for_formation":{"type":"boolean"},
+    "ready_for_fresh_proof":{"type":"boolean"},
+    "report_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+  },
+  "additionalProperties":true
+}

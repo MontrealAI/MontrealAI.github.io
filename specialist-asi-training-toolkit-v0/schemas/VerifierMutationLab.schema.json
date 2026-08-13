@@ -1,0 +1,16 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://montreal.ai/schemas/goalos/VerifierMutationLab.v1.json",
+  "title":"GoalOS Verifier Mutation Lab",
+  "type":"object",
+  "required":["schema","sample_receipts","attacks","mutation_detection_rate","pass","report_sha256"],
+  "properties":{
+    "schema":{"const":"GoalOS.VerifierMutationLab.v1"},
+    "sample_receipts":{"type":"integer","minimum":1},
+    "attacks":{"type":"object","minProperties":1},
+    "mutation_detection_rate":{"type":"number","minimum":0,"maximum":1},
+    "pass":{"type":"boolean"},
+    "report_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+  },
+  "additionalProperties":true
+}

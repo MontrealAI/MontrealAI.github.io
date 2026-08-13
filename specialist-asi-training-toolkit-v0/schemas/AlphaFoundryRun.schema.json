@@ -1,0 +1,24 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"GoalOS.UVSI3.SovereignAlphaFoundryTournament.v1",
+  "title":"GoalOS Sovereign Alpha Foundry Tournament Record",
+  "type":"object",
+  "required":["schema","run_id","created_at","mission","router","candidates","references","best_reference_id","champion_id","verdict","governing_reason","fresh_proof","authority_recommendation","manifest_sha256"],
+  "properties":{
+    "schema":{"const":"GoalOS.SovereignAlphaFoundry.Tournament.v1"},
+    "run_id":{"type":"string"},
+    "created_at":{"type":"string"},
+    "mission":{"type":"object"},
+    "router":{"type":"object"},
+    "candidates":{"type":"array","minItems":2,"items":{"type":"object","required":["algorithm","formation","fresh","transfer","proof","architecture","claim_boundary"]}},
+    "references":{"type":"array","items":{"type":"string"}},
+    "best_reference_id":{"type":"string"},
+    "champion_id":{"type":"string"},
+    "verdict":{"type":"string"},
+    "governing_reason":{"type":"string"},
+    "fresh_proof":{"type":"object"},
+    "authority_recommendation":{"type":"object"},
+    "manifest_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+  },
+  "additionalProperties":true
+}
