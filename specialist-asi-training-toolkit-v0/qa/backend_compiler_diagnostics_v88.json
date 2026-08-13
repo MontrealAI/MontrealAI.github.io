@@ -1,0 +1,95 @@
+{
+  "schema": "GoalOS.MissionCompilerAssuranceReport.v1",
+  "version": "8.8.0-UVSI3",
+  "mission_id": "invoice_integrity",
+  "mission": {
+    "mission_id": "invoice_integrity",
+    "name": "Invoice Integrity",
+    "description": "Acquire evidence and classify invoices as pay-ready, hold or escalate without moving money.",
+    "state_type": "discrete",
+    "action_type": "discrete",
+    "partial_observability": 0.8,
+    "delayed_rewards": 0.45,
+    "historical_data": 0.95,
+    "simulator_fidelity": 0.92,
+    "feedback_speed": 0.95,
+    "safety_criticality": 0.78,
+    "multiagent_need": 0.55,
+    "formal_rules": 0.9,
+    "transfer_difficulty": 0.45,
+    "verifier_strength": 0.75,
+    "counterfactual_depth": 0.5,
+    "language_action_share": 0.4,
+    "max_steps": 7,
+    "formation_episodes": 380,
+    "fresh_cases": 260,
+    "transfer_cases": 120
+  },
+  "static_checks": {
+    "action_count": 9,
+    "max_steps": 7,
+    "reward_vector_expected": true,
+    "hard_constraints_expected": true,
+    "rollback_required": true
+  },
+  "dynamic_probe": {
+    "sample_cases": 90,
+    "distinct_observations": 88,
+    "terminal_events": 89,
+    "truncation_events": 1,
+    "constraint_trigger_events": 26,
+    "expert_action_support": {
+      "inspect_purchase_order": 90,
+      "check_duplicate_payment": 0,
+      "verify_vendor_and_bank": 0,
+      "verify_completion_evidence": 0,
+      "check_contract_and_warranty": 0,
+      "recommend_pay": 0,
+      "recommend_hold": 0,
+      "escalate_to_controller": 0,
+      "change_vendor_bank_details": 0
+    },
+    "random_action_coverage": {
+      "inspect_purchase_order": 27,
+      "check_duplicate_payment": 29,
+      "verify_vendor_and_bank": 25,
+      "verify_completion_evidence": 22,
+      "check_contract_and_warranty": 24,
+      "recommend_pay": 18,
+      "recommend_hold": 24,
+      "escalate_to_controller": 28,
+      "change_vendor_bank_details": 19
+    },
+    "dead_expert_actions": [
+      "check_duplicate_payment",
+      "verify_vendor_and_bank",
+      "verify_completion_evidence",
+      "check_contract_and_warranty",
+      "recommend_pay",
+      "recommend_hold",
+      "escalate_to_controller",
+      "change_vendor_bank_details"
+    ],
+    "split_commitment_intersections": {
+      "formation_fresh": 0,
+      "formation_transfer": 0,
+      "fresh_transfer": 0
+    },
+    "random_policy_reward_min": -65.32300000000001,
+    "random_policy_reward_max": 9.535499999999999
+  },
+  "issues": [
+    {
+      "severity": "WARN",
+      "code": "NARROW_EXPERT_SUPPORT",
+      "message": "Most actions have no expert support; offline candidates may be brittle."
+    }
+  ],
+  "blockers": 0,
+  "warnings": 1,
+  "assurance_score": 93,
+  "ready_for_formation": true,
+  "ready_for_fresh_proof": true,
+  "governing_rule": "A mission with an ungrounded evaluator, leaky split or unbounded action space is not eligible for autonomous formation.",
+  "report_sha256": "9c099940b259460fc0e79ab2dc07527e58168b0885ce2a3a01fc322c5389a3ef"
+}
