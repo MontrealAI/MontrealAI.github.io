@@ -1,0 +1,42 @@
+name: Becoming Genesis Snapshot
+
+on:
+  push:
+    branches:
+      - automation/becoming-snapshot-20260815
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install runtime dependency
+        run: python -m pip install --disable-pip-version-check 'requests>=2.31,<3'
+      - name: Decode and run block-exact snapshot builder
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, gzip
+          from pathlib import Path
+          payload = Path('tools/becoming_snapshot.py.gz.b64').read_text().strip()
+          Path('/tmp/becoming_snapshot.py').write_bytes(gzip.decompress(base64.b64decode(payload)))
+          PY
+          python /tmp/becoming_snapshot.py --output snapshot_output
+      - name: Upload complete snapshot package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-becoming-genesis-snapshot
+          path: |
+            snapshot_output/**
+            MONTREALAI_BECOMING_OMEGA_FINAL_444_GENESIS_SNAPSHOT_BLOCK_*.zip
+          if-no-files-found: warn
+          retention-days: 3
