@@ -5,7 +5,7 @@ on:
     branches:
       - snapshot/becoming-omega-2026-08-15
     paths:
-      - tools/becoming_omega_snapshot.py
+      - tools/becoming_omega_snapshot_v3.py
       - .github/workflows/becoming-omega-snapshot.yml
 
 permissions:
@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 1
           filter: blob:none
           sparse-checkout: |
-            tools/becoming_omega_snapshot.py
+            tools/becoming_omega_snapshot_v3.py
           sparse-checkout-cone-mode: false
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -35,7 +35,7 @@ jobs:
       - name: Collect and verify snapshot
         env:
           SNAPSHOT_OUT: snapshot_output
-        run: python tools/becoming_omega_snapshot.py
+        run: python tools/becoming_omega_snapshot_v3.py
       - name: Upload complete snapshot package
         if: always()
         uses: actions/upload-artifact@v4
