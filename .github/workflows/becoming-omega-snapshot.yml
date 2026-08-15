@@ -11,13 +11,23 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: becoming-omega-genesis-snapshot
+  cancel-in-progress: true
+
 jobs:
   snapshot:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Check out isolated snapshot branch
+      - name: Check out collector only
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            tools/becoming_omega_snapshot.py
+          sparse-checkout-cone-mode: false
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
