@@ -1,0 +1,28 @@
+name: Becoming Omega RPC Diagnostic
+
+on:
+  push:
+    branches:
+      - snapshot/becoming-omega-2026-08-15
+    paths:
+      - tools/becoming_omega_rpc_diag.py
+      - .github/workflows/becoming-omega-rpc-diag.yml
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: tools/becoming_omega_rpc_diag.py
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tools/becoming_omega_rpc_diag.py
