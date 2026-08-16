@@ -1,0 +1,84 @@
+name: MONTREAL.AI OpenSea Public Network Capture
+
+on:
+  push:
+    branches:
+      - research/montrealai-provenance-sales-20260816
+    paths:
+      - .github/workflows/montrealai-opensea-network-capture.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@latest
+          npx playwright install chromium
+      - name: Capture public OpenSea requests and responses
+        run: |
+          cat > capture.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'fs';
+          import path from 'path';
+
+          const out='capture_output';
+          fs.mkdirSync(out,{recursive:true});
+          const browser=await chromium.launch({headless:true,args:['--disable-blink-features=AutomationControlled']});
+          const context=await browser.newContext({
+            viewport:{width:1600,height:1000},
+            userAgent:'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151.0.0.0 Safari/537.36',
+            locale:'en-US',
+            recordHar:{path:path.join(out,'opensea.har'),content:'embed',mode:'full'}
+          });
+          const page=await context.newPage();
+          const captured=[];
+          const interesting=u=>u.includes('gql.opensea.io')||u.includes('api.opensea.io')||u.includes('/graphql');
+          page.on('request',req=>{
+            if(!interesting(req.url())) return;
+            const h={...req.headers()};
+            for(const k of Object.keys(h)) if(['cookie','authorization'].includes(k.toLowerCase())) h[k]='[redacted]';
+            captured.push({kind:'request',time:new Date().toISOString(),url:req.url(),method:req.method(),headers:h,postData:req.postData()});
+          });
+          page.on('response',async res=>{
+            if(!interesting(res.url())) return;
+            let body='';
+            try{ body=await res.text(); }catch(e){ body='[unavailable '+e+']'; }
+            captured.push({kind:'response',time:new Date().toISOString(),url:res.url(),status:res.status(),headers:res.headers(),body:body.slice(0,5000000)});
+          });
+          async function visit(label,url,after){
+            console.log('VISIT',label,url);
+            await page.goto(url,{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForTimeout(15000);
+            if(after) await after();
+            await page.screenshot({path:path.join(out,label+'.png'),fullPage:true});
+          }
+          await visit('collection_oldest','https://opensea.io/collection/montrealai?sortBy=created_date');
+          await visit('collection_activity','https://opensea.io/collection/montrealai/activity');
+          const item='https://opensea.io/item/ethereum/0x495f947276749ce646f68ac8c248420045cb7b5e/2392630434290240917728431095880785304289144848761899072947382440480049463297';
+          await visit('item_000',item,async()=>{
+            const activity=page.getByText('Activity',{exact:true}).first();
+            if(await activity.count()) { try{await activity.click(); await page.waitForTimeout(10000);}catch(e){console.log('activity click',String(e));} }
+          });
+          fs.writeFileSync(path.join(out,'captured.json'),JSON.stringify(captured,null,2));
+          fs.writeFileSync(path.join(out,'summary.json'),JSON.stringify({entries:captured.length,urls:[...new Set(captured.map(x=>x.url))]},null,2));
+          await context.close();
+          await browser.close();
+          console.log('captured',captured.length);
+          JS
+          node capture.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-opensea-public-network-capture
+          path: capture_output
+          retention-days: 7
+          if-no-files-found: error
