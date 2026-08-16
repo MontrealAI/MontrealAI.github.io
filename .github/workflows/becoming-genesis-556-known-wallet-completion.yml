@@ -17,6 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      - name: Checkout focused resolver only
+        uses: actions/checkout@v4
+        with:
+          ref: snapshot/becoming-genesis-556-20260816
+          sparse-checkout: |
+            tools/becoming_snapshot/snapshot_v5_focus.py
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -33,9 +41,10 @@ jobs:
             -o base_snapshot.zip
           mkdir -p base_snapshot
           unzip -q base_snapshot.zip -d base_snapshot
-          curl --fail --location --retry 5 --retry-all-errors \
-            https://raw.githubusercontent.com/MontrealAI/MontrealAI.github.io/7b5aca562eb51d89701257d821195438f312bd1f/tools/becoming_snapshot/snapshot_v5_focus.py \
-            -o snapshot_v5_focus.py
+          cp tools/becoming_snapshot/snapshot_v5_focus.py snapshot_v5_focus.py
+          python -m py_compile snapshot_v5_focus.py
+          test -f base_snapshot/snapshot/token_holdings.csv
+          test -f base_snapshot/snapshot/snapshot_block.json
       - name: Test every proven Genesis-holder wallet at the frozen block
         id: capture
         continue-on-error: true
@@ -44,7 +53,7 @@ jobs:
           SNAPSHOT_OUT: snapshot_output
           HTTP_RETRIES: "3"
           HTTP_TIMEOUT: "45"
-          ETH_RPC_URLS: "https://eth.llamarpc.com,https://rpc.flashbots.net,https://eth.drpc.org,https://ethereum-rpc.publicnode.com"
+          ETH_RPC_URLS: "https://rpc.flashbots.net,https://eth.drpc.org,https://ethereum-rpc.publicnode.com,https://eth.llamarpc.com"
         run: |
           cat > known_wallet_runner.py <<'PY'
           import csv
