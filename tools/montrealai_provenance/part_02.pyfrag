@@ -1,0 +1,170 @@
+            "contract": norm_address(item.get("contractAddress")),
+            "from_address": norm_address(event.get("from")),
+            "from_name": json_get(event, "from", "displayName"),
+            "to_address": norm_address(event.get("to")),
+            "to_name": json_get(event, "to", "displayName"),
+            "quantity": event.get("quantity"),
+            "sale_type": event.get("saleType"),
+            "marketplace": json_get(event, "saleMarketplace", "identifier") or json_get(event, "mintMarketplace", "identifier"),
+            "is_airdrop": event.get("isAirdrop"),
+            "minter_address": norm_address(event.get("minter")),
+            "chain": json_get(event, "chain", "identifier"),
+            "image_url": item.get("imageUrl"),
+            "opensea_url": f"https://opensea.io/item/ethereum/{CONTRACT}/{item.get('tokenId')}",
+        }
+        row.update(price_fields(price, "price"))
+        rows.append(row)
+    rows.sort(key=lambda r: (str(r.get("event_time_utc") or ""), str(r.get("event_id") or "")))
+    return rows
+
+
+def rpc_call(url: str, method: str, params: list[Any], retries: int = 4) -> Any:
+    last: Exception | None = None
+    for attempt in range(retries + 1):
+        try:
+            r = SESSION.post(url, json={"jsonrpc": "2.0", "id": 1, "method": method, "params": params}, timeout=HTTP_TIMEOUT)
+            if r.status_code in (403, 408, 425, 429) or r.status_code >= 500:
+                raise RuntimeError(f"HTTP {r.status_code}: {r.text[:300]}")
+            r.raise_for_status()
+            data = r.json()
+            if data.get("error"):
+                raise RuntimeError(json.dumps(data["error"]))
+            return data.get("result")
+        except Exception as exc:
+            last = exc
+            if attempt == retries:
+                break
+            time.sleep(min(15.0, 0.5 * (2 ** attempt)))
+    raise RuntimeError(f"RPC {method} at {url} failed: {last}")
+
+
+def rpc_batch(url: str, calls: list[tuple[str, list[Any]]], retries: int = 4) -> list[Any]:
+    payload = [{"jsonrpc": "2.0", "id": i + 1, "method": method, "params": params} for i, (method, params) in enumerate(calls)]
+    last: Exception | None = None
+    for attempt in range(retries + 1):
+        try:
+            r = SESSION.post(url, json=payload, timeout=max(HTTP_TIMEOUT, 90))
+            if r.status_code in (403, 408, 425, 429) or r.status_code >= 500:
+                raise RuntimeError(f"HTTP {r.status_code}: {r.text[:300]}")
+            r.raise_for_status()
+            data = r.json()
+            if not isinstance(data, list):
+                raise RuntimeError(f"Non-list batch response: {str(data)[:500]}")
+            by_id = {int(x.get("id")): x for x in data if isinstance(x, dict) and x.get("id") is not None}
+            out: list[Any] = []
+            for i in range(len(calls)):
+                x = by_id.get(i + 1)
+                if not x:
+                    raise RuntimeError(f"Missing batch response id {i + 1}")
+                if x.get("error"):
+                    raise RuntimeError(f"Batch error id {i + 1}: {x['error']}")
+                out.append(x.get("result"))
+            return out
+        except Exception as exc:
+            last = exc
+            if attempt == retries:
+                break
+            time.sleep(min(15.0, 0.5 * (2 ** attempt)))
+    raise RuntimeError(f"RPC batch at {url} failed: {last}")
+
+
+def select_rpc_and_snapshot_block() -> tuple[str, dict[str, Any], list[dict[str, Any]]]:
+    attempts: list[dict[str, Any]] = []
+    for url in RPC_URLS:
+        try:
+            chain = int(rpc_call(url, "eth_chainId", [], 2), 16)
+            if chain != 1:
+                raise RuntimeError(f"Wrong chain {chain}")
+            block = rpc_call(url, "eth_getBlockByNumber", ["latest", False], 2)
+            if not isinstance(block, dict) or not block.get("number") or not block.get("hash"):
+                raise RuntimeError("Incomplete latest block")
+            code = rpc_call(url, "eth_getCode", [CONTRACT, block["number"]], 2)
+            if code == "0x":
+                raise RuntimeError("Contract code unavailable")
+            attempts.append({"url": url, "status": "PASS", "block_number": int(block["number"], 16), "block_hash": block["hash"]})
+            return url, block, attempts
+        except Exception as exc:
+            attempts.append({"url": url, "status": "FAIL", "error": str(exc)})
+    raise RuntimeError("No usable Ethereum RPC: " + json.dumps(attempts))
+
+
+def crosscheck_block(primary: str, block: dict[str, Any]) -> list[dict[str, Any]]:
+    checks: list[dict[str, Any]] = []
+    for url in RPC_URLS:
+        if url == primary:
+            continue
+        try:
+            chain = int(rpc_call(url, "eth_chainId", [], 2), 16)
+            other = rpc_call(url, "eth_getBlockByNumber", [block["number"], False], 2)
+            actual = str((other or {}).get("hash") or "").lower()
+            expected = str(block.get("hash") or "").lower()
+            checks.append({"url": url, "chain_id": chain, "status": "PASS" if chain == 1 and actual == expected else "MISMATCH", "actual_hash": actual, "expected_hash": expected})
+        except Exception as exc:
+            checks.append({"url": url, "status": "ERROR", "error": str(exc)})
+    return checks
+
+
+def encode_balance_batch(accounts: list[str], token_ids: list[str]) -> str:
+    selector = keccak(text="balanceOfBatch(address[],uint256[])")[:4]
+    encoded = abi_encode(["address[]", "uint256[]"], [accounts, [int(x) for x in token_ids]])
+    return "0x" + (selector + encoded).hex()
+
+
+def decode_uint_array(raw: str) -> list[int]:
+    return list(abi_decode(["uint256[]"], bytes.fromhex(raw[2:]))[0])
+
+
+def discover_candidates(item_rows: list[dict[str, Any]], event_rows: list[dict[str, Any]]) -> dict[str, set[str]]:
+    candidates: dict[str, set[str]] = {r["token_id_decimal"]: {CREATOR} for r in item_rows}
+    for row in item_rows:
+        if row.get("opensea_owner_address"):
+            candidates[row["token_id_decimal"]].add(row["opensea_owner_address"])
+    for event in event_rows:
+        tid = event.get("token_id_decimal")
+        if tid not in candidates:
+            continue
+        for key in ["from_address", "to_address", "minter_address"]:
+            a = event.get(key)
+            if a and a != ZERO:
+                candidates[tid].add(a)
+    return candidates
+
+
+def query_balances(url: str, block_hex: str, candidates: dict[str, set[str]], label: str) -> list[dict[str, Any]]:
+    pairs = [(tid, address) for tid in sorted(candidates, key=int) for address in sorted(candidates[tid])]
+    results: list[dict[str, Any]] = []
+    for start in range(0, len(pairs), RPC_BATCH):
+        chunk = pairs[start:start + RPC_BATCH]
+        calldata = encode_balance_batch([a for _, a in chunk], [tid for tid, _ in chunk])
+        raw = rpc_call(url, "eth_call", [{"to": CONTRACT, "data": calldata}, block_hex], 6)
+        values = decode_uint_array(raw)
+        if len(values) != len(chunk):
+            raise RuntimeError("balanceOfBatch result length mismatch")
+        results.extend({"token_id_decimal": tid, "holder_address": address, "balance": int(value), "rpc": url} for (tid, address), value in zip(chunk, values))
+        print(f"{label}: {min(start + RPC_BATCH, len(pairs))}/{len(pairs)}", flush=True)
+    return results
+
+
+def fetch_receipts(primary: str, tx_hashes: list[str]) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]]]:
+    receipts: dict[str, dict[str, Any]] = {}
+    attempts: list[dict[str, Any]] = []
+    for start in range(0, len(tx_hashes), 40):
+        chunk = tx_hashes[start:start + 40]
+        success = False
+        urls = [primary] + [u for u in RPC_URLS if u != primary]
+        last_error = None
+        for url in urls:
+            try:
+                raw = rpc_batch(url, [("eth_getTransactionReceipt", [h]) for h in chunk], 4)
+                for h, receipt in zip(chunk, raw):
+                    if receipt is not None:
+                        receipts[h] = receipt
+                attempts.append({"batch_start": start, "batch_size": len(chunk), "url": url, "status": "PASS", "received": sum(x is not None for x in raw)})
+                success = True
+                break
+            except Exception as exc:
+                last_error = str(exc)
+                attempts.append({"batch_start": start, "batch_size": len(chunk), "url": url, "status": "FAIL", "error": str(exc)})
+        if not success:
+            raise RuntimeError(f"Receipt batch failed at {start}: {last_error}")
+        print(f"Receipts: {min(start + 40, len(tx_hashes))}/{len(tx_hashes)}", flush=True)
