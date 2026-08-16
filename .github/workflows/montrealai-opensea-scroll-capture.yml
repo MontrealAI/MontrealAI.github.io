@@ -1,0 +1,61 @@
+name: MONTREAL.AI OpenSea Scroll Capture
+
+on:
+  push:
+    branches:
+      - research/montrealai-provenance-sales-20260816
+    paths:
+      - .github/workflows/montrealai-opensea-scroll-capture.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@latest
+          npx playwright install chromium
+      - name: Scroll collection and activity to expose GraphQL queries
+        run: |
+          cat > capture.mjs <<'JS'
+          import { chromium } from 'playwright';
+          import fs from 'fs';
+          import path from 'path';
+          const out='capture_output'; fs.mkdirSync(out,{recursive:true});
+          const browser=await chromium.launch({headless:true,args:['--disable-blink-features=AutomationControlled']});
+          const context=await browser.newContext({viewport:{width:1600,height:1000},userAgent:'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151.0.0.0 Safari/537.36',locale:'en-US'});
+          const page=await context.newPage();
+          const rows=[];
+          const interesting=u=>u.includes('gql.opensea.io/graphql');
+          page.on('request',req=>{if(interesting(req.url())) rows.push({kind:'request',time:new Date().toISOString(),url:req.url(),method:req.method(),postData:req.postData()});});
+          page.on('response',async res=>{if(!interesting(res.url()))return;let body='';try{body=await res.text()}catch(e){body='[unavailable '+e+']'};rows.push({kind:'response',time:new Date().toISOString(),url:res.url(),status:res.status(),body:body.slice(0,10000000)});});
+          await page.goto('https://opensea.io/collection/montrealai?sortBy=created_date',{waitUntil:'domcontentloaded',timeout:120000});
+          await page.waitForTimeout(12000);
+          for(let i=0;i<25;i++){await page.mouse.wheel(0,2500);await page.waitForTimeout(1500);}
+          await page.screenshot({path:path.join(out,'items_scrolled.png'),fullPage:false});
+          const tab=page.getByText('Activity',{exact:true}).first();
+          if(await tab.count()){await tab.click();await page.waitForTimeout(12000);}else{await page.goto('https://opensea.io/collection/montrealai/activity',{waitUntil:'domcontentloaded',timeout:120000});await page.waitForTimeout(12000);}
+          for(let i=0;i<35;i++){await page.mouse.wheel(0,2200);await page.waitForTimeout(1200);}
+          await page.screenshot({path:path.join(out,'activity_scrolled.png'),fullPage:false});
+          fs.writeFileSync(path.join(out,'captured.json'),JSON.stringify(rows,null,2));
+          const ops=[];
+          for(const r of rows.filter(x=>x.kind==='request')){try{const u=new URL(r.url);ops.push({operationName:u.searchParams.get('operationName'),variables:u.searchParams.get('variables'),extensions:u.searchParams.get('extensions'),url:r.url});}catch{}}
+          fs.writeFileSync(path.join(out,'operations.json'),JSON.stringify(ops,null,2));
+          console.log(JSON.stringify({entries:rows.length,operations:[...new Set(ops.map(x=>x.operationName))]},null,2));
+          await context.close(); await browser.close();
+          JS
+          node capture.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-opensea-scroll-capture
+          path: capture_output
+          retention-days: 7
+          if-no-files-found: error
