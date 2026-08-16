@@ -1,0 +1,75 @@
+name: MONTREAL.AI OpenSea Provenance Probe
+
+on:
+  push:
+    branches:
+      - research/montrealai-provenance-sales-20260816
+    paths:
+      - .github/workflows/montrealai-opensea-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check requests
+      - name: Probe official OpenSea endpoints
+        run: |
+          cat > probe.py <<'PY'
+          import json, time
+          from pathlib import Path
+          import requests
+
+          BASE='https://api.opensea.io/api/v2'
+          CONTRACT='0x495f947276749ce646f68ac8c248420045cb7b5e'
+          TOKEN0='2392630434290240917728431095880785304289144848761899072947382440480049463297'
+          s=requests.Session()
+          s.headers.update({'Accept':'application/json','User-Agent':'MONTREALAI-Provenance-Probe/1.0'})
+          key_resp=s.post(BASE+'/auth/keys',timeout=45)
+          key_resp.raise_for_status()
+          key_data=key_resp.json()
+          key=key_data['api_key']
+          headers={'x-api-key':key,'Accept':'application/json'}
+
+          def get(name,path,params=None):
+              url=BASE+path
+              try:
+                  r=s.get(url,headers=headers,params=params,timeout=60)
+                  body=None
+                  try: body=r.json()
+                  except Exception: body={'text':r.text[:5000]}
+                  return {'name':name,'url':r.url,'status_code':r.status_code,'headers':{k:v for k,v in r.headers.items() if k.lower().startswith('x-ratelimit')},'body':body}
+              except Exception as e:
+                  return {'name':name,'url':url,'error':repr(e)}
+
+          results={
+              'key_metadata':{k:v for k,v in key_data.items() if k!='api_key'},
+              'requests':[
+                  get('collection','/collections/montrealai'),
+                  get('stats','/collections/montrealai/stats'),
+                  get('nfts','/collection/montrealai/nfts',{'limit':5}),
+                  get('sales','/events/collection/montrealai',{'event_type':'sale','limit':5}),
+                  get('transfers','/events/collection/montrealai',{'event_type':'transfer','limit':5}),
+                  get('mints','/events/collection/montrealai',{'event_type':'mint','limit':5}),
+                  get('nft0',f'/chain/ethereum/contract/{CONTRACT}/nfts/{TOKEN0}'),
+                  get('nft0_events',f'/events/chain/ethereum/contract/{CONTRACT}/nfts/{TOKEN0}',{'limit':20}),
+              ]
+          }
+          Path('probe_output').mkdir()
+          Path('probe_output/opensea_probe.json').write_text(json.dumps(results,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          print(json.dumps({'statuses':[(x['name'],x.get('status_code'),x.get('error')) for x in results['requests']]},indent=2))
+          PY
+          python probe.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-opensea-probe
+          path: probe_output
+          retention-days: 7
+          if-no-files-found: error
