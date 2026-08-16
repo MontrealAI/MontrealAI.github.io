@@ -105,12 +105,16 @@ def main():
     if raw_baseline and 'endpoint' in raw_baseline[0]:
         unique={}
         for x in raw_baseline:
+            tid=x['token_id_decimal']
+            if tid in unique: continue
             n=str(x['artwork_number']).zfill(3)
-            if n in unique: continue
+            # The preserved baseline intentionally retained OpenSea's duplicate raw title #316.
+            # Canonical position #317 is the second raw #316 record, identified by internal nonce 322.
+            nonce=(int(tid)>>40)&((1<<56)-1)
+            if n=='316' and nonce==322: n='317'
             state=x.get('state') or ''
             address=(x.get('address') or '').lower()
-            tid=x['token_id_decimal']
-            unique[n]={
+            unique[tid]={
                 'artwork_number':n,'token_id_decimal':tid,'token_id_hex':f'0x{int(tid):064x}',
                 'ownership_state':state,
                 'onchain_holder_address':address if state=='ONCHAIN_HELD' and int(x.get('expected_balance') or 0)==1 else '',
