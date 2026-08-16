@@ -1,0 +1,170 @@
+
+
+def collect_items() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    count_payload = gql(COUNT_OPERATION, {"collectionSlug": SLUG}, COUNT_HASH)
+    write_json(OUT / "raw" / "items" / "count.json", count_payload)
+    expected = int(json_get(count_payload, "data", "collectionItemsCount", "count", default=0))
+    pages: list[dict[str, Any]] = []
+    items: list[dict[str, Any]] = []
+    cursor: str | None = None
+    seen_cursors: set[str] = set()
+    for page_no in range(1, 100):
+        variables = {
+            "after": cursor,
+            "collectionSlug": SLUG,
+            "limit": 100,
+            "sort": {"by": "CREATED_DATE", "direction": "ASC"},
+        }
+        payload = gql(ITEM_OPERATION, variables, ITEM_HASH)
+        write_json(OUT / "raw" / "items" / f"page_{page_no:03d}.json", payload)
+        conn = json_get(payload, "data", "collectionItems", default={})
+        page_items = conn.get("items") or []
+        next_cursor = conn.get("nextPageCursor")
+        pages.append({"page": page_no, "count": len(page_items), "cursor_in": cursor, "cursor_out": next_cursor})
+        items.extend(page_items)
+        print(f"Items page {page_no}: {len(page_items)}; total={len(items)}", flush=True)
+        if not next_cursor:
+            break
+        if next_cursor in seen_cursors:
+            raise RuntimeError("Collection item cursor loop")
+        seen_cursors.add(next_cursor)
+        cursor = next_cursor
+        time.sleep(PAGE_SLEEP)
+    if expected and len(items) != expected:
+        raise RuntimeError(f"Expected {expected} collection items, received {len(items)}")
+    return items, pages
+
+
+def price_fields(price: Any, prefix: str) -> dict[str, Any]:
+    if not isinstance(price, dict):
+        return {
+            f"{prefix}_unit": None,
+            f"{prefix}_symbol": None,
+            f"{prefix}_token_address": None,
+            f"{prefix}_native_unit": None,
+            f"{prefix}_usd": None,
+        }
+    token = price.get("token") if isinstance(price.get("token"), dict) else {}
+    native = price.get("native") if isinstance(price.get("native"), dict) else {}
+    return {
+        f"{prefix}_unit": token.get("unit"),
+        f"{prefix}_symbol": token.get("symbol"),
+        f"{prefix}_token_address": norm_address(token.get("contractAddress") or token.get("address")),
+        f"{prefix}_native_unit": native.get("unit"),
+        f"{prefix}_usd": price.get("usd"),
+    }
+
+
+def flatten_items(raw_items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for item in raw_items:
+        name = str(item.get("name") or "")
+        m = re.fullmatch(r"Crypto AI Art #(\d{3})", name.strip())
+        number = int(m.group(1)) if m else None
+        owner = item.get("owner") if isinstance(item.get("owner"), dict) else {}
+        best_listing = item.get("bestListing") if isinstance(item.get("bestListing"), dict) else {}
+        best_offer = item.get("bestOffer") if isinstance(item.get("bestOffer"), dict) else {}
+        last_sale = item.get("lastSale") if isinstance(item.get("lastSale"), dict) else {}
+        attrs = item.get("attributes") or []
+        attr_text = " | ".join(f"{a.get('traitType')}={a.get('value')}" for a in attrs if isinstance(a, dict))
+        row = {
+            "artwork_number": f"{number:03d}" if number is not None else None,
+            "artwork_index": number,
+            "human_position": number + 1 if number is not None else None,
+            "name": name,
+            "token_id_decimal": str(item.get("tokenId") or ""),
+            "token_id_hex": f"0x{int(str(item.get('tokenId'))):064x}" if str(item.get("tokenId") or "").isdigit() else None,
+            "contract": norm_address(item.get("contractAddress")),
+            "standard": item.get("standard"),
+            "total_supply": item.get("totalSupply"),
+            "open_sea_item_id": item.get("id"),
+            "image_url": item.get("imageUrl"),
+            "animation_url": item.get("animationUrl"),
+            "token_uri": item.get("tokenUri"),
+            "metadata_storage": item.get("metadataStorageLabel"),
+            "description": item.get("description"),
+            "attributes": attr_text,
+            "opensea_created_at_raw": item.get("createdAt"),
+            "opensea_last_sale_at": item.get("lastSaleAt"),
+            "opensea_last_transfer_at": item.get("lastTransferAt"),
+            "opensea_owner_address": norm_address(owner.get("address")),
+            "opensea_owner_name": owner.get("displayName"),
+            "opensea_owner_kind": owner.get("kind"),
+            "is_compromised": json_get(item, "enforcement", "isCompromised", default=False),
+            "is_disabled": json_get(item, "enforcement", "isDisabled", default=False),
+            "is_ownership_disputed": json_get(item, "enforcement", "isOwnershipDisputed", default=False),
+            "is_delisted": json_get(item, "enforcement", "isDelisted", default=False),
+            "best_listing_marketplace": json_get(best_listing, "marketplace", "identifier"),
+            "best_listing_maker": norm_address(json_get(best_listing, "maker", "address")),
+            "best_offer_maker": norm_address(json_get(best_offer, "maker", "address")),
+            "opensea_url": f"https://opensea.io/item/ethereum/{CONTRACT}/{item.get('tokenId')}",
+        }
+        row.update(price_fields(last_sale, "last_sale"))
+        row.update(price_fields(best_listing.get("pricePerItem") if best_listing else None, "listing"))
+        row.update(price_fields(best_offer.get("pricePerItem") if best_offer else None, "offer"))
+        rows.append(row)
+    rows.sort(key=lambda r: (r["artwork_index"] is None, r["artwork_index"] if r["artwork_index"] is not None else 9999))
+    return rows
+
+
+def collect_activity(activity_type: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    pages: list[dict[str, Any]] = []
+    events_by_id: dict[str, dict[str, Any]] = {}
+    cursor: str | None = None
+    seen_cursors: set[str] = set()
+    for page_no in range(1, 1000):
+        variables: dict[str, Any] = {
+            "filter": {
+                "activityTypes": [activity_type],
+                "chains": [],
+                "collectionSlugs": [SLUG],
+                "markets": [],
+            },
+            "limit": 100,
+        }
+        if cursor:
+            variables["after"] = cursor
+        payload = gql(ACTIVITY_OPERATION, variables, ACTIVITY_HASH)
+        write_json(OUT / "raw" / "activity" / f"{activity_type.lower()}_{page_no:04d}.json", payload)
+        conn = json_get(payload, "data", "globalActivity", default={})
+        page_items = conn.get("items") or []
+        next_cursor = conn.get("nextPageCursor")
+        new_count = 0
+        for event in page_items:
+            event_id = str(event.get("id") or hashlib.sha256(json.dumps(event, sort_keys=True).encode()).hexdigest())
+            if event_id not in events_by_id:
+                events_by_id[event_id] = event
+                new_count += 1
+        pages.append({"page": page_no, "count": len(page_items), "new_unique": new_count, "cursor_in": cursor, "cursor_out": next_cursor})
+        print(f"{activity_type} page {page_no}: {len(page_items)}; unique={len(events_by_id)}", flush=True)
+        if not next_cursor:
+            break
+        if next_cursor in seen_cursors:
+            raise RuntimeError(f"{activity_type} cursor loop")
+        if not page_items:
+            raise RuntimeError(f"{activity_type} returned an empty page with a continuation cursor")
+        seen_cursors.add(next_cursor)
+        cursor = next_cursor
+        time.sleep(PAGE_SLEEP)
+    events = list(events_by_id.values())
+    events.sort(key=lambda x: (str(x.get("eventTime") or ""), str(x.get("id") or "")))
+    return events, pages
+
+
+def flatten_events(events: Iterable[dict[str, Any]], expected_type: str) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for event in events:
+        item = event.get("item") if isinstance(event.get("item"), dict) else {}
+        name = str(item.get("name") or "")
+        m = re.fullmatch(r"Crypto AI Art #(\d{3})", name.strip())
+        number = int(m.group(1)) if m else None
+        price = event.get("price") if isinstance(event.get("price"), dict) else None
+        row = {
+            "event_id": event.get("id"),
+            "event_type": str(event.get("type") or event.get("__typename") or expected_type).upper(),
+            "event_time_utc": event.get("eventTime"),
+            "transaction_hash": event.get("transactionHash"),
+            "artwork_number": f"{number:03d}" if number is not None else None,
+            "artwork_index": number,
+            "name": name,
+            "token_id_decimal": str(item.get("tokenId") or ""),
