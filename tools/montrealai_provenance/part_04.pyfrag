@@ -1,0 +1,162 @@
+        for p in positives:
+            ownership_rows.append({
+                "artwork_number": item["artwork_number"],
+                "artwork_index": item["artwork_index"],
+                "token_id_decimal": tid,
+                "holder_address": p["holder_address"],
+                "balance": p["balance"],
+                "snapshot_block_number": snapshot_block_number,
+                "snapshot_block_hash": snapshot_block["hash"],
+                "snapshot_timestamp_utc": snapshot_info["timestamp_utc"],
+                "opensea_owner_address": item.get("opensea_owner_address"),
+                "opensea_owner_match": p["holder_address"] == item.get("opensea_owner_address"),
+                "candidate_count": len(candidates[tid]),
+                "token_balance_sum": total,
+                "verification_method": "ERC-1155 balanceOfBatch at the recorded Ethereum block",
+            })
+    ownership_rows.sort(key=lambda r: (r["artwork_index"], r["holder_address"]))
+    write_csv(OUT / "normalized" / "current_ownership.csv", ownership_rows)
+
+    # Independent current-balance cross-check through the first compatible secondary RPC.
+    secondary_balance_status: dict[str, Any] = {"status": "NOT_RUN"}
+    exact_candidates = {r["token_id_decimal"]: {r["holder_address"]} for r in ownership_rows}
+    if len(ownership_rows) == 556:
+        for check in block_checks:
+            url = check.get("url")
+            if check.get("status") != "PASS" or not url:
+                continue
+            try:
+                secondary = query_balances(url, snapshot_block["number"], exact_candidates, "Secondary balances")
+                failures = [x for x in secondary if x["balance"] != 1]
+                secondary_balance_status = {"status": "PASS" if not failures else "FAIL", "rpc": url, "checked": len(secondary), "failures": failures}
+                write_csv(OUT / "raw" / "onchain" / "candidate_balances_secondary.csv", secondary)
+                if not failures:
+                    break
+            except Exception as exc:
+                secondary_balance_status = {"status": "ERROR", "rpc": url, "error": str(exc)}
+    write_json(OUT / "qa" / "secondary_balance_crosscheck.json", secondary_balance_status)
+
+    tx_hashes = sorted({str(r["transaction_hash"]).lower() for r in all_event_rows if r.get("transaction_hash") and re.fullmatch(r"0x[0-9a-fA-F]{64}", str(r["transaction_hash"]))})
+    receipts, receipt_attempts = fetch_receipts(primary_rpc, tx_hashes)
+    write_json(OUT / "raw" / "onchain" / "receipts.json", receipts)
+    write_json(OUT / "raw" / "onchain" / "receipt_attempts.json", receipt_attempts)
+    transfer_logs = parse_transfer_logs(receipts)
+    collection_token_ids = {r["token_id_decimal"] for r in item_rows}
+    collection_logs = [r for r in transfer_logs if r["token_id_decimal"] in collection_token_ids]
+    write_csv(OUT / "normalized" / "onchain_transfer_logs.csv", collection_logs)
+    block_numbers = [r["block_number"] for r in collection_logs if r.get("block_number") is not None]
+    block_times = fetch_block_times(primary_rpc, block_numbers)
+    write_json(OUT / "raw" / "onchain" / "blocks.json", {str(k): v for k, v in block_times.items()})
+
+    verification_by_type: dict[str, list[dict[str, Any]]] = {}
+    for activity_type in ["SALE", "TRANSFER", "MINT"]:
+        matches = match_events_to_logs(event_rows_by_type[activity_type], collection_logs, block_times)
+        verification_by_type[activity_type] = matches
+        write_csv(OUT / "qa" / f"{activity_type.lower()}_event_onchain_verification.csv", matches)
+
+    # A canonical transfer ledger is the set of unique onchain transfer logs referenced by the complete OpenSea event history.
+    referenced_keys = set()
+    for matches in verification_by_type.values():
+        for m in matches:
+            if m.get("matching_transfer_log"):
+                referenced_keys.add((str(m.get("transaction_hash") or "").lower(), m.get("token_id_decimal"), m.get("onchain_log_index")))
+    canonical_logs = [r for r in collection_logs if (str(r.get("transaction_hash") or "").lower(), r.get("token_id_decimal"), r.get("log_index")) in referenced_keys]
+    canonical_logs.sort(key=lambda r: (r.get("block_number") or 0, r.get("transaction_index") or 0, r.get("log_index") or 0, r.get("batch_position") or 0))
+    for r in canonical_logs:
+        bt = block_times.get(r.get("block_number"))
+        r["block_timestamp_utc"] = bt.get("timestamp_utc") if bt else None
+    write_csv(OUT / "normalized" / "canonical_transfer_ledger.csv", canonical_logs)
+
+    # QA and status.
+    numbers = [r.get("artwork_index") for r in item_rows]
+    token_ids = [r.get("token_id_decimal") for r in item_rows]
+    item_qa = {
+        "count": len(item_rows),
+        "unique_artwork_numbers": len(set(numbers)),
+        "numbers_exact_000_to_555": numbers == list(range(556)),
+        "unique_token_ids": len(set(token_ids)),
+        "contract_matches": sum(r.get("contract") == CONTRACT for r in item_rows),
+        "names_match": sum(r.get("name") == f"Crypto AI Art #{r.get('artwork_index'):03d}" for r in item_rows if r.get("artwork_index") is not None),
+    }
+    ownership_qa = {
+        "positive_rows": len(ownership_rows),
+        "distinct_tokens": len({r["token_id_decimal"] for r in ownership_rows}),
+        "verified_units": sum(r["balance"] for r in ownership_rows),
+        "tokens_with_exactly_one_unit": sum(r["token_balance_sum"] == 1 for r in ownership_rows),
+        "opensea_owner_matches": sum(bool(r["opensea_owner_match"]) for r in ownership_rows),
+        "secondary_balance_crosscheck": secondary_balance_status,
+    }
+    event_qa: dict[str, Any] = {}
+    for typ in ["SALE", "TRANSFER", "MINT"]:
+        rows = event_rows_by_type[typ]
+        matches = verification_by_type[typ]
+        event_qa[typ] = {
+            "events": len(rows),
+            "unique_event_ids": len({r["event_id"] for r in rows}),
+            "with_transaction_hash": sum(bool(r.get("transaction_hash")) for r in rows),
+            "onchain_pass": sum(r.get("verification_status") == "PASS" for r in matches),
+            "no_tx_expected": sum(r.get("verification_status") == "NO_TX_EXPECTED" for r in matches),
+            "fail": sum(r.get("verification_status") == "FAIL" for r in matches),
+            "oldest_event": min((r.get("event_time_utc") for r in rows if r.get("event_time_utc")), default=None),
+            "newest_event": max((r.get("event_time_utc") for r in rows if r.get("event_time_utc")), default=None),
+        }
+    block_crosscheck_passes = sum(x.get("status") == "PASS" for x in block_checks)
+    complete = (
+        item_qa["count"] == 556
+        and item_qa["numbers_exact_000_to_555"]
+        and item_qa["unique_token_ids"] == 556
+        and item_qa["contract_matches"] == 556
+        and ownership_qa["distinct_tokens"] == 556
+        and ownership_qa["verified_units"] == 556
+        and secondary_balance_status.get("status") == "PASS"
+        and block_crosscheck_passes >= 1
+        and event_qa["SALE"]["fail"] == 0
+        and event_qa["TRANSFER"]["fail"] == 0
+        and event_qa["MINT"]["fail"] == 0
+        and event_qa["SALE"]["oldest_event"] is not None
+        and event_qa["TRANSFER"]["oldest_event"] is not None
+    )
+    status = {
+        "schema": "montrealai.crypto-ai-art.provenance-capture.v1",
+        "capture_started_utc": started,
+        "capture_finished_utc": now_utc(),
+        "collection": SLUG,
+        "contract": CONTRACT,
+        "creator": CREATOR,
+        "item_pagination": item_pages,
+        "activity_pagination": activity_pages,
+        "collection_snapshot": collection_snapshot,
+        "snapshot_block": snapshot_info,
+        "item_qa": item_qa,
+        "ownership_qa": ownership_qa,
+        "event_qa": event_qa,
+        "unique_transaction_hashes": len(tx_hashes),
+        "receipts_retrieved": len(receipts),
+        "collection_transfer_logs": len(collection_logs),
+        "canonical_referenced_transfer_logs": len(canonical_logs),
+        "block_crosscheck_passes": block_crosscheck_passes,
+        "capture_complete": complete,
+    }
+    write_json(OUT / "qa" / "capture_status.json", status)
+    write_json(OUT / "source" / "query_specification.json", {
+        "collection_items": {"operation": ITEM_OPERATION, "sha256_hash": ITEM_HASH},
+        "collection_count": {"operation": COUNT_OPERATION, "sha256_hash": COUNT_HASH},
+        "activity": {"operation": ACTIVITY_OPERATION, "sha256_hash": ACTIVITY_HASH, "types": ["SALE", "TRANSFER", "MINT"]},
+        "graphql_endpoint": GQL,
+        "collection_url": COLLECTION_URL,
+    })
+    (OUT / "source" / "collect_montrealai_provenance.py").write_text(Path(__file__).read_text(encoding="utf-8"), encoding="utf-8")
+
+    files = sorted(p for p in OUT.rglob("*") if p.is_file() and p.name not in {"SHA256SUMS", "MONTREALAI_PROVENANCE_CAPTURE.zip", "MONTREALAI_PROVENANCE_CAPTURE.zip.sha256"})
+    (OUT / "SHA256SUMS").write_text("\n".join(f"{sha256(p)}  {p.relative_to(OUT).as_posix()}" for p in files) + "\n", encoding="utf-8")
+    zip_path = OUT / "MONTREALAI_PROVENANCE_CAPTURE.zip"
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+        for p in sorted(x for x in OUT.rglob("*") if x.is_file() and x != zip_path):
+            z.write(p, p.relative_to(OUT))
+    (OUT / (zip_path.name + ".sha256")).write_text(f"{sha256(zip_path)}  {zip_path.name}\n", encoding="utf-8")
+    print(json.dumps(status, indent=2), flush=True)
+    return 0 if complete else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
