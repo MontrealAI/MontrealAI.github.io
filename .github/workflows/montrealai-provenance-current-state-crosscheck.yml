@@ -1,0 +1,131 @@
+name: MONTREAL.AI Current-State Independent Crosscheck
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/montrealai-provenance-sales-20260816
+    paths:
+      - .github/workflows/montrealai-provenance-current-state-crosscheck.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download primary fixed-block evidence
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail --location \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/MontrealAI/MontrealAI.github.io/actions/artifacts/9265452226/zip" \
+            -o primary.zip
+          mkdir primary
+          unzip -q primary.zip -d primary
+          test -f primary/normalized/current_ownership.csv
+          test -f primary/normalized/items.csv
+          test -f primary/normalized/snapshot_block.json
+      - name: Install verifier dependencies
+        run: python -m pip install --disable-pip-version-check requests eth-abi eth-utils "eth-hash[pycryptodome]"
+      - name: Verify all 556 expected current states through independent RPCs
+        run: |
+          cat > verify.py <<'PY'
+          import csv, json, time, hashlib, zipfile
+          from pathlib import Path
+          import requests
+          from eth_abi import encode as abi_encode, decode as abi_decode
+          from eth_utils import keccak
+
+          ROOT=Path('primary')
+          CONTRACT='0x495f947276749ce646f68ac8c248420045cb7b5e'
+          CREATOR='0x054a2e4b3b5ea2c62372e92358fdf7fb74b4f34a'
+          ENDPOINTS=['https://ethereum.publicnode.com','https://1rpc.io/eth','https://eth.drpc.org']
+          session=requests.Session(); session.headers.update({'User-Agent':'MONTREALAI-Provenance-Crosscheck/1.0','Accept':'application/json'})
+
+          def read_csv(path):
+              with path.open(encoding='utf-8-sig',newline='') as f:return list(csv.DictReader(f))
+          def rpc(url,method,params,retries=4):
+              last=None
+              for i in range(retries+1):
+                  try:
+                      r=session.post(url,json={'jsonrpc':'2.0','id':1,'method':method,'params':params},timeout=45)
+                      if r.status_code in (403,408,429) or r.status_code>=500: raise RuntimeError(f'HTTP {r.status_code}: {r.text[:200]}')
+                      r.raise_for_status(); data=r.json()
+                      if data.get('error'): raise RuntimeError(str(data['error']))
+                      return data['result']
+                  except Exception as exc:
+                      last=exc
+                      if i<retries: time.sleep(min(8,0.6*(2**i)))
+              raise RuntimeError(str(last))
+          def encode(accounts,ids):
+              return '0x'+(keccak(text='balanceOfBatch(address[],uint256[])')[:4]+abi_encode(['address[]','uint256[]'],[accounts,[int(x) for x in ids]])).hex()
+          def decode(raw): return list(abi_decode(['uint256[]'],bytes.fromhex(raw[2:]))[0])
+
+          items=read_csv(ROOT/'normalized/items.csv')
+          ownership=read_csv(ROOT/'normalized/current_ownership.csv')
+          block=json.loads((ROOT/'normalized/snapshot_block.json').read_text())
+          by_token={r['token_id_decimal']:r for r in ownership}
+          expected=[]
+          for item in items:
+              row=by_token.get(item['token_id_decimal'])
+              if row:
+                  expected.append({'artwork_number':item['artwork_number'],'token_id_decimal':item['token_id_decimal'],'address':row['holder_address'].lower(),'expected_balance':1,'state':'ONCHAIN_HELD'})
+              else:
+                  expected.append({'artwork_number':item['artwork_number'],'token_id_decimal':item['token_id_decimal'],'address':CREATOR,'expected_balance':0,'state':'LEGACY_LAZY_UNMINTED'})
+          assert len(expected)==556 and sum(x['expected_balance'] for x in expected)==550
+          results=[]; passing=[]
+          for url in ENDPOINTS:
+              endpoint={'url':url,'status':'ERROR','rows':[]}
+              try:
+                  chain=int(rpc(url,'eth_chainId',[]),16)
+                  b=rpc(url,'eth_getBlockByNumber',[block['block_number_hex'],False])
+                  if chain!=1 or str(b.get('hash','')).lower()!=block['block_hash'].lower():
+                      raise RuntimeError('chain or block hash mismatch')
+                  rows=[]
+                  for start in range(0,len(expected),20):
+                      chunk=expected[start:start+20]
+                      raw=rpc(url,'eth_call',[{'to':CONTRACT,'data':encode([x['address'] for x in chunk],[x['token_id_decimal'] for x in chunk])},block['block_number_hex']])
+                      vals=decode(raw)
+                      if len(vals)!=len(chunk): raise RuntimeError('length mismatch')
+                      for x,v in zip(chunk,vals): rows.append({**x,'observed_balance':int(v),'pass':int(v)==x['expected_balance']})
+                  failures=[r for r in rows if not r['pass']]
+                  endpoint.update({'status':'PASS' if not failures else 'FAIL','chain_id':chain,'block_hash':b['hash'],'checked':len(rows),'failures':failures,'rows':rows})
+                  if not failures: passing.append(url)
+              except Exception as exc:
+                  endpoint['error']=str(exc)
+              print(json.dumps({k:v for k,v in endpoint.items() if k!='rows'},default=str),flush=True)
+              results.append(endpoint)
+          complete=len(passing)>=2
+          out=Path('crosscheck');out.mkdir()
+          summary={'schema':'montrealai.crypto-ai-art.current-state-crosscheck.v1','contract':CONTRACT,'block':block,'expected_records':556,'expected_onchain_units':550,'expected_lazy_records':6,'endpoints':[{k:v for k,v in r.items() if k!='rows'} for r in results],'passing_independent_endpoints':passing,'crosscheck_complete':complete}
+          (out/'crosscheck_status.json').write_text(json.dumps(summary,indent=2)+'\n')
+          fields=['endpoint','artwork_number','token_id_decimal','address','state','expected_balance','observed_balance','pass']
+          with (out/'crosscheck_rows.csv').open('w',encoding='utf-8',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=fields);w.writeheader()
+              for endpoint in results:
+                  for r in endpoint.get('rows',[]):w.writerow({'endpoint':endpoint['url'],**r})
+          files=[out/'crosscheck_status.json',out/'crosscheck_rows.csv']
+          (out/'SHA256SUMS').write_text('\n'.join(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}" for p in files)+'\n')
+          with zipfile.ZipFile(out/'MONTREALAI_CURRENT_STATE_CROSSCHECK.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in files+[out/'SHA256SUMS']:z.write(p,p.name)
+          if not complete: raise SystemExit(2)
+          PY
+          python verify.py
+      - name: Upload independent crosscheck
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-current-state-independent-crosscheck
+          path: crosscheck
+          if-no-files-found: error
+          retention-days: 7
