@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
+import os
+import re
+import sys
+import time
+import zipfile
+from collections import defaultdict
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Iterable
+
+import requests
+from eth_abi import decode as abi_decode, encode as abi_encode
+from eth_utils import keccak
+
+SLUG = "montrealai"
+CONTRACT = "0x495f947276749ce646f68ac8c248420045cb7b5e"
+CREATOR = "0x054a2e4b3b5ea2c62372e92358fdf7fb74b4f34a"
+ZERO = "0x0000000000000000000000000000000000000000"
+GQL = "https://gql.opensea.io/graphql"
+COLLECTION_URL = "https://opensea.io/collection/montrealai?sortBy=created_date"
+ITEM_OPERATION = "CollectionItemsListQuery"
+ITEM_HASH = "33a4c321d0c7bc7775c92efcf80e2ae3738322e8427401448eaecd4d09b90454"
+ACTIVITY_OPERATION = "UseGlobalActivityQuery"
+ACTIVITY_HASH = "eaccd718ac71d4062009c6d4cbd6d0e0caeca6e34a019306ecd0cacff8409f04"
+COUNT_OPERATION = "CollectionItemsCountQuery"
+COUNT_HASH = "e90cce9fffa40ca0c9e7b35e52dad7891b88f2b16034ecf8262a18379839882a"
+OUT = Path(os.environ.get("OUTPUT_DIR", "provenance_output"))
+OUT.mkdir(parents=True, exist_ok=True)
+for d in ["raw/items", "raw/activity", "raw/onchain", "normalized", "qa", "source"]:
+    (OUT / d).mkdir(parents=True, exist_ok=True)
+
+HTTP_TIMEOUT = int(os.environ.get("HTTP_TIMEOUT", "60"))
+HTTP_RETRIES = int(os.environ.get("HTTP_RETRIES", "8"))
+PAGE_SLEEP = float(os.environ.get("PAGE_SLEEP", "0.20"))
+RPC_BATCH = int(os.environ.get("RPC_BATCH", "40"))
+RPC_URLS = [x.strip() for x in os.environ.get(
+    "ETH_RPC_URLS",
+    "https://eth.drpc.org,https://eth.llamarpc.com,https://rpc.mevblocker.io,https://ethereum.publicnode.com,https://1rpc.io/eth"
+).split(",") if x.strip()]
+
+SESSION = requests.Session()
+SESSION.headers.update({
+    "Accept": "application/json",
+    "User-Agent": "MONTREALAI-Provenance-Atlas/1.0",
+    "Origin": "https://opensea.io",
+    "Referer": "https://opensea.io/collection/montrealai",
+})
+
+TRANSFER_SINGLE_TOPIC = "0x" + keccak(text="TransferSingle(address,address,address,uint256,uint256)").hex()
+TRANSFER_BATCH_TOPIC = "0x" + keccak(text="TransferBatch(address,address,address,uint256[],uint256[])").hex()
+
+
+def now_utc() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def write_json(path: Path, obj: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str] | None = None) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if fields is None:
+        fields = list(rows[0].keys()) if rows else []
+    with path.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+
+
+def sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
+def norm_address(value: Any) -> str | None:
+    if isinstance(value, dict):
+        return norm_address(value.get("address") or value.get("hash") or value.get("address_hash"))
+    if not isinstance(value, str):
+        return None
+    v = value.strip().lower()
+    return v if re.fullmatch(r"0x[0-9a-f]{40}", v) else None
+
+
+def json_get(obj: Any, *path: str, default: Any = None) -> Any:
+    cur = obj
+    for key in path:
+        if not isinstance(cur, dict):
+            return default
+        cur = cur.get(key)
+    return default if cur is None else cur
+
+
+def request_with_retry(method: str, url: str, **kwargs: Any) -> requests.Response:
+    last: Exception | None = None
+    for attempt in range(HTTP_RETRIES + 1):
+        try:
+            r = SESSION.request(method, url, timeout=HTTP_TIMEOUT, **kwargs)
+            if r.status_code in (408, 425, 429) or r.status_code >= 500:
+                raise RuntimeError(f"HTTP {r.status_code}: {r.text[:300]}")
+            r.raise_for_status()
+            return r
+        except Exception as exc:
+            last = exc
+            if attempt == HTTP_RETRIES:
+                break
+            time.sleep(min(30.0, 0.75 * (2 ** attempt)))
+    raise RuntimeError(f"{method} {url} failed after retries: {last}")
+
+
+def gql(operation: str, variables: dict[str, Any], query_hash: str) -> dict[str, Any]:
+    params = {
+        "app_id": "os2-web",
+        "operationName": operation,
+        "variables": json.dumps(variables, separators=(",", ":")),
+        "extensions": json.dumps({"persistedQuery": {"sha256Hash": query_hash, "version": 1}}, separators=(",", ":")),
+    }
+    r = request_with_retry("GET", GQL, params=params)
+    payload = r.json()
+    if payload.get("errors"):
+        raise RuntimeError(f"GraphQL {operation} errors: {json.dumps(payload['errors'])[:2000]}")
+    if not isinstance(payload.get("data"), dict):
+        raise RuntimeError(f"GraphQL {operation} missing data: {json.dumps(payload)[:2000]}")
+    return payload
+
+
+def capture_collection_page() -> dict[str, Any]:
+    r = request_with_retry("GET", COLLECTION_URL, headers={
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36",
+    })
+    html = r.text
+    (OUT / "raw" / "collection_page.html").write_text(html, encoding="utf-8")
+    result: dict[str, Any] = {"captured_utc": now_utc(), "url": r.url, "http_status": r.status_code}
+    patterns = {
+        "floor_native": r'"floorPrice":\{"pricePerItem":\{"token":\{"unit":([0-9.eE+-]+),"symbol":"([^"]+)"',
+        "floor_usd": r'"floorPrice":\{"pricePerItem":\{.*?"usd":([0-9.eE+-]+)',
+        "unique_item_count": r'"uniqueItemCount":([0-9]+)',
+        "total_supply": r'"totalSupply":([0-9]+)',
+        "total_volume_native": r'"volume":\{"native":\{"unit":([0-9.eE+-]+).*?"symbol":"([^"]+)"',
+        "total_volume_usd": r'"volume":\{"native":\{.*?\},"usd":([0-9.eE+-]+)',
+        "listed_item_count": r'"listedItemCount":([0-9]+)',
+        "owner_count": r'"ownerCount":([0-9]+)',
+    }
+    for key, pattern in patterns.items():
+        m = re.search(pattern, html)
+        if not m:
+            result[key] = None
+        elif len(m.groups()) == 1:
+            raw = m.group(1)
+            result[key] = float(raw) if any(c in raw.lower() for c in ".e") else int(raw)
+        else:
+            result[key] = {"unit": float(m.group(1)), "symbol": m.group(2)}
+    # More deterministic extraction around the first collectionBySlug stats block.
+    marker = '"collectionBySlug":{"__typename":"Collection","slug":"montrealai"'
+    pos = html.find(marker)
+    if pos >= 0:
+        result["collection_json_context"] = html[pos:pos + 12000]
+    write_json(OUT / "normalized" / "collection_snapshot.json", result)
+    return result
