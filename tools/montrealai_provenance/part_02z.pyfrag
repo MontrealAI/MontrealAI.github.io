@@ -1,0 +1,29 @@
+
+
+# Correct receipt collector override: preserve every successful receipt and return the audit trail.
+def fetch_receipts(primary: str, tx_hashes: list[str]) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]]]:
+    receipts: dict[str, dict[str, Any]] = {}
+    attempts: list[dict[str, Any]] = []
+    preferred = "https://rpc.mevblocker.io" if "https://rpc.mevblocker.io" in RPC_URLS else primary
+    for start in range(0, len(tx_hashes), 40):
+        chunk = tx_hashes[start:start + 40]
+        success = False
+        urls = [preferred] + [u for u in ([primary] + RPC_URLS) if u != preferred]
+        last_error = None
+        for url in urls:
+            try:
+                raw = rpc_batch(url, [("eth_getTransactionReceipt", [h]) for h in chunk], 3)
+                for h, receipt in zip(chunk, raw):
+                    if receipt is not None:
+                        receipts[h] = receipt
+                attempts.append({"batch_start": start, "batch_size": len(chunk), "url": url, "status": "PASS", "received": sum(x is not None for x in raw)})
+                preferred = url
+                success = True
+                break
+            except Exception as exc:
+                last_error = str(exc)
+                attempts.append({"batch_start": start, "batch_size": len(chunk), "url": url, "status": "FAIL", "error": str(exc)})
+        if not success:
+            raise RuntimeError(f"Receipt batch failed at {start}: {last_error}")
+        print(f"Receipts: {min(start + 40, len(tx_hashes))}/{len(tx_hashes)} via {preferred}", flush=True)
+    return receipts, attempts
