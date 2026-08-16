@@ -1,0 +1,51 @@
+name: MONTREAL.AI Collection Activity Capture
+
+on:
+  push:
+    branches:
+      - research/montrealai-provenance-sales-20260816
+    paths:
+      - .github/workflows/montrealai-collection-activity-capture.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@latest
+          npx playwright install chromium
+      - name: Capture direct collection activity requests
+        run: |
+          cat > capture.mjs <<'JS'
+          import { chromium } from 'playwright'; import fs from 'fs'; import path from 'path';
+          const out='capture_output';fs.mkdirSync(out,{recursive:true});
+          const browser=await chromium.launch({headless:true,args:['--disable-blink-features=AutomationControlled']});
+          const context=await browser.newContext({viewport:{width:1600,height:1000},userAgent:'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151.0.0.0 Safari/537.36',locale:'en-US'});
+          const page=await context.newPage(); const rows=[];
+          page.on('request',r=>{if(r.url().includes('gql.opensea.io/graphql'))rows.push({kind:'request',url:r.url(),method:r.method(),time:new Date().toISOString()})});
+          page.on('response',async r=>{if(!r.url().includes('gql.opensea.io/graphql'))return;let body='';try{body=await r.text()}catch(e){body='[unavailable]'};rows.push({kind:'response',url:r.url(),status:r.status(),body:body.slice(0,10000000),time:new Date().toISOString()})});
+          await page.goto('https://opensea.io/collection/montrealai/activity',{waitUntil:'domcontentloaded',timeout:120000});
+          await page.waitForTimeout(12000);
+          for(let i=0;i<45;i++){await page.mouse.wheel(0,2200);await page.waitForTimeout(1200);}
+          await page.screenshot({path:path.join(out,'activity.png'),fullPage:false});
+          fs.writeFileSync(path.join(out,'captured.json'),JSON.stringify(rows,null,2));
+          const ops=[];for(const r of rows.filter(x=>x.kind==='request')){const u=new URL(r.url);ops.push({operationName:u.searchParams.get('operationName'),variables:u.searchParams.get('variables'),extensions:u.searchParams.get('extensions'),url:r.url})}
+          fs.writeFileSync(path.join(out,'operations.json'),JSON.stringify(ops,null,2));console.log(JSON.stringify({entries:rows.length,operations:[...new Set(ops.map(x=>x.operationName))]},null,2));
+          await context.close();await browser.close();
+          JS
+          node capture.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-collection-activity-capture
+          path: capture_output
+          retention-days: 7
+          if-no-files-found: error
