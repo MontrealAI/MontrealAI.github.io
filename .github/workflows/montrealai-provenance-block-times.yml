@@ -1,0 +1,89 @@
+name: MONTREAL.AI Provenance Block-Time Capture
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/montrealai-provenance-sales-20260816
+    paths:
+      - .github/workflows/montrealai-provenance-block-times.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download receipt-complete evidence
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          curl --fail --location \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/MontrealAI/MontrealAI.github.io/actions/artifacts/9265662948/zip" \
+            -o evidence.zip
+          mkdir evidence
+          unzip -q evidence.zip -d evidence
+          test -f evidence/normalized/onchain_transfer_logs.csv
+      - name: Capture and crosscheck every unique transfer block
+        run: |
+          cat > capture.py <<'PY'
+          import csv,json,time,hashlib,zipfile
+          from pathlib import Path
+          from datetime import datetime,timezone
+          import urllib.request
+          ENDPOINTS=['https://rpc.mevblocker.io','https://ethereum.publicnode.com']
+          with Path('evidence/normalized/onchain_transfer_logs.csv').open(encoding='utf-8-sig',newline='') as f:
+              numbers=sorted({int(r['block_number']) for r in csv.DictReader(f) if r.get('block_number')})
+          def batch(url,nums):
+              payload=[{'jsonrpc':'2.0','id':i+1,'method':'eth_getBlockByNumber','params':[hex(n),False]} for i,n in enumerate(nums)]
+              req=urllib.request.Request(url,data=json.dumps(payload).encode(),headers={'Content-Type':'application/json','User-Agent':'MONTREALAI-Block-Time/1.0'})
+              with urllib.request.urlopen(req,timeout=60) as resp:data=json.loads(resp.read().decode())
+              by={int(x['id']):x for x in data}
+              out=[]
+              for i,n in enumerate(nums,1):
+                  x=by[i]
+                  if x.get('error'):raise RuntimeError(str(x['error']))
+                  b=x['result'];ts=int(b['timestamp'],16)
+                  out.append({'block_number':n,'block_hash':b['hash'].lower(),'timestamp_unix':ts,'timestamp_utc':datetime.fromtimestamp(ts,timezone.utc).isoformat().replace('+00:00','Z')})
+              return out
+          primary=[]
+          for start in range(0,len(numbers),40):
+              chunk=numbers[start:start+40]
+              primary.extend(batch(ENDPOINTS[0],chunk));print(f'Primary {min(start+40,len(numbers))}/{len(numbers)}',flush=True)
+          check_numbers=sorted(set(numbers[::max(1,len(numbers)//50)] + [numbers[-1]]))
+          secondary=[]
+          for start in range(0,len(check_numbers),20): secondary.extend(batch(ENDPOINTS[1],check_numbers[start:start+20]))
+          pmap={r['block_number']:r for r in primary};fail=[]
+          for r in secondary:
+              p=pmap[r['block_number']]
+              if p['block_hash']!=r['block_hash'] or p['timestamp_unix']!=r['timestamp_unix']:fail.append({'primary':p,'secondary':r})
+          out=Path('block_times');out.mkdir()
+          (out/'blocks.json').write_text(json.dumps({str(r['block_number']):r for r in primary},indent=2)+'\n')
+          with (out/'blocks.csv').open('w',encoding='utf-8',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(primary[0]));w.writeheader();w.writerows(primary)
+          status={'unique_blocks':len(numbers),'captured_blocks':len(primary),'secondary_sample_blocks':len(secondary),'crosscheck_failures':fail,'complete':len(primary)==len(numbers) and not fail,'primary_rpc':ENDPOINTS[0],'secondary_rpc':ENDPOINTS[1]}
+          (out/'status.json').write_text(json.dumps(status,indent=2)+'\n')
+          files=[out/'blocks.json',out/'blocks.csv',out/'status.json']
+          (out/'SHA256SUMS').write_text('\n'.join(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}" for p in files)+'\n')
+          with zipfile.ZipFile(out/'MONTREALAI_PROVENANCE_BLOCK_TIMES.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in files+[out/'SHA256SUMS']:z.write(p,p.name)
+          if not status['complete']:raise SystemExit(2)
+          PY
+          python capture.py
+      - name: Upload block-time evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-provenance-block-times
+          path: block_times
+          if-no-files-found: error
+          retention-days: 7
