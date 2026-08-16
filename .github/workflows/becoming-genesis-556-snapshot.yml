@@ -1,0 +1,47 @@
+name: MONTREAL.AI Becoming Genesis 556 Atomic Snapshot
+
+on:
+  push:
+    branches:
+      - snapshot/becoming-genesis-556-20260816
+    paths:
+      - tools/becoming_snapshot/**
+      - .github/workflows/becoming-genesis-556-snapshot.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install runtime dependency
+        run: python -m pip install --disable-pip-version-check requests
+      - name: Capture one finalized Ethereum state
+        id: capture
+        continue-on-error: true
+        env:
+          SNAPSHOT_OUT: snapshot_output
+          SNAPSHOT_WORKERS: "4"
+          HTTP_RETRIES: "8"
+          HTTP_TIMEOUT: "40"
+          RPC_BATCH_SIZE: "80"
+          ETH_RPC_URLS: "https://ethereum-rpc.publicnode.com,https://eth.llamarpc.com,https://rpc.flashbots.net,https://eth.drpc.org"
+        run: python tools/becoming_snapshot/snapshot.py
+      - name: Preserve complete evidence package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-becoming-genesis-556-atomic-snapshot
+          path: snapshot_output
+          if-no-files-found: error
+          retention-days: 7
+      - name: Enforce strict completion
+        if: steps.capture.outcome != 'success'
+        run: exit 1
