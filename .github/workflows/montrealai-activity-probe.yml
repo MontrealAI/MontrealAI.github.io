@@ -1,0 +1,52 @@
+name: MONTREAL.AI Activity Probe
+
+on:
+  push:
+    branches:
+      - research/montrealai-provenance-sales-20260816
+    paths:
+      - .github/workflows/montrealai-activity-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check requests
+      - name: Query persisted public activity endpoint
+        run: |
+          cat > probe.py <<'PY'
+          import json
+          from pathlib import Path
+          import requests
+          endpoint='https://gql.opensea.io/graphql'
+          op='UseGlobalActivityQuery'
+          sha='eaccd718ac71d4062009c6d4cbd6d0e0caeca6e34a019306ecd0cacff8409f04'
+          s=requests.Session(); s.headers.update({'Accept':'application/graphql-response+json, application/json','User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151.0.0.0 Safari/537.36','Origin':'https://opensea.io','Referer':'https://opensea.io/collection/montrealai/activity'})
+          tests=[]
+          for activity in [['SALE'],['MINT'],['TRANSFER'],['SALE','MINT','TRANSFER']]:
+            for offset in [None,0,32]:
+              variables={'filter':{'activityTypes':activity,'chains':[],'collectionSlugs':['montrealai'],'markets':[]},'limit':32}
+              if offset is not None: variables['offset']=offset
+              params={'app_id':'os2-web','operationName':op,'variables':json.dumps(variables,separators=(',',':')),'extensions':json.dumps({'persistedQuery':{'sha256Hash':sha,'version':1}},separators=(',',':'))}
+              r=s.get(endpoint,params=params,timeout=60)
+              try: body=r.json()
+              except: body={'text':r.text[:10000]}
+              tests.append({'activity':activity,'offset':offset,'status':r.status_code,'url':r.url,'body':body,'headers':{k:v for k,v in r.headers.items() if 'ratelimit' in k.lower()}})
+              print(activity,offset,r.status_code, list((body.get('data') or {}).keys()), (body.get('errors') or [])[:1], flush=True)
+          Path('probe_output').mkdir(); Path('probe_output/activity_probe.json').write_text(json.dumps(tests,indent=2,ensure_ascii=False)+'\n')
+          PY
+          python probe.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-activity-probe
+          path: probe_output
+          retention-days: 7
+          if-no-files-found: error
