@@ -1,0 +1,130 @@
+name: MONTREAL.AI Genesis 556 Eight-Pair Verification
+
+on:
+  push:
+    branches:
+      - snapshot/becoming-genesis-556-20260816
+    paths:
+      - .github/workflows/becoming-genesis-556-eight-pair-verification.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify eight exact ERC-1155 balances through independent RPCs
+        run: |
+          cat > verify.py <<'PY'
+          import csv, hashlib, json, time, urllib.request, zipfile
+          from pathlib import Path
+
+          CONTRACT='0x495f947276749ce646f68ac8c248420045cb7b5e'
+          CREATOR='0x054a2e4b3b5ea2c62372e92358fdf7fb74b4f34a'
+          BLOCK=25765022
+          BLOCK_HEX=hex(BLOCK)
+          BLOCK_HASH='0x46e51fdbb16d87c31f490ee2496d8d164b0d706da9adcecd8b2cc97eb62ff93f'
+          MAPPING={
+              161:'0x80bcce47ca8717bf7cc0aa96fbc608f4d2af637c',
+              501:'0xb1b53c6cab852e534ed519d34bf756d45229cd96',
+              503:'0x779ef52d96285e37a6f0013791ea1b17b43509d2',
+              505:'0xab2875a5d77ccc288543d8c0908bb14d967a5b4b',
+              524:'0x80bcce47ca8717bf7cc0aa96fbc608f4d2af637c',
+              538:'0x779ef52d96285e37a6f0013791ea1b17b43509d2',
+              539:'0x779ef52d96285e37a6f0013791ea1b17b43509d2',
+              563:'0x1624ad33aad3f9c0c0bb8297788b1bcbab89b4dc',
+          }
+          ENDPOINTS=[
+              'https://rpc.flashbots.net',
+              'https://eth.drpc.org',
+              'https://ethereum-rpc.publicnode.com',
+              'https://1rpc.io/eth',
+              'https://cloudflare-eth.com',
+          ]
+
+          nonces=[n for n in range(5,564) if n not in {159,495,523}]
+          nonces[257],nonces[258]=nonces[258],nonces[257]
+          canonical={nonce:i for i,nonce in enumerate(nonces,1)}
+          creator=int(CREATOR,16)
+          pairs=[]
+          for nonce,address in MAPPING.items():
+              tid=(creator<<96)|(nonce<<40)|1
+              pairs.append({'canonical_number':canonical[nonce],'internal_nonce':nonce,'token_id_decimal':str(tid),'token_id_hex':f'0x{tid:064x}','holder_address':address})
+          pairs.sort(key=lambda r:r['canonical_number'])
+
+          def rpc(url,method,params):
+              body=json.dumps({'jsonrpc':'2.0','id':1,'method':method,'params':params}).encode()
+              req=urllib.request.Request(url,data=body,headers={'Content-Type':'application/json','Accept':'application/json','User-Agent':'MONTREALAI-Genesis-556-Verification/1.0'})
+              err=None
+              for n in range(3):
+                  try:
+                      with urllib.request.urlopen(req,timeout=35) as resp:
+                          data=json.loads(resp.read().decode())
+                      if data.get('error'): raise RuntimeError(str(data['error']))
+                      return data['result']
+                  except Exception as e:
+                      err=e
+                      if n<2: time.sleep(1.5*(n+1))
+              raise RuntimeError(str(err))
+
+          def encode(accounts,ids):
+              selector=bytes.fromhex('4e1273f4')
+              n=len(accounts)
+              aa=n.to_bytes(32,'big')+b''.join(bytes.fromhex(a[2:]).rjust(32,b'\0') for a in accounts)
+              ii=n.to_bytes(32,'big')+b''.join(int(i).to_bytes(32,'big') for i in ids)
+              head=(64).to_bytes(32,'big')+(64+len(aa)).to_bytes(32,'big')
+              return '0x'+(selector+head+aa+ii).hex()
+
+          def decode(raw):
+              b=bytes.fromhex(raw[2:])
+              off=int.from_bytes(b[:32],'big')
+              n=int.from_bytes(b[off:off+32],'big')
+              start=off+32
+              return [int.from_bytes(b[start+32*i:start+32*(i+1)],'big') for i in range(n)]
+
+          calldata=encode([r['holder_address'] for r in pairs],[r['token_id_decimal'] for r in pairs])
+          endpoint_results=[]
+          for url in ENDPOINTS:
+              row={'url':url}
+              try:
+                  chain=int(rpc(url,'eth_chainId',[]),16)
+                  block=rpc(url,'eth_getBlockByNumber',[BLOCK_HEX,False])
+                  actual_hash=str(block.get('hash','')).lower()
+                  raw=rpc(url,'eth_call',[{'to':CONTRACT,'data':calldata},BLOCK_HEX])
+                  values=decode(raw)
+                  row.update({'chain_id':chain,'block_hash':actual_hash,'balances':values,'status':'PASS' if chain==1 and actual_hash==BLOCK_HASH and values==[1]*8 else 'FAIL'})
+              except Exception as e:
+                  row.update({'status':'ERROR','error':str(e)})
+              endpoint_results.append(row)
+              print(json.dumps(row),flush=True)
+
+          passing=[r for r in endpoint_results if r.get('status')=='PASS']
+          complete=len(passing)>=2
+          out=Path('verification'); out.mkdir()
+          summary={'schema':'montrealai.becoming.genesis-556.eight-pair-verification.v1','contract':CONTRACT,'block_number':BLOCK,'block_hash':BLOCK_HASH,'pairs':pairs,'endpoint_results':endpoint_results,'passing_independent_endpoints':len(passing),'verification_complete':complete}
+          (out/'verification.json').write_text(json.dumps(summary,indent=2)+'\n')
+          with (out/'verified_pairs.csv').open('w',newline='',encoding='utf-8') as f:
+              fields=['canonical_number','internal_nonce','token_id_decimal','token_id_hex','holder_address','balance','block_number','block_hash']
+              w=csv.DictWriter(f,fieldnames=fields); w.writeheader()
+              for r in pairs: w.writerow({**r,'balance':1,'block_number':BLOCK,'block_hash':BLOCK_HASH})
+          files=[out/'verification.json',out/'verified_pairs.csv']
+          (out/'SHA256SUMS').write_text('\n'.join(f"{hashlib.sha256(p.read_bytes()).hexdigest()}  {p.name}" for p in files)+'\n')
+          with zipfile.ZipFile(out/'MONTREALAI_GENESIS_556_EIGHT_PAIR_VERIFICATION.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in files+[out/'SHA256SUMS']: z.write(p,p.name)
+          if not complete: raise SystemExit(2)
+          PY
+          python verify.py
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-genesis-556-eight-pair-verification
+          path: verification
+          if-no-files-found: error
+          retention-days: 7
