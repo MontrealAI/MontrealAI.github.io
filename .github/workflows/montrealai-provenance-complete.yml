@@ -6,6 +6,7 @@ on:
       - research/montrealai-provenance-sales-20260816
     paths:
       - .github/workflows/montrealai-provenance-complete.yml
+      - tools/montrealai_provenance/**
   workflow_dispatch:
 
 permissions:
@@ -40,7 +41,7 @@ jobs:
           HTTP_TIMEOUT: "60"
           HTTP_RETRIES: "8"
           PAGE_SLEEP: "0.25"
-          RPC_BATCH: "40"
+          RPC_BATCH: "20"
           ETH_RPC_URLS: "https://eth.drpc.org,https://eth.llamarpc.com,https://rpc.mevblocker.io,https://ethereum.publicnode.com,https://1rpc.io/eth"
         run: python collect_montrealai_provenance.py
       - name: Preserve capture, including failed QA evidence
