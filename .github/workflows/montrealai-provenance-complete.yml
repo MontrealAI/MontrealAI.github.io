@@ -1,0 +1,57 @@
+name: MONTREAL.AI Complete Provenance and Sales Capture
+
+on:
+  push:
+    branches:
+      - research/montrealai-provenance-sales-20260816
+    paths:
+      - .github/workflows/montrealai-provenance-complete.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout collector fragments only
+        uses: actions/checkout@v4
+        with:
+          ref: research/montrealai-provenance-sales-20260816
+          sparse-checkout: |
+            tools/montrealai_provenance
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Assemble and validate collector
+        run: |
+          cat tools/montrealai_provenance/part_*.pyfrag > collect_montrealai_provenance.py
+          python -m py_compile collect_montrealai_provenance.py
+          python -m pip install --disable-pip-version-check requests eth-abi eth-utils
+      - name: Capture complete OpenSea and Ethereum evidence
+        id: capture
+        continue-on-error: true
+        env:
+          OUTPUT_DIR: provenance_output
+          HTTP_TIMEOUT: "60"
+          HTTP_RETRIES: "8"
+          PAGE_SLEEP: "0.25"
+          RPC_BATCH: "40"
+          ETH_RPC_URLS: "https://eth.drpc.org,https://eth.llamarpc.com,https://rpc.mevblocker.io,https://ethereum.publicnode.com,https://1rpc.io/eth"
+        run: python collect_montrealai_provenance.py
+      - name: Preserve capture, including failed QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-provenance-sales-complete-capture
+          path: provenance_output
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 6
+      - name: Enforce definitive capture acceptance
+        if: steps.capture.outcome != 'success'
+        run: exit 1
