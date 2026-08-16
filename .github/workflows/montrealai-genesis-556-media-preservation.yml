@@ -14,11 +14,22 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout media preservation source
+        uses: actions/checkout@v4
         with:
           ref: research/montrealai-genesis-556-v4-media
           sparse-checkout: |
             tools/montrealai_provenance/preserve_genesis_media.py
+            .github/workflows/montrealai-genesis-556-media-preservation.yml
+          sparse-checkout-cone-mode: false
+      - name: Checkout completion verification source
+        uses: actions/checkout@v4
+        with:
+          ref: research/montrealai-genesis-556-completion-20260816
+          path: completion_source
+          sparse-checkout: |
+            tools/montrealai_provenance/verify_genesis_556_completion.py
+            .github/workflows/montrealai-genesis-556-completion.yml
           sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v5
         with:
@@ -40,6 +51,13 @@ jobs:
           WORKERS: '8'
           HTTP_TIMEOUT: '60'
         run: python tools/montrealai_provenance/preserve_genesis_media.py
+      - name: Seal exact source files into preservation package
+        run: |
+          mkdir -p genesis_556_media/source/media genesis_556_media/source/verification
+          cp tools/montrealai_provenance/preserve_genesis_media.py genesis_556_media/source/media/
+          cp .github/workflows/montrealai-genesis-556-media-preservation.yml genesis_556_media/source/media/
+          cp completion_source/tools/montrealai_provenance/verify_genesis_556_completion.py genesis_556_media/source/verification/
+          cp completion_source/.github/workflows/montrealai-genesis-556-completion.yml genesis_556_media/source/verification/
       - name: Upload complete preservation package
         uses: actions/upload-artifact@v4
         with:
