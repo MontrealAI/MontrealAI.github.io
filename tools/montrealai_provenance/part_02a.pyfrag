@@ -1,0 +1,47 @@
+
+
+# RPC failover override: free public endpoints may rate-limit large historical batches.
+def rpc_call_any(method: str, params: list[Any], preferred: str | None = None, retries_per_endpoint: int = 2) -> tuple[Any, str, list[dict[str, Any]]]:
+    urls = ([preferred] if preferred else []) + [u for u in RPC_URLS if u != preferred]
+    attempts: list[dict[str, Any]] = []
+    last_error: str | None = None
+    for url in urls:
+        if not url:
+            continue
+        try:
+            value = rpc_call(url, method, params, retries_per_endpoint)
+            attempts.append({"url": url, "status": "PASS"})
+            return value, url, attempts
+        except Exception as exc:
+            last_error = str(exc)
+            attempts.append({"url": url, "status": "FAIL", "error": str(exc)})
+    raise RuntimeError(f"All RPC endpoints failed for {method}: {last_error}; attempts={json.dumps(attempts)}")
+
+
+def query_balances(url: str, block_hex: str, candidates: dict[str, set[str]], label: str) -> list[dict[str, Any]]:
+    pairs = [(tid, address) for tid in sorted(candidates, key=int) for address in sorted(candidates[tid])]
+    results: list[dict[str, Any]] = []
+    preferred = url
+    for start in range(0, len(pairs), RPC_BATCH):
+        chunk = pairs[start:start + RPC_BATCH]
+        calldata = encode_balance_batch([a for _, a in chunk], [tid for tid, _ in chunk])
+        raw, used_url, attempts = rpc_call_any(
+            "eth_call",
+            [{"to": CONTRACT, "data": calldata}, block_hex],
+            preferred=preferred,
+            retries_per_endpoint=2,
+        )
+        preferred = used_url
+        values = decode_uint_array(raw)
+        if len(values) != len(chunk):
+            raise RuntimeError("balanceOfBatch result length mismatch")
+        results.extend({
+            "token_id_decimal": tid,
+            "holder_address": address,
+            "balance": int(value),
+            "rpc": used_url,
+            "rpc_attempts": json.dumps(attempts, separators=(",", ":")),
+        } for (tid, address), value in zip(chunk, values))
+        print(f"{label}: {min(start + RPC_BATCH, len(pairs))}/{len(pairs)} via {used_url}", flush=True)
+        time.sleep(0.15)
+    return results
