@@ -1,0 +1,35 @@
+name: MONTREAL.AI Blockscout ERC-1155 Probe
+
+on:
+  push:
+    branches:
+      - snapshot/becoming-genesis-556-20260816
+    paths:
+      - .github/workflows/becoming-blockscout-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch creator transfer page
+        run: |
+          mkdir probe
+          curl --fail --location --retry 5 --retry-all-errors \
+            --get 'https://eth.blockscout.com/api/v2/addresses/0x054a2e4b3b5ea2c62372e92358fdf7fb74b4f34a/token-transfers' \
+            --data-urlencode 'type=ERC-1155' \
+            --data-urlencode 'token=0x495f947276749ce646f68ac8c248420045cb7b5e' \
+            -o probe/creator_transfers.json
+          python - <<'PY'
+          import json
+          x=json.load(open('probe/creator_transfers.json'))
+          print(json.dumps({'item_count':len(x.get('items',[])),'next_page_params':x.get('next_page_params'),'first_items':x.get('items',[])[:3]},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: becoming-blockscout-probe
+          path: probe
+          retention-days: 7
