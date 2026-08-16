@@ -1,0 +1,58 @@
+name: MONTREAL.AI Genesis 556 Media Preservation
+on:
+  push:
+    branches: [research/montrealai-genesis-556-v4-media]
+    paths:
+      - tools/montrealai_provenance/preserve_genesis_media.py
+      - .github/workflows/montrealai-genesis-556-media-preservation.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  preserve:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/montrealai-genesis-556-v4-media
+          sparse-checkout: |
+            tools/montrealai_provenance/preserve_genesis_media.py
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download definitive item capture
+        uses: actions/download-artifact@v4
+        with:
+          name: montrealai-provenance-sales-complete-capture
+          path: baseline
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: MontrealAI/MontrealAI.github.io
+          run-id: 31954792859
+      - name: Install preservation dependencies
+        run: python -m pip install --disable-pip-version-check requests pillow
+      - name: Download, normalize and hash all 556 media assets
+        env:
+          ITEMS_CSV: baseline/normalized/items.csv
+          OUTPUT_DIR: genesis_556_media
+          WORKERS: '8'
+          HTTP_TIMEOUT: '60'
+        run: python tools/montrealai_provenance/preserve_genesis_media.py
+      - name: Upload complete preservation package
+        uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-genesis-556-media-preservation
+          path: genesis_556_media
+          retention-days: 30
+          compression-level: 6
+          if-no-files-found: error
+      - name: Enforce acceptance
+        run: python - <<'PY'
+          import json
+          q=json.load(open('genesis_556_media/QA_REPORT.json'))
+          assert q['acceptance_gate']=='PASS',q
+          assert q['passed']==556,q
+          print(json.dumps(q,indent=2))
+          PY
