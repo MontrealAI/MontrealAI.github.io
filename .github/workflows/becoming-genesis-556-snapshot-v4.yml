@@ -1,0 +1,46 @@
+name: MONTREAL.AI Becoming Genesis 556 Complete Snapshot v4
+
+on:
+  push:
+    branches:
+      - snapshot/becoming-genesis-556-20260816
+    paths:
+      - .github/workflows/becoming-genesis-556-snapshot-v4.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check requests
+      - name: Load immutable corrected runner
+        run: curl --fail --silent --show-error --location "https://raw.githubusercontent.com/MontrealAI/MontrealAI.github.io/45a297b0bccd5a3e9e561bdf333e580178aad835/tools/becoming_snapshot/snapshot_v4.py" --output snapshot_v4.py
+      - name: Capture and verify one finalized Ethereum state
+        id: capture
+        continue-on-error: true
+        env:
+          SNAPSHOT_OUT: snapshot_output
+          SNAPSHOT_WORKERS: "8"
+          HTTP_RETRIES: "6"
+          HTTP_TIMEOUT: "45"
+          RPC_BATCH_SIZE: "80"
+          ETH_RPC_URLS: "https://ethereum-rpc.publicnode.com,https://eth.llamarpc.com,https://rpc.flashbots.net,https://eth.drpc.org"
+        run: python snapshot_v4.py
+      - name: Preserve all evidence, including failed audits
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: montrealai-becoming-genesis-556-complete-snapshot-v4
+          path: snapshot_output
+          if-no-files-found: error
+          retention-days: 7
+      - name: Enforce 556-of-556 completion
+        if: steps.capture.outcome != 'success'
+        run: exit 1
