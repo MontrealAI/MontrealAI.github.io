@@ -49,10 +49,4 @@ jobs:
           compression-level: 6
           if-no-files-found: error
       - name: Enforce acceptance
-        run: python - <<'PY'
-          import json
-          q=json.load(open('genesis_556_media/QA_REPORT.json'))
-          assert q['acceptance_gate']=='PASS',q
-          assert q['passed']==556,q
-          print(json.dumps(q,indent=2))
-          PY
+        run: python -c "import json; q=json.load(open('genesis_556_media/QA_REPORT.json')); assert q['acceptance_gate']=='PASS' and q['passed']==556, q; print(json.dumps(q,indent=2))"
