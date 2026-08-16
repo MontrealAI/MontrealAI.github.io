@@ -5,7 +5,6 @@ on:
     branches:
       - snapshot/becoming-genesis-556-20260816
     paths:
-      - tools/becoming_snapshot/**
       - .github/workflows/becoming-genesis-556-snapshot.yml
   workflow_dispatch:
 
@@ -24,13 +23,25 @@ jobs:
         run: python -m pip install --disable-pip-version-check requests
       - name: Load the immutable snapshot runner
         run: curl --fail --silent --show-error --location "https://raw.githubusercontent.com/MontrealAI/MontrealAI.github.io/f6e3356c5a64836cf3b93513c06f852f49c2e6fc/tools/becoming_snapshot/snapshot.py" --output snapshot.py
+      - name: Apply explorer-404 correction
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('snapshot.py')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('def pages(url,params=None):', 'def pages(url,params=None,allow404=False):')
+          s=s.replace('seen.add(key); x=get(url,p)', 'seen.add(key); x=get(url,p,allow404=allow404)\n        if x is None: return')
+          s=s.replace('for x in pages(root+"/holders"):', 'for x in pages(root+"/holders",allow404=True):')
+          s=s.replace('for x in pages(root+"/transfers"):', 'for x in pages(root+"/transfers",allow404=True):')
+          p.write_text(s,encoding='utf-8')
+          PY
       - name: Capture one finalized Ethereum state
         id: capture
         continue-on-error: true
         env:
           SNAPSHOT_OUT: snapshot_output
-          SNAPSHOT_WORKERS: "4"
-          HTTP_RETRIES: "8"
+          SNAPSHOT_WORKERS: "6"
+          HTTP_RETRIES: "6"
           HTTP_TIMEOUT: "40"
           RPC_BATCH_SIZE: "80"
           ETH_RPC_URLS: "https://ethereum-rpc.publicnode.com,https://eth.llamarpc.com,https://rpc.flashbots.net,https://eth.drpc.org"
