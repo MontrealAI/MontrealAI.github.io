@@ -1,0 +1,116 @@
+name: MONTREAL.AI Becoming Genesis 556 OpenSea Direct Capture
+
+on:
+  push:
+    branches:
+      - snapshot/becoming-genesis-556-20260816
+    paths:
+      - .github/workflows/becoming-genesis-556-opensea-scrape.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check requests beautifulsoup4
+      - name: Capture direct public item links
+        id: capture
+        continue-on-error: true
+        run: |
+          cat > capture.py <<'PY'
+          import csv, hashlib, json, re, time, zipfile
+          from pathlib import Path
+          import requests
+          from bs4 import BeautifulSoup
+
+          CONTRACT='0x495f947276749ce646f68ac8c248420045cb7b5e'
+          OUT=Path('opensea_capture'); OUT.mkdir(exist_ok=True); (OUT/'raw_pages').mkdir(exist_ok=True)
+          s=requests.Session(); s.headers.update({'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/150 Safari/537.36','Accept':'text/html,application/xhtml+xml'})
+          items={}; page_rows=[]; no_new=0
+          def fetch(url):
+              last=None
+              for i in range(7):
+                  try:
+                      r=s.get(url,timeout=40)
+                      if r.status_code==429 or r.status_code>=500:
+                          raise RuntimeError(f'HTTP {r.status_code}')
+                      r.raise_for_status(); return r.text
+                  except Exception as e:
+                      last=e; time.sleep(min(15,1.2*(2**i)))
+              raise RuntimeError(last)
+          for page in range(1,41):
+              url=f'https://opensea.io/collection/montrealai?page={page}'
+              try: html=fetch(url)
+              except Exception as e:
+                  page_rows.append({'page':page,'url':url,'status':'ERROR','bytes':0,'unique_links':0,'new_links':0,'error':str(e)}); continue
+              (OUT/'raw_pages'/f'page_{page:02d}.html').write_text(html,encoding='utf-8')
+              soup=BeautifulSoup(html,'html.parser'); before=len(items); page_ids=set()
+              for a in soup.find_all('a',href=True):
+                  href=a.get('href','')
+                  m=re.search(rf'/item/ethereum/{CONTRACT}/([0-9]+)',href,re.I)
+                  if not m: m=re.search(rf'/assets/(?:ethereum/)?{CONTRACT}/([0-9]+)',href,re.I)
+                  if not m: continue
+                  tid=m.group(1); text=' '.join(a.get_text(' ',strip=True).split()); title_match=re.search(r'Crypto\s+AI\s+Art\s*#\s*0*([0-9]{1,3})',text,re.I)
+                  if not title_match:
+                      parent=a.parent
+                      for _ in range(4):
+                          if parent is None: break
+                          text=' '.join(parent.get_text(' ',strip=True).split()); title_match=re.search(r'Crypto\s+AI\s+Art\s*#\s*0*([0-9]{1,3})',text,re.I)
+                          if title_match: break
+                          parent=parent.parent
+                  number=int(title_match.group(1)) if title_match else None
+                  rec=items.setdefault(tid,{'token_id_decimal':tid,'opensea_item_url':'https://opensea.io/item/ethereum/'+CONTRACT+'/'+tid,'canonical_number':number,'title':f'Crypto AI Art #{number:03d}' if number else '','pages':set()})
+                  rec['pages'].add(page); page_ids.add(tid)
+                  if number:
+                      if rec['canonical_number'] not in (None,number): rec['title_conflict']=f"{rec['canonical_number']} vs {number}"
+                      rec['canonical_number']=number; rec['title']=f'Crypto AI Art #{number:03d}'
+              # Also scan escaped/raw Next.js payloads for URLs; title is assigned later from nearby text where possible.
+              pats=[rf'/item/ethereum/{CONTRACT}/([0-9]+)',rf'/assets/(?:ethereum/)?{CONTRACT}/([0-9]+)']
+              normalized=html.replace('\\/','/')
+              for pat in pats:
+                  for m in re.finditer(pat,normalized,re.I):
+                      tid=m.group(1); lo=max(0,m.start()-1200); hi=min(len(normalized),m.end()+1200); near=normalized[lo:hi]
+                      tm=re.search(r'Crypto(?:\\u0020|\s)+AI(?:\\u0020|\s)+Art(?:\\u0020|\s)*#(?:\\u0020|\s)*0*([0-9]{1,3})',near,re.I)
+                      number=int(tm.group(1)) if tm else None
+                      rec=items.setdefault(tid,{'token_id_decimal':tid,'opensea_item_url':'https://opensea.io/item/ethereum/'+CONTRACT+'/'+tid,'canonical_number':number,'title':f'Crypto AI Art #{number:03d}' if number else '','pages':set()})
+                      rec['pages'].add(page); page_ids.add(tid)
+                      if number and not rec.get('canonical_number'): rec['canonical_number']=number; rec['title']=f'Crypto AI Art #{number:03d}'
+              new=len(items)-before; page_rows.append({'page':page,'url':url,'status':'PASS','bytes':len(html.encode()),'unique_links':len(page_ids),'new_links':new,'error':''})
+              print(f'page {page}: {len(page_ids)} links, {new} new, {len(items)} total',flush=True)
+              no_new=no_new+1 if new==0 else 0
+              if len(items)>=556 or (page>=4 and no_new>=3): break
+              time.sleep(.6)
+          rows=[]
+          for r in items.values():
+              q=dict(r); q['pages']=' '.join(map(str,sorted(q.pop('pages')))); rows.append(q)
+          rows.sort(key=lambda r:(r.get('canonical_number') is None,r.get('canonical_number') or 9999,int(r['token_id_decimal'])))
+          fields=['canonical_number','title','token_id_decimal','opensea_item_url','pages','title_conflict']
+          with (OUT/'opensea_direct_items.csv').open('w',newline='',encoding='utf-8') as f:
+              w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore'); w.writeheader(); w.writerows(rows)
+          with (OUT/'opensea_page_audit.csv').open('w',newline='',encoding='utf-8') as f:
+              w=csv.DictWriter(f,fieldnames=list(page_rows[0])); w.writeheader(); w.writerows(page_rows)
+          numbers=[r.get('canonical_number') for r in rows if r.get('canonical_number')]
+          status={'unique_token_ids':len(rows),'title_mapped':len(numbers),'unique_canonical_numbers':len(set(numbers)),'missing_canonical_numbers':[n for n in range(1,557) if n not in set(numbers)],'duplicate_canonical_numbers':sorted({n for n in numbers if numbers.count(n)>1}),'direct_capture_complete':len(rows)==556 and len(set(numbers))==556,'pages_requested':len(page_rows)}
+          (OUT/'opensea_capture_status.json').write_text(json.dumps(status,indent=2)+'\n')
+          files=sorted(p for p in OUT.rglob('*') if p.is_file() and p.name!='SHA256SUMS'); (OUT/'SHA256SUMS').write_text('\n'.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.relative_to(OUT).as_posix() for p in files)+'\n')
+          with zipfile.ZipFile(OUT/'MONTREALAI_BECOMING_GENESIS_556_OPENSEA_DIRECT_CAPTURE.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(x for x in OUT.rglob('*') if x.is_file() and not x.name.endswith('.zip')): z.write(p,p.relative_to(OUT))
+          print(json.dumps(status,indent=2)); raise SystemExit(0 if status['direct_capture_complete'] else 2)
+          PY
+          python capture.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: montrealai-becoming-genesis-556-opensea-direct-capture
+          path: opensea_capture
+          if-no-files-found: error
+          retention-days: 7
+      - if: steps.capture.outcome != 'success'
+        run: exit 1
