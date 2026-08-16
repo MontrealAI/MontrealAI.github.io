@@ -1,5 +1,5 @@
 from __future__ import annotations
-import csv, hashlib, io, json, os, shutil, sys, time
+import csv, hashlib, io, json, os, shutil, time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
@@ -42,7 +42,15 @@ def main()->int:
  if OUT.exists():shutil.rmtree(OUT)
  OUT.mkdir(parents=True)
  with INPUT.open(encoding='utf-8-sig',newline='') as f:rows=list(csv.DictReader(f))
- if len(rows)!=556 or {r['artwork_number'].zfill(3) for r in rows}!={f'{i:03d}' for i in range(556)}:raise RuntimeError('Input identity validation failed')
+ if len(rows)!=556:raise RuntimeError(f'Expected 556 item rows, got {len(rows)}')
+ # OpenSea has two raw titles #316. The token whose embedded nonce is 322 occupies canonical position #317.
+ for r in rows:
+  nonce=(int(r['token_id_decimal'])>>40)&((1<<56)-1)
+  r['raw_opensea_artwork_number']=r['artwork_number']
+  if nonce==322:
+   r['artwork_number']='317';r['canonical_name']='Crypto AI Art #317';r['canonicalization_note']='Raw OpenSea title #316 preserved; canonical position #317 assigned from token identity.'
+  else:r['canonical_name']=f"Crypto AI Art #{r['artwork_number'].zfill(3)}"
+ if {r['artwork_number'].zfill(3) for r in rows}!={f'{i:03d}' for i in range(556)}:raise RuntimeError('Canonical identity validation failed')
  results=[]
  with ThreadPoolExecutor(max_workers=WORKERS) as ex:
   fut={ex.submit(fetch_one,r):r['artwork_number'] for r in rows}
