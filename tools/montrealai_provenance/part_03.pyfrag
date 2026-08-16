@@ -1,0 +1,170 @@
+    return receipts, attempts
+
+
+def topic_address(topic: str) -> str:
+    return "0x" + topic[-40:].lower()
+
+
+def parse_transfer_logs(receipts: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for tx_hash, receipt in receipts.items():
+        for log in receipt.get("logs") or []:
+            if str(log.get("address") or "").lower() != CONTRACT:
+                continue
+            topics = [str(x).lower() for x in (log.get("topics") or [])]
+            if not topics:
+                continue
+            topic0 = topics[0]
+            block_number = int(receipt.get("blockNumber"), 16) if receipt.get("blockNumber") else None
+            tx_index = int(receipt.get("transactionIndex"), 16) if receipt.get("transactionIndex") else None
+            log_index = int(log.get("logIndex"), 16) if log.get("logIndex") else None
+            if topic0 == TRANSFER_SINGLE_TOPIC.lower() and len(topics) >= 4:
+                token_id, value = abi_decode(["uint256", "uint256"], bytes.fromhex(str(log.get("data") or "0x")[2:]))
+                rows.append({
+                    "transaction_hash": tx_hash,
+                    "block_number": block_number,
+                    "transaction_index": tx_index,
+                    "log_index": log_index,
+                    "event_signature": "TransferSingle",
+                    "operator": topic_address(topics[1]),
+                    "from_address": topic_address(topics[2]),
+                    "to_address": topic_address(topics[3]),
+                    "token_id_decimal": str(token_id),
+                    "quantity": int(value),
+                })
+            elif topic0 == TRANSFER_BATCH_TOPIC.lower() and len(topics) >= 4:
+                ids, values = abi_decode(["uint256[]", "uint256[]"], bytes.fromhex(str(log.get("data") or "0x")[2:]))
+                for position, (token_id, value) in enumerate(zip(ids, values)):
+                    rows.append({
+                        "transaction_hash": tx_hash,
+                        "block_number": block_number,
+                        "transaction_index": tx_index,
+                        "log_index": log_index,
+                        "batch_position": position,
+                        "event_signature": "TransferBatch",
+                        "operator": topic_address(topics[1]),
+                        "from_address": topic_address(topics[2]),
+                        "to_address": topic_address(topics[3]),
+                        "token_id_decimal": str(token_id),
+                        "quantity": int(value),
+                    })
+    rows.sort(key=lambda r: (r.get("block_number") or 0, r.get("transaction_index") or 0, r.get("log_index") or 0, r.get("batch_position") or 0))
+    return rows
+
+
+def fetch_block_times(primary: str, block_numbers: list[int]) -> dict[int, dict[str, Any]]:
+    out: dict[int, dict[str, Any]] = {}
+    unique = sorted(set(block_numbers))
+    for start in range(0, len(unique), 50):
+        chunk = unique[start:start + 50]
+        raw = rpc_batch(primary, [("eth_getBlockByNumber", [hex(n), False]) for n in chunk], 4)
+        for n, block in zip(chunk, raw):
+            if isinstance(block, dict):
+                timestamp = int(block.get("timestamp"), 16) if block.get("timestamp") else None
+                out[n] = {
+                    "block_number": n,
+                    "block_hash": block.get("hash"),
+                    "timestamp_unix": timestamp,
+                    "timestamp_utc": datetime.fromtimestamp(timestamp, timezone.utc).isoformat().replace("+00:00", "Z") if timestamp is not None else None,
+                }
+        print(f"Blocks: {min(start + 50, len(unique))}/{len(unique)}", flush=True)
+    return out
+
+
+def match_events_to_logs(event_rows: list[dict[str, Any]], transfer_logs: list[dict[str, Any]], block_times: dict[int, dict[str, Any]]) -> list[dict[str, Any]]:
+    by_tx_token: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for log in transfer_logs:
+        by_tx_token[(str(log.get("transaction_hash") or "").lower(), log["token_id_decimal"])].append(log)
+    matches: list[dict[str, Any]] = []
+    for event in event_rows:
+        tx = str(event.get("transaction_hash") or "").lower()
+        tid = event.get("token_id_decimal")
+        candidates = by_tx_token.get((tx, tid), []) if tx else []
+        exact = []
+        for log in candidates:
+            from_ok = not event.get("from_address") or event.get("from_address") == log.get("from_address")
+            to_ok = not event.get("to_address") or event.get("to_address") == log.get("to_address")
+            qty = event.get("quantity")
+            try:
+                qty_ok = qty is None or float(qty) == float(log.get("quantity"))
+            except Exception:
+                qty_ok = True
+            if from_ok and to_ok and qty_ok:
+                exact.append(log)
+        chosen = (exact or candidates)[0] if (exact or candidates) else None
+        block_time = block_times.get(chosen.get("block_number")) if chosen else None
+        matches.append({
+            "event_id": event.get("event_id"),
+            "event_type": event.get("event_type"),
+            "event_time_utc": event.get("event_time_utc"),
+            "transaction_hash": event.get("transaction_hash"),
+            "artwork_number": event.get("artwork_number"),
+            "token_id_decimal": tid,
+            "from_address": event.get("from_address"),
+            "to_address": event.get("to_address"),
+            "quantity": event.get("quantity"),
+            "transaction_present": bool(tx),
+            "matching_transfer_log": bool(chosen),
+            "exact_party_match": bool(exact),
+            "onchain_block_number": chosen.get("block_number") if chosen else None,
+            "onchain_log_index": chosen.get("log_index") if chosen else None,
+            "onchain_event_signature": chosen.get("event_signature") if chosen else None,
+            "onchain_block_timestamp_utc": block_time.get("timestamp_utc") if block_time else None,
+            "verification_status": "PASS" if chosen else ("NO_TX_EXPECTED" if not tx and event.get("event_type") == "MINT" else "FAIL"),
+        })
+    return matches
+
+
+def main() -> int:
+    started = now_utc()
+    collection_snapshot = capture_collection_page()
+    raw_items, item_pages = collect_items()
+    item_rows = flatten_items(raw_items)
+    write_json(OUT / "raw" / "items" / "pagination.json", item_pages)
+    write_json(OUT / "normalized" / "items.json", item_rows)
+    write_csv(OUT / "normalized" / "items.csv", item_rows)
+
+    activities: dict[str, list[dict[str, Any]]] = {}
+    activity_pages: dict[str, list[dict[str, Any]]] = {}
+    event_rows_by_type: dict[str, list[dict[str, Any]]] = {}
+    for activity_type in ["SALE", "TRANSFER", "MINT"]:
+        raw, pages = collect_activity(activity_type)
+        activities[activity_type] = raw
+        activity_pages[activity_type] = pages
+        flat = flatten_events(raw, activity_type)
+        event_rows_by_type[activity_type] = flat
+        write_json(OUT / "raw" / "activity" / f"{activity_type.lower()}_all.json", raw)
+        write_json(OUT / "raw" / "activity" / f"{activity_type.lower()}_pagination.json", pages)
+        write_csv(OUT / "normalized" / f"{activity_type.lower()}_events.csv", flat)
+
+    all_event_rows = event_rows_by_type["SALE"] + event_rows_by_type["TRANSFER"] + event_rows_by_type["MINT"]
+    primary_rpc, snapshot_block, rpc_attempts = select_rpc_and_snapshot_block()
+    block_checks = crosscheck_block(primary_rpc, snapshot_block)
+    snapshot_block_number = int(snapshot_block["number"], 16)
+    snapshot_timestamp = int(snapshot_block["timestamp"], 16)
+    snapshot_info = {
+        "chain_id": 1,
+        "block_number": snapshot_block_number,
+        "block_number_hex": snapshot_block["number"],
+        "block_hash": snapshot_block["hash"],
+        "timestamp_unix": snapshot_timestamp,
+        "timestamp_utc": datetime.fromtimestamp(snapshot_timestamp, timezone.utc).isoformat().replace("+00:00", "Z"),
+        "primary_rpc": primary_rpc,
+        "rpc_attempts": rpc_attempts,
+        "independent_block_crosschecks": block_checks,
+    }
+    write_json(OUT / "normalized" / "snapshot_block.json", snapshot_info)
+
+    candidates = discover_candidates(item_rows, all_event_rows)
+    write_json(OUT / "raw" / "onchain" / "owner_candidates.json", {k: sorted(v) for k, v in candidates.items()})
+    primary_balances = query_balances(primary_rpc, snapshot_block["number"], candidates, "Primary balances")
+    write_csv(OUT / "raw" / "onchain" / "candidate_balances_primary.csv", primary_balances)
+    positive_by_token: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in primary_balances:
+        if row["balance"] > 0:
+            positive_by_token[row["token_id_decimal"]].append(row)
+    ownership_rows: list[dict[str, Any]] = []
+    for item in item_rows:
+        tid = item["token_id_decimal"]
+        positives = positive_by_token.get(tid, [])
+        total = sum(x["balance"] for x in positives)
