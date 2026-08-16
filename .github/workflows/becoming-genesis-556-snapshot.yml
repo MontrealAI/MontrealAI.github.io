@@ -17,18 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          lfs: false
-          sparse-checkout: |
-            tools/becoming_snapshot
-          sparse-checkout-cone-mode: true
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Install runtime dependency
         run: python -m pip install --disable-pip-version-check requests
+      - name: Load the immutable snapshot runner
+        run: curl --fail --silent --show-error --location "https://raw.githubusercontent.com/MontrealAI/MontrealAI.github.io/f6e3356c5a64836cf3b93513c06f852f49c2e6fc/tools/becoming_snapshot/snapshot.py" --output snapshot.py
       - name: Capture one finalized Ethereum state
         id: capture
         continue-on-error: true
@@ -39,7 +34,7 @@ jobs:
           HTTP_TIMEOUT: "40"
           RPC_BATCH_SIZE: "80"
           ETH_RPC_URLS: "https://ethereum-rpc.publicnode.com,https://eth.llamarpc.com,https://rpc.flashbots.net,https://eth.drpc.org"
-        run: python tools/becoming_snapshot/snapshot.py
+        run: python snapshot.py
       - name: Preserve complete evidence package
         if: always()
         uses: actions/upload-artifact@v4
