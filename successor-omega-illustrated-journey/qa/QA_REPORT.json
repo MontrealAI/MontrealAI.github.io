@@ -1,68 +1,100 @@
 {
   "status": "PASS",
-  "release": "1.0.1-browser-upload-safe",
-  "protectedAssets": [
-    {
-      "id": "web_pdf",
-      "mode": "single",
-      "plaintextBytes": 5071249,
-      "status": "PASS"
-    },
-    {
-      "id": "a4_pdf",
-      "mode": "single",
-      "plaintextBytes": 18468819,
-      "status": "PASS"
-    },
-    {
-      "id": "letter_pdf",
-      "mode": "single",
-      "plaintextBytes": 18467816,
-      "status": "PASS"
-    },
-    {
-      "id": "board_brief",
-      "mode": "single",
-      "plaintextBytes": 825305,
-      "status": "PASS"
-    },
-    {
-      "id": "visual_abstract",
-      "mode": "single",
-      "plaintextBytes": 559628,
-      "status": "PASS"
-    },
-    {
-      "id": "complete_suite",
-      "mode": "multipart",
-      "parts": 6,
-      "plaintextBytes": 97712378,
-      "sourceZipEntries": 167,
-      "status": "PASS"
-    }
-  ],
-  "multipartCompleteSuite": {
-    "parts": 6,
-    "maxPartBytes": 16777232,
-    "reconstruction": "PASS",
-    "wholePlaintextSha256": "fb1ea67a9fdb49b527f6f5704a8bbeb3dfbcac42dd90140e716efa825d57b8d3"
+  "release": "1.0.2-direct-wallet-gate",
+  "architecture": "Direct browser on-chain verification matching the Specialist ASI Training Toolkit pattern; no Worker or private RPC.",
+  "referenceParity": {
+    "erc20BalanceOfDirectRead": true,
+    "ensRegistryAndNameWrapperDirectRead": true,
+    "domainBoundSignedReceipt": true,
+    "periodicRevalidation": true,
+    "accountNetworkRelock": true,
+    "noApprovalTransferPaymentCustody": true
+  },
+  "browserTests": {
+    "status": "PASS",
+    "tests": [
+      {
+        "name": "eligible_token_route",
+        "status": "PASS",
+        "statusText": "Current direct AGIALPHA balance verified. Publication unlocked."
+      },
+      {
+        "name": "eligible_club_route",
+        "status": "PASS",
+        "summary": "AGI Club: alpha.club.agi.eth. Session expires 10:06 PM."
+      },
+      {
+        "name": "ineligible_fails_closed",
+        "status": "PASS",
+        "statusText": "This wallet holds 999,999 AGIALPHA. At least 1,000,000 direct AGIALPHA is required."
+      }
+    ],
+    "consoleErrors": []
+  },
+  "contentDelivery": {
+    "status": "PASS",
+    "assets": [
+      {
+        "id": "web_pdf",
+        "bytes": 5071249,
+        "sha256": "338a4462684ca22f47b25400ce39e3a31676f8b262c19c2c7298944497b29a47",
+        "status": "PASS",
+        "pdfHeader": "PASS"
+      },
+      {
+        "id": "a4_pdf",
+        "bytes": 18468819,
+        "sha256": "1c0147ee5801e7d2751e382d49d117c1f00bd5429a6cf06ae8080871bd11db7d",
+        "status": "PASS",
+        "pdfHeader": "PASS"
+      },
+      {
+        "id": "letter_pdf",
+        "bytes": 18467816,
+        "sha256": "e5951d74edefb3f4ab0b134e9d8fa72cb7348fe2efe05743d2e2594bb8dd4594",
+        "status": "PASS",
+        "pdfHeader": "PASS"
+      },
+      {
+        "id": "board_brief",
+        "bytes": 825305,
+        "sha256": "4e58ff45fe996ed6dc092224a18bcfbb2a11f1b45e3ba1498c76177b0f99c040",
+        "status": "PASS",
+        "pdfHeader": "PASS"
+      },
+      {
+        "id": "visual_abstract",
+        "bytes": 559628,
+        "sha256": "4980e5a19c8dbf1ba1017ae526a51cce910e9ef2299c58e997842a20535ffac5",
+        "status": "PASS",
+        "pdfHeader": "PASS"
+      },
+      {
+        "id": "complete_suite",
+        "bytes": 97712378,
+        "sha256": "fb1ea67a9fdb49b527f6f5704a8bbeb3dfbcac42dd90140e716efa825d57b8d3",
+        "status": "PASS",
+        "zipEntries": 184,
+        "zipCrc": "PASS"
+      }
+    ]
+  },
+  "javascriptSyntax": {
+    "config.js": "PASS",
+    "keccak.js": "PASS",
+    "delivery.js": "PASS",
+    "app.js": "PASS",
+    "sw.js": "PASS"
   },
   "githubBrowserUpload": {
     "limitMiB": 25,
     "largestFile": "protected/a4_pdf.enc",
     "largestFileBytes": 18468835,
-    "filesOverLimit": [],
-    "fileCount": 40,
-    "status": "PASS"
+    "filesOverLimit": []
   },
-  "publicPlaintextProtectedFiles": [],
-  "contentKeyAbsentFromPublic": true,
-  "localLinksChecked": 7,
+  "zeroByteFilesExcludingNoJekyll": [],
   "missingLocalLinks": [],
-  "javascriptSyntax": {
-    "app.js": "PASS",
-    "config.js": "PASS",
-    "sw.js": "PASS"
-  },
-  "removedImageGenFirstFromWebCopy": true
+  "legacyRuntimeFindings": [],
+  "securityBoundary": "Client-side eligibility gate on public static hosting; no server-side confidentiality.",
+  "removedImageGenFirstFromUserFacingPage": true
 }

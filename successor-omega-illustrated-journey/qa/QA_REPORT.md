@@ -1,15 +1,22 @@
-# QA Report — Browser-upload-safe access edition v1.0.1
+# QA Report — Direct-wallet access edition v1.0.2
 
 **Status:** PASS
 
-- GitHub browser-upload limit target: 25 MiB per file
+- Worker-free direct wallet verification: PASS
+- AGIALPHA current direct-balance route: PASS
+- AGI Club current direct-owner route: PASS
+- Ineligible wallet fails closed: PASS
+- Domain-bound signed receipt: PASS
+- Periodic and event-driven revalidation: PASS
+- All five PDF payloads authenticated and opened from the original encrypted assets: PASS
+- Six-part Complete Suite reconstruction and ZIP CRC: PASS
+- JavaScript syntax: config.js PASS, keccak.js PASS, delivery.js PASS, app.js PASS, sw.js PASS
 - Largest repository file: `protected/a4_pdf.enc` — 18,468,835 bytes
-- Files above 25 MiB: 0
-- Public repository files: 40
-- Complete-suite encrypted parts: 6
-- Multipart reconstruction and whole-file SHA-256: PASS
-- Reconstructed ZIP CRC and entry scan: PASS
-- Protected plaintext files in public package: 0
+- Files above GitHub browser-upload target: 0
 - Missing local links: 0
-- JavaScript syntax: PASS
+- Legacy runtime/placeholder findings: 0
 - `ImageGen-first` present in user-facing page: no
+
+## Security boundary
+
+This mirrors the working Specialist ASI Training Toolkit's client-side wallet gate. GitHub Pages is a public static host; the gate is not server-side confidentiality or DRM. AES-GCM packaging provides authenticated delivery and corruption detection.

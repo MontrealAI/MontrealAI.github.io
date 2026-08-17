@@ -1,6 +1,6 @@
 # GitHub Browser Upload Guide
 
-This edition is designed for GitHub's browser uploader. Every repository file is below 25 MiB.
+The direct-wallet edition is designed for GitHub's browser uploader. Every repository file is below 25 MiB.
 
 ## What changed
 

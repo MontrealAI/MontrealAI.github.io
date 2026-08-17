@@ -1,15 +1,15 @@
 # Launch Checklist
 
-- [ ] production and preview KV namespaces created
-- [ ] namespace IDs inserted
-- [ ] RPC and content-key secrets set
-- [ ] allowed origin and app path exact
-- [ ] Worker dry-run and deployment pass
-- [ ] Worker URL inserted in `config.js`
-- [ ] no private secret or plaintext PDF in public repo
-- [ ] all six complete-suite encrypted parts uploaded without renaming
-- [ ] largest repository file remains below 25 MiB
-- [ ] GitHub Pages configured with Actions
-- [ ] both eligibility routes tested
-- [ ] account/network/session relocking tested
-- [ ] all protected files decrypt and match hashes
+- [ ] Upload the corrected root files or apply the Direct Gate Patch.
+- [ ] Confirm `keccak.js` and `delivery.js` are present beside `app.js`.
+- [ ] Confirm `config.js` contains no legacy broker setting or placeholder.
+- [ ] Confirm the GitHub Pages workflow succeeds.
+- [ ] Hard-refresh and unregister any older service worker if needed.
+- [ ] Test both eligibility routes and an ineligible wallet.
+- [ ] Test account/network-change relocking.
+- [ ] Open all five PDFs and reconstruct the six-part Complete Suite.
+- [ ] Confirm no wallet transaction, token approval or payment request appears.
+
+- [ ] Open `/reset.html` once after the first corrected deployment.
+
+- [ ] Open `/reset.html` once after the first corrected deployment.

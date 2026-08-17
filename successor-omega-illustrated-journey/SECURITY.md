@@ -1,7 +1,9 @@
 # Security Policy
 
-The public repository contains encrypted payloads, public IVs and hashes. The decryption key is stored only as a Cloudflare Worker secret. The Worker issues one-time challenges, verifies the wallet signature, rechecks current on-chain eligibility and creates a short-lived session.
+The access gate reads current Ethereum Mainnet state directly through the connected wallet provider and creates a domain-bound, expiring signed receipt. It never requests token approval, transfer, payment, staking, locking, burning, deposit, custody or transaction authority.
 
-The signed request states `Authority created: NONE`. Eligibility does not establish identity assurance, professional competence, corporate mandate, Chronicle admission or Successor Ω authority.
+Because GitHub Pages is a public static host, all client code and browser-delivery material are public. The gate is an eligibility and user-experience control, not server-side confidentiality or DRM. The packaged files remain AES-GCM authenticated so corruption is detected before delivery.
+
+Access does not establish identity assurance, professional competence, corporate mandate, Chronicle admission, Specialist ASI or Successor Ω authority.
 
 Report suspected vulnerabilities privately to `president@montreal.ai`.

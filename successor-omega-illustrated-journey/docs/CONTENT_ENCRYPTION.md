@@ -1,14 +1,9 @@
-# Content Encryption
+# Publication Packaging and Integrity
 
-Protected assets use AES-256-GCM with unique 96-bit IVs and 128-bit authentication tags. The public manifest records ciphertext and plaintext SHA-256 hashes, sizes, MIME types and authenticated data, but never the key.
+Protected publication assets remain packaged with AES-256-GCM, unique IVs, authenticated data and exact plaintext/ciphertext SHA-256 records. The large Complete Suite is divided into six independently authenticated parts below GitHub's browser-upload limit.
 
-Ordinary PDFs remain one encrypted object. The larger Complete Publication Suite uses six independently encrypted parts. Each part has its own IV, authenticated data, ciphertext hash, plaintext hash and exact byte count. The browser:
+After direct wallet eligibility verification, the browser downloads, authenticates, opens and hash-verifies the selected asset locally. The multipart Complete Suite is automatically reassembled into the original ZIP.
 
-1. downloads one part at a time;
-2. verifies its ciphertext hash;
-3. decrypts it locally after current eligibility is verified;
-4. verifies its plaintext hash;
-5. assembles the ordered plaintext parts into the original ZIP;
-6. checks the exact final byte count before delivery.
+## Important boundary
 
-This design keeps every public repository file below GitHub's browser-upload limit without exposing readable publication files.
+This is a public GitHub Pages deployment. The browser-delivery material is necessarily public and therefore is not a server-side secrecy boundary. Encryption here provides authenticated packaging, integrity verification and a smoother gated interface—not cryptographic exclusivity against a technically determined visitor.

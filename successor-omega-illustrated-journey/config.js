@@ -1,7 +1,7 @@
-/* Public configuration only. Never place private keys, RPC credentials or the content key here. */
+/* Public, browser-only configuration. No Worker or private RPC is required. */
 window.SUCCESSOR_OMEGA_CONFIG = Object.freeze({
   appId: 'successor-omega-illustrated-journey',
-  version: '1.0.1',
+  version: '1.0.2',
   edition: 'The Illustrated Guided Institutional Journey',
   releaseDate: '2026-08-16',
   ethereumChainId: '0x1',
@@ -12,14 +12,25 @@ window.SUCCESSOR_OMEGA_CONFIG = Object.freeze({
     decimals: 18,
     minimumWhole: '1000000'
   },
-  ens: { suffix: 'club.agi.eth' },
+  ens: {
+    suffix: 'club.agi.eth',
+    registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    nameWrappers: [
+      '0x0635513f179D50A207757E05759CbD106d7dFcE8',
+      '0xD4416b13d2b3a9aBae7AcD5D6C2BbDBE25686401'
+    ]
+  },
   access: {
-    /* Replace after deploying the separately packaged access Worker. */
-    brokerUrl: 'https://REPLACE-WITH-YOUR-WORKER.workers.dev',
-    sessionMinutes: 15,
+    mode: 'direct-browser-verification',
+    sessionMinutes: 30,
     revalidateMinutes: 5,
-    inactivityMinutes: 20,
-    requireBroker: true
+    inactivityMinutes: 20
+  },
+  delivery: {
+    manifest: 'protected/manifest.json',
+    materialSource: 'delivery.js',
+    encryptedAtRest: true,
+    serverSideConfidentiality: false
   },
   deployment: {
     expectedOrigin: 'https://montrealai.github.io',

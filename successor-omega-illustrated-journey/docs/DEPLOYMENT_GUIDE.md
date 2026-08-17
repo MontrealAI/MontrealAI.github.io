@@ -1,50 +1,35 @@
-# Deployment Guide
+# GitHub Pages Deployment Guide — No Worker Required
 
-The secure edition uses two components:
+## Replace the live repository
 
-1. **GitHub Pages** hosts the public gate and encrypted publication payloads.
-2. **Cloudflare Worker** verifies current wallet eligibility and supplies the short-lived decryption key.
+1. Extract the corrected GitHub Pages ZIP.
+2. Upload its contents to the root of `MONTREALAI/successor-omega-illustrated-journey`.
+3. Under **Settings → Pages**, select **GitHub Actions**.
+4. Wait for the Pages workflow to finish.
+5. Open the live page and perform a hard refresh: `Command + Shift + R`.
 
-A client-only gate cannot make plaintext files in a public repository exclusive. Do not place readable PDFs or ZIPs in the GitHub repository.
+The package contains `config.js`, `keccak.js`, `delivery.js`, `app.js` and an updated service worker. There is no legacy broker setting, Cloudflare Worker, KV namespace, private RPC or deployment secret.
 
-## Deploy the Worker
+## Existing repository: patch method
 
-```bash
-npm install
-npx wrangler login
-npx wrangler kv namespace create ACCESS_KV
-npx wrangler kv namespace create ACCESS_KV --preview
-```
-
-Paste the IDs into `wrangler.toml`, then:
-
-```bash
-npx wrangler secret put ETHEREUM_RPC_URL
-npx wrangler secret put CONTENT_KEY_B64
-npm run check
-npm run deploy
-```
-
-Use the exact content key in the private package.
-
-## Configure GitHub Pages
-
-Replace the placeholder `access.brokerUrl` in `config.js`. If the repository slug changes, update the Worker `APP_PATH` too.
-
-Create `MONTREALAI/successor-omega-illustrated-journey`, upload the public package to the repository root, then choose **GitHub Actions** under **Settings → Pages**.
-
-Suggested URL: `https://montrealai.github.io/successor-omega-illustrated-journey/`
-
-## Browser-safe multipart asset
-
-The encrypted Complete Publication Suite is divided into six parts below 20 MiB. The website automatically downloads, verifies, decrypts and reassembles them. Upload all six `complete_suite.part-*.enc` files and `protected/manifest.json`; do not rename or combine them.
-
-For detailed browser-upload steps, see `BROWSER_UPLOAD_GUIDE.md`.
+Upload the files from the Direct Gate Patch and choose **Replace** when GitHub reports existing paths. Do not delete or re-upload the `protected/` directory; its existing encrypted assets remain compatible.
 
 ## Acceptance tests
 
-Test both eligible routes, ineligible wallets, wrong network, account/network changes, session expiry, inactivity lock, every protected PDF and the multipart Complete Publication Suite download.
+- eligible AGIALPHA wallet;
+- ineligible AGIALPHA wallet;
+- eligible AGI Club label;
+- wrong label or former owner;
+- wrong network and network switching;
+- account/network change relock;
+- session expiry and inactivity lock;
+- Web, A4, Letter, Board Brief and Visual Abstract;
+- six-part Complete Suite reconstruction.
 
-## Never commit
+## One-time cache reset after replacing v1.0.1
 
-The content key, RPC credentials, Cloudflare credentials, `.dev.vars`, or decrypted files.
+Open `https://montrealai.github.io/successor-omega-illustrated-journey/reset.html` once. It unregisters the previous service worker, clears old caches and returns to the corrected edition.
+
+## One-time cache reset after replacing v1.0.1
+
+Open `https://montrealai.github.io/successor-omega-illustrated-journey/reset.html` once. It unregisters the previous service worker, clears old caches and returns to the corrected edition.

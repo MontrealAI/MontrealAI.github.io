@@ -1,31 +1,25 @@
 # Successor Ω — The Illustrated Guided Institutional Journey
-## Encrypted GitHub Pages access edition · Browser-upload-safe v1.0.1
+## GitHub Pages direct-wallet access edition · v1.0.2
 
-The public repository contains the access interface and AES-256-GCM ciphertext only. Readable publication files and the content key are not committed.
+This edition uses the same **browser-direct on-chain verification model** as the live Sovereign Specialist ASI Training Toolkit. It requires no Cloudflare Worker, no private RPC secret and no legacy broker setting configuration.
 
 ## Eligibility
 
-Access is granted when the signing Ethereum Mainnet wallet is either:
+The connected Ethereum Mainnet wallet must be either:
 
 1. the current direct owner of one exact single-label `*.club.agi.eth` name; or
 2. the current direct holder of at least 1,000,000 official AGIALPHA at `0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA`.
 
-No approval, transfer, payment, staking, locking, burning or custody is requested. Balances are not aggregated. Access creates no Successor Ω authority.
-
-## Browser-upload-safe protected assets
-
-The Complete Publication Suite is divided into six independently authenticated encrypted parts. The reader automatically downloads, verifies, decrypts and reassembles them into the original ZIP. Every public repository file is below 25 MiB.
-
-See `docs/BROWSER_UPLOAD_GUIDE.md`.
+The app reads current on-chain state through the connected wallet provider, then requests a readable, domain-bound sign-in receipt. It requests no approval, transfer, payment, staking, locking, burning, deposit or custody.
 
 ## Deployment
 
-1. Deploy the separately packaged Cloudflare access Worker.
-2. Set its private `ETHEREUM_RPC_URL` and `CONTENT_KEY_B64` secrets.
-3. Replace `access.brokerUrl` in `config.js`.
-4. Upload this folder to `MONTREALAI/successor-omega-illustrated-journey`.
-5. In GitHub **Settings → Pages**, select **GitHub Actions**.
+Upload this folder to `MONTREALAI/successor-omega-illustrated-journey`, enable GitHub Actions under **Settings → Pages**, and hard-refresh the published page. No second service is required.
 
-Suggested URL: `https://montrealai.github.io/successor-omega-illustrated-journey/`
+## GitHub browser uploader
 
-Never commit the private Worker package, content key, RPC credentials or decrypted files.
+Every repository file remains below 25 MiB. The Complete Suite is stored as six browser-safe authenticated parts and is reassembled automatically after access.
+
+## Security boundary
+
+GitHub Pages is a public static host. This edition provides the same client-side eligibility gate as the reference Toolkit; it does not provide server-side confidentiality. The AES-GCM packaging provides corruption detection and casual delivery separation, not a private-secret boundary. A recipient can retain or redistribute any file after opening it.
