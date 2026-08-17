@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://montreal.ai/schemas/goalos/IndependentProofDecision.v1.json",
+  "title":"GoalOS Independent Proof Decision",
+  "type":"object",
+  "required":["schema","run_id","mission_id","champion_id","verdict","authority_created","requires_accountable_admission","signature","signed_record_sha256"],
+  "properties":{
+    "schema":{"const":"GoalOS.IndependentProofDecision.v1"},
+    "authority_created":{"const":"NONE"},
+    "requires_accountable_admission":{"const":true},
+    "signature":{"type":"object","required":["scheme","purpose","key_id","value"],"properties":{"scheme":{"const":"HMAC-SHA256"},"value":{"type":"string","pattern":"^[0-9a-f]{64}$"}}},
+    "signed_record_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+  },
+  "additionalProperties":true
+}

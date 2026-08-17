@@ -1,0 +1,87 @@
+{
+  "schema": "GoalOS.AlgorithmRoute.v1",
+  "mission_id": "building_operations",
+  "features": {
+    "mission_id": "building_operations",
+    "name": "Portfolio Building Operations",
+    "description": "Diagnose hidden equipment faults, acquire decisive evidence and select a safe bounded intervention.",
+    "state_type": "discrete",
+    "action_type": "discrete",
+    "partial_observability": 0.9,
+    "delayed_rewards": 0.75,
+    "historical_data": 0.75,
+    "simulator_fidelity": 0.86,
+    "feedback_speed": 0.85,
+    "safety_criticality": 0.95,
+    "multiagent_need": 0.7,
+    "formal_rules": 0.55,
+    "transfer_difficulty": 0.72,
+    "max_steps": 7,
+    "formation_episodes": 500,
+    "fresh_cases": 280,
+    "transfer_cases": 140
+  },
+  "selected_core_algorithms": [
+    "incumbent",
+    "rules",
+    "behavior_clone",
+    "shielded_muzero",
+    "muzero_lite",
+    "dyna_q",
+    "q_learning"
+  ],
+  "scores": {
+    "shielded_muzero": 0.83,
+    "muzero_lite": 0.8274,
+    "behavior_clone": 0.7,
+    "rules": 0.6525,
+    "dyna_q": 0.585,
+    "q_learning": 0.4225,
+    "incumbent": 0.15
+  },
+  "reasons": [
+    "Historical experience is abundant, supporting behaviour cloning and offline-learning baselines.",
+    "Sequential consequences and a credible simulator justify testing MuZero-style latent planning.",
+    "Safety criticality requires an external action shield and non-compensable proof gates.",
+    "The mission benefits from separated Producer, Critic, Verifier, Governor and Principal roles; a MAPPO adapter is recommended for a protected compute deployment."
+  ],
+  "optional_production_adapters": [
+    {
+      "id": "rllib_ppo",
+      "status": "optional",
+      "when": "large-scale sequential policy learning",
+      "dependency": "ray[rllib]"
+    },
+    {
+      "id": "rllib_sac",
+      "status": "optional",
+      "when": "continuous control",
+      "dependency": "ray[rllib]"
+    },
+    {
+      "id": "rllib_iql_cql",
+      "status": "optional",
+      "when": "offline logs and unsafe exploration",
+      "dependency": "ray[rllib]"
+    },
+    {
+      "id": "mctx_muzero",
+      "status": "optional",
+      "when": "JAX-native neural MuZero/Gumbel MuZero search",
+      "dependency": "jax,mctx"
+    },
+    {
+      "id": "pettingzoo_mappo",
+      "status": "optional",
+      "when": "multi-agent specialist coordination",
+      "dependency": "pettingzoo,ray[rllib]"
+    },
+    {
+      "id": "dreamerv3",
+      "status": "optional",
+      "when": "continuous or visual world-model control",
+      "dependency": "ray[rllib] or external DreamerV3 implementation"
+    }
+  ],
+  "governing_rule": "The router proposes a diverse experiment portfolio. It does not authorize promotion or authority."
+}

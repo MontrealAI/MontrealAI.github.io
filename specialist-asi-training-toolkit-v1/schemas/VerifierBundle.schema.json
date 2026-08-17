@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://montreal.ai/schemas/GoalOS.VerifierBundle.v2.json",
+  "title":"GoalOS Verifier Bundle v2",
+  "type":"object",
+  "required":["schema","mission_id","verifiers","separation","bundle_sha256"],
+  "properties":{
+    "schema":{"const":"GoalOS.VerifierBundle.v2"},
+    "mission_id":{"type":"string","minLength":1},
+    "emphasis":{"type":"string"},
+    "verifiers":{"type":"array","minItems":1,"items":{"type":"object","required":["verifier_id","name","verifier_class","independent"]}},
+    "separation":{"type":"object","required":["candidate_controls_authoritative_verifier","fresh_proof_uses_independent_bundle"]},
+    "bundle_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+  }
+}

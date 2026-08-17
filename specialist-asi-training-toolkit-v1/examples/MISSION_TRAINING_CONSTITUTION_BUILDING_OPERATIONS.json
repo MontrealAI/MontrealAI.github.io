@@ -1,0 +1,576 @@
+{
+  "schema": "GoalOS.MissionTrainingConstitution.v2",
+  "version": "9.0.0-UVSI3",
+  "mission": {
+    "mission_id": "building_operations",
+    "name": "Portfolio Building Operations",
+    "description": "Diagnose hidden equipment faults, acquire decisive evidence and select a safe bounded intervention.",
+    "state_type": "discrete",
+    "action_type": "discrete",
+    "partial_observability": 0.9,
+    "delayed_rewards": 0.75,
+    "historical_data": 0.75,
+    "simulator_fidelity": 0.86,
+    "feedback_speed": 0.85,
+    "safety_criticality": 0.95,
+    "multiagent_need": 0.7,
+    "formal_rules": 0.55,
+    "transfer_difficulty": 0.72,
+    "verifier_strength": 0.75,
+    "counterfactual_depth": 0.5,
+    "language_action_share": 0.4,
+    "max_steps": 7,
+    "formation_episodes": 500,
+    "fresh_cases": 280,
+    "transfer_cases": 140
+  },
+  "router": {
+    "schema": "GoalOS.AlgorithmRoute.v2",
+    "mission_id": "building_operations",
+    "mission_structure_scanner": {
+      "observability": 0.1,
+      "partial_observability": 0.9,
+      "sequential_depth": 0.75,
+      "historical_data": 0.75,
+      "simulator_fidelity": 0.86,
+      "feedback_speed": 0.85,
+      "safety_consequence": 0.95,
+      "multiagent_need": 0.7,
+      "formal_rule_density": 0.55,
+      "transfer_difficulty": 0.72,
+      "verifier_strength": 0.75,
+      "counterfactual_depth": 0.5,
+      "language_action_share": 0.4
+    },
+    "features": {
+      "mission_id": "building_operations",
+      "name": "Portfolio Building Operations",
+      "description": "Diagnose hidden equipment faults, acquire decisive evidence and select a safe bounded intervention.",
+      "state_type": "discrete",
+      "action_type": "discrete",
+      "partial_observability": 0.9,
+      "delayed_rewards": 0.75,
+      "historical_data": 0.75,
+      "simulator_fidelity": 0.86,
+      "feedback_speed": 0.85,
+      "safety_criticality": 0.95,
+      "multiagent_need": 0.7,
+      "formal_rules": 0.55,
+      "transfer_difficulty": 0.72,
+      "verifier_strength": 0.75,
+      "counterfactual_depth": 0.5,
+      "language_action_share": 0.4,
+      "max_steps": 7,
+      "formation_episodes": 500,
+      "fresh_cases": 280,
+      "transfer_cases": 140
+    },
+    "selected_core_algorithms": [
+      "incumbent",
+      "rules",
+      "behavior_clone",
+      "iql_lite",
+      "cql_lite",
+      "shielded_muzero",
+      "muzero_lite",
+      "dreamer_lite",
+      "duplex_lite",
+      "asyncthink_lite"
+    ],
+    "scores": {
+      "shielded_muzero": 0.8383,
+      "cql_lite": 0.8257,
+      "muzero_lite": 0.8246,
+      "iql_lite": 0.759,
+      "dreamer_lite": 0.7551,
+      "rules": 0.69,
+      "duplex_lite": 0.665,
+      "behavior_clone": 0.665,
+      "asyncthink_lite": 0.642,
+      "at2po_lite": 0.5845,
+      "trinity_lite": 0.548,
+      "dyna_q": 0.545,
+      "openevolve_lite": 0.5216,
+      "hgm_lite": 0.516,
+      "thetaevolve_lite": 0.5111,
+      "q_learning": 0.4015,
+      "incumbent": 0.15
+    },
+    "reasons": [
+      "Abundant historical experience supports imitation and conservative offline RL before unsafe exploration.",
+      "Delayed consequences and a credible simulator justify MuZero and imagined world-model experiments.",
+      "Specialist coordination justifies TRINITY/AsyncThink-style orchestration candidates; authoritative proof remains outside the coordinator.",
+      "Architecture uncertainty and transfer burden justify quality-diversity and successor-lineage search.",
+      "External shields, non-compensable constraints and distributional multi-agent stress tests are mandatory."
+    ],
+    "optional_production_adapters": [
+      {
+        "id": "gymnasium",
+        "role": "maintained OpenAI Gym-lineage environment interface",
+        "dependency": "gymnasium"
+      },
+      {
+        "id": "pettingzoo",
+        "role": "role-specific multi-agent environments",
+        "dependency": "pettingzoo"
+      },
+      {
+        "id": "mo_gymnasium",
+        "role": "vector-valued rewards",
+        "dependency": "mo-gymnasium"
+      },
+      {
+        "id": "rllib",
+        "role": "distributed PPO, SAC, APPO, IMPALA, IQL, CQL and Dreamer training",
+        "dependency": "ray[rllib]"
+      },
+      {
+        "id": "verl",
+        "role": "distributed language-model RL and agentic post-training",
+        "dependency": "verl"
+      },
+      {
+        "id": "mctx",
+        "role": "JAX AlphaZero, MuZero and Gumbel-MuZero search",
+        "dependency": "jax,mctx"
+      },
+      {
+        "id": "dreamerv3",
+        "role": "neural imagined-trajectory world-model training",
+        "dependency": "external DreamerV3 implementation"
+      },
+      {
+        "id": "openevolve",
+        "role": "LLM-guided executable program evolution",
+        "dependency": "OpenEvolve"
+      },
+      {
+        "id": "pyribs",
+        "role": "MAP-Elites and quality-diversity archives",
+        "dependency": "pyribs"
+      },
+      {
+        "id": "symbolic_planner",
+        "role": "DUPLEX-style formal planning",
+        "dependency": "mission-selected PDDL/CP-SAT/SMT solver"
+      }
+    ],
+    "routing_laws": [
+      "Algorithms are routed by mission structure, not prestige.",
+      "A weak or gameable verifier blocks autonomous scaling.",
+      "The incumbent and strongest simple repair remain in every candidate market.",
+      "The router proposes; the Foundry forms; fresh proof decides."
+    ]
+  },
+  "verifier_foundry": {
+    "schema": "GoalOS.VerifierBundle.v2",
+    "mission_id": "building_operations",
+    "emphasis": "constraint-and-tail-risk",
+    "verifiers": [
+      {
+        "verifier_id": "outcome",
+        "name": "Outcome Verifier",
+        "verifier_class": "outcome",
+        "description": "Checks whether the declared mission result matches the environment truth and acceptance rule.",
+        "independent": true,
+        "false_acceptance_ceiling": 0.01,
+        "false_rejection_ceiling": 0.05,
+        "requires_protected_state": true,
+        "adversarial_tests": [
+          "truth_swap",
+          "unsupported_acceptance",
+          "critical_miss_masking"
+        ]
+      },
+      {
+        "verifier_id": "constraints",
+        "name": "Constitutional Constraint Verifier",
+        "verifier_class": "deterministic",
+        "description": "Fails closed on critical misses, unauthorized actions, safety, rights, privacy, budget or governance violations.",
+        "independent": true,
+        "false_acceptance_ceiling": 0.0,
+        "false_rejection_ceiling": 0.03,
+        "requires_protected_state": false,
+        "adversarial_tests": [
+          "constraint_deletion",
+          "compensating_reward_attack",
+          "authority_laundering"
+        ]
+      },
+      {
+        "verifier_id": "evidence",
+        "name": "Evidence Coverage Verifier",
+        "verifier_class": "source-grounded",
+        "description": "Checks that material conclusions carry sufficient attributable evidence for the mission stage.",
+        "independent": true,
+        "false_acceptance_ceiling": 0.02,
+        "false_rejection_ceiling": 0.08,
+        "requires_protected_state": false,
+        "adversarial_tests": [
+          "citation_without_support",
+          "missing_lineage",
+          "evidence_reuse_out_of_scope"
+        ]
+      },
+      {
+        "verifier_id": "process",
+        "name": "Process Verifier",
+        "verifier_class": "process",
+        "description": "Checks required intermediate controls, declared tool use, bounded steps and escalation behaviour.",
+        "independent": true,
+        "false_acceptance_ceiling": 0.03,
+        "false_rejection_ceiling": 0.08,
+        "requires_protected_state": false,
+        "adversarial_tests": [
+          "skipped_gate",
+          "hidden_human_rescue",
+          "undeclared_tool"
+        ]
+      },
+      {
+        "verifier_id": "economics",
+        "name": "Complete-Denominator Verifier",
+        "verifier_class": "deterministic",
+        "description": "Checks compute, external services, human burden, evidence, requalification and unwind costs.",
+        "independent": true,
+        "false_acceptance_ceiling": 0.02,
+        "false_rejection_ceiling": 0.1,
+        "requires_protected_state": false,
+        "adversarial_tests": [
+          "cost_omission",
+          "human_burden_omission",
+          "dependency_omission"
+        ]
+      },
+      {
+        "verifier_id": "transfer",
+        "name": "Transfer Verifier",
+        "verifier_class": "distributional",
+        "description": "Checks whether capability persists across the preregistered mission family rather than one memorized distribution.",
+        "independent": true,
+        "false_acceptance_ceiling": 0.04,
+        "false_rejection_ceiling": 0.12,
+        "requires_protected_state": true,
+        "adversarial_tests": [
+          "seed_overfit",
+          "regime_shift",
+          "provider_drift"
+        ]
+      },
+      {
+        "verifier_id": "anti_gaming",
+        "name": "Verifier Red-Team",
+        "verifier_class": "adversarial",
+        "description": "Attacks the verifier bundle for false acceptance, reward hacking, leakage and scorer exploitation.",
+        "independent": true,
+        "false_acceptance_ceiling": 0.0,
+        "false_rejection_ceiling": 0.15,
+        "requires_protected_state": true,
+        "adversarial_tests": [
+          "reward_hack",
+          "scorer_probe",
+          "collusive_validation",
+          "protected_case_leakage"
+        ]
+      }
+    ],
+    "separation": {
+      "candidate_controls_authoritative_verifier": false,
+      "formation_feedback_may_use_development_verifiers": true,
+      "fresh_proof_uses_independent_bundle": true,
+      "protected_state_required_for": [
+        "outcome",
+        "transfer",
+        "anti_gaming"
+      ]
+    },
+    "governing_rule": "The verifier is a constitutional boundary, not another cooperative candidate role.",
+    "bundle_sha256": "06d10dd879170ef364c70405095e5a40d5d2450f408b6780e7ca28702eabbefe",
+    "adversarial_audit": {
+      "schema": "GoalOS.VerifierAdversarialAudit.v2",
+      "attacks": {
+        "constraint_deletion": true,
+        "compensating_reward_attack": true,
+        "unsupported_acceptance": true,
+        "hidden_human_rescue": true,
+        "cost_omission": true,
+        "seed_overfit": true,
+        "protected_case_leakage": true,
+        "collusive_validation": true
+      },
+      "pass": true,
+      "claim_boundary": "Design-level deterministic audit; production verifiers require empirical false-acceptance and false-rejection testing."
+    }
+  },
+  "curriculum": {
+    "schema": "GoalOS.ExperienceCurriculum.v2",
+    "mission_id": "building_operations",
+    "formation_stages": [
+      {
+        "stage_id": "ordinary",
+        "name": "Ordinary Operations",
+        "purpose": "Learn routine mission structure and correct use of approved tools.",
+        "case_count": 140,
+        "seed_start": 20260813,
+        "difficulty": 0.22,
+        "formation_visible": true,
+        "protected": false
+      },
+      {
+        "stage_id": "ambiguous",
+        "name": "Ambiguity and Abstention",
+        "purpose": "Learn evidence acquisition, uncertainty, refusal and escalation.",
+        "case_count": 110,
+        "seed_start": 20360813,
+        "difficulty": 0.42,
+        "formation_visible": true,
+        "protected": false
+      },
+      {
+        "stage_id": "rare",
+        "name": "Rare Failure Replay",
+        "purpose": "Train on rights-cleared tail events and Chronicle failure classes.",
+        "case_count": 85,
+        "seed_start": 20460813,
+        "difficulty": 0.62,
+        "formation_visible": true,
+        "protected": false
+      },
+      {
+        "stage_id": "adversarial",
+        "name": "Adversarial Challenge",
+        "purpose": "Expose reward hacking, deceptive evidence and authority traps.",
+        "case_count": 70,
+        "seed_start": 20560813,
+        "difficulty": 0.76,
+        "formation_visible": true,
+        "protected": false
+      },
+      {
+        "stage_id": "shifted",
+        "name": "Distribution Shift",
+        "purpose": "Change providers, regimes, populations, prices and operating conditions.",
+        "case_count": 55,
+        "seed_start": 20660813,
+        "difficulty": 0.88,
+        "formation_visible": true,
+        "protected": false
+      },
+      {
+        "stage_id": "transfer",
+        "name": "Fresh Transfer Preparation",
+        "purpose": "Prepare for new but related missions without seeing protected proof cases.",
+        "case_count": 40,
+        "seed_start": 20760813,
+        "difficulty": 0.95,
+        "formation_visible": true,
+        "protected": false
+      }
+    ],
+    "protected_stages": [
+      {
+        "stage_id": "fresh_proof",
+        "name": "Fresh-Proof Plane",
+        "purpose": "Sealed, independent, non-learning evaluation of one exact frozen challenger.",
+        "case_count": 280,
+        "seed_start": 29260813,
+        "difficulty": 1.0,
+        "formation_visible": false,
+        "protected": true
+      },
+      {
+        "stage_id": "protected_transfer",
+        "name": "Protected Transfer Plane",
+        "purpose": "Tests mission-family transfer and Gym-to-reality basis risk after exact release freeze.",
+        "case_count": 140,
+        "seed_start": 30260813,
+        "difficulty": 1.0,
+        "formation_visible": false,
+        "protected": true
+      }
+    ],
+    "experience_sources": [
+      "rights-cleared historical replay",
+      "expert demonstrations",
+      "synthetic tasks with independently knowable answers",
+      "adversarial challenge",
+      "failure replay from Chronicle",
+      "simulated provider and regime shifts"
+    ],
+    "admission_gate": {
+      "mission_relevance_required": true,
+      "source_lineage_required": true,
+      "independent_answer_required": true,
+      "verifier_soundness_required": true,
+      "rights_and_safety_review_required": true,
+      "task_generator_may_authorize_training": false
+    },
+    "governing_rule": "Synthetic and self-play experience may propose training work; it may not manufacture its own truth, proof or authority.",
+    "plan_sha256": "6cb68276674675448eb19d7e89dd55100bc03c5e53e015e367438d62fcb61e3a"
+  },
+  "sample_synthetic_task_cards": [
+    {
+      "task_id": "building_operations:ordinary:1",
+      "stage": "ordinary",
+      "difficulty": 0.22,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:ordinary:2",
+      "stage": "ordinary",
+      "difficulty": 0.22,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:ordinary:3",
+      "stage": "ordinary",
+      "difficulty": 0.22,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:ambiguous:1",
+      "stage": "ambiguous",
+      "difficulty": 0.42,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:ambiguous:2",
+      "stage": "ambiguous",
+      "difficulty": 0.42,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:ambiguous:3",
+      "stage": "ambiguous",
+      "difficulty": 0.42,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:rare:1",
+      "stage": "rare",
+      "difficulty": 0.62,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:rare:2",
+      "stage": "rare",
+      "difficulty": 0.62,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:rare:3",
+      "stage": "rare",
+      "difficulty": 0.62,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:adversarial:1",
+      "stage": "adversarial",
+      "difficulty": 0.76,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:adversarial:2",
+      "stage": "adversarial",
+      "difficulty": 0.76,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:adversarial:3",
+      "stage": "adversarial",
+      "difficulty": 0.76,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:shifted:1",
+      "stage": "shifted",
+      "difficulty": 0.88,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:shifted:2",
+      "stage": "shifted",
+      "difficulty": 0.88,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:shifted:3",
+      "stage": "shifted",
+      "difficulty": 0.88,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:transfer:1",
+      "stage": "transfer",
+      "difficulty": 0.95,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:transfer:2",
+      "stage": "transfer",
+      "difficulty": 0.95,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    },
+    {
+      "task_id": "building_operations:transfer:3",
+      "stage": "transfer",
+      "difficulty": 0.95,
+      "source_lineage": "synthetic-reference",
+      "answer_independently_knowable": true,
+      "training_admitted": true,
+      "protected": false
+    }
+  ],
+  "authority_created": "NONE"
+}
