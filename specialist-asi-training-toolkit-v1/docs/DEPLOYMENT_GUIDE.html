@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07172d"><title>Deployment Guide · GoalOS v9</title><style>
+:root{--navy:#07172d;--navy2:#0d2a46;--gold:#c79a2b;--ivory:#fbf7ee;--ink:#10243a;--green:#167552;--red:#9f3b35}*{box-sizing:border-box}body{margin:0;background:var(--ivory);color:var(--ink);font-family:Inter,Arial,sans-serif;line-height:1.62}header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:white;border-bottom:3px solid var(--gold);padding:46px 7vw}header .k{color:#e5ba54;font-weight:900;letter-spacing:.14em;text-transform:uppercase}h1,h2,h3{font-family:Georgia,serif}h1{font-size:clamp(38px,5vw,64px);line-height:1.05;margin:.2em 0}main{max-width:1100px;margin:auto;padding:38px 24px 72px}nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}nav a{display:inline-block;border:1px solid #d8b553;border-radius:9px;padding:9px 13px;text-decoration:none;background:#fff;color:var(--navy);font-weight:800}main>h1:first-child{display:none}h2{margin-top:1.5em;border-bottom:1px solid #d8b553;padding-bottom:.25em}blockquote{background:var(--navy);color:#fff;border-left:6px solid var(--gold);margin:18px 0;padding:18px 20px;border-radius:8px;font:700 18px Georgia,serif}table{width:100%;border-collapse:collapse;background:#fff}th,td{border:1px solid #e8ddbf;padding:10px;text-align:left;vertical-align:top}th{background:#f2e6bf}code{background:#efe5c8;padding:2px 5px;border-radius:4px}pre{background:#07172d;color:#f7e6b8;border-radius:8px;padding:16px;overflow:auto}pre code{background:transparent;padding:0}a{color:#0b4b7a}footer{border-top:1px solid #d9c99b;text-align:center;padding:24px;color:#65717b}@media(max-width:760px){header{padding:34px 22px}main{padding:28px 18px 56px}}
+</style></head><body><header><div class="k">Version 9.0.0-UVSI3</div><h1>Deployment Guide</h1><p>GitHub Pages, local Foundry, independent proof and production boundary</p><nav><a href="../index.html">Open Toolkit</a><a href="QUICK_START.html">Quick Start</a><a href="THE_COMPLETE_SYSTEM.html">Complete System</a><a href="PRODUCTION_DEPLOYMENT.html">Production Deployment</a><a href="RELEASE_NOTES.html">Release Notes</a></nav></header><main><h1 id="goalos-v900-uvsi3--production-deployment-guide">GoalOS
+v9.0.0-UVSI3 — Production Deployment Guide</h1>
+<h2 id="a-github-pages-public-institution">A. GitHub Pages public
+institution</h2>
+<ol type="1">
+<li>Extract the <code>GoalOS_UVSI3_v9_0_0_GITHUB_PAGES.zip</code>
+package.</li>
+<li>Upload its <strong>contents</strong> to the repository root,
+including <code>.github/</code> and <code>.nojekyll</code>.</li>
+<li>Confirm that every extracted file is below 25 MiB.</li>
+<li>In <strong>Settings → Pages</strong>, choose <strong>GitHub
+Actions</strong>.</li>
+<li>Wait for the included workflow to deploy.</li>
+<li>Visit <code>/reset.html</code> once when replacing a prior
+service-worker release.</li>
+<li>Test both wallet routes using a wallet-enabled browser on Ethereum
+Mainnet.</li>
+</ol>
+<p>The public application verifies current direct eligibility and
+creates a bounded signed access receipt. It is a public static control
+surface, not confidential DRM or a protected proof plane.</p>
+<h2 id="b-local-synthetic-foundry">B. Local synthetic Foundry</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> toolkit</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./START_MAC.command</span>       <span class="co"># macOS</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./START_LINUX.sh</span>          <span class="co"># Linux</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows: START_WINDOWS.bat</span></span></code></pre></div>
+<p>The service binds to <code>127.0.0.1:8788</code>. The GitHub Pages
+application can connect to the loopback service without exposing it
+publicly.</p>
+<h2 id="c-independent-proof-plane">C. Independent proof plane</h2>
+<p>Run the proof worker from <code>independent-proof-plane/</code>
+against an exact frozen cycle record. In real deployments, protected
+cases, scorer internals, signing credentials and release authority must
+remain physically and organizationally separate from formation.</p>
+<h2 id="d-production-institution">D. Production institution</h2>
+<p>A real deployment additionally requires:</p>
+<ul>
+<li>organizational identity and role separation;</li>
+<li>server-side authorization and least privilege;</li>
+<li>protected evidence custody and secrets management;</li>
+<li>immutable or append-only receipts and release signing;</li>
+<li>rights, privacy, security, professional and legal review;</li>
+<li>action gateways enforcing scope, spend, expiry and prohibited
+systems;</li>
+<li>monitoring, incident response, tested rollback and known-good
+fallback;</li>
+<li>independent realized-value calculation and dated
+requalification.</li>
+</ul>
+<h2 id="e-post-deployment-acceptance">E. Post-deployment acceptance</h2>
+<ul>
+<li><code>/index.html</code>, <code>config.js</code>, executable JS and
+JSON are network-first.</li>
+<li><code>/reset.html</code> clears stale caches and service
+workers.</li>
+<li>account, network, eligibility loss, expiry and inactivity relock
+access.</li>
+<li>eligible AGI Club owner and qualifying AGIALPHA wallet succeed.</li>
+<li>ineligible wallet, wrong network, expired name and insufficient
+balance fail closed.</li>
+<li>no approval or transaction request appears.</li>
+</ul>
+</main><footer>MONTREAL.AI · QUEBEC.AI · Mission first. Proof above claim. Authority is accountable.</footer></body></html>
