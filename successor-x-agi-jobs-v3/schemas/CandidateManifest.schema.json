@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Candidate Successor Manifest",
+  "required": [
+    "schema",
+    "missionId",
+    "releaseId",
+    "policyStateSha256",
+    "verifierBundleSha256",
+    "learningPermittedAfterFreeze",
+    "rollbackTarget",
+    "authorityCreated",
+    "manifestSha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.CandidateManifest.v3"
+    },
+    "releaseId": {
+      "type": "string"
+    },
+    "policyStateSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "verifierBundleSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "learningPermittedAfterFreeze": {
+      "const": false
+    },
+    "authorityCreated": {
+      "const": "NONE"
+    },
+    "manifestSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "$id": "CandidateManifest.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

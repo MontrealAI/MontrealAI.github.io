@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Authority Envelope",
+  "required": [
+    "schema",
+    "missionId",
+    "releaseId",
+    "state",
+    "level",
+    "allowedActions",
+    "prohibitedActions",
+    "spendLimit",
+    "externalActionLimit",
+    "rollbackTarget",
+    "signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.AuthorityEnvelope.v3"
+    },
+    "state": {
+      "enum": [
+        "ACTIVE",
+        "IMPAIRED",
+        "EXPIRED",
+        "REVOKED"
+      ]
+    },
+    "allowedActions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "prohibitedActions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "spendLimit": {
+      "type": "number",
+      "minimum": 0
+    },
+    "externalActionLimit": {
+      "type": "number",
+      "minimum": 0
+    },
+    "signature": {
+      "$ref": "#/$defs/signature"
+    }
+  },
+  "$id": "AuthorityEnvelope.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

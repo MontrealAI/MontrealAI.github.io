@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Access Receipt",
+  "required": [
+    "schema",
+    "appId",
+    "version",
+    "route",
+    "wallet",
+    "chainId",
+    "issuedAt",
+    "expiresAt",
+    "authorityCreated",
+    "message",
+    "signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.AccessReceipt.v3"
+    },
+    "version": {
+      "const": "3.0.0"
+    },
+    "route": {
+      "enum": [
+        "AGI_CLUB_DIRECT_OWNER",
+        "AGIALPHA_DIRECT_BALANCE"
+      ]
+    },
+    "wallet": {
+      "type": "string",
+      "pattern": "^0x[0-9a-fA-F]{40}$"
+    },
+    "chainId": {
+      "const": "0x1"
+    },
+    "authorityCreated": {
+      "const": "NONE"
+    }
+  },
+  "$id": "AccessReceipt.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

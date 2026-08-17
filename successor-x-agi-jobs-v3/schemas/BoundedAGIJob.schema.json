@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Bounded AGI Job",
+  "required": [
+    "schema",
+    "jobId",
+    "family",
+    "missionId",
+    "objective",
+    "prohibitedActions",
+    "evidenceObligations",
+    "rollbackTarget",
+    "authorityCreated"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.BoundedAGIJob.v3"
+    },
+    "jobId": {
+      "type": "string"
+    },
+    "family": {
+      "enum": [
+        "constitution",
+        "evidence",
+        "formation",
+        "challenge",
+        "verification",
+        "admission",
+        "renewal"
+      ]
+    },
+    "missionId": {
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "prohibitedActions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidenceObligations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rollbackTarget": {
+      "type": "string"
+    },
+    "authorityCreated": {
+      "const": "NONE"
+    }
+  },
+  "$id": "BoundedAGIJob.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

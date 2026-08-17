@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Independent Fresh Proof",
+  "required": [
+    "schema",
+    "missionId",
+    "candidateReleaseId",
+    "protectedCaseCommitment",
+    "proofPlane",
+    "learningCallsDuringProof",
+    "hardGates",
+    "verdict",
+    "authorityCreated",
+    "requiresSeparateAdmission",
+    "signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.IndependentFreshProof.v3"
+    },
+    "protectedCaseCommitment": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "proofPlane": {
+      "type": "string"
+    },
+    "learningCallsDuringProof": {
+      "const": 0
+    },
+    "hardGates": {
+      "type": "object"
+    },
+    "authorityCreated": {
+      "const": "NONE"
+    },
+    "requiresSeparateAdmission": {
+      "const": true
+    },
+    "signature": {
+      "$ref": "#/$defs/signature"
+    }
+  },
+  "$id": "IndependentFreshProof.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

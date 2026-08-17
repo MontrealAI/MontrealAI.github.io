@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Requalification Record",
+  "required": [
+    "schema",
+    "missionId",
+    "previousReleaseId",
+    "newReleaseId",
+    "rollbackExecuted",
+    "proofInherited",
+    "authorityInherited",
+    "tests",
+    "verdict",
+    "signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.RequalificationRecord.v3"
+    },
+    "rollbackExecuted": {
+      "const": true
+    },
+    "proofInherited": {
+      "const": false
+    },
+    "authorityInherited": {
+      "const": false
+    },
+    "verdict": {
+      "const": "REQUALIFICATION_TEST_PASS"
+    },
+    "signature": {
+      "$ref": "#/$defs/signature"
+    }
+  },
+  "$id": "RequalificationRecord.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

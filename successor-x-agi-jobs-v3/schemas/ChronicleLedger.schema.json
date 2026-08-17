@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Chronicle Ledger",
+  "required": [
+    "schema",
+    "missionId",
+    "events",
+    "headHash",
+    "rule",
+    "signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.ChronicleLedger.v3"
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "index",
+          "type",
+          "at",
+          "previousHash",
+          "payloadSha256",
+          "hash"
+        ]
+      }
+    },
+    "headHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "signature": {
+      "$ref": "#/$defs/signature"
+    }
+  },
+  "$id": "ChronicleLedger.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Accountable Admission",
+  "required": [
+    "schema",
+    "missionId",
+    "candidateReleaseId",
+    "proofSha256",
+    "decision",
+    "authorityCeiling",
+    "rollbackTarget",
+    "admitterIndependentOfProducer",
+    "admitterIndependentOfVerifier",
+    "signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.AccountableAdmission.v3"
+    },
+    "decision": {
+      "enum": [
+        "ADMIT",
+        "ADMIT_WITH_LIMITS",
+        "REPAIR",
+        "HOLD",
+        "REJECT",
+        "STOP"
+      ]
+    },
+    "admitterIndependentOfProducer": {
+      "const": true
+    },
+    "admitterIndependentOfVerifier": {
+      "const": true
+    },
+    "signature": {
+      "$ref": "#/$defs/signature"
+    }
+  },
+  "$id": "AccountableAdmission.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Successor \u03a9 Mission Constitution",
+  "required": [
+    "schema",
+    "missionId",
+    "version",
+    "objective",
+    "hardGates",
+    "authorityCeiling",
+    "fallback",
+    "constitutionSha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.MissionConstitution.v3"
+    },
+    "missionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "const": "3.0.0"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "hardGates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "authorityCeiling": {
+      "type": "string"
+    },
+    "fallback": {
+      "type": "string"
+    },
+    "constitutionSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "$id": "MissionConstitution.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

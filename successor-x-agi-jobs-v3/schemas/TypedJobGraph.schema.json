@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": true,
+  "title": "Typed AGI Job Graph",
+  "required": [
+    "schema",
+    "missionId",
+    "jobs",
+    "edges",
+    "coverage",
+    "compiler",
+    "authorityCreated",
+    "graphSha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "SuccessorOmega.TypedJobGraph.v3"
+    },
+    "jobs": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "$ref": "BoundedAGIJob.schema.json"
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "type"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "evidence",
+              "control",
+              "challenge",
+              "rollback",
+              "invalidation"
+            ]
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "array",
+      "contains": {
+        "const": "renewal"
+      }
+    },
+    "authorityCreated": {
+      "const": "NONE"
+    },
+    "graphSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "$id": "TypedJobGraph.schema.json",
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "required": [
+        "scheme",
+        "purpose",
+        "keyId",
+        "signedPayloadSha256",
+        "valueBase64"
+      ],
+      "properties": {
+        "scheme": {
+          "const": "Ed25519"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "keyId": {
+          "type": "string"
+        },
+        "signedPayloadSha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "valueBase64": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

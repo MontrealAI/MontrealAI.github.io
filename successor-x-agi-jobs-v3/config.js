@@ -1,0 +1,31 @@
+window.VSI3_CONFIG=Object.freeze({
+  appId:'successor-omega-agi-jobs-v3',
+  version:'3.0.0',
+  edition:'First Executable Proof-Bearing Reference Cycle',
+  ethereumChainId:'0x1',
+  ethereumChainName:'Ethereum Mainnet',
+  token:{
+    symbol:'AGIALPHA',
+    contract:'0xA61a3B3a130a9c20768EEBF97E21515A6046a1fA',
+    decimals:18,
+    minimumWhole:'1000000'
+  },
+  ens:{
+    suffix:'club.agi.eth',
+    registry:'0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    nameWrappers:[
+      '0x0635513f179D50A207757E05759CbD106d7dFcE8',
+      '0xD4416b13d2b3a9aBae7AcD5D6C2BbDBE25686401'
+    ]
+  },
+  contracts:{
+    agiJobManagerPrime:'0xF8fc6572098DDcAc4560E17cA4A683DF30ea993e',
+    agiJobDiscoveryPrime:'0xd5EF1dde7Ac60488f697ff2A7967a52172A78F29',
+    ensJobPagesPrime:'0x703011EF1C6E4277587eFe150e6cd74cA18F0069',
+    agiJobManagerGenesis:'0xB3AAeb69b630f0299791679c063d68d6687481d1'
+  },
+  explorer:'https://etherscan.io',
+  access:{sessionMinutes:15,revalidateSeconds:120},
+  liveTransactions:false,
+  protectedGatewayEndpoint:''
+});
