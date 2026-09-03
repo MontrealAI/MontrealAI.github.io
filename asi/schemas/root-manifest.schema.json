@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montrealai.github.io/asi/schemas/root-manifest.schema.json",
+  "title": "MCAP-001 Machine Civilization Root Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "specification",
+    "version",
+    "published",
+    "status",
+    "id",
+    "name",
+    "type",
+    "canonicalRoot",
+    "canonicalUrl",
+    "publisher",
+    "purpose",
+    "doctrine",
+    "inheritance",
+    "authorityModel",
+    "institutionalRoles",
+    "discovery",
+    "compatibility",
+    "nonClaims"
+  ],
+  "properties": {
+    "$schema": {"type": "string", "format": "uri"},
+    "specification": {"const": "MCAP-001"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "published": {"type": "string", "format": "date"},
+    "status": {"type": "string"},
+    "id": {"type": "string", "pattern": "^ens:"},
+    "name": {"type": "string", "minLength": 1},
+    "type": {"const": "MachineCivilizationRoot"},
+    "canonicalRoot": {"type": "string", "pattern": "^[^.]+\\.eth$"},
+    "canonicalUrl": {"type": "string", "format": "uri"},
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "website", "github"],
+      "properties": {
+        "name": {"type": "string"},
+        "established": {"type": "string"},
+        "website": {"type": "string", "format": "uri"},
+        "github": {"type": "string", "format": "uri"}
+      }
+    },
+    "purpose": {"type": "string", "minLength": 20},
+    "doctrine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["continuity", "authority", "capability", "trust", "institution"],
+      "properties": {
+        "continuity": {"type": "string"},
+        "authority": {"type": "string"},
+        "capability": {"type": "string"},
+        "trust": {"type": "string"},
+        "institution": {"type": "string"}
+      }
+    },
+    "inheritance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mayPass", "mustRequalify"],
+      "properties": {
+        "mayPass": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "mustRequalify": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "authorityModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["principle", "levels", "requiredProperties"],
+      "properties": {
+        "principle": {"type": "string"},
+        "levels": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^A[0-9]+$"},
+              "name": {"type": "string"}
+            }
+          }
+        },
+        "requiredProperties": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "institutionalRoles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "role", "status", "description"],
+        "properties": {
+          "name": {"type": "string", "pattern": "\\.eth$"},
+          "role": {"type": "string"},
+          "status": {"type": "string"},
+          "description": {"type": "string"}
+        }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {"type": "string", "format": "uri"}
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stable", "draftOptional"],
+      "properties": {
+        "stable": {"type": "array", "items": {"type": "string"}},
+        "draftOptional": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "nonClaims": {"type": "array", "minItems": 1, "items": {"type": "string"}}
+  }
+}
