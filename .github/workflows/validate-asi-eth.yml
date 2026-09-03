@@ -18,9 +18,17 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            asi
+            .well-known/asi-machine-civilization.json
+            .github/workflows/validate-asi-eth.yml
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
