@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://montrealai.github.io/asi/schemas/agent-context.schema.json",
+  "title": "ASI.ETH Machine Civilization Root Agent Context",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "id", "ens", "type", "name", "description", "specification", "manifest", "covenant", "registry", "chronicle", "proof", "verifiers", "admissions", "policy", "rollback", "treasury", "successor", "endpoints", "doctrine", "authority", "standardsPosture", "nonClaim"],
+  "properties": {
+    "$schema": {"type": "string", "format": "uri"},
+    "version": {"type": "string"},
+    "id": {"type": "string", "pattern": "^ens:"},
+    "ens": {"type": "string", "pattern": "\\.eth$"},
+    "type": {"const": "MachineCivilizationRoot"},
+    "name": {"type": "string"},
+    "description": {"type": "string"},
+    "specification": {"const": "MCAP-001"},
+    "manifest": {"type": "string", "format": "uri"},
+    "covenant": {"type": "string", "format": "uri"},
+    "registry": {"type": "string", "format": "uri"},
+    "chronicle": {"type": "string", "format": "uri"},
+    "proof": {"type": "string", "format": "uri"},
+    "verifiers": {"type": "string", "format": "uri"},
+    "admissions": {"type": "string", "format": "uri"},
+    "policy": {"type": "string", "format": "uri"},
+    "rollback": {"type": "string", "format": "uri"},
+    "treasury": {"type": "string", "format": "uri"},
+    "successor": {"type": "string", "pattern": "^ens:"},
+    "endpoints": {"type": "object", "additionalProperties": {"type": "string", "format": "uri"}},
+    "doctrine": {"type": "array", "items": {"type": "string"}},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["current", "meaning"],
+      "properties": {
+        "current": {"type": "string", "pattern": "^A[0-9]+$"},
+        "meaning": {"type": "string"}
+      }
+    },
+    "standardsPosture": {"type": "object", "additionalProperties": {"type": "string"}},
+    "nonClaim": {"type": "string"}
+  }
+}

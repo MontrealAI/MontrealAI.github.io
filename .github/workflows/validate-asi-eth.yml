@@ -1,0 +1,36 @@
+name: Validate ASI.ETH Root
+
+on:
+  pull_request:
+    paths:
+      - 'asi/**'
+      - '.well-known/asi-machine-civilization.json'
+      - '.github/workflows/validate-asi-eth.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'asi/**'
+      - '.well-known/asi-machine-civilization.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            asi
+            .well-known/asi-machine-civilization.json
+            .github/workflows/validate-asi-eth.yml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate MCAP-001 release
+        run: node asi/scripts/validate.mjs
